@@ -23,7 +23,9 @@
         app:itemRippleColor="@color/transparent"
         app:labelVisibilityMode="labeled"
         app:itemActiveIndicatorStyle="@color/transparent"
-        android:background="@color/white"
+        android:background="@color/layerWhite"
+        app:itemIconTint="@color/bottom_menu_color"
+        app:itemTextColor="@color/bottom_menu_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
