@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/bottom_menu_home_icon"
+        android:title="홈" />
+
+    <item
+        android:id="@+id/menu_diary"
+        android:icon="@drawable/bottom_menu_diary_icon"
+        android:title="감정일기" />
+
+    <item
+        android:id="@+id/menu_ego_room"
+        android:icon="@drawable/bottom_menu_ego_room_icon"
+        android:title="에고룸" />
+
+    <item
+        android:id="@+id/menu_square"
+        android:icon="@drawable/bottom_menu_square_icon"
+        android:title="광장" />
+</menu>
