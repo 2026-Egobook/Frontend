@@ -66,5 +66,6 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation("org.assertj:assertj-core:3.27.6")
     androidTestImplementation(libs.androidx.espresso.core)
 }
