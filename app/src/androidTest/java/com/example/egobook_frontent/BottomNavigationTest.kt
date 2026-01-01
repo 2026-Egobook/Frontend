@@ -57,5 +57,7 @@ class BottomNavigationTest {
             val currentFragment = navHostFragment.childFragmentManager.primaryNavigationFragment
             assertThat(currentFragment).isInstanceOf(DiaryFragment::class.java)
         }
+
+        scenario.close()
     }
 }
