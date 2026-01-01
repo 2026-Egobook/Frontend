@@ -43,4 +43,19 @@ class BottomNavigationTest {
         }
         scenario.close()
     }
+    @Test
+    fun maintain_fragment_after_rotation_test() {
+        val scenario = ActivityScenario.launch(MainActivity::class.java)
+        onView(withId(R.id.menu_diary)).perform(click())
+
+        scenario.recreate()
+
+        scenario.onActivity { activity ->
+            val navHostFragment = activity.supportFragmentManager
+                .findFragmentById(R.id.fragment_container) as NavHostFragment
+
+            val currentFragment = navHostFragment.childFragmentManager.primaryNavigationFragment
+            assertThat(currentFragment).isInstanceOf(DiaryFragment::class.java)
+        }
+    }
 }
