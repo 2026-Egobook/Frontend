@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="brand">#95BB2D</color>
+    <color name="layerWhite">#FFFEFC</color>
+    <color name="naturalSubtle">#969696</color>
 </resources>
