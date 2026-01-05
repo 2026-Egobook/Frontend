@@ -219,7 +219,7 @@
 
     </LinearLayout>
 
-    <!--일기 추가 버튼    -->
+    <!--일기 추가 float버튼    -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"
         android:layout_width="wrap_content"
@@ -235,7 +235,7 @@
         app:shapeAppearanceOverlay="@style/Circle"
         />
 
-    <!--GoToTop 버튼    -->
+    <!--GoToTop float 버튼    -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_go_to_top"
         android:layout_width="wrap_content"

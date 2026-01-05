@@ -6,6 +6,7 @@
     <!--텍스트용    -->
     <color name="cos_black">#FF191818</color>
     <color name="grey">#FF969696</color>
+    <color name="cos_grey">#FFDBDBDB</color>
 
 
     <color name="grey_img">#FFD9D9D9></color>
