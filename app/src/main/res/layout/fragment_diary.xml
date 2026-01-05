@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/light_grass"
+        android:background="@drawable/topbar_background"
         android:paddingBottom="12dp">
 
         <!-- 년/월/일 그룹-->
