@@ -184,6 +184,4 @@
         android:paddingStart="16.75dp"
         android:paddingEnd="17.75dp"/>
 
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
