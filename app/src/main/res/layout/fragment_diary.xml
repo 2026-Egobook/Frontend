@@ -134,7 +134,7 @@
         app:tabIndicatorFullWidth="true"
         app:tabSelectedTextColor="@color/cos_black"
         app:tabTextColor="@color/grey"
-        app:tabTextAppearance="@style/TabTextAppearance"
+        app:tabTextAppearance="arita"
         android:background="@color/white">
 
         <com.google.android.material.tabs.TabItem
@@ -173,7 +173,8 @@
         app:layout_constraintTop_toBottomOf="@id/tb_type"
         app:layout_constraintStart_toStartOf="@id/tb_type"
         app:layout_constraintEnd_toEndOf="@id/tb_type"/>
-    
+
+    <!--일기 목록 리사이클러뷰    -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_diary"
         android:layout_width="match_parent"
@@ -182,7 +183,41 @@
         app:layout_constraintTop_toBottomOf="@+id/tab_divider"
         app:layout_constraintBottom_toBottomOf="parent"
         android:paddingStart="16.75dp"
-        android:paddingEnd="17.75dp"/>
+        android:paddingEnd="17.75dp"
+        android:visibility="visible"/>
+
+    <!-- 작성된 일기가 없을 때 보여줄 빈 화면 -->
+    <LinearLayout
+        android:id="@+id/layout_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tab_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tv_empty_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="작성된 감정 일기가 없어요"
+            android:textSize="20sp"
+            android:textColor="@color/cos_black"
+            android:fontFamily="@font/arita_bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="오늘의 일기를 작성해 보세요"
+            android:textSize="14sp"
+            android:textColor="@color/cos_black"
+            android:fontFamily="@font/arita_medium" />
+
+    </LinearLayout>
 
     <!--일기 추가 버튼    -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
