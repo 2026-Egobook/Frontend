@@ -186,7 +186,7 @@
         android:paddingEnd="17.75dp"
         android:visibility="visible"/>
 
-    <!-- 작성된 일기가 없을 때 보여줄 빈 화면 -->
+    <!-- 작성된 일기가 없을 때 보여줄 화면 -->
     <LinearLayout
         android:id="@+id/layout_empty"
         android:layout_width="wrap_content"
@@ -230,6 +230,22 @@
         android:contentDescription="Add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:backgroundTint="@color/brand_grass"
+        app:tint="@color/white"
+        app:shapeAppearanceOverlay="@style/Circle"
+        />
+
+    <!--GoToTop 버튼    -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_go_to_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_uparrow_white"
+        android:contentDescription="GoToTop"
+        app:layout_constraintBottom_toTopOf="@id/btn_add"
+        app:layout_constraintStart_toStartOf="@id/btn_add"
+        app:layout_constraintEnd_toEndOf="@id/btn_add"
         app:backgroundTint="@color/brand_grass"
         app:tint="@color/white"
         app:shapeAppearanceOverlay="@style/Circle"
