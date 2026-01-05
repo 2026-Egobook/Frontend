@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.counseling
+package com.example.egobook_frontent.ui.counseling.view
 
 import android.os.Bundle
 import android.view.View

@@ -2,9 +2,9 @@ package com.example.egobook_frontent.ui.counseling.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.egobook_frontent.ui.counseling.CounselingDailyPraiseFragment
-import com.example.egobook_frontent.ui.counseling.CounselingStatisticsFragment
-import com.example.egobook_frontent.ui.counseling.CounselingWeeklyReportFragment
+import com.example.egobook_frontent.ui.counseling.view.CounselingDailyPraiseFragment
+import com.example.egobook_frontent.ui.counseling.view.CounselingStatisticsFragment
+import com.example.egobook_frontent.ui.counseling.view.CounselingWeeklyReportFragment
 
 class CounselingMainAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {

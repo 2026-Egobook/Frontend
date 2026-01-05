@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.counseling.CounselingMainFragment">
+    tools:context=".ui.counseling.view.CounselingMainFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_counseling_main_top_container"

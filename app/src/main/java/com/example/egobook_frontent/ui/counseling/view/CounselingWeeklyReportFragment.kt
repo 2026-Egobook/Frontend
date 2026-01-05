@@ -1,10 +1,8 @@
-package com.example.egobook_frontent.ui.counseling
+package com.example.egobook_frontent.ui.counseling.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentCounselingWeeklyReportBinding
 
