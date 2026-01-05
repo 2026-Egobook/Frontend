@@ -5,4 +5,142 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/default_background">
 
+        <ImageView
+            android:id="@+id/level_type_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/layer_white_circle"
+            android:src="@drawable/level_type_1"
+            android:layout_marginStart="22dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/level_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/brand_circle_with_border"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:text="Lv 999"
+            android:textColor="@color/neutral_contrast"
+            android:textSize="12dp"
+            android:layout_marginBottom="-12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/level_type_icon"
+            app:layout_constraintEnd_toEndOf="@id/level_type_icon"
+            app:layout_constraintStart_toStartOf="@id/level_type_icon" />
+
+    <LinearLayout
+        android:id="@+id/ink_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginStart="9dp"
+        android:background="@drawable/layer_white_circle"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/level_type_icon"
+        app:layout_constraintStart_toEndOf="@id/level_type_icon"
+        app:layout_constraintTop_toTopOf="@id/level_type_icon">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ink_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
+            android:text="9999"
+            android:textColor="@color/neutral"
+            android:textSize="12dp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/setting_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/setting_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp" />
+
+    <ImageView
+        android:id="@+id/bell_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/bell_icon"
+        app:layout_constraintEnd_toStartOf="@id/setting_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <ImageView
+        android:id="@+id/store_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/store_icon"
+        app:layout_constraintTop_toBottomOf="@id/setting_icon"
+        app:layout_constraintEnd_toEndOf="@id/setting_icon"
+        android:layout_marginTop="41dp" />
+
+    <ImageView
+        android:id="@+id/bottle_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/bottle_icon"
+        app:layout_constraintTop_toBottomOf="@id/store_icon"
+        app:layout_constraintEnd_toEndOf="@id/store_icon"
+        android:layout_marginTop="12dp" />
+
+    <ImageView
+        android:id="@+id/ad_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ad_icon"
+        app:layout_constraintTop_toBottomOf="@id/bottle_icon"
+        app:layout_constraintEnd_toEndOf="@id/bottle_icon"
+        android:layout_marginTop="12dp" />
+
+    <ImageView
+        android:id="@+id/radar_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/radar_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/store_icon"
+        android:layout_marginStart="16dp" />
+
+    <ImageView
+        android:id="@+id/calendar_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/calendar_icon"
+        app:layout_constraintTop_toBottomOf="@id/radar_icon"
+        app:layout_constraintStart_toStartOf="@id/radar_icon"
+        android:layout_marginTop="12dp" />
+
+    <ImageView
+        android:id="@+id/turtle_image"
+        android:layout_width="304dp"
+        android:layout_height="197dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_turtle"
+        android:layout_marginTop="170dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/store_icon"/>
+
+    <ImageView
+        android:id="@+id/question_icon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:src="@drawable/question_icon"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
