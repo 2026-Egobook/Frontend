@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentCounselingStatisticsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-private lateinit var binding: FragmentCounselingStatisticsBinding
+@AndroidEntryPoint
 class CounselingStatisticsFragment : Fragment(R.layout.fragment_counseling_statistics) {
+    private lateinit var binding: FragmentCounselingStatisticsBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCounselingStatisticsBinding.bind(view)

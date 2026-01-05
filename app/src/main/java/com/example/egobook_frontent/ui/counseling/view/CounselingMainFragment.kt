@@ -7,7 +7,9 @@ import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentCounselingMainBinding
 import com.example.egobook_frontent.ui.counseling.adapter.CounselingMainAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CounselingMainFragment : Fragment(R.layout.fragment_counseling_main) {
     private lateinit var binding: FragmentCounselingMainBinding
 
