@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_navigation"
+    app:startDestination="@id/menu_home">
+
+    <fragment
+        android:id="@+id/menu_home"
+        android:name="com.example.egobook_frontent.ui.home.HomeFragment"
+        android:label="홈" />
+    <fragment
+        android:id="@+id/menu_diary"
+        android:name="com.example.egobook_frontent.ui.diary.DiaryFragment"
+        android:label="감정일기" />
+    <fragment
+        android:id="@+id/menu_ego_room"
+        android:name="com.example.egobook_frontent.ui.counseling.EgoRoomFragment"
+        android:label="에고룸" />
+    <fragment
+        android:id="@+id/menu_square"
+        android:name="com.example.egobook_frontent.ui.square.SquareFragment"
+        android:label="광장" />
+</navigation>
