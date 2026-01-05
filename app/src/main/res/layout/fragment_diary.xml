@@ -134,7 +134,7 @@
         app:tabIndicatorFullWidth="true"
         app:tabSelectedTextColor="@color/cos_black"
         app:tabTextColor="@color/grey"
-        app:tabTextAppearance="arita"
+        app:tabTextAppearance="@style/TabTextAppearance"
         android:background="@color/white">
 
         <com.google.android.material.tabs.TabItem
@@ -183,5 +183,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:paddingStart="16.75dp"
         android:paddingEnd="17.75dp"/>
+
+    <!--일기 추가 버튼    -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_plus_white"
+        android:contentDescription="Add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:backgroundTint="@color/brand_grass"
+        app:tint="@color/white"
+        app:shapeAppearanceOverlay="@style/Circle"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
