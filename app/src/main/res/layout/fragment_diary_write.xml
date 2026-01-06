@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_left"
-            android:contentDescription="back to DiartFragment"
+            android:contentDescription="back to DiaryFragment"
             android:layout_marginEnd="10dp"/>
 
         <TextView
@@ -37,11 +37,13 @@
             android:layout_height="wrap_content"
             android:text="2025년 12월 25일"
             android:textSize="20sp"
-            android:fontFamily="@font/arita_semibold"/>
+            android:fontFamily="@font/arita_semibold"
+            android:textColor="@color/cos_black"/>
     </LinearLayout>
 
-    <!-- 스크롤 영역 -->
+    <!-- 2. 중앙 스크롤 영역 -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -51,9 +53,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="0dp">
+            android:paddingBottom="16dp">
 
-            <!-- 내부 가이드라인 -->
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/inner_guideline_start"
                 android:layout_width="wrap_content"
@@ -100,7 +101,7 @@
                     android:layout_marginTop="8dp"/>
             </LinearLayout>
 
-            <!-- 일기 유형 선택 (Chain) -->
+            <!-- 일기 유형 선택 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/type_layout"
                 android:layout_width="0dp"
@@ -177,7 +178,7 @@
                 android:textColor="@color/cos_black"
                 android:fontFamily="@font/arita_semibold"/>
 
-            <!-- 상태 지표 (매우 좋음/나쁨) -->
+            <!-- 상태 지표 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/state_layout"
                 android:layout_width="0dp"
@@ -211,7 +212,7 @@
                     app:layout_constraintTop_toTopOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 감정 이미지 선택 영역 (Chain) -->
+            <!-- 감정 이미지 선택 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/emotion_layout"
                 android:layout_width="0dp"
@@ -278,7 +279,7 @@
                     app:layout_constraintEnd_toEndOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 일기 입력 박스 -->
+            <!-- 💡 일기 입력 박스: emotion_layout과의 간격 24dp 고정 -->
             <LinearLayout
                 android:id="@+id/input_box_layout"
                 android:layout_width="0dp"
@@ -292,7 +293,6 @@
                 app:layout_constraintEnd_toEndOf="@id/inner_guideline_end"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-               <!--적는 시간-->
                 <TextView
                     android:id="@+id/tv_input_time"
                     android:layout_width="wrap_content"
@@ -341,7 +341,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginTop="24dp"
         android:background="@color/cos_black"
         android:text="저장하기"
         android:textColor="@color/white"
