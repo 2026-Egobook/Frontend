@@ -51,7 +51,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="24dp">
+            android:paddingBottom="0dp">
 
             <!-- 내부 가이드라인 -->
             <androidx.constraintlayout.widget.Guideline
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="394dp" />
+                app:layout_constraintGuide_begin="15.65dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/inner_guideline_end"
@@ -289,7 +289,8 @@
                 android:padding="16dp"
                 app:layout_constraintTop_toBottomOf="@id/emotion_layout"
                 app:layout_constraintStart_toStartOf="@id/inner_guideline_start"
-                app:layout_constraintEnd_toEndOf="@id/inner_guideline_end">
+                app:layout_constraintEnd_toEndOf="@id/inner_guideline_end"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                <!--적는 시간-->
                 <TextView
@@ -337,7 +338,10 @@
         android:id="@+id/btn_save"
         android:layout_width="0dp"
         android:layout_height="47dp"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="24dp"
         android:background="@color/cos_black"
         android:text="저장하기"
         android:textColor="@color/white"
