@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentDiaryBinding
 
@@ -60,10 +61,19 @@ class DiaryFragment : Fragment() {
                 )
             )
         }
+
+        //리사이클러뷰 어댑터 등록
+        val diaryRVAdapter = DiaryRVAdapter(diaryDatas)
+        binding.rvDiary.adapter = diaryRVAdapter
+
+        //리사이클러뷰의 레이아웃 매니저
+        binding.rvDiary.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL, false
+        )
+
         return binding.root
     }
-
-    //아 죄송합니다 커밋 메세지 실수했어요...
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
