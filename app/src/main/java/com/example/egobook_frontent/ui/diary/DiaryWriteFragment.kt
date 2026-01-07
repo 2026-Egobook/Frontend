@@ -14,53 +14,11 @@ class DiaryWriteFragment : Fragment() {
     private var _binding: FragmentDiaryWriteBinding? = null
     private val binding get() = _binding!!
 
-    //더미데이터
-    private var diaryDatas = ArrayList<Diary>()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiaryWriteBinding.inflate(inflater, container, false)
-
-        //더미데이터 삽입
-        diaryDatas.apply {
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당 아주nice",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당 아주nice",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당 아주nice",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당 아주nice",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당 아주nice",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-        }
 
         return binding.root
     }
