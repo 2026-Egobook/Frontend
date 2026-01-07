@@ -19,4 +19,8 @@
 
 
 
+    <color name="transparent">#00000000</color>
+    <color name="brand">#95BB2D</color>
+    <color name="layer_white">#FFFEFC</color>
+    <color name="natural_subtle">#969696</color>
 </resources>
