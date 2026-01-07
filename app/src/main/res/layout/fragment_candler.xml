@@ -4,17 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.diary.CandlerFragment">
+    tools:context=".ui.diary.CandlerFragment"
+    android:background="@color/white">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="@string/hello_blank_fragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <LinearLayout
+        android:id="@+id/top_btn_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <!-- 내보내기 버튼 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_export"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:icon="@drawable/ic_export"
+            app:iconTint="@color/cos_black"
+            android:contentDescription="Export" />
+
+        <!-- 일기 목록으로 버튼 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_list"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:icon="@drawable/ic_to_list"
+            app:iconTint="@color/cos_black"
+            android:contentDescription="To Diary List" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

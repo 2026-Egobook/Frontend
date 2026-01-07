@@ -68,4 +68,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation("org.assertj:assertj-core:3.27.6")
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation("com.kizitonwose.calendar:view:2.6.0")
 }
