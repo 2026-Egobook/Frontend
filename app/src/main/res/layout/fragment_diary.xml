@@ -134,7 +134,6 @@
         app:tabIndicatorFullWidth="true"
         app:tabSelectedTextColor="@color/cos_black"
         app:tabTextColor="@color/grey"
-        app:tabTextAppearance="arita"
         android:background="@color/white">
 
         <com.google.android.material.tabs.TabItem
