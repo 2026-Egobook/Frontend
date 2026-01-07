@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="8dp"
+    android:background="@drawable/bg_calender_titles"
+    android:layout_marginHorizontal="16dp">
+
+    <!-- 각 요일 텍스트 (총 7개) -->
+    <TextView style="@style/CalendarTitleTextStyle" android:text="월" />
+    <TextView style="@style/CalendarTitleTextStyle" android:text="화" />
+    <TextView style="@style/CalendarTitleTextStyle" android:text="수" />
+    <TextView style="@style/CalendarTitleTextStyle" android:text="목" />
+    <TextView style="@style/CalendarTitleTextStyle" android:text="금" />
+    <TextView style="@style/CalendarTitleTextStyle" android:text="토" />
+    <TextView style="@style/CalendarTitleTextStyle" android:text="일" android:textColor="@color/dark_bage_text" />
+
+</LinearLayout>

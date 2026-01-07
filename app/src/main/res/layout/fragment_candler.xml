@@ -40,4 +40,107 @@
 
     </LinearLayout>
 
+    <!--  년도/월 표시 및 화살표 -->
+    <LinearLayout
+        android:id="@+id/calendar_header_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/top_btn_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!--년 표시        -->
+        <TextView
+            android:id="@+id/tv_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2025"
+            android:textColor="@color/cos_black"
+            android:fontFamily="@font/arita_medium"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_prev_month"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_left"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginEnd="60dp"
+                android:contentDescription="이전 달"/>
+
+            <TextView
+                android:id="@+id/tv_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12월"
+                android:textSize="24sp"
+                android:layout_marginHorizontal="24dp"
+                android:fontFamily="@font/arita_semibold" />
+
+            <ImageButton
+                android:id="@+id/btn_next_month"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_right"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginStart="60dp"
+                android:contentDescription="다음 달"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 3. 요일 표시 (월화수목금토일) -->
+    <include
+        android:id="@+id/titles_layout"
+        layout="@layout/calendar_day_titles_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16.16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintTop_toBottomOf="@id/calendar_header_layout"/>
+
+    <!-- 4. 실제 달력 위젯 -->
+    <com.kizitonwose.calendar.view.CalendarView
+        android:id="@+id/calendarView"
+        tools:listitem="@layout/calendar_day_layout"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:spanCount="7"
+        tools:itemCount="31"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="43dp"
+        app:cv_dayViewResource="@layout/calendar_day_layout"
+        app:layout_constraintTop_toBottomOf="@id/titles_layout" />
+
+    <!-- 5. 하단 버튼 -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_write_diary"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:text="일기 쓰러 가기"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
+        app:cornerRadius="4dp"
+        android:layout_marginHorizontal="16.16dp"
+        android:layout_marginBottom="16dp"
+        app:backgroundTint="@color/brand_grass"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
