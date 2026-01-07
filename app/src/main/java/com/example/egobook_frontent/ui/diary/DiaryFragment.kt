@@ -63,6 +63,8 @@ class DiaryFragment : Fragment() {
         return binding.root
     }
 
+    //아 죄송합니다 커밋 메세지 실수했어요...
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
