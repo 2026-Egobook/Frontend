@@ -35,8 +35,13 @@ class DiaryFragment : Fragment() {
         initRecyclerView()
 
         // 3. 버튼 클릭 리스너
-        binding.btnAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_diaryFragment_to_diaryWriteFragment)
+        binding.apply {
+            btnAdd.setOnClickListener {
+                findNavController().navigate(R.id.action_diaryFragment_to_diaryWriteFragment)
+        }
+            btnCalender.setOnClickListener {
+                findNavController().navigate(R.id.action_diaryFragment_to_candlerFragment)
+            }
         }
     }
 
