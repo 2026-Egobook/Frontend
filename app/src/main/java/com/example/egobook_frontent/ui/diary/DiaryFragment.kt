@@ -14,74 +14,46 @@ class DiaryFragment : Fragment() {
     private var _binding: FragmentDiaryBinding? = null
     private val binding get() = _binding!!
 
-    //더미데이터
     private var diaryDatas = ArrayList<Diary>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiaryBinding.inflate(inflater, container, false)
-
-        //더미데이터 삽입
-        diaryDatas.apply {
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-            add(
-                Diary(
-                    content = "요즘 너무 설렌당",
-                    type = null,
-                    time = "17:00"
-                )
-            )
-        }
-
-        //리사이클러뷰 어댑터 등록
-        val diaryRVAdapter = DiaryRVAdapter(diaryDatas)
-        binding.rvDiary.adapter = diaryRVAdapter
-
-        //리사이클러뷰의 레이아웃 매니저
-        binding.rvDiary.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL, false
-        )
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 일기 추가 버튼 클릭 리스너
+        // 1. 데이터가 비어있을 때만 더미데이터 삽입 (중복 방지)
+        if (diaryDatas.isEmpty()) {
+            setupDummyData()
+        }
+
+        // 2. 어댑터 설정
+        initRecyclerView()
+
+        // 3. 버튼 클릭 리스너
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.action_diaryFragment_to_diaryWriteFragment)
         }
+    }
+
+    private fun setupDummyData() {
+        diaryDatas.addAll(arrayListOf(
+            Diary("요즘 너무 설렌당", null, "17:00"),
+            Diary("요즘 너무 설렌당", null, "17:00"),
+            Diary("요즘 너무 설렌당", null, "17:00"),
+            Diary("요즘 너무 설렌당", null, "17:00"),
+            Diary("요즘 너무 설렌당", null, "17:00")
+        ))
+    }
+
+    private fun initRecyclerView() {
+        val diaryRVAdapter = DiaryRVAdapter(diaryDatas)
+        binding.rvDiary.adapter = diaryRVAdapter
+        binding.rvDiary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     override fun onDestroyView() {
