@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.egobook_frontent.R
@@ -25,7 +26,8 @@ class CounselingWeeklyReportFragment : Fragment(R.layout.fragment_counseling_wee
     private lateinit var binding: FragmentCounselingWeeklyReportBinding
     private val viewModel: WeeklyReportViewModel by viewModels()
     private val counselingWeeklyReportAdapter = CounselingWeeklyReportAdapter { item ->
-        // TODO: navigation 으로 화면 이동 + Safe Args 전달
+        val action = CounselingMainFragmentDirections.actionMenuSquareToCounselingWeeklyReportDetailFragment(weeklyReportItem = item)
+        findNavController().navigate(action)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
