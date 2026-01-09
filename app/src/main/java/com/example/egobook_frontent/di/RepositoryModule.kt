@@ -1,7 +1,9 @@
 package com.example.egobook_frontent.di
 
 import com.example.egobook_frontent.data.repository.CounselingRepositoryImpl
+import com.example.egobook_frontent.data.repository.NotificationRepositoryImpl
 import com.example.egobook_frontent.domain.repository.CounselingRepository
+import com.example.egobook_frontent.domain.repository.NotificationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,4 +16,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindCounselingRepository(impl: CounselingRepositoryImpl): CounselingRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepository
 }
