@@ -28,6 +28,7 @@
             android:layout_height="48dp"
             app:icon="@drawable/ic_left"
             app:iconTint="@color/cos_black"
+            app:iconSize="24dp"
             android:contentDescription="back to DiaryFragment"/>
 
         <TextView

@@ -26,6 +26,7 @@
             android:layout_height="48dp"
             app:icon="@drawable/ic_export"
             app:iconTint="@color/cos_black"
+            app:iconSize="24dp"
             android:contentDescription="Export" />
 
         <!-- 일기 목록으로 버튼 -->
@@ -36,6 +37,7 @@
             android:layout_height="48dp"
             app:icon="@drawable/ic_to_list"
             app:iconTint="@color/cos_black"
+            app:iconSize="24dp"
             android:contentDescription="To Diary List" />
 
     </LinearLayout>
@@ -69,13 +71,14 @@
             android:paddingEnd="16dp"
             android:orientation="horizontal">
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_prev_month"
+                style="@style/Widget.Material3.Button.IconButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_left"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                app:icon="@drawable/ic_left"
+                app:iconTint="@color/cos_black"
+                app:iconSize="24dp"
                 android:layout_marginEnd="60dp"
                 android:contentDescription="이전 달"/>
 
@@ -88,15 +91,16 @@
                 android:layout_marginHorizontal="24dp"
                 android:fontFamily="@font/arita_semibold" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_next_month"
+                style="@style/Widget.Material3.Button.IconButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_right"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                app:icon="@drawable/ic_right"
+                app:iconTint="@color/cos_black"
+                app:iconSize="24dp"
                 android:layout_marginStart="60dp"
-                android:contentDescription="다음 달"/>
+                android:contentDescription="이전 달"/>
         </LinearLayout>
     </LinearLayout>
 

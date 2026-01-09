@@ -73,6 +73,7 @@
                     android:layout_height="48dp"
                     app:icon="@drawable/ic_left"
                     app:iconTint="@color/cos_black"
+                    app:iconSize="24dp"
                     android:contentDescription="이전 날짜로"/>
 
                 <TextView
@@ -92,6 +93,7 @@
                     android:layout_height="48dp"
                     app:icon="@drawable/ic_right"
                     app:iconTint="@color/cos_black"
+                    app:iconSize="24dp"
                     android:contentDescription="다음 날짜로"/>
             </LinearLayout>
 
@@ -114,6 +116,7 @@
                 android:layout_height="48dp"
                 app:icon="@drawable/ic_export"
                 app:iconTint="@color/cos_black"
+                app:iconSize="24dp"
                 android:contentDescription="Export"/>
 
             <com.google.android.material.button.MaterialButton
@@ -123,6 +126,7 @@
                 android:layout_height="48dp"
                 app:icon="@drawable/ic_calendar"
                 app:iconTint="@color/cos_black"
+                app:iconSize="24dp"
                 android:contentDescription="Export"/>
 
         </LinearLayout>
