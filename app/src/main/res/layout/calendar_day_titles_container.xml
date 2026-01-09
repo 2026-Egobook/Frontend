@@ -14,6 +14,6 @@
     <TextView style="@style/CalendarTitleTextStyle" android:text="목" />
     <TextView style="@style/CalendarTitleTextStyle" android:text="금" />
     <TextView style="@style/CalendarTitleTextStyle" android:text="토" />
-    <TextView style="@style/CalendarTitleTextStyle" android:text="일" android:textColor="@color/dark_bage_text" />
+    <TextView style="@style/CalendarTitleTextStyle" android:text="일" android:textColor="@color/cos_red" />
 
 </LinearLayout>
