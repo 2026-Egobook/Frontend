@@ -26,7 +26,7 @@ class DiaryWriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 하단 시스템 바  영역만큼 패딩을 주어 버튼이 가려지지 않게 함.
+        // 하단 시스템 바 영역만큼 패딩을 주어 버튼이 가려지지 않게 함.
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             // 기존 패딩은 유지하면서 하단만 시스템 바 높이만큼 추가

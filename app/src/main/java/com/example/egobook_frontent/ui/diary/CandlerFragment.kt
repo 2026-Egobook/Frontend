@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentCandlerBinding
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
@@ -55,6 +56,16 @@ class CandlerFragment : Fragment() {
         val startMonth = currentMonth.minusMonths(100)
         val endMonth = currentMonth.plusMonths(100)
         val firstDayOfWeek = daysOfWeek().first()
+
+        // 초기 현재 날짜 기준 텍스트 설정
+        binding.tvYear.text = currentMonth.year.toString()
+        binding.tvMonth.text = "${currentMonth.monthValue}월"
+
+        // 달력을 넘길 때마다 헤더(년, 월)를 업데이트하는 리스너
+        binding.calendarView.monthScrollListener = { month ->
+            binding.tvYear.text = month.yearMonth.year.toString()
+            binding.tvMonth.text = "${month.yearMonth.monthValue}월"
+        }
 
         // 달력 범위 및 시작 요일 설정
         binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
