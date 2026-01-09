@@ -17,19 +17,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="14dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingStart="4dp"
         android:paddingEnd="16dp"
         android:background="@color/white">
 
-        <ImageView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_left"
-            android:contentDescription="back to DiaryFragment"
-            android:layout_marginEnd="10dp"/>
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:icon="@drawable/ic_left"
+            app:iconTint="@color/cos_black"
+            android:contentDescription="back to DiaryFragment"/>
 
         <TextView
             android:id="@+id/tv_year"
@@ -279,7 +278,7 @@
                     app:layout_constraintEnd_toEndOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 💡 일기 입력 박스: emotion_layout과의 간격 24dp 고정 -->
+            <!-- 일기 입력 박스 -->
             <LinearLayout
                 android:id="@+id/input_box_layout"
                 android:layout_width="0dp"
