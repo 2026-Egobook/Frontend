@@ -1,6 +1,8 @@
 name: Android CI
 
 on:
+  push:
+    branches: [ "main", "develop", "feat/counseling" ]
   pull_request:
     branches: [ "main", "develop" ] # 검사할 브랜치
 
