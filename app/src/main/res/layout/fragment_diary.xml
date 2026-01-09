@@ -58,7 +58,7 @@
                     android:fontFamily="@font/arita_semibold"/>
             </LinearLayout>
 
-            <!-- 2. 날짜(일) 및 아이콘 -->
+            <!-- 날짜(일) 및 아이콘 -->
             <LinearLayout
                 android:id="@+id/date_layout"
                 android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                     android:text="10"
                     android:textSize="24sp"
                     android:fontFamily="@font/arita_semibold"
-                    android:layout_marginHorizontal="6dp"/> <!-- 숫자 양옆 간격 추가 -->
+                    android:layout_marginHorizontal="6dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_next_date"

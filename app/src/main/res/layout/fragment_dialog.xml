@@ -8,7 +8,7 @@
     android:background="@drawable/dialog_year_month_picker"
     android:padding="16dp">
 
-    <!-- 1. 상단 연도 선택 (화살표 + 연도) -->
+    <!-- 상단 연도 선택  -->
     <LinearLayout
         android:id="@+id/year_layout"
         android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
             app:layout_constraintTop_toTopOf="@+id/tv_dialog_year" />
     </LinearLayout>
 
-    <!-- 2. 월 선택 격자 (3열 4행) -->
+    <!-- 월 선택 격자 (3열 4행) -->
     <GridLayout
         android:id="@+id/months_layout"
         android:layout_width="wrap_content"

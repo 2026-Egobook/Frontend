@@ -7,7 +7,7 @@
     tools:context=".ui.diary.DiaryWriteFragment"
     android:background="@color/white">
 
-    <!-- 1. 상단 날짜 레이아웃 (고정) -->
+    <!-- 상단 날짜 및 아이콘-->
     <LinearLayout
         android:id="@+id/date_layout"
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:textColor="@color/cos_black"/>
     </LinearLayout>
 
-    <!-- 2. 중앙 스크롤 영역 -->
+    <!-- 중앙 스크롤 영역 -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -212,7 +212,7 @@
                     app:layout_constraintTop_toTopOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 감정 이미지 선택 -->
+            <!-- 감정 이미지들 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/emotion_layout"
                 android:layout_width="0dp"
@@ -333,7 +333,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- 3. 하단 저장 버튼 (고정) -->
+    <!-- 하단 저장 버튼 -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_save"
         android:layout_width="0dp"
