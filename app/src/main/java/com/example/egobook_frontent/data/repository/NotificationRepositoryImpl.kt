@@ -17,4 +17,15 @@ class NotificationRepositoryImpl @Inject constructor(private val apiService: Not
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    override suspend fun updateNotificationStatus(isEnabled: Boolean): Result<Boolean> = try {
+        val response = apiService.updateNotificationStatus(isEnabled = isEnabled)
+        if(response.isSuccessful) {
+            Result.success(isEnabled)
+        } else {
+            Result.failure(Exception("Error: ${response.code()}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }
