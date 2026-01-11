@@ -14,7 +14,7 @@ class DiaryFragment : Fragment() {
     private var _binding: FragmentDiaryBinding? = null
     private val binding get() = _binding!!
 
-    private var diaryDatas = ArrayList<Diary>()
+    private val diaryDatas: MutableList<Diary> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?

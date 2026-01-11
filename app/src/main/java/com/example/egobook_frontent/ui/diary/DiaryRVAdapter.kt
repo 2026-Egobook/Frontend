@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.egobook_frontent.databinding.ItemDiaryBinding
 
-class DiaryRVAdapter(private var diaryList: ArrayList<Diary>) :
+class DiaryRVAdapter(private val diaryList: List<Diary>) :
     RecyclerView.Adapter<DiaryRVAdapter.ViewHolder>() {
 
 
