@@ -134,8 +134,17 @@
 |`Rename`|파일 또는 폴더 명을 수정하거나 옮기는 작업만인 경우
 |`Remove`|파일을 삭제하는 작업만 수행한 경우
 |`!HOTFIX`| 급하게 치명적인 버그를 고쳐야 하는 경우
+<br>
 
-
+## Android Studio 환경 설정
+### Android Studio 버전
+`Android Studio Otter | 2025.2.1 Patch 1`
+### SDK 버전
+- targetSDK `36`
+- minSDK `24`
+### 테스트 기기
+- 실제 디바이스 (안드로이드 폰 소유자)
+- 에뮬레이터 (안드로이드 폰 미소유자)
 
 
     
