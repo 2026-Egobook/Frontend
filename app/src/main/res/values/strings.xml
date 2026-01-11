@@ -2,4 +2,12 @@
     <string name="app_name">egobook_frontent</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    !-- Diary Types -->
+    <string name="emotion">감정</string>
+    <string name="worry">고민</string>
+    <string name="praise">칭찬</string>
+    <string name="thanks">감사</string>
 </resources>
+
+
