@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.data.model
+package com.example.egobook_frontent.data.model.counseling
 
 import com.example.egobook_frontent.domain.model.PraiseMessage
 

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">egobook_frontent</string>
+    <string name="counseling_daily_praise_notification_on">매주 월요일 자정 에고북이 작성한 리포트가 도착해요</string>
+    <string name="counseling_daily_praise_notification_off">주간 리포트가 도착하지 않아요</string>
+    <string name="notification_on">알림이 켜졌습니다</string>
+    <string name="notification_off">알림이 꺼졌습니다.</string>
 </resources>

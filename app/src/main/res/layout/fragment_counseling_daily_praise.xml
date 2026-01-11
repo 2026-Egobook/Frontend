@@ -24,12 +24,12 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="일기를 작성하면 자정에 칭찬서가 도착해요"/>
+            tools:text="일기를 작성하면 자정에 칭찬서가 도착해요"/>
         <ImageView
             android:id="@+id/iv_counseling_daily_praise_notification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_notification_on"/>
+            tools:src="@drawable/ic_notification_on"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.recyclerview.widget.RecyclerView
