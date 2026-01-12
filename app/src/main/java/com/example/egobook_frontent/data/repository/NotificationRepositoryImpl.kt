@@ -3,6 +3,7 @@ package com.example.egobook_frontent.data.repository
 import com.example.egobook_frontent.data.api.NotificationService
 import com.example.egobook_frontent.data.model.notification.toDomain
 import com.example.egobook_frontent.domain.model.Notification
+import com.example.egobook_frontent.domain.model.NotificationType
 import com.example.egobook_frontent.domain.repository.NotificationRepository
 import javax.inject.Inject
 
@@ -18,8 +19,8 @@ class NotificationRepositoryImpl @Inject constructor(private val apiService: Not
         Result.failure(e)
     }
 
-    override suspend fun updateNotificationStatus(isEnabled: Boolean): Result<Boolean> = try {
-        val response = apiService.updateNotificationStatus(isEnabled = isEnabled)
+    override suspend fun updateNotificationStatus(type: NotificationType, isEnabled: Boolean): Result<Boolean> = try {
+        val response = apiService.updateNotificationStatus(type = type, isEnabled = isEnabled)
         if(response.isSuccessful) {
             Result.success(isEnabled)
         } else {

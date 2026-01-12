@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentCounselingDailyPraiseBinding
+import com.example.egobook_frontent.domain.model.NotificationType
 import com.example.egobook_frontent.ui.counseling.adapter.CounselingDailyPraiseAdapter
 import com.example.egobook_frontent.ui.counseling.viewmodel.DailyPraiseViewModel
 import com.example.egobook_frontent.ui.notification.model.NotificationModel
@@ -53,9 +54,9 @@ class CounselingDailyPraiseFragment : Fragment(R.layout.fragment_counseling_dail
     private fun initListeners() = with(binding) {
         ivCounselingDailyPraiseNotification.setOnClickListener {
             if(isNotificationEnabled == true) {
-                viewModel.updateNotificationStatus(isEnabled = false)
+                viewModel.updateNotificationStatus(type = NotificationType.DAILY_PRAISE, isEnabled = false)
             } else {
-                viewModel.updateNotificationStatus(isEnabled = true)
+                viewModel.updateNotificationStatus(type = NotificationType.DAILY_PRAISE, isEnabled = true)
             }
         }
     }

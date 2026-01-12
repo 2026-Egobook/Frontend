@@ -2,6 +2,7 @@ package com.example.egobook_frontent.ui.counseling.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.egobook_frontent.domain.model.NotificationType
 import com.example.egobook_frontent.domain.usecase.GetWeeklyReportUseCase
 import com.example.egobook_frontent.ui.counseling.model.WeeklyReportModel
 import com.example.egobook_frontent.ui.counseling.model.toPresentation
@@ -10,6 +11,7 @@ import com.example.egobook_frontent.ui.notification.model.NotificationModel
 import com.example.egobook_frontent.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -40,6 +42,14 @@ class WeeklyReportViewModel @Inject constructor(
     fun fetchNotificationStatus() {
         viewModelScope.launch {
             notificationDelegate.fetchNotificationStatus()
+        }
+    }
+
+    val updateNotificationResult: SharedFlow<UiState<Boolean>> = notificationDelegate.updateNotificationResult
+
+    fun updateNotificationStatus(type: NotificationType, isEnabled: Boolean) {
+        viewModelScope.launch {
+            notificationDelegate.updateNotificationStatus(type = type, isEnabled = isEnabled)
         }
     }
 }
