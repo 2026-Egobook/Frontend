@@ -9,7 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.egobook_frontent.databinding.FragmentOnboardingContainerBinding
 import com.example.egobook_frontent.ui.onboarding.adapter.OnboardingVPAdapter
-import me.relex.circleindicator.CircleIndicator3
 
 class OnboardingContainerFragment : Fragment() {
 
