@@ -21,8 +21,11 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.egobook_frontent.HiltTestRunner"
+
     }
 
     buildTypes {
@@ -38,6 +41,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -81,4 +85,15 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation("org.assertj:assertj-core:3.27.6")
     androidTestImplementation(libs.androidx.espresso.core)
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    implementation("com.kizitonwose.calendar:view:2.6.0")
+
+    // Hilt 테스트를 위한 의존성 추가
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
+}
+
+kapt {
+    correctErrorTypes = true
 }

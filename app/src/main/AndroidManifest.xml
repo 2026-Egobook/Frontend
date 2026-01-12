@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Egobook_frontent">
         <activity
+            android:name=".ui.diary.DiaryWriteActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
