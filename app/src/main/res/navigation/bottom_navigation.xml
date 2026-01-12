@@ -30,10 +30,11 @@
         android:id="@+id/menu_square"
         android:name="com.example.egobook_frontent.ui.counseling.view.CounselingMainFragment"
         android:label="광장"
-        tools:layout="@layout/fragment_counseling_main" >
+        tools:layout="@layout/fragment_counseling_main">
         <action
             android:id="@+id/action_menu_square_to_counselingWeeklyReportDetailFragment"
             app:destination="@id/counselingWeeklyReportDetailFragment" />
+    </fragment>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
     <fragment
