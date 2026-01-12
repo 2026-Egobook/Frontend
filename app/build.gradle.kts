@@ -92,6 +92,8 @@ dependencies {
     // Hilt 테스트를 위한 의존성 추가
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
+
+    implementation("me.relex:circleindicator:2.1.6")
 }
 
 kapt {
