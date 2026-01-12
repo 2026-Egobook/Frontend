@@ -88,7 +88,7 @@ class CounselingDailyPraiseFragment : Fragment(R.layout.fragment_counseling_dail
                             UiState.Loading -> {}
                             is UiState.Success<NotificationModel> -> {
                                 val notificationStatus: NotificationModel = state.data
-                                updateNotificationUi(notificationStatus.isEnabled)
+                                updateNotificationUi(notificationStatus.isDailyPraiseEnabled)
                             }
                         }
                     }
