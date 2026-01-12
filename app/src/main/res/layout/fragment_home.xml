@@ -58,33 +58,42 @@
             android:textSize="12dp" />
     </LinearLayout>
 
+    <androidx.constraintlayout.helper.widget.Flow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@id/gl_end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:constraint_referenced_ids="iv_bell, iv_setting"
+        android:layout_marginTop="8dp" />
+    
     <ImageView
         android:id="@+id/iv_setting"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/setting_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp" />
+        android:src="@drawable/setting_icon" />
 
     <ImageView
         android:id="@+id/iv_bell"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/bell_icon"
-        app:layout_constraintEnd_toStartOf="@id/iv_setting"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp" />
+        android:src="@drawable/bell_icon" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_store,iv_bottle,iv_ad"
+        app:flow_verticalGap="12dp"
+        android:orientation="vertical"
+        android:layout_marginTop="41dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_setting"
+        app:layout_constraintEnd_toEndOf="@id/iv_setting"/>
 
     <ImageView
         android:id="@+id/iv_store"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/store_icon"
-        app:layout_constraintTop_toBottomOf="@id/iv_setting"
-        app:layout_constraintEnd_toEndOf="@id/iv_setting"
-        android:layout_marginTop="41dp" />
+        android:src="@drawable/store_icon" />
 
     <ImageView
         android:id="@+id/iv_bottle"
@@ -104,23 +113,26 @@
         app:layout_constraintEnd_toEndOf="@id/iv_bottle"
         android:layout_marginTop="12dp" />
 
+    <androidx.constraintlayout.helper.widget.Flow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:flow_verticalGap="12dp"
+        android:orientation="vertical"
+        app:constraint_referenced_ids="iv_radar,iv_calendar"
+        app:layout_constraintStart_toStartOf="@id/gl_start"
+        app:layout_constraintTop_toTopOf="@id/iv_store" />
+    
     <ImageView
         android:id="@+id/iv_radar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/radar_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_store"
-        android:layout_marginStart="16dp" />
+        android:src="@drawable/radar_icon" />
 
     <ImageView
         android:id="@+id/iv_calendar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/calendar_icon"
-        app:layout_constraintTop_toBottomOf="@id/iv_radar"
-        app:layout_constraintStart_toStartOf="@id/iv_radar"
-        android:layout_marginTop="12dp" />
+        android:src="@drawable/calendar_icon" />
 
     <ImageView
         android:id="@+id/iv_turtle"
@@ -142,5 +154,19 @@
         android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_end"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.96" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_start"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.04" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
