@@ -3,11 +3,14 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    !-- Diary Types -->
+    <!-- Diary Types -->
     <string name="emotion">감정</string>
     <string name="worry">고민</string>
     <string name="praise">칭찬</string>
     <string name="thanks">감사</string>
+
+    <string name="counseling_daily_praise_notification_on">매주 월요일 자정 에고북이 작성한 리포트가 도착해요</string>
+    <string name="counseling_daily_praise_notification_off">주간 리포트가 도착하지 않아요</string>
+    <string name="notification_on">알림이 켜졌습니다</string>
+    <string name="notification_off">알림이 꺼졌습니다.</string>
 </resources>
-
-
