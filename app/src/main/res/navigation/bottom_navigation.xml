@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_navigation"
     app:startDestination="@id/menu_home">
 
@@ -18,6 +19,26 @@
         android:label="에고룸" />
     <fragment
         android:id="@+id/menu_square"
-        android:name="com.example.egobook_frontent.ui.square.SquareFragment"
-        android:label="광장" />
+        android:name="com.example.egobook_frontent.ui.counseling.view.CounselingMainFragment"
+        android:label="광장"
+        tools:layout="@layout/fragment_counseling_main" >
+        <action
+            android:id="@+id/action_menu_square_to_counselingWeeklyReportDetailFragment"
+            app:destination="@id/counselingWeeklyReportDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/counselingWeeklyReportFragment"
+        android:name="com.example.egobook_frontent.ui.counseling.view.CounselingWeeklyReportFragment"
+        android:label="fragment_counseling_weekly_report"
+        tools:layout="@layout/fragment_counseling_weekly_report" >
+    </fragment>
+    <fragment
+        android:id="@+id/counselingWeeklyReportDetailFragment"
+        android:name="com.example.egobook_frontent.ui.counseling.view.CounselingWeeklyReportDetailFragment"
+        android:label="CounselingWeeklyReportDetailFragment"
+        tools:layout="@layout/fragment_counseling_weekly_report_detail">
+        <argument app:argType="com.example.egobook_frontent.ui.counseling.model.WeeklyReportModel"
+            android:name="weeklyReportItem"
+            app:nullable="false"/>
+    </fragment>
 </navigation>

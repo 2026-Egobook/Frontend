@@ -8,4 +8,6 @@
     <color name="neutral_subtle">#969696</color>
     <color name="neutral_contrast">#FFFEFC</color>
     <color name="neutral">#191818</color>
+    <color name="green_secondary">#E8EED9</color>
+    <color name="cardview_background">#F4F7EE</color>
 </resources>
