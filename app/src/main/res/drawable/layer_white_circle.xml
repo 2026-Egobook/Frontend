@@ -4,9 +4,9 @@
         android:color="@color/layer_white">
     </solid>
     <corners
-        android:bottomLeftRadius="9999dp"
-        android:bottomRightRadius="9999dp"
-        android:topLeftRadius="9999dp"
-        android:topRightRadius="9999dp">
+        android:bottomLeftRadius="@dimen/circle_radius"
+        android:bottomRightRadius="@dimen/circle_radius"
+        android:topLeftRadius="@dimen/circle_radius"
+        android:topRightRadius="@dimen/circle_radius">
     </corners>
 </shape>
