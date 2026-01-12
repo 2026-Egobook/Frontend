@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.egobook_frontent.databinding.FragmentOnboardingContainerBinding
 import com.example.egobook_frontent.ui.onboarding.adapter.OnboardingVPAdapter
 import me.relex.circleindicator.CircleIndicator3
@@ -24,6 +26,14 @@ class OnboardingContainerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 하단 시스템 바 영역만큼 패딩 주기
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // 기존 패딩은 유지하면서 하단만 시스템 바 높이만큼 추가
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom)
+            insets
+        }
 
         setAdapter()
     }

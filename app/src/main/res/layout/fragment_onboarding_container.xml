@@ -18,10 +18,15 @@
 
     <me.relex.circleindicator.CircleIndicator3
         android:id="@+id/circle_indicator"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
         app:ci_drawable="@drawable/brand_radius"
         app:ci_drawable_unselected="@drawable/gray_radius"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:ci_width="10dp"
+        app:ci_height="10dp"
+        app:ci_margin="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
