@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentCounselingWeeklyReportBinding
 import com.example.egobook_frontent.domain.model.NotificationType
+import com.example.egobook_frontent.domain.model.ReportStyle
 import com.example.egobook_frontent.ui.counseling.adapter.CounselingWeeklyReportAdapter
+import com.example.egobook_frontent.ui.counseling.model.WeeklyReportStyleModel
 import com.example.egobook_frontent.ui.counseling.viewmodel.WeeklyReportViewModel
 import com.example.egobook_frontent.ui.notification.model.NotificationModel
 import com.example.egobook_frontent.util.UiState
@@ -54,11 +56,26 @@ class CounselingWeeklyReportFragment : Fragment(R.layout.fragment_counseling_wee
     }
 
     private fun initListeners() = with(binding) {
+        cvCounselingWeeklyReportStyleSharp.setOnClickListener {
+            viewModel.updateWeeklyReportStyle(reportStyle = ReportStyle.SHARP)
+        }
+        cvCounselingWeeklyReportStyleSoft.setOnClickListener {
+            viewModel.updateWeeklyReportStyle(reportStyle = ReportStyle.SOFT)
+        }
+        cvCounselingWeeklyReportStyleObjective.setOnClickListener {
+            viewModel.updateWeeklyReportStyle(reportStyle = ReportStyle.OBJECTIVE)
+        }
         ivCounselingWeeklyReportNotification.setOnClickListener {
-            if(isNotificationEnabled == true) {
-                viewModel.updateNotificationStatus(type = NotificationType.WEEKLY_REPORT, isEnabled = false)
+            if (isNotificationEnabled == true) {
+                viewModel.updateNotificationStatus(
+                    type = NotificationType.WEEKLY_REPORT,
+                    isEnabled = false
+                )
             } else {
-                viewModel.updateNotificationStatus(type = NotificationType.WEEKLY_REPORT, isEnabled = true)
+                viewModel.updateNotificationStatus(
+                    type = NotificationType.WEEKLY_REPORT,
+                    isEnabled = true
+                )
             }
         }
     }
@@ -111,6 +128,33 @@ class CounselingWeeklyReportFragment : Fragment(R.layout.fragment_counseling_wee
                         }
                     }
                 }
+                launch {
+                    viewModel.weeklyReportStyle.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<WeeklyReportStyleModel> -> {
+                                val reportStyle = state.data.type
+                                updateReportStyleUi(reportStyle = reportStyle)
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.updateReportStyleResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<ReportStyle> -> {
+                                val reportStyle = state.data
+                                updateReportStyleUi(reportStyle = reportStyle)
+                                Toast.makeText(context, "분위기가 변경되었습니다.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -126,8 +170,15 @@ class CounselingWeeklyReportFragment : Fragment(R.layout.fragment_counseling_wee
         }
     }
 
+    private fun updateReportStyleUi(reportStyle: ReportStyle) = with(binding) {
+        cvCounselingWeeklyReportStyleSharp.isSelected = (reportStyle == ReportStyle.SHARP)
+        cvCounselingWeeklyReportStyleSoft.isSelected = (reportStyle == ReportStyle.SOFT)
+        cvCounselingWeeklyReportStyleObjective.isSelected = (reportStyle == ReportStyle.OBJECTIVE)
+    }
+
     private fun fetchData() {
         viewModel.fetchWeeklyReport()
         viewModel.fetchNotificationStatus()
+        viewModel.fetchWeeklyReportStyle()
     }
 }
