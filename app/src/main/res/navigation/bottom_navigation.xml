@@ -12,7 +12,16 @@
     <fragment
         android:id="@+id/menu_diary"
         android:name="com.example.egobook_frontent.ui.diary.DiaryFragment"
-        android:label="감정일기" />
+        android:label="감정일기">
+        <!-- diaryWriteFragment로의 이동 액션 추가 -->
+        <action
+            android:id="@+id/action_diaryFragment_to_diaryWriteFragment"
+            app:destination="@id/diaryWriteFragment" />
+        <!-- CandlerFragment로의 이동 액션 추가 -->
+        <action
+            android:id="@+id/action_diaryFragment_to_candlerFragment"
+            app:destination="@id/candlerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/menu_ego_room"
         android:name="com.example.egobook_frontent.ui.counseling.EgoRoomFragment"
@@ -21,11 +30,24 @@
         android:id="@+id/menu_square"
         android:name="com.example.egobook_frontent.ui.counseling.view.CounselingMainFragment"
         android:label="광장"
-        tools:layout="@layout/fragment_counseling_main" >
+        tools:layout="@layout/fragment_counseling_main">
         <action
             android:id="@+id/action_menu_square_to_counselingWeeklyReportDetailFragment"
             app:destination="@id/counselingWeeklyReportDetailFragment" />
     </fragment>
+
+    <!-- diaryWriteFragment로의 목적지 정의 -->
+    <fragment
+        android:id="@+id/diaryWriteFragment"
+        android:name="com.example.egobook_frontent.ui.diary.DiaryWriteFragment"
+        android:label="일기 작성" />
+
+    <!-- CandlerFragment로의 목적지 정의 -->
+    <fragment
+        android:id="@+id/candlerFragment"
+        android:name="com.example.egobook_frontent.ui.diary.CandlerFragment"
+        android:label="달력 화면" />
+     
     <fragment
         android:id="@+id/counselingWeeklyReportFragment"
         android:name="com.example.egobook_frontent.ui.counseling.view.CounselingWeeklyReportFragment"

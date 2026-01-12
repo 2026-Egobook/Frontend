@@ -1,6 +1,6 @@
 package com.example.egobook_frontent.di
 
-import com.example.egobook_frontent.data.api.CounselingService
+import com.example.egobook_frontent.data.api.CounselingApiService
 import com.example.egobook_frontent.data.api.NotificationService
 import dagger.Module
 import dagger.Provides
@@ -15,8 +15,8 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
-    fun provideCounselingService(retrofit: Retrofit): CounselingService {
-        return retrofit.create(CounselingService::class.java)
+    fun provideCounselingService(retrofit: Retrofit): CounselingApiService {
+        return retrofit.create(CounselingApiService::class.java)
     }
 
     @Provides
