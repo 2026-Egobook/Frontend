@@ -1,7 +1,7 @@
 package com.example.egobook_frontent.di
 
 import com.example.egobook_frontent.data.api.CounselingApiService
-import com.example.egobook_frontent.data.api.NotificationService
+import com.example.egobook_frontent.data.api.NotificationApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,8 +21,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideNotificationService(retrofit: Retrofit): NotificationService {
-        return retrofit.create(NotificationService::class.java)
+    fun provideNotificationService(retrofit: Retrofit): NotificationApiService {
+        return retrofit.create(NotificationApiService::class.java)
     }
 
     @Provides

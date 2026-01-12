@@ -6,7 +6,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 
-interface NotificationService {
+interface NotificationApiService {
     @GET("api/notification/settings")
     suspend fun getNotificationStatus(): Response<NotificationResponse>
 

@@ -1,7 +1,6 @@
 package com.example.egobook_frontent.data.repository
 
-import com.example.egobook_frontent.data.api.CounselingService
-import com.example.egobook_frontent.data.model.counseling.toDomain
+import com.example.egobook_frontent.data.api.CounselingApiService
 import com.example.egobook_frontent.domain.model.PraiseMessage
 import com.example.egobook_frontent.domain.model.ReportStyle
 import com.example.egobook_frontent.domain.model.WeeklyReport
@@ -10,7 +9,7 @@ import com.example.egobook_frontent.domain.model.WeeklyReportStyle
 import com.example.egobook_frontent.domain.repository.CounselingRepository
 import javax.inject.Inject
 
-class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingService): CounselingRepository {
+class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingApiService): CounselingRepository {
     override suspend fun getDailyPraise(): Result<List<PraiseMessage>> = try {
 //        val response = apiService.fetchDailyPraise()
 //        if(response.isSuccessful && response.body() != null) {

@@ -1,13 +1,12 @@
 package com.example.egobook_frontent.data.repository
 
-import com.example.egobook_frontent.data.api.NotificationService
-import com.example.egobook_frontent.data.model.notification.toDomain
+import com.example.egobook_frontent.data.api.NotificationApiService
 import com.example.egobook_frontent.domain.model.Notification
 import com.example.egobook_frontent.domain.model.NotificationType
 import com.example.egobook_frontent.domain.repository.NotificationRepository
 import javax.inject.Inject
 
-class NotificationRepositoryImpl @Inject constructor(private val apiService: NotificationService): NotificationRepository {
+class NotificationRepositoryImpl @Inject constructor(private val apiService: NotificationApiService): NotificationRepository {
     override suspend fun getNotificationStatus(): Result<Notification> = try {
 //        val response = apiService.getNotificationStatus()
 //        if(response.isSuccessful && response.body() != null) {
