@@ -17,4 +17,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_start_egobook"
+        android:layout_width="328dp"
+        android:layout_height="48dp"
+        android:text="에고북 시작하기"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/arita_semibold"
+        app:cornerRadius="4dp"
+        android:layout_margin="16dp"
+        app:backgroundTint="@color/brand_grass"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
