@@ -45,13 +45,22 @@
 
     <ImageView
         android:id="@+id/img_onboarding_1_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="215dp"
+        android:layout_height="217dp"
         android:src="@drawable/img_onboarding_1_1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="151.65dp"
         android:layout_marginStart="17.84dp"/>
 
+    <ImageView
+        android:id="@+id/img_onboarding_1_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_onboarding_1_2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="329.17dp"
+        android:layout_marginStart="136.06dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
