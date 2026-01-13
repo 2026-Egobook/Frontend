@@ -43,5 +43,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"/>
 
+    <ImageView
+        android:id="@+id/img_onboarding_1_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_onboarding_1_1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="151.65dp"
+        android:layout_marginStart="17.84dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
