@@ -42,36 +42,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"/>
-    
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="235dp"
         android:layout_height="340dp"
         android:padding="10dp"
-        android:layout_marginTop="228dp"
+        android:layout_marginTop="227dp"
         android:layout_marginStart="53.5dp"
         android:background="@drawable/bg_onboarding_image_container1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:elevation="5dp">
 
-        <com.google.android.material.card.MaterialCardView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/bg_card_no_bottom"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:strokeColor="@color/cos_grey">
+            android:padding="1dp">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_onboarding_4_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/img_onboarding_4_1"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.OnboardingCard"/>
 
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_onboarding_4_2"
@@ -81,9 +82,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="157.6dp"
-        android:layout_marginStart="195dp"
-        app:strokeWidth="0dp"
-        app:cardElevation="8dp">
+        android:layout_marginStart="191dp"
+        app:cardElevation="8dp"
+        app:strokeWidth="0dp">
 
         <ImageView
             android:id="@+id/iv_onboarding_4_2"
