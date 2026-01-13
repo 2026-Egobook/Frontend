@@ -221,6 +221,7 @@
                 android:layout_width="0dp"
                 android:layout_height="72dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/cardview_background"
                 app:contentPaddingBottom="8dp"
                 app:contentPaddingLeft="16dp"
