@@ -1,9 +1,11 @@
 package com.example.egobook_frontent
 
 import com.example.egobook_frontent.ui.home.Level
+import com.example.egobook_frontent.ui.home.Ink
 import com.example.egobook_frontent.ui.home.LevelType
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -22,6 +24,12 @@ class UserStateTest {
     fun `올바르지 않은 레벨 값은 예외를 반환한다`(invalidLevelNumber: Int) {
         assertThatThrownBy { Level(invalidLevelNumber) }
             .isInstanceOf(IllegalStateException::class.java)
+    }
+
+    @Test
+    fun `잉크 값이 음수라면 예외를 반환한다`() {
+       assertThatThrownBy { Ink(-1) }
+           .isInstanceOf(java.lang.IllegalStateException::class.java)
     }
 
     companion object {
