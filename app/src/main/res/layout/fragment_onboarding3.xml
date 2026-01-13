@@ -43,4 +43,60 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="209dp"
+        android:layout_height="321dp"
+        android:padding="10dp"
+        android:layout_marginTop="157dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/bg_onboarding_image_container1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:elevation="5dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_onboarding_3_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:strokeColor="@color/cos_grey"
+            app:cardBackgroundColor="@color/white">
+
+            <ImageView
+                android:id="@+id/iv_onboarding_3_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_onboarding_3_1"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="7dp"/>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="212dp"
+        android:layout_height="298dp"
+        android:padding="10dp"
+        android:layout_marginTop="267dp"
+        android:layout_marginStart="134dp"
+        android:background="@drawable/bg_onboarding_image_container1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:elevation="8dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_onboarding_3_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:strokeColor="@color/cos_grey"
+            app:cardBackgroundColor="@color/white">
+
+            <ImageView
+                android:id="@+id/iv_onboarding_3_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_onboarding_3_2"
+                android:scaleType="centerCrop"/>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
