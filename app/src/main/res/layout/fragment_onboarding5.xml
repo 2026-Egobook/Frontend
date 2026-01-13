@@ -7,16 +7,6 @@
     android:background="@color/white"
     tools:context=".ui.onboarding.view.OnboardingFragment5">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="hello5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gd_text"
         android:layout_width="wrap_content"
@@ -24,6 +14,34 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="64dp"/>
 
+    <TextView
+        android:id="@+id/tv_onboarding_5_1"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="@id/gd_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_onboarding_5_2"
+        android:text="고북이 꾸미기"
+        android:textSize="20sp"
+        android:textColor="@color/brand_grass"
+        android:fontFamily="@font/arita_semibold"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_onboarding_5_2"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="4dp"
+        android:text="다양한 활동을 통해 얻은 잉크로\n나만의 고북이를 꾸며봐요"
+        android:textSize="14sp"
+        android:textColor="@color/cos_black"
+        android:fontFamily="@font/arita_medium"
+        android:lineHeight="21sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_onboarding_5_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"/>
 
 
     <com.google.android.material.button.MaterialButton

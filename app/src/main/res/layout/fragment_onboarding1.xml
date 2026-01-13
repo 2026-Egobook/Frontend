@@ -7,18 +7,6 @@
     android:background="@color/white"
     tools:context=".ui.onboarding.view.OnboardingFragment1">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="hello1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gd_text"
         android:layout_width="wrap_content"
@@ -26,6 +14,34 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="64dp"/>
 
+    <TextView
+        android:id="@+id/tv_onboarding_1_1"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="@id/gd_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_onboarding_1_2"
+        android:text="건강한 습관 형성"
+        android:textSize="20sp"
+        android:textColor="@color/brand_grass"
+        android:fontFamily="@font/arita_semibold"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_onboarding_1_2"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="4dp"
+        android:text="매일 새로운 심리지식과 함께\n오늘의 습관을 만들어가요"
+        android:textSize="14sp"
+        android:textColor="@color/cos_black"
+        android:fontFamily="@font/arita_medium"
+        android:lineHeight="21sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_onboarding_1_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
