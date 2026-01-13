@@ -25,13 +25,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="매일 월요일 자정 에고북이 작성한 리포트가 도착해요" />
+            tools:text="매일 월요일 자정 에고북이 작성한 리포트가 도착해요" />
 
         <ImageView
             android:id="@+id/iv_counseling_weekly_report_notification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_notification_on" />
+            tools:src="@drawable/ic_notification_on" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -51,6 +51,7 @@
             android:text="다음주 리포트 스타일"
             android:layout_marginEnd="8dp"/>
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_counseling_weekly_report_style_sharp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -68,6 +69,7 @@
                 android:textColor="@color/selector_weekly_report_style_text"/>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_counseling_weekly_report_style_soft"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -85,6 +87,7 @@
                 android:textColor="@color/selector_weekly_report_style_text"/>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_counseling_weekly_report_style_objective"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
