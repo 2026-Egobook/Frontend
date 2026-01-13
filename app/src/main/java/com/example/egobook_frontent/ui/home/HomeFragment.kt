@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentHomeBinding
 import kotlinx.coroutines.launch
 
@@ -30,10 +31,22 @@ class HomeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { userState ->
                     binding.tvLevel.text = "Lv ${userState.level.number}"
-                    binding.ivLevelType.setImageResource(userState.level.type.badgeUiId)
+                    binding.ivLevelType.setImageResource(userState.level.type.getResId())
                     binding.tvInk.text = "${userState.ink.value}"
                 }
             }
+        }
+    }
+    private fun LevelType.getResId(): Int {
+        return when(this) {
+            LevelType.ONE -> R.drawable.level_type_1
+            LevelType.TWO -> R.drawable.level_type_2
+            LevelType.THREE -> R.drawable.level_type_3
+            LevelType.FOUR -> R.drawable.level_type_4
+            LevelType.FIVE -> R.drawable.level_type_5
+            LevelType.SIX -> R.drawable.level_type_6
+            LevelType.SEVEN -> R.drawable.level_type_7
+            LevelType.EIGHT -> R.drawable.level_type_8
         }
     }
 }
