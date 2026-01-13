@@ -2,14 +2,55 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/default_background" >
+    
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/left_icon"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp" />
+
+    <LinearLayout
+        android:id="@+id/ink_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginStart="9dp"
+        android:background="@drawable/layer_white_circle"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@id/iv_back"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Store!!" />
+        android:layout_marginEnd="10dp" >
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ink_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
+            android:text="9999"
+            android:textColor="@color/neutral"
+            android:textSize="12dp" />
+    </LinearLayout>
+    
+    <ImageView
+        android:layout_width="283dp"
+        android:layout_height="203dp"
+        android:src="@drawable/default_turtle"
+        app:layout_constraintTop_toBottomOf="@id/ink_layout"
+        android:layout_marginTop="67dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
