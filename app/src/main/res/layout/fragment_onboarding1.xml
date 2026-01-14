@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/tv_onboarding_1_1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:text="건강한 습관 형성"
         android:textSize="20sp"
         android:textColor="@color/brand_grass"
@@ -25,12 +25,13 @@
         android:gravity="center"
         app:layout_constraintTop_toTopOf="@id/gd_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_onboarding_1_2"/>
 
     <TextView
         android:id="@+id/tv_onboarding_1_2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_marginTop="4dp"
         android:text="매일 새로운 심리지식과 함께\n오늘의 습관을 만들어가요"
         android:textSize="14sp"
