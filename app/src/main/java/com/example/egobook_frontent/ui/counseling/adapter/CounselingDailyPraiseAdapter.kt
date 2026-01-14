@@ -17,7 +17,7 @@ class CounselingDailyPraiseAdapter: ListAdapter<PraiseMessageModel, CounselingDa
         fun bind(item: PraiseMessageModel) = with(binding) {
             tvCounselingDailyPraiseDatetime.text = item.formattedDate
             tvCounselingDailyPraiseContent.text = item.messageText
-            ivCounselingDailyPraiseToggle.setOnClickListener {
+            root.setOnClickListener {
                 cvCounselingDailyPraiseContent.isVisible = !cvCounselingDailyPraiseContent.isVisible
                 ivCounselingDailyPraiseToggle.setImageResource(if(cvCounselingDailyPraiseContent.isVisible) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down)
             }
