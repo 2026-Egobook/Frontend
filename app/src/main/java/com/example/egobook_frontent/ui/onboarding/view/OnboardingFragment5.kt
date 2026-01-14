@@ -19,6 +19,7 @@ class OnboardingFragment5 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOnboarding5Binding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -28,6 +29,7 @@ class OnboardingFragment5 : Fragment() {
         binding.btnStartEgobook.setOnClickListener {
             findNavController().navigate(R.id.action_onboarding_to_home)
         }
+
     }
 
     override fun onDestroyView() {
