@@ -52,19 +52,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+    <ImageView
+        android:id="@+id/iv_tab_layout_background"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:fontFamily="@font/arita"
+        android:src="@drawable/store_collection_background"
+        app:layout_constraintBottom_toTopOf="@id/vp2_store_collection_container"
+        app:layout_constraintStart_toStartOf="@id/vp2_store_collection_container"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/neutral_stroke"
+        app:layout_constraintStart_toStartOf="@id/tl_tabs"
+        app:layout_constraintEnd_toEndOf="@id/tl_tabs"
+        app:layout_constraintBottom_toBottomOf="@id/tl_tabs" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:tabPaddingBottom="12dp"
+        app:tabPaddingStart="16dp"
+        app:tabTextAppearance="@style/StoreTabTextSize"
+        app:tabPaddingEnd="16dp"
+        app:tabPaddingTop="12dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabMaxWidth="66dp"
         app:tabRippleColor="@color/transparent"
-        app:tabIndicatorColor="@color/brand"
+        app:tabIndicator="@drawable/store_tab_indicator"
+        app:tabIndicatorColor="@null"
+        app:tabIndicatorHeight="2dp"
+        app:tabIndicatorFullWidth="true"
         app:tabSelectedTextColor="@color/neutral"
         app:tabTextColor="@color/neutral_subtle"
-        app:layout_constraintBottom_toTopOf="@id/vp2_store_collection_container"
-        app:layout_constraintStart_toStartOf="@id/vp2_store_collection_container"
-        android:background="@drawable/store_collection_background"/>
-
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="@id/iv_tab_layout_background"
+        app:layout_constraintStart_toStartOf="@id/iv_tab_layout_background" />
+    
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp2_store_collection_container"
         android:layout_width="match_parent"

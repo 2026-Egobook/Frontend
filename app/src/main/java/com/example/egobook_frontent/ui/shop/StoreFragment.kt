@@ -29,7 +29,7 @@ class StoreFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewPager = binding.vp2StoreCollectionContainer
         viewPager.adapter = StoreCollectionAdapter(this)
-        val tabLayout = binding.tabLayout
+        val tabLayout = binding.tlTabs
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = ItemTab.of(position).text
         }.attach()
