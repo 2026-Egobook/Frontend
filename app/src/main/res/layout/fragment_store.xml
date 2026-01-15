@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/default_background" >
+    android:background="@drawable/default_background">
     
     <ImageView
         android:id="@+id/iv_back"
@@ -52,5 +52,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:fontFamily="@font/arita"
+        app:tabRippleColor="@color/transparent"
+        app:tabIndicatorColor="@color/brand"
+        app:tabSelectedTextColor="@color/neutral"
+        app:tabTextColor="@color/neutral_subtle"
+        app:layout_constraintBottom_toTopOf="@id/vp2_store_collection_container"
+        app:layout_constraintStart_toStartOf="@id/vp2_store_collection_container"
+        android:background="@drawable/store_collection_background"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2_store_collection_container"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
