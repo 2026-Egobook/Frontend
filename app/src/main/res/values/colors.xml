@@ -35,4 +35,8 @@
     <color name="emotion_neutral">#F9E8B0</color>
     <color name="emotion_sad">#C6E9E4</color>
     <color name="emotion_very_sad">#A2C5E9</color>
+
+    <!-- stroke -->
+    <color name="neutral_stroke">#DBDBDB</color>
+
 </resources>

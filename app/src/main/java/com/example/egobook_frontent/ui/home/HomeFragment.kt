@@ -1,11 +1,11 @@
 package com.example.egobook_frontent.ui.home
 
 import android.os.Bundle
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +24,7 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: HomeViewModel by viewModels()
@@ -36,9 +37,13 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        binding.ivStore.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_storeFragment)
+        }
     }
+
     private fun LevelType.getResId(): Int {
-        return when(this) {
+        return when (this) {
             LevelType.ONE -> R.drawable.level_type_1
             LevelType.TWO -> R.drawable.level_type_2
             LevelType.THREE -> R.drawable.level_type_3
