@@ -22,4 +22,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Unit Tests # 테스트 코드 실행
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testDebugUnitTest --no-daemon
