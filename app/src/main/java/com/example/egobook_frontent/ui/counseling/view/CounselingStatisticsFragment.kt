@@ -10,14 +10,10 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.BubbleData
-import com.github.mikephil.charting.data.BubbleDataSet
-import com.github.mikephil.charting.data.BubbleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -108,41 +104,14 @@ class CounselingStatisticsFragment : Fragment(R.layout.fragment_counseling_stati
     }
 
     private fun initWordBubbleChart() = with(binding) {
-        val labels = listOf("매우 기쁨", "기쁨", "보통", "슬픔", "매우 슬픔")
-        val entries = listOf(
-            BubbleEntry(0f, 1f, 10f),
-            BubbleEntry(1f, 2f, 6f),
-            BubbleEntry(2f, 3f, 4f),
-            BubbleEntry(3f, 4f, 3f),
-            BubbleEntry(4f, 5f, 1f)
+        val data = listOf(
+            "매우 기쁨" to 10,
+            "기쁨" to 8,
+            "보통" to 7,
+            "슬픔" to 5,
+            "매우 슬픔" to 3
         )
-        val dataSet = BubbleDataSet(entries, "자주 쓴 단어").apply {
-            colors = listOf(
-                resources.getColor(R.color.emotion_very_happy, null),
-                resources.getColor(R.color.emotion_happy, null),
-                resources.getColor(R.color.emotion_neutral, null),
-                resources.getColor(R.color.emotion_sad, null),
-                resources.getColor(R.color.emotion_very_sad, null)
-            )
-            valueTextSize = 12f
-            valueTextColor = resources.getColor(R.color.black, null)
-            valueFormatter = object : ValueFormatter() {
-                override fun getBubbleLabel(bubbleEntry: BubbleEntry): String {
-                    val index = bubbleEntry.x.toInt()
-                    return labels[index]
-                }
-            }
-        }
-        with(bcCounselingStatisticsWordFrequency) {
-            data = BubbleData(dataSet)
-            description.isEnabled = false
-            legend.isEnabled = false
-            axisLeft.isEnabled = false
-            axisRight.isEnabled = false
-            xAxis.isEnabled = false
-            setTouchEnabled(false)
-            invalidate()
-        }
+        wbvCounselingStatisticsWordFrequency.setWords(data) // 차트 렌더링
     }
 
     private fun initHorizontalBar(layout: HorizontalBarChart, value: Float, label: String, colorRes: Int) {

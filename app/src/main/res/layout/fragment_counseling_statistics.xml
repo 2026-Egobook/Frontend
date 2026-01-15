@@ -446,8 +446,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <com.github.mikephil.charting.charts.BubbleChart
-                android:id="@+id/bc_counseling_statistics_word_frequency"
+            <com.example.egobook_frontent.ui.counseling.view.WordBubbleView
+                android:id="@+id/wbv_counseling_statistics_word_frequency"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginTop="12dp"
