@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentStoreBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -31,6 +33,10 @@ class StoreFragment: Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = ItemTab.of(position).text
         }.attach()
+
+        binding.ivBack.setOnClickListener {
+            findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
+        }
     }
 
     override fun onDestroyView() {
