@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_navigation"
-    app:startDestination="@id/menu_home">
+    app:startDestination="@id/onboardingContainerFragment">
 
     <fragment
         android:id="@+id/menu_home"
@@ -70,6 +70,21 @@
             android:name="weeklyReportItem"
             app:nullable="false"/>
     </fragment>
+
+    <!-- OnboardingContainerFragment로의 목적지 정의 -->
+    <fragment
+        android:id="@+id/onboardingContainerFragment"
+        android:name="com.example.egobook_frontent.ui.onboarding.view.OnboardingContainerFragment"
+        android:label="온보딩"
+        tools:layout="@layout/fragment_onboarding_container">
+        <action
+            android:id="@+id/action_onboarding_to_home"
+            app:destination="@id/menu_home"
+            app:popUpTo="@id/onboardingContainerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/storeFragment"

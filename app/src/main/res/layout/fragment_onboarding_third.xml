@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.onboarding.view.OnboardingThirdFragment"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gd_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="64dp"/>
+
+    <TextView
+        android:id="@+id/tv_onboarding_3_1"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="@id/gd_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_onboarding_3_2"
+        android:text="일기 칭찬서 &amp; 주간 레포트"
+        android:textSize="20sp"
+        android:textColor="@color/brand_grass"
+        android:fontFamily="@font/arita_semibold"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_onboarding_3_2"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="4dp"
+        android:text="감정일기를 바탕으로\nAI분석을 받아볼 수 있어요"
+        android:textSize="14sp"
+        android:textColor="@color/cos_black"
+        android:fontFamily="@font/arita_medium"
+        android:lineHeight="21sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_onboarding_3_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"/>
+
+    <FrameLayout
+        android:id="@+id/image_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_onboarding_3_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="209dp"
+            android:layout_height="321dp"
+            android:padding="10dp"
+            android:background="@drawable/bg_onboarding_image_container1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:elevation="5dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_onboarding_3_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:strokeColor="@color/cos_grey"
+                app:cardBackgroundColor="@color/white">
+
+                <ImageView
+                    android:id="@+id/iv_onboarding_3_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/img_onboarding_3_1"
+                    android:scaleType="centerCrop"
+                    android:layout_marginBottom="7dp"/>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="212dp"
+            android:layout_height="298dp"
+            android:padding="10dp"
+            android:layout_marginTop="112dp"
+            android:layout_marginStart="121dp"
+            android:background="@drawable/bg_onboarding_image_container1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:elevation="8dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_onboarding_3_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:strokeColor="@color/cos_grey"
+                app:cardBackgroundColor="@color/white">
+
+                <ImageView
+                    android:id="@+id/iv_onboarding_3_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/img_onboarding_3_2"
+                    android:scaleType="centerCrop"/>
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </FrameLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

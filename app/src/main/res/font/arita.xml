@@ -22,7 +22,7 @@
     <!-- SemiBold: 600 (이미지의 Date, semibold/m, s, lg, xl 대응) -->
     <font
         app:fontStyle="normal"
-        app:fontWeight="500"
+        app:fontWeight="600"
         app:font="@font/arita_semibold" />
 
     <!-- Bold: 700 -->
