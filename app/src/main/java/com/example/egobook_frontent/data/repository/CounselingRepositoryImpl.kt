@@ -1,15 +1,18 @@
 package com.example.egobook_frontent.data.repository
 
 import com.example.egobook_frontent.data.api.CounselingApiService
+import com.example.egobook_frontent.data.model.counseling.toDomain
 import com.example.egobook_frontent.domain.model.PraiseMessage
 import com.example.egobook_frontent.domain.model.ReportStyle
+import com.example.egobook_frontent.domain.model.Statistics
 import com.example.egobook_frontent.domain.model.WeeklyReport
 import com.example.egobook_frontent.domain.model.WeeklyReportContent
 import com.example.egobook_frontent.domain.model.WeeklyReportStyle
 import com.example.egobook_frontent.domain.repository.CounselingRepository
 import javax.inject.Inject
 
-class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingApiService): CounselingRepository {
+class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingApiService) :
+    CounselingRepository {
     override suspend fun getDailyPraise(): Result<List<PraiseMessage>> = try {
 //        val response = apiService.fetchDailyPraise()
 //        if(response.isSuccessful && response.body() != null) {
@@ -57,7 +60,8 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
 //        } else {
 //            Result.failure(Exception("Error: ${response.code()}"))
 //        }
-        val longDummyText = "이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리"
+        val longDummyText =
+            "이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리"
 
         val dummyWeeklyReports = listOf(
             WeeklyReport(
@@ -102,14 +106,26 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
     }
 
 
-    override suspend fun updateWeeklyReportStyle(reportStyle: ReportStyle): Result<ReportStyle> = try {
+    override suspend fun updateWeeklyReportStyle(reportStyle: ReportStyle): Result<ReportStyle> =
+        try {
 //        val response = apiService.updateWeeklyReportStyle(reportStyle = reportStyle)
 //        if(response.isSuccessful) {
 //            Result.success(reportStyle)
 //        } else {
 //            Result.failure(Exception("Error: ${response.code()}"))
 //        }
-        Result.success(reportStyle)
+            Result.success(reportStyle)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+
+    override suspend fun getStatistics(): Result<Statistics> = try {
+                val response = apiService.fetchStatistics()
+        if(response.isSuccessful && response.body() != null) {
+            Result.success(response.body()!!.toDomain())
+        } else {
+            Result.failure(Exception("Error: ${response.code()}"))
+        }
     } catch (e: Exception) {
         Result.failure(e)
     }

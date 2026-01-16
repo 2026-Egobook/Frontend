@@ -1,6 +1,7 @@
 package com.example.egobook_frontent.data.api
 
 import com.example.egobook_frontent.data.model.counseling.PraiseMessageResponse
+import com.example.egobook_frontent.data.model.counseling.StatisticsResponse
 import com.example.egobook_frontent.data.model.counseling.WeeklyReportResponse
 import com.example.egobook_frontent.data.model.counseling.WeeklyReportStyleResponse
 import com.example.egobook_frontent.domain.model.ReportStyle
@@ -21,4 +22,7 @@ interface CounselingApiService {
 
     @POST("api/reports/weekly/style")
     suspend fun updateWeeklyReportStyle(@Query("style") reportStyle: ReportStyle): Response<Unit>
+
+    @GET("api/statistics")
+    suspend fun fetchStatistics(): Response<StatisticsResponse>
 }
