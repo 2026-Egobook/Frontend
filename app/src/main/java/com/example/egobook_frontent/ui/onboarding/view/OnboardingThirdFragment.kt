@@ -5,18 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.egobook_frontent.databinding.FragmentOnboarding4Binding
+import com.example.egobook_frontent.databinding.FragmentOnboardingThirdBinding
 
-class OnboardingFragment4 : Fragment() {
+class OnboardingThirdFragment : Fragment() {
 
-    private var _binding: FragmentOnboarding4Binding? = null
+    private var _binding: FragmentOnboardingThirdBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOnboarding4Binding.inflate(inflater, container, false)
+        _binding = FragmentOnboardingThirdBinding.inflate(inflater, container, false)
         return binding.root
     }
 

@@ -2,20 +2,20 @@ package com.example.egobook_frontent.ui.onboarding.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.egobook_frontent.ui.onboarding.view.OnboardingFragment1
-import com.example.egobook_frontent.ui.onboarding.view.OnboardingFragment2
-import com.example.egobook_frontent.ui.onboarding.view.OnboardingFragment3
-import com.example.egobook_frontent.ui.onboarding.view.OnboardingFragment4
-import com.example.egobook_frontent.ui.onboarding.view.OnboardingFragment5
+import com.example.egobook_frontent.ui.onboarding.view.OnboardingFirstFragment
+import com.example.egobook_frontent.ui.onboarding.view.OnboardingSecondFragment
+import com.example.egobook_frontent.ui.onboarding.view.OnboardingThirdFragment
+import com.example.egobook_frontent.ui.onboarding.view.OnboardingFourthFragment
+import com.example.egobook_frontent.ui.onboarding.view.OnboardingFifthFragment
 
 class OnboardingVPAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> OnboardingFragment1()
-            1 -> OnboardingFragment2()
-            2 -> OnboardingFragment3()
-            3 -> OnboardingFragment4()
-            4 -> OnboardingFragment5()
+            0 -> OnboardingFirstFragment()
+            1 -> OnboardingSecondFragment()
+            2 -> OnboardingThirdFragment()
+            3 -> OnboardingFourthFragment()
+            4 -> OnboardingFifthFragment()
             else -> throw IllegalStateException("Invalid position: $position")
         }
     }

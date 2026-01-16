@@ -7,18 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.egobook_frontent.R
-import com.example.egobook_frontent.databinding.FragmentOnboarding5Binding
+import com.example.egobook_frontent.databinding.FragmentOnboardingFifthBinding
 
-class OnboardingFragment5 : Fragment() {
+class OnboardingFifthFragment : Fragment() {
 
-    private var _binding: FragmentOnboarding5Binding? = null
+    private var _binding: FragmentOnboardingFifthBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOnboarding5Binding.inflate(inflater, container, false)
+        _binding = FragmentOnboardingFifthBinding.inflate(inflater, container, false)
 
         return binding.root
     }
