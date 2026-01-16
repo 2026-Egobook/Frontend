@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.testRuntimeOnly
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -51,6 +53,13 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
+
 }
 
 dependencies {
@@ -81,7 +90,11 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    testImplementation(libs.junit)
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.assertj:assertj-core:3.27.6")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation("org.assertj:assertj-core:3.27.6")
     androidTestImplementation(libs.androidx.espresso.core)

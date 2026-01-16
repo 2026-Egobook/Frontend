@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/default_background">
+    
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/left_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp" />
+
+    <LinearLayout
+        android:id="@+id/ink_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginStart="9dp"
+        android:background="@drawable/layer_white_circle"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@id/iv_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="10dp" >
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ink_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
+            android:text="9999"
+            android:textColor="@color/neutral"
+            android:textSize="12dp" />
+    </LinearLayout>
+    
+    <ImageView
+        android:layout_width="283dp"
+        android:layout_height="203dp"
+        android:src="@drawable/default_turtle"
+        app:layout_constraintTop_toBottomOf="@id/ink_layout"
+        android:layout_marginTop="67dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_tab_layout_background"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:src="@drawable/store_collection_background"
+        app:layout_constraintBottom_toTopOf="@id/vp2_store_collection_container"
+        app:layout_constraintStart_toStartOf="@id/vp2_store_collection_container"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/neutral_stroke"
+        app:layout_constraintStart_toStartOf="@id/tl_tabs"
+        app:layout_constraintEnd_toEndOf="@id/tl_tabs"
+        app:layout_constraintBottom_toBottomOf="@id/tl_tabs" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:tabPaddingBottom="12dp"
+        app:tabPaddingStart="16dp"
+        app:tabTextAppearance="@style/StoreTabTextSize"
+        app:tabPaddingEnd="16dp"
+        app:tabPaddingTop="12dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabMaxWidth="66dp"
+        app:tabRippleColor="@color/transparent"
+        app:tabIndicator="@drawable/store_tab_indicator"
+        app:tabIndicatorColor="@null"
+        app:tabIndicatorHeight="2dp"
+        app:tabIndicatorFullWidth="true"
+        app:tabSelectedTextColor="@color/neutral"
+        app:tabTextColor="@color/neutral_subtle"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="@id/iv_tab_layout_background"
+        app:layout_constraintStart_toStartOf="@id/iv_tab_layout_background" />
+    
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2_store_collection_container"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

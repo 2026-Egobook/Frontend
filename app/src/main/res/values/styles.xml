@@ -38,4 +38,8 @@
     </style>
 
 
+    <style name="StoreTabTextSize" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12dp</item>
+        <item name="fontFamily">@font/arita_semibold</item>
+    </style>
 </resources>
