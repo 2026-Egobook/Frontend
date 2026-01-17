@@ -56,7 +56,7 @@
     </style>
 
     <!-- 로그인 화면 하단 버튼들 스타일 -->
-    <style name="LoginButtonStyle1" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="LoginButtonStyle1" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="backgroundTint">@android:color/white</item>
         <item name="cornerRadius">99dp</item>
 
@@ -74,7 +74,7 @@
         <item name="android:elevation">0dp</item>
     </style>
 
-    <style name="LoginButtonStyle2" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="LoginButtonStyle2" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="backgroundTint">@color/cos_grey2</item>
         <item name="cornerRadius">99dp</item>
 
