@@ -52,5 +52,41 @@
         <item name="cornerRadius">4dp</item>
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">@font/arita_semibold</item>
+        <item name="android:letterSpacing">-0.03</item>
+    </style>
+
+    <!-- 로그인 화면 하단 버튼들 스타일 -->
+    <style name="LoginButtonStyle1" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@android:color/white</item>
+        <item name="cornerRadius">99dp</item>
+
+        <item name="android:textColor">@color/cos_black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/arita_semibold</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+
+        <item name="iconTint">@null</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="LoginButtonStyle2" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@color/cos_grey2</item>
+        <item name="cornerRadius">99dp</item>
+
+        <item name="android:textColor">@color/cos_black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/arita_semibold</item>
+        <item name="android:gravity">center</item>
+
+        <item name="iconTint">@null</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+
+        <item name="android:elevation">0dp</item>
     </style>
 </resources>
