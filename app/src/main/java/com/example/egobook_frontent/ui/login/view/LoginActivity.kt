@@ -32,8 +32,18 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        // 💡 가이드 텍스트에 커스텀 폰트 적용
+        // 가이드 텍스트에 커스텀 폰트 적용
         setupGuideText()
+
+        setupClickListeners()
+    }
+
+    private fun setupClickListeners() {
+        binding.btnLogin.setOnClickListener {
+            // "로그인" 버튼을 누르면 바텀시트를 보여줍니다.
+            val loginBottomSheet = LoginBottomSheetFragment()
+            loginBottomSheet.show(supportFragmentManager, LoginBottomSheetFragment.TAG)
+        }
     }
 
     private fun setupGuideText() {
