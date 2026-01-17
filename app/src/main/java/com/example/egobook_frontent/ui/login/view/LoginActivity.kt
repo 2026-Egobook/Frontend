@@ -23,4 +23,5 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
     }
+
 }
