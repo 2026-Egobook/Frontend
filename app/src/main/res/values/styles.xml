@@ -75,7 +75,7 @@
     </style>
 
     <style name="LoginButtonStyle2" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="backgroundTint">@color/cos_grey2</item>
+        <item name="backgroundTint">@color/cos_light_grey</item>
         <item name="cornerRadius">99dp</item>
 
         <item name="android:textColor">@color/cos_black</item>
