@@ -30,15 +30,21 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setupWithNavController(navHostFragment.navController)
 
-        // navController변수 선언.
+        // navController변수 선언
         val navController = navHostFragment.navController
 
         // 목적지 변경 리스너 추가: 특정 프래그먼트에서 바텀바 숨기기
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.diaryWriteFragment) {
-                binding.bottomNavigation.visibility = View.GONE
-            } else {
-                binding.bottomNavigation.visibility = View.VISIBLE
+            when (destination.id) {
+                R.id.onboardingContainerFragment, // 온보딩 화면
+                R.id.diaryWriteFragment,        // 일기 작성 화면
+                R.id.candlerFragment            // 달력 화면
+                    -> {
+                    binding.bottomNavigation.visibility = View.GONE
+                }
+                else -> {
+                    binding.bottomNavigation.visibility = View.VISIBLE
+                }
             }
         }
     }
