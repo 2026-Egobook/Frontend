@@ -110,6 +110,7 @@ dependencies {
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
 
     implementation("me.relex:circleindicator:2.1.6")
+    implementation("com.github.Dimezis:BlurView:version-3.2.0")
 }
 
 kapt {

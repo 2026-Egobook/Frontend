@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
-import android.text.style.ClickableSpan
 import android.text.style.MetricAffectingSpan
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -15,10 +15,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.ActivityLoginBinding
+import eightbitlab.com.blurview.BlurTarget
+
 
 class LoginActivity : AppCompatActivity() {
-
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+
+    private val blurRadius = 5f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,17 +35,27 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        // 가이드 텍스트에 커스텀 폰트 적용
         setupGuideText()
-
+        setupBlur()
         setupClickListeners()
+
     }
 
+    private fun setupBlur() {
+        binding.blurView.setupWith(binding.blurTarget)
+            .setBlurRadius(blurRadius)
+            .setBlurAutoUpdate(true)
+    }
+
+    fun clearBlur() {
+        binding.blurView.visibility = View.GONE
+    }
     private fun setupClickListeners() {
         binding.btnLogin.setOnClickListener {
-            // "로그인" 버튼을 누르면 바텀시트를 보여줍니다.
-            val loginBottomSheet = LoginBottomSheetFragment()
-            loginBottomSheet.show(supportFragmentManager, LoginBottomSheetFragment.TAG)
+            binding.blurView.visibility = View.VISIBLE
+
+            LoginBottomSheetFragment()
+                .show(supportFragmentManager, LoginBottomSheetFragment.TAG)
         }
     }
 
@@ -50,10 +63,10 @@ class LoginActivity : AppCompatActivity() {
         val fullText = "시작 시 이용약관 및\n개인정보 수집 및 이용에 동의하게 됩니다"
         val spannableString = SpannableString(fullText)
 
-        // 1. 폰트 리소스를 Typeface 객체로 불러옴.
+        // 폰트 리소스를 Typeface 객체로 불러옴.
         val semiBoldTypeface = ResourcesCompat.getFont(this, R.font.arita_semibold) ?: return
 
-        // 2. 폰트를 적용할 텍스트 ("이용약관")
+        // 폰트를 적용할 텍스트 ("이용약관")
         val target1 = "이용약관"
         val start1 = fullText.indexOf(target1)
         if (start1 >= 0) {
@@ -61,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
             spannableString.setSpan(CustomTypefaceSpan(semiBoldTypeface), start1, end1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
-        // 3. 폰트를 적용할 텍스트 ("개인정보 수집 및 이용")
+        // 폰트를 적용할 텍스트 ("개인정보 수집 및 이용")
         val target2 = "개인정보 수집 및 이용"
         val start2 = fullText.indexOf(target2)
         if (start2 >= 0) {
@@ -69,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
             spannableString.setSpan(CustomTypefaceSpan(semiBoldTypeface), start2, end2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
-        // 4. 완성된 SpannableString을 TextView에 적용합니다.
+        // 완성된 SpannableString을 TextView에 적용
         binding.tvStartGuide.text = spannableString
     }
 
