@@ -10,13 +10,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.egobook_frontent"
+    namespace = "com.example.egobook"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.egobook_frontent"
+        applicationId = "com.example.egobook"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -24,7 +24,7 @@ android {
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner = "com.example.egobook_frontent.HiltTestRunner"
+        testInstrumentationRunner = "com.example.egobook.HiltTestRunner"
 
     }
 

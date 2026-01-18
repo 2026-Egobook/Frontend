@@ -7,11 +7,11 @@
 
     <fragment
         android:id="@+id/menu_home"
-        android:name="com.example.egobook_frontent.ui.home.HomeFragment"
+        android:name="com.example.egobook.ui.home.HomeFragment"
         android:label="홈" />
     <fragment
         android:id="@+id/menu_diary"
-        android:name="com.example.egobook_frontent.ui.diary.DiaryFragment"
+        android:name="com.example.egobook.ui.diary.DiaryFragment"
         android:label="감정일기">
         <!-- diaryWriteFragment로의 이동 액션 추가 -->
         <action
@@ -24,11 +24,11 @@
     </fragment>
     <fragment
         android:id="@+id/menu_ego_room"
-        android:name="com.example.egobook_frontent.ui.counseling.EgoRoomFragment"
+        android:name="com.example.egobook.ui.counseling.EgoRoomFragment"
         android:label="에고룸" />
     <fragment
         android:id="@+id/menu_square"
-        android:name="com.example.egobook_frontent.ui.counseling.view.CounselingMainFragment"
+        android:name="com.example.egobook.ui.counseling.view.CounselingMainFragment"
         android:label="광장"
         tools:layout="@layout/fragment_counseling_main">
         <action
@@ -39,27 +39,27 @@
     <!-- diaryWriteFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/diaryWriteFragment"
-        android:name="com.example.egobook_frontent.ui.diary.DiaryWriteFragment"
+        android:name="com.example.egobook.ui.diary.DiaryWriteFragment"
         android:label="일기 작성" />
 
     <!-- CandlerFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/candlerFragment"
-        android:name="com.example.egobook_frontent.ui.diary.CandlerFragment"
+        android:name="com.example.egobook.ui.diary.CandlerFragment"
         android:label="달력 화면" />
      
     <fragment
         android:id="@+id/counselingWeeklyReportFragment"
-        android:name="com.example.egobook_frontent.ui.counseling.view.CounselingWeeklyReportFragment"
+        android:name="com.example.egobook.ui.counseling.view.CounselingWeeklyReportFragment"
         android:label="fragment_counseling_weekly_report"
         tools:layout="@layout/fragment_counseling_weekly_report" >
     </fragment>
     <fragment
         android:id="@+id/counselingWeeklyReportDetailFragment"
-        android:name="com.example.egobook_frontent.ui.counseling.view.CounselingWeeklyReportDetailFragment"
+        android:name="com.example.egobook.ui.counseling.view.CounselingWeeklyReportDetailFragment"
         android:label="CounselingWeeklyReportDetailFragment"
         tools:layout="@layout/fragment_counseling_weekly_report_detail">
-        <argument app:argType="com.example.egobook_frontent.ui.counseling.model.WeeklyReportModel"
+        <argument app:argType="com.example.egobook.ui.counseling.model.WeeklyReportModel"
             android:name="weeklyReportItem"
             app:nullable="false"/>
     </fragment>
