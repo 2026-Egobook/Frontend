@@ -71,19 +71,22 @@ class CounselingStatisticsFragment : Fragment(R.layout.fragment_counseling_stati
         val badTotalCnt = statisticsInfo.emotions[EmotionType.BAD]?.totalCnt ?: 0
         val veryBadTotalCnt = statisticsInfo.emotions[EmotionType.VERY_BAD]?.totalCnt ?: 0
 
-        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountVeryHappy, value = veryGoodTotalCnt.toFloat(), label = "VeryHappy", colorRes = R.color.emotion_very_happy)
+        val counts = listOf(veryGoodTotalCnt, goodTotalCnt, normalTotalCnt, badTotalCnt, veryBadTotalCnt)
+        val maxCount = counts.maxOrNull()?.toFloat() ?: 0f
+
+        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountVeryHappy, value = veryGoodTotalCnt.toFloat(), label = "VeryHappy", colorRes = R.color.emotion_very_happy, maxValue = maxCount)
         tvCounselingStatisticsTotalCountVeryHappyCount.text = "${veryGoodTotalCnt}회"
 
-        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountHappy, value = goodTotalCnt.toFloat(), label = "Happy", colorRes = R.color.emotion_happy)
+        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountHappy, value = goodTotalCnt.toFloat(), label = "Happy", colorRes = R.color.emotion_happy, maxValue = maxCount)
         tvCounselingStatisticsTotalCountHappyCount.text = "${goodTotalCnt}회"
 
-        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountNeutral, value = normalTotalCnt.toFloat(), label = "Neutral", colorRes = R.color.emotion_neutral)
+        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountNeutral, value = normalTotalCnt.toFloat(), label = "Neutral", colorRes = R.color.emotion_neutral, maxValue = maxCount)
         tvCounselingStatisticsTotalCountNeutralCount.text = "${normalTotalCnt}회"
 
-        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountSad, value = badTotalCnt.toFloat(), label = "Sad", colorRes = R.color.emotion_sad)
+        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountSad, value = badTotalCnt.toFloat(), label = "Sad", colorRes = R.color.emotion_sad, maxValue = maxCount)
         tvCounselingStatisticsTotalCountSadCount.text = "${badTotalCnt}회"
 
-        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountVerySad, value = veryBadTotalCnt.toFloat(), label = "VerySad", colorRes = R.color.emotion_very_sad)
+        initHorizontalBar(layout = hbcCounselingStatisticsTotalCountVerySad, value = veryBadTotalCnt.toFloat(), label = "VerySad", colorRes = R.color.emotion_very_sad, maxValue = maxCount)
         tvCounselingStatisticsTotalCountVerySadCount.text = "${veryBadTotalCnt}회"
     }
 
@@ -237,18 +240,24 @@ class CounselingStatisticsFragment : Fragment(R.layout.fragment_counseling_stati
         wbvCounselingStatisticsWordFrequency.setWords(data) // 차트 렌더링
     }
 
-    private fun initHorizontalBar(layout: HorizontalBarChart, value: Float, label: String, colorRes: Int) {
+    private fun initHorizontalBar(layout: HorizontalBarChart, value: Float, label: String, colorRes: Int, maxValue: Float) {
         val entries = listOf(BarEntry(0f, value))
         val dataSet = BarDataSet(entries, label).apply {
             color = resources.getColor(colorRes, null)
         }
         with(layout) {
             data = BarData(dataSet)
+
             description.isEnabled = false // 차트 오른쪽 하단 라벨(설명 문구)을 제거한다.
             legend.isEnabled = false // 범례(데이터 색상이 무엇을 뜻하는지 설명하는 박스)를 제거한다.
+
             xAxis.isEnabled = false // X축 라인과 축에 적히는 값(0, 1, 2...)을 모두 숨긴다.
+
+            axisLeft.axisMinimum = 0f
+            axisLeft.axisMaximum = maxValue
             axisLeft.isEnabled = false // Y축 왼쪽 수치 가이드라인을 숨긴다.
             axisRight.isEnabled = false // Y축 오른쪽 수치 가이드라인을 숨긴다.
+
             setTouchEnabled(false) // 사용자의 터치 인터렉션을 막는다.
             invalidate() // 화면을 다시 그린다.
         }

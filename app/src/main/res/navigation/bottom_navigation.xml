@@ -72,7 +72,7 @@
     <!-- OnboardingContainerFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/onboardingContainerFragment"
-        android:name="com.example.egobook_frontent.ui.onboarding.view.OnboardingContainerFragment"
+        android:name="com.example.egobook.ui.onboarding.view.OnboardingContainerFragment"
         android:label="온보딩"
         tools:layout="@layout/fragment_onboarding_container">
         <action
@@ -86,7 +86,7 @@
 
     <fragment
         android:id="@+id/storeFragment"
-        android:name="com.example.egobook_frontent.ui.shop.StoreFragment" >
+        android:name="com.example.egobook.ui.shop.StoreFragment" >
 
         <action
             android:id="@+id/action_storeFragment_to_homeFragment"
