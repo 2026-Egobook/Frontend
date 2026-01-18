@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.egobook_frontent.R
@@ -34,6 +35,7 @@ class StoreFragment: Fragment() {
             v.setPadding(0, 0, 0, systemBars.bottom)
             insets
         }
+
         viewPager = binding.vp2StoreCollectionContainer
         viewPager.adapter = StoreCollectionAdapter(this)
         val tabLayout = binding.tlTabs
@@ -44,6 +46,7 @@ class StoreFragment: Fragment() {
         binding.ivBack.setOnClickListener {
             findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
         }
+
     }
 
     override fun onDestroyView() {
