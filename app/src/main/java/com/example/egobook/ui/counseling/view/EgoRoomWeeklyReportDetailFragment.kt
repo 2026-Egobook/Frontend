@@ -2,22 +2,22 @@ package com.example.egobook.ui.counseling.view
 
 import android.os.Bundle
 import android.view.View
-import com.example.egobook.R
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.egobook.databinding.FragmentCounselingWeeklyReportDetailBinding
+import com.example.egobook.R
+import com.example.egobook.databinding.FragmentEgoRoomWeeklyReportDetailBinding
 import com.example.egobook.ui.counseling.model.WeeklyReportModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CounselingWeeklyReportDetailFragment : Fragment(R.layout.fragment_counseling_weekly_report_detail) {
-    private lateinit var binding: FragmentCounselingWeeklyReportDetailBinding
-    private val args: CounselingWeeklyReportDetailFragmentArgs by navArgs()
+class EgoRoomWeeklyReportDetailFragment : Fragment(R.layout.fragment_ego_room_weekly_report_detail) {
+    private lateinit var binding: FragmentEgoRoomWeeklyReportDetailBinding
+    private val args: EgoRoomWeeklyReportDetailFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentCounselingWeeklyReportDetailBinding.bind(view)
+        binding = FragmentEgoRoomWeeklyReportDetailBinding.bind(view)
         val weeklyReportItem: WeeklyReportModel = args.weeklyReportItem
         initViews(weeklyReportItem)
         initListeners()

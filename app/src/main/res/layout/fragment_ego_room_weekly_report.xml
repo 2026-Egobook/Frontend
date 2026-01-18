@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.counseling.view.CounselingWeeklyReportFragment">
+    tools:context=".ui.counseling.view.EgoRoomWeeklyReportFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_counseling_weekly_report_notification"

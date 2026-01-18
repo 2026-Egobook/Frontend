@@ -2,16 +2,16 @@ package com.example.egobook.ui.counseling.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.egobook.ui.counseling.view.CounselingDailyPraiseFragment
-import com.example.egobook.ui.counseling.view.CounselingStatisticsFragment
-import com.example.egobook.ui.counseling.view.CounselingWeeklyReportFragment
+import com.example.egobook.ui.counseling.view.EgoRoomDailyPraiseFragment
+import com.example.egobook.ui.counseling.view.EgoRoomStatisticsFragment
+import com.example.egobook.ui.counseling.view.EgoRoomWeeklyReportFragment
 
 class CounselingMainAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> CounselingDailyPraiseFragment()
-            1 -> CounselingWeeklyReportFragment()
-            else -> CounselingStatisticsFragment()
+            0 -> EgoRoomDailyPraiseFragment()
+            1 -> EgoRoomWeeklyReportFragment()
+            else -> EgoRoomStatisticsFragment()
         }
     }
 

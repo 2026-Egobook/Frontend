@@ -1,11 +1,11 @@
 package com.example.egobook.ui.counseling.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.egobook.R
-import com.example.egobook.databinding.FragmentCounselingDailyPraiseBinding
+import com.example.egobook.databinding.FragmentEgoRoomDailyPraiseBinding
 import com.example.egobook.domain.model.NotificationType
 import com.example.egobook.ui.counseling.adapter.CounselingDailyPraiseAdapter
 import com.example.egobook.ui.counseling.viewmodel.DailyPraiseViewModel
@@ -23,9 +23,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CounselingDailyPraiseFragment : Fragment(R.layout.fragment_counseling_daily_praise) {
+class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_praise) {
 
-    private lateinit var binding: FragmentCounselingDailyPraiseBinding
+    private lateinit var binding: FragmentEgoRoomDailyPraiseBinding
     private val viewModel: DailyPraiseViewModel by viewModels()
     private val counselingDailyPraiseAdapter = CounselingDailyPraiseAdapter()
     private var isNotificationEnabled: Boolean? = null
@@ -33,7 +33,7 @@ class CounselingDailyPraiseFragment : Fragment(R.layout.fragment_counseling_dail
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentCounselingDailyPraiseBinding.bind(view)
+        binding = FragmentEgoRoomDailyPraiseBinding.bind(view)
         initViews()
         initListeners()
         initObservers()
@@ -114,7 +114,7 @@ class CounselingDailyPraiseFragment : Fragment(R.layout.fragment_counseling_dail
     }
 
     private fun updateNotificationUi(isEnabled: Boolean) = with(binding) {
-        this@CounselingDailyPraiseFragment.isNotificationEnabled = isEnabled
+        this@EgoRoomDailyPraiseFragment.isNotificationEnabled = isEnabled
         if(isEnabled) {
             tvCounselingDailyPraiseNotification.text = getString(R.string.counseling_daily_praise_notification_on)
             ivCounselingDailyPraiseNotification.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_notification_on))

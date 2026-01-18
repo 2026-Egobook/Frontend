@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.counseling.view.CounselingStatisticsFragment">
+        tools:context=".ui.counseling.view.EgoRoomStatisticsFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_counseling_statistics_total_count"

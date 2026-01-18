@@ -1,11 +1,11 @@
 package com.example.egobook.ui.counseling.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.egobook.R
-import com.example.egobook.databinding.FragmentCounselingWeeklyReportBinding
+import com.example.egobook.databinding.FragmentEgoRoomWeeklyReportBinding
 import com.example.egobook.domain.model.NotificationType
 import com.example.egobook.domain.model.ReportStyle
 import com.example.egobook.ui.counseling.adapter.CounselingWeeklyReportAdapter
@@ -26,18 +26,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CounselingWeeklyReportFragment : Fragment(R.layout.fragment_counseling_weekly_report) {
-    private lateinit var binding: FragmentCounselingWeeklyReportBinding
+class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_report) {
+    private lateinit var binding: FragmentEgoRoomWeeklyReportBinding
     private val viewModel: WeeklyReportViewModel by viewModels()
     private val counselingWeeklyReportAdapter = CounselingWeeklyReportAdapter { item ->
-        val action = CounselingMainFragmentDirections.actionMenuSquareToCounselingWeeklyReportDetailFragment(weeklyReportItem = item)
+        val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(weeklyReportItem = item)
         findNavController().navigate(action)
     }
     private var isNotificationEnabled: Boolean? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentCounselingWeeklyReportBinding.bind(view)
+        binding = FragmentEgoRoomWeeklyReportBinding.bind(view)
         initViews()
         initListeners()
         initObservers()
@@ -160,7 +160,7 @@ class CounselingWeeklyReportFragment : Fragment(R.layout.fragment_counseling_wee
     }
 
     private fun updateNotificationUi(isEnabled: Boolean) = with(binding) {
-        this@CounselingWeeklyReportFragment.isNotificationEnabled = isEnabled
+        this@EgoRoomWeeklyReportFragment.isNotificationEnabled = isEnabled
         if(isEnabled) {
             tvCounselingWeeklyReportNotification.text = getString(R.string.counseling_weekly_report_notification_on)
             ivCounselingWeeklyReportNotification.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_notification_on))

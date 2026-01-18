@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.egobook.R
-import com.example.egobook.databinding.FragmentCounselingStatisticsBinding
+import com.example.egobook.databinding.FragmentEgoRoomStatisticsBinding
 import com.example.egobook.domain.model.EmotionType
 import com.example.egobook.ui.counseling.model.StatisticsModel
 import com.example.egobook.ui.counseling.viewmodel.StatisticsViewModel
@@ -24,17 +24,16 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.collections.toFloatArray
 import kotlin.math.abs
 
 @AndroidEntryPoint
-class CounselingStatisticsFragment : Fragment(R.layout.fragment_counseling_statistics) {
-    private lateinit var binding: FragmentCounselingStatisticsBinding
+class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics) {
+    private lateinit var binding: FragmentEgoRoomStatisticsBinding
     private val viewModel: StatisticsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentCounselingStatisticsBinding.bind(view)
+        binding = FragmentEgoRoomStatisticsBinding.bind(view)
         fetchData()
         initObservers()
     }
