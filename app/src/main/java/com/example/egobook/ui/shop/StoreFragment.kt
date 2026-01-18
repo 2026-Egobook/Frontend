@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.shop
+package com.example.egobook.ui.shop
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.example.egobook_frontent.R
-import com.example.egobook_frontent.databinding.FragmentStoreBinding
+import com.example.egobook.R
+import com.example.egobook.databinding.FragmentStoreBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 class StoreFragment: Fragment() {

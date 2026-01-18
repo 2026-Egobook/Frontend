@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.onboarding.view
+package com.example.egobook.ui.onboarding.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.egobook_frontent.databinding.FragmentOnboardingContainerBinding
-import com.example.egobook_frontent.ui.onboarding.adapter.OnboardingVPAdapter
-
+import com.example.egobook.databinding.FragmentOnboardingContainerBinding
+import com.example.egobook.ui.onboarding.adapter.OnboardingVPAdapter
 class OnboardingContainerFragment : Fragment() {
 
     private var _binding: FragmentOnboardingContainerBinding? = null
@@ -40,7 +39,6 @@ class OnboardingContainerFragment : Fragment() {
     private fun setAdapter() {
         val onboardingVPAdapter = OnboardingVPAdapter(this)
         binding.vpOnboarding.adapter = onboardingVPAdapter
-
         binding.circleIndicator.setViewPager(binding.vpOnboarding)
     }
 

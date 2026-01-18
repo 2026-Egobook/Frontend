@@ -1,22 +1,22 @@
-package com.example.egobook_frontent.ui.onboarding.view
+package com.example.egobook.ui.onboarding.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.egobook_frontent.databinding.FragmentOnboardingThirdBinding
+import androidx.fragment.app.Fragment
+import com.example.egobook.databinding.FragmentOnboardingFourthBinding
 
-class OnboardingThirdFragment : Fragment() {
+class OnboardingFourthFragment : Fragment() {
 
-    private var _binding: FragmentOnboardingThirdBinding? = null
+    private var _binding: FragmentOnboardingFourthBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOnboardingThirdBinding.inflate(inflater, container, false)
+        _binding = FragmentOnboardingFourthBinding.inflate(inflater, container, false)
         return binding.root
     }
 

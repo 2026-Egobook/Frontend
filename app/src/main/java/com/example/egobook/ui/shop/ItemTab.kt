@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.shop
+package com.example.egobook.ui.shop
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.onboarding.view
+package com.example.egobook.ui.onboarding.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.example.egobook_frontent.R
-import com.example.egobook_frontent.databinding.FragmentOnboardingFifthBinding
+import com.example.egobook.R
+import com.example.egobook.databinding.FragmentOnboardingFifthBinding
 
 class OnboardingFifthFragment : Fragment() {
 

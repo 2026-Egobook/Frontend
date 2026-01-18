@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.shop
+package com.example.egobook.ui.shop
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
-import com.example.egobook_frontent.databinding.FragmentStoreCollectionBinding
+import com.example.egobook.databinding.FragmentStoreCollectionBinding
 
 class StoreCollectionFragment(): Fragment() {
     private var _binding: FragmentStoreCollectionBinding? = null

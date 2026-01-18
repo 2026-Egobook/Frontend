@@ -1,11 +1,11 @@
-package com.example.egobook_frontent.ui.onboarding.view
+package com.example.egobook.ui.onboarding.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.egobook_frontent.databinding.FragmentOnboardingFirstBinding
+import com.example.egobook.databinding.FragmentOnboardingFirstBinding
 
 class OnboardingFirstFragment : Fragment() {
 

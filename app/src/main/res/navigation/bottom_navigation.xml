@@ -8,14 +8,10 @@
     <fragment
         android:id="@+id/menu_home"
         android:name="com.example.egobook.ui.home.HomeFragment"
-        android:label="홈" />
-        android:name="com.example.egobook_frontent.ui.home.HomeFragment"
-        android:label="홈">
-
+        android:label="홈" >
         <action
             android:id="@+id/action_homeFragment_to_storeFragment"
             app:destination="@id/storeFragment" />
-
     </fragment>
 
     <fragment
