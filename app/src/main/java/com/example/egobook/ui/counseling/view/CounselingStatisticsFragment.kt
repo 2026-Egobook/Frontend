@@ -113,15 +113,20 @@ class CounselingStatisticsFragment : Fragment(R.layout.fragment_counseling_stati
             setDrawValues(false) // 막대 위의 숫자 제거
         }
         with(bcCounselingStatisticsDailyRecord) {
-            data = BarData(dataSet)
+            data = BarData(dataSet).apply {
+                barWidth = 0.5f
+            }
             xAxis.valueFormatter = IndexAxisValueFormatter(dayLabels)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setDrawGridLines(false) // X축 세로 격자선 제거
             xAxis.setDrawAxisLine(false) // X축 가로선 제거
+            xAxis.textColor = resources.getColor(R.color.stacked_bar_chart_text, null)
+            xAxis.textSize = 13f
             legend.isEnabled = false
             description.isEnabled = false
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
+            setExtraOffsets(0f, 0f, 0f, 10f)
             setTouchEnabled(false)
             invalidate()
         }
@@ -212,6 +217,7 @@ class CounselingStatisticsFragment : Fragment(R.layout.fragment_counseling_stati
             xAxis.valueFormatter = IndexAxisValueFormatter(monthLabels)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setDrawGridLines(false)
+            xAxis.granularity = 1f // x축 단위 간격을 1로 고정
             axisLeft.isEnabled = false
             description.isEnabled = false
             legend.isEnabled = false
@@ -244,13 +250,16 @@ class CounselingStatisticsFragment : Fragment(R.layout.fragment_counseling_stati
         val entries = listOf(BarEntry(0f, value))
         val dataSet = BarDataSet(entries, label).apply {
             color = resources.getColor(colorRes, null)
+            setDrawValues(false) // 막대 위의 숫자 제거
         }
         with(layout) {
-            data = BarData(dataSet)
+            val barData = BarData(dataSet).apply {
+                barWidth = 1.0f
+            }
+            data = barData
 
             description.isEnabled = false // 차트 오른쪽 하단 라벨(설명 문구)을 제거한다.
             legend.isEnabled = false // 범례(데이터 색상이 무엇을 뜻하는지 설명하는 박스)를 제거한다.
-
             xAxis.isEnabled = false // X축 라인과 축에 적히는 값(0, 1, 2...)을 모두 숨긴다.
 
             axisLeft.axisMinimum = 0f
