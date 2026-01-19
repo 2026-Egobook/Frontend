@@ -6,4 +6,5 @@
     </style>
 
     <style name="Theme.Egobook_frontent" parent="Base.Theme.Egobook_frontent" />
+
 </resources>

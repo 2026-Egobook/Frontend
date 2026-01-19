@@ -42,4 +42,53 @@
         <item name="android:textSize">12dp</item>
         <item name="fontFamily">@font/arita_semibold</item>
     </style>
+
+    <!-- 흰색 테두리 Material 버튼 스타일 -->
+    <style name="Widget.App.Button.Outlined.White" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/white</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:textColor">@color/cos_black</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/arita_semibold</item>
+        <item name="android:letterSpacing">-0.03</item>
+    </style>
+
+    <!-- 로그인 화면 하단 버튼들 스타일 -->
+    <style name="LoginButtonStyle1" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="backgroundTint">@android:color/white</item>
+        <item name="cornerRadius">99dp</item>
+
+        <item name="android:textColor">@color/cos_black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/arita_semibold</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+
+        <item name="iconTint">@null</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="LoginButtonStyle2" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="backgroundTint">@color/cos_light_grey</item>
+        <item name="cornerRadius">99dp</item>
+
+        <item name="android:textColor">@color/cos_black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/arita_semibold</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+
+        <item name="iconTint">@null</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+
+        <item name="android:elevation">0dp</item>
+    </style>
 </resources>

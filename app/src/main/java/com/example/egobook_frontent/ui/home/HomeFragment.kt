@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.example.egobook_frontent.BlurLevel
 import com.example.egobook_frontent.R
+import com.example.egobook_frontent.applyScreenBlur
 import com.example.egobook_frontent.databinding.FragmentHomeBinding
 import kotlinx.coroutines.launch
 
@@ -39,6 +41,13 @@ class HomeFragment : Fragment() {
         }
         binding.ivStore.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_storeFragment)
+        }
+
+        binding.ivAd.setOnClickListener {
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = AdDialog()
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "ConfirmDialog")
         }
     }
 

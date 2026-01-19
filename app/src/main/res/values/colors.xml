@@ -3,11 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!--텍스트용    -->
     <color name="cos_black">#FF191818</color>
     <color name="grey">#FF969696</color>
     <color name="cos_grey">#FFDBDBDB</color>
     <color name="cos_red">#FFE14444</color>
+    <color name="cos_light_grey">#F2F2F2</color>
 
 
     <color name="grey_img">#FFD9D9D9</color>
@@ -25,6 +25,7 @@
     <color name="layer_white">#FFFEFC</color>
     <color name="neutral_subtle">#969696</color>
     <color name="neutral_contrast">#FFFEFC</color>
+    <color name="neutral_weak">#F4F3F3</color>
     <color name="neutral">#191818</color>
     <color name="green_secondary">#E8EED9</color>
     <color name="cardview_background">#F4F7EE</color>
