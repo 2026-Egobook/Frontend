@@ -39,7 +39,8 @@
     <fragment
         android:id="@+id/menu_square"
         android:name="com.example.egobook.ui.square.SquareFragment"
-        android:label="광장"/>
+        android:label="광장"
+        tools:layout="@layout/fragment_square"/>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
     <fragment
@@ -93,5 +94,10 @@
             app:popUpTo="@id/menu_home"
             app:destination="@id/menu_home" />
     </fragment>
+    <fragment
+        android:id="@+id/letterReplyFragment"
+        android:name="com.example.egobook.ui.square.LetterReplyFragment"
+        android:label="fragment_letter_reply"
+        tools:layout="@layout/fragment_letter_reply" />
 
 </navigation>
