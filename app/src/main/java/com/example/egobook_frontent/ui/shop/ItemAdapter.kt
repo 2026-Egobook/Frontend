@@ -26,25 +26,7 @@ class ItemAdapter(private val items: List<CustomItem>) :
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-         when (items[position].itemStatus) {
-            ItemStatus.PURCHASED -> {
-                holder.itemStatus.text = "보유중"
-                holder.itemInfoLayout.setPadding(24,6,24,6)
-                holder.itemPriceIcon.visibility = GONE
-            }
-            ItemStatus.SUBSCRIBE_ONLY -> {
-                holder.itemStatus.text = "구독전용"
-                holder.itemInfoLayout.setPadding(24,6,24,6)
-                holder.itemPriceIcon.visibility = GONE
-                holder.root.background = null
-            }
-            ItemStatus.PURCHASABLE -> {
-                holder.itemStatus.text = items[position].price.toString()
-                holder.itemInfoLayout.updatePadding(left=12, right=16)
-                holder.itemPriceIcon.visibility = VISIBLE
-                holder.root.background = null
-            }
-        }
+        holder.binding(items[position])
     }
 
     override fun getItemCount() = items.size
@@ -54,5 +36,27 @@ class ItemAdapter(private val items: List<CustomItem>) :
         val itemPriceIcon: ImageView = view.findViewById(R.id.iv_store_item_ink)
         val itemInfoLayout: LinearLayout = view.findViewById(R.id.ll_item_info)
         val root: View = view.rootView
+
+        fun binding(item: CustomItem) {
+            when (item.itemStatus) {
+                ItemStatus.PURCHASED -> {
+                    itemStatus.text = "보유중"
+                    itemInfoLayout.setPadding(24,6,24,6)
+                    itemPriceIcon.visibility = GONE
+                }
+                ItemStatus.SUBSCRIBE_ONLY -> {
+                    itemStatus.text = "구독전용"
+                    itemInfoLayout.setPadding(24,6,24,6)
+                    itemPriceIcon.visibility = GONE
+                    root.background = null
+                }
+                ItemStatus.PURCHASABLE -> {
+                    itemStatus.text = item.price.toString()
+                    itemInfoLayout.updatePadding(left=12, right=16)
+                    itemPriceIcon.visibility = VISIBLE
+                    root.background = null
+                }
+            }
+        }
     }
 }
