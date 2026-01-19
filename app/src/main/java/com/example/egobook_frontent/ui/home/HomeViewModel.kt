@@ -1,8 +1,6 @@
 package com.example.egobook_frontent.ui.home
 
-import android.R.attr.level
 import androidx.lifecycle.ViewModel
-import com.example.egobook_frontent.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

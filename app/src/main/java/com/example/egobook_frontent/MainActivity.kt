@@ -1,18 +1,20 @@
 package com.example.egobook_frontent
 
+import android.R.attr.windowBackground
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.egobook_frontent.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BlurController {
     val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -47,5 +49,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        binding.blurView.setupWith(binding.blurTarget).setFrameClearDrawable(window.decorView.background).setBlurEnabled(false)
+    }
+
+    override fun activateBlur(blurLevel: BlurLevel) {
+        binding.blurView.apply {
+            setBlurEnabled(true)
+            setBlurRadius(blurLevel.value)
+        }
+    }
+
+    override fun deactivateBlur() {
+        binding.blurView.setBlurEnabled(false)
     }
 }
