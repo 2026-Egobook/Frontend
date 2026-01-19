@@ -175,52 +175,52 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="16dp"/>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_notification_content"
+        android:layout_width="259dp"
+        android:layout_height="match_parent"
+        android:background="@color/layer_white"
+        android:orientation="vertical"
+        android:layout_gravity="end">
+
         <LinearLayout
-            android:id="@+id/ll_notification_content"
-            android:layout_width="259dp"
-            android:layout_height="match_parent"
-            android:background="@color/layer_white"
-            android:orientation="vertical"
-            android:layout_gravity="end">
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="알림"
+                android:fontFamily="@font/arita_semibold"
+                android:textSize="20dp"
+                android:layout_marginStart="16dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="알림"
-                    android:fontFamily="@font/arita_semibold"
-                    android:textSize="20dp"
-                    android:layout_marginStart="16dp"/>
-                
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-                
-                <ImageView
-                    android:id="@+id/iv_home_notification_button"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity=""
-                    android:src="@drawable/ic_notification_on"
-                    android:layout_marginEnd="14dp"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-            </LinearLayout>
-            
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_notification"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
+            <ImageView
+                android:id="@+id/iv_home_notification_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_notification_on"
+                android:layout_marginEnd="14dp"/>
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_notification"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="16dp" />
+
+    </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>
