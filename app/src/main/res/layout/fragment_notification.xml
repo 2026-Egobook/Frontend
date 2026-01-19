@@ -19,6 +19,7 @@
             android:layout_marginStart="16dp"
             android:fontFamily="@font/arita_semibold"
             android:text="알림"
+            android:textColor="@color/neutral"
             android:textSize="20dp" />
 
         <View
