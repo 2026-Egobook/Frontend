@@ -22,16 +22,8 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
-            insets
-        }
-        ViewCompat.setOnApplyWindowInsetsListener(binding.fcvNotificationDrawer) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
-            insets
-        }
+        applyDefaultInsets(binding.main)
+        applyDefaultInsets(binding.fcvNotificationDrawer)
         setContentView(binding.root)
         val navHostFragment = binding.fragmentContainer.getFragment<NavHostFragment>()
         binding.bottomNavigation.setupWithNavController(navHostFragment.navController)
@@ -66,6 +58,14 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
                 deactivateBlur()
             }
         })
+    }
+
+    private fun applyDefaultInsets(targetView: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(targetView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            insets
+        }
     }
 
     override fun activateBlur(blurLevel: BlurLevel) {
