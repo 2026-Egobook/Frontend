@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -12,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.egobook_frontent.BlurLevel
+import com.example.egobook_frontent.NotificationController
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.applyScreenBlur
 import com.example.egobook_frontent.databinding.FragmentHomeBinding
@@ -50,10 +50,12 @@ class HomeFragment : Fragment() {
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "ConfirmDialog")
         }
-
         binding.ivBell.setOnClickListener {
-            binding.dlHome.openDrawer(binding.llNotificationContent)
+            val notificationController =
+                checkNotNull(activity as? NotificationController) { "해당 액티비티는 notification controller를 구현하지 않았습니다" }
+            notificationController.openDrawer()
         }
+
     }
 
     private fun LevelType.getResId(): Int {
