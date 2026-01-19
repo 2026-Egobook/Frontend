@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -43,6 +44,13 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
                 else -> {
                     binding.bottomNavigation.visibility = View.VISIBLE
                 }
+            }
+
+            if (destination.id == R.id.menu_home) {
+                binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            } else {
+                binding.root.closeDrawer(binding.fcvNotificationDrawer)
+                binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             }
         }
 
