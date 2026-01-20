@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="15.65dp" />
+                app:layout_constraintGuide_end="395dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/inner_guideline_end"
