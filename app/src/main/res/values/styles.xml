@@ -91,4 +91,17 @@
 
         <item name="android:elevation">0dp</item>
     </style>
+    
+    <style name="CrudButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="backgroundTint">@color/neutral_weak</item>
+        <item name="cornerRadius">4dp</item>
+
+        <item name="android:textColor">@color/cos_black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/arita_semibold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:textAllCaps">false</item>
+
+    </style>
 </resources>

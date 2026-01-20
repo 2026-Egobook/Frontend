@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.diary.DiaryCheckFragment"
+    tools:context=".ui.diary.view.DiaryCheckFragment"
     android:background="@color/white">
 
     <androidx.constraintlayout.widget.Guideline
@@ -176,13 +176,16 @@
 
         <TextView
             android:id="@+id/tv_diary_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="일기일기일기 일기일기"
-            android:textSize="14sp"
+            android:text="일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기"
             android:textColor="@color/cos_black"
+            android:textSize="14sp"
             android:fontFamily="@font/arita_medium"
-            android:lineHeight="21sp"/>
+            android:lineHeight="21sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
         
         <TextView
             android:id="@+id/tv_written_time"
@@ -200,6 +203,20 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_delete"
+        style="@style/CrudButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="34dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="삭제하기"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/gd_left"
+        app:layout_constraintEnd_toEndOf="@id/gd_right"
+        android:layout_marginBottom="16dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
