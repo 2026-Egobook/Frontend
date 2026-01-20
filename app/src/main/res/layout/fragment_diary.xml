@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.diary.DiaryFragment"
+    tools:context=".ui.diary.view.DiaryFragment"
     android:background="@color/white">
 
     <!--상단 날짜 및 내보내기, 달력 버튼 배치용 -->

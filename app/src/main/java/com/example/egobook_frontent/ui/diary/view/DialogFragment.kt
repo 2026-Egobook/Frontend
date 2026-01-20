@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.diary
+package com.example.egobook_frontent.ui.diary.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,14 +1,16 @@
-package com.example.egobook_frontent.ui.diary
+package com.example.egobook_frontent.ui.diary.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentDiaryBinding
+import com.example.egobook_frontent.ui.diary.Diary
+import com.example.egobook_frontent.ui.diary.adapter.DiaryRVAdapter
 
 class DiaryFragment : Fragment() {
     private var _binding: FragmentDiaryBinding? = null
@@ -58,7 +60,8 @@ class DiaryFragment : Fragment() {
     private fun initRecyclerView() {
         val diaryRVAdapter = DiaryRVAdapter(diaryDatas)
         binding.rvDiary.adapter = diaryRVAdapter
-        binding.rvDiary.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.rvDiary.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     override fun onDestroyView() {

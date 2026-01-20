@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.diary
+package com.example.egobook_frontent.ui.diary.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentCandlerBinding
+import com.example.egobook_frontent.ui.diary.adapter.DayViewContainer
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek

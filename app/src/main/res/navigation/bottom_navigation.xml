@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/menu_diary"
-        android:name="com.example.egobook_frontent.ui.diary.DiaryFragment"
+        android:name="com.example.egobook_frontent.ui.diary.view.DiaryFragment"
         android:label="감정일기">
         <!-- diaryWriteFragment로의 이동 액션 추가 -->
         <action
@@ -46,13 +46,13 @@
     <!-- diaryWriteFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/diaryWriteFragment"
-        android:name="com.example.egobook_frontent.ui.diary.DiaryWriteFragment"
+        android:name="com.example.egobook_frontent.ui.diary.view.DiaryWriteFragment"
         android:label="일기 작성" />
 
     <!-- CandlerFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/candlerFragment"
-        android:name="com.example.egobook_frontent.ui.diary.CandlerFragment"
+        android:name="com.example.egobook_frontent.ui.diary.view.CandlerFragment"
         android:label="달력 화면" />
      
     <fragment
