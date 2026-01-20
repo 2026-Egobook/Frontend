@@ -99,5 +99,10 @@
         android:name="com.example.egobook.ui.square.LetterReplyFragment"
         android:label="fragment_letter_reply"
         tools:layout="@layout/fragment_letter_reply" />
+    <fragment
+        android:id="@+id/letterFragment"
+        android:name="com.example.egobook.ui.square.LetterFragment"
+        android:label="fragment_letter"
+        tools:layout="@layout/fragment_letter" />
 
 </navigation>
