@@ -14,8 +14,10 @@
         android:layout_gravity="center"
         android:background="@drawable/dialog_background"
         android:gravity="center_horizontal"
+        android:minWidth="233dp"
+        android:minHeight="278dp"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="16dp">
 
         <!-- 상단 연도 선택 -->
         <LinearLayout
@@ -61,137 +63,52 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_january"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="1월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="1월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_february"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="2월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
-
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="2월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_march"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="3월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="3월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_april"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="4월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="4월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_may"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="5월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="5월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_june"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="6월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="6월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_july"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="7월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="7월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_august"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="8월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="8월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_september"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="9월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="9월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_october"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="10월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="10월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_november"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="11월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="11월" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_december"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="12월"
-                android:textSize="16dp"
-                android:textColor="@color/neutral"
-                app:backgroundTint="@color/transparent"
-                />
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="12월" />
 
         </GridLayout>
 
