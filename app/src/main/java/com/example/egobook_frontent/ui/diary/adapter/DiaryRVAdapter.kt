@@ -6,8 +6,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.egobook_frontent.databinding.ItemDiaryBinding
 import com.example.egobook_frontent.ui.diary.Diary
 
-class DiaryRVAdapter(private val diaryList: List<Diary>) :
-    RecyclerView.Adapter<DiaryRVAdapter.ViewHolder>() {
+class DiaryRVAdapter(private val diaryList: List<Diary>) : RecyclerView.Adapter<DiaryRVAdapter.ViewHolder>() {
+
+    interface MyItemClickListener {
+        fun onItemClick(diary: Diary)
+    }
+
+    private lateinit var myItemClickListener: MyItemClickListener
+    fun setMyItemClickListener(itemClickListener: MyItemClickListener) {
+        myItemClickListener = itemClickListener
+    }
 
 
     override fun onCreateViewHolder(
@@ -24,11 +32,15 @@ class DiaryRVAdapter(private val diaryList: List<Diary>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(diaryList[position])
+
+        holder.itemView.setOnClickListener {
+            myItemClickListener.onItemClick(diaryList[position])
+        }
     }
 
     override fun getItemCount(): Int = diaryList.size
 
-    inner class ViewHolder(var binding: ItemDiaryBinding):
+    inner class ViewHolder(var binding: ItemDiaryBinding) :
             RecyclerView.ViewHolder(binding.root) {
                 fun bind(diary: Diary) {
                     binding.tvDiaryContent.text = diary.content

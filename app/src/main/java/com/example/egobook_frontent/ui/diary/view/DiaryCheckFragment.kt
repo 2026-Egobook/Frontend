@@ -4,16 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.egobook_frontent.databinding.FragmentDiaryCheckBinding
 
 class DiaryCheckFragment : Fragment() {
 
     private var _binding: FragmentDiaryCheckBinding? = null
     private val binding get() = _binding!!
+
+    // 💡 1. by navArgs()를 사용하여 전달받은 인자를 가져옵니다.
+    private val args: DiaryCheckFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,14 +28,14 @@ class DiaryCheckFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 하단 시스템 바 영역만큼 패딩을 주어 버튼이 가려지지 않게 함.
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // 기존 패딩은 유지하면서 하단만 시스템 바 높이만큼 추가
-            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom)
-            insets
-        }
+        // 💡 2. 임시 텍스트 대신, 전달받은 args의 데이터를 사용합니다.
+        binding.tvDiaryContent.text = args.diaryContent
+        binding.tvWrittenTime.text = args.diaryTime
 
+        // 3. 뒤로가기 버튼 클릭 리스너를 설정합니다.
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     override fun onDestroyView() {

@@ -49,16 +49,31 @@ class DiaryFragment : Fragment() {
 
     private fun setupDummyData() {
         diaryDatas.addAll(arrayListOf(
-            Diary("요즘 너무 설렌당", null, "17:00"),
-            Diary("요즘 너무 설렌당", null, "17:00"),
-            Diary("요즘 너무 설렌당", null, "17:00"),
-            Diary("요즘 너무 설렌당", null, "17:00"),
-            Diary("요즘 너무 설렌당", null, "17:00")
+            Diary("테스트1", null, "17:00"),
+            Diary("테스트2", null, "17:00"),
+            Diary("테스트3", null, "17:00"),
+            Diary("테스트4", null, "17:00"),
+            Diary("테스트5", null, "17:00")
         ))
     }
 
     private fun initRecyclerView() {
         val diaryRVAdapter = DiaryRVAdapter(diaryDatas)
+        diaryRVAdapter.setMyItemClickListener(object :
+            DiaryRVAdapter.MyItemClickListener {
+                // 💡 1. 어댑터와 동일한 파라미터를 받도록 수정합니다.
+                override fun onItemClick(diary: Diary) {
+                    // 2. Safe Args가 생성한 Directions 클래스를 사용합니다.
+                    val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
+                        // 💡 3. 클릭된 아이템(diary)의 데이터를 전달합니다.
+                        diaryContent = diary.content,
+                        diaryTime = diary.time
+                    )
+                    // 4. action 객체를 사용하여 안전하게 화면을 전환합니다.
+                    findNavController().navigate(action)
+                }
+            })
+
         binding.rvDiary.adapter = diaryRVAdapter
         binding.rvDiary.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
