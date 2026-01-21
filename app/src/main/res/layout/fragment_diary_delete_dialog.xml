@@ -14,7 +14,7 @@
         android:background="@drawable/dialog_background"
         android:gravity="center"
         android:minWidth="233dp"
-        android:minHeight="280dp"
+        android:minHeight="188dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:orientation="vertical" >
@@ -34,9 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/arita_medium"
-            android:textColor="@color/neutral_subtle"
+            android:textColor="@color/cos_red"
             android:textSize="12dp"
-            android:text="최대 1년 단위로 내보낼 수 있어요" />
+            android:text="삭제된 일기는 복구할 수 없어요" />
 
         <LinearLayout
             android:layout_marginTop="16dp"
@@ -47,23 +47,23 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_back"
-                style="@style/SaveButtonStyle"
+                style="@style/DeleteButtonStyle"
                 android:layout_width="94.5dp"
                 android:layout_height="42dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:layout_marginEnd="12dp"
-                android:text="PDF" />
+                android:text="돌아가기" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_delete"
-                style="@style/SaveButtonStyle"
+                style="@style/RedButtonStyle"
                 android:layout_width="94.5dp"
                 android:layout_height="42dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:textSize="12dp"
-                android:text="TEXT" />
+                android:text="삭제하기" />
 
         </LinearLayout>
 

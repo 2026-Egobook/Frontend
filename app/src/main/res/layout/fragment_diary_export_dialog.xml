@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    tools:context=".ui.diary.view.DiaryExportFragment">
+    tools:context=".ui.diary.view.DiaryExportDialogFragment"
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,7 +67,8 @@
             android:background="@drawable/bg_date_input_box"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="12dp">
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
 
             <ImageView
                 android:layout_width="wrap_content"

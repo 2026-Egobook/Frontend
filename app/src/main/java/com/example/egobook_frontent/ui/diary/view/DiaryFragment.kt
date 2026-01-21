@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.egobook_frontent.BlurLevel
 import com.example.egobook_frontent.R
+import com.example.egobook_frontent.applyScreenBlur
 import com.example.egobook_frontent.databinding.FragmentDiaryBinding
 import com.example.egobook_frontent.ui.diary.Diary
 import com.example.egobook_frontent.ui.diary.adapter.DiaryRVAdapter
@@ -43,6 +45,12 @@ class DiaryFragment : Fragment() {
         }
             btnCalender.setOnClickListener {
                 findNavController().navigate(R.id.action_diaryFragment_to_candlerFragment)
+            }
+            btnExport.setOnClickListener {
+                applyScreenBlur(BlurLevel.BASE)
+                val dialog = DiaryExportDialogFragment()
+                dialog.isCancelable = true
+                dialog.show(parentFragmentManager, "ConfirmDialog")
             }
         }
     }
