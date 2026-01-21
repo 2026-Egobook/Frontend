@@ -53,6 +53,20 @@ class CandlerFragment : Fragment() {
                 dialog.isCancelable = true
                 dialog.show(childFragmentManager, "MonthDialog")
             }
+
+            // 💡 이전 달로 스크롤
+            btnPrevMonth.setOnClickListener {
+                binding.calendarView.findFirstVisibleMonth()?.let {
+                    binding.calendarView.smoothScrollToMonth(it.yearMonth.minusMonths(1))
+                }
+            }
+
+            // 💡 다음 달로 스크롤
+            btnNextMonth.setOnClickListener {
+                binding.calendarView.findFirstVisibleMonth()?.let {
+                    binding.calendarView.smoothScrollToMonth(it.yearMonth.plusMonths(1))
+                }
+            }
         }
     }
 
@@ -89,13 +103,6 @@ class CandlerFragment : Fragment() {
             }
         }
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        binding.root.post {
-//            applyScreenBlur(BlurLevel.NONE)
-//        }
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
