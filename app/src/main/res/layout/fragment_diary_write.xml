@@ -29,6 +29,8 @@
             app:icon="@drawable/ic_left"
             app:iconTint="@color/cos_black"
             app:iconSize="24dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:contentDescription="back to DiaryFragment"/>
 
         <TextView
@@ -43,7 +45,7 @@
 
     <!-- 중앙 스크롤 영역 -->
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/scroll_view"
+        android:id="@+id/sv_diary_write"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -60,14 +62,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="395dp" />
+                app:layout_constraintGuide_begin="16dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/inner_guideline_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="16.35dp"/>
+                app:layout_constraintGuide_end="16dp"/>
 
             <!-- 안내 문구 -->
             <LinearLayout
@@ -111,58 +113,86 @@
                 app:layout_constraintStart_toStartOf="@id/inner_guideline_start"
                 app:layout_constraintEnd_toEndOf="@id/inner_guideline_end">
 
-                <TextView
-                    android:id="@+id/tv_emotion_tag"
-                    android:layout_width="73dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_emotion"
+                    android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:gravity="center"
-                    android:text="감정"
-                    android:textColor="@color/dark_bage_text"
-                    android:fontFamily="@font/arita_semibold"
-                    android:background="@drawable/bg_tag_emotion"
+                    app:cardBackgroundColor="@color/selector_weekly_report_style_bg"
+                    app:strokeColor="@color/selector_weekly_report_style_stroke"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="99dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_worry_tag"
-                    app:layout_constraintHorizontal_chainStyle="spread_inside" />
+                    app:layout_constraintEnd_toStartOf="@id/cv_worry"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="감정"
+                        android:textColor="@color/selector_weekly_report_style_text"/>
+                </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_worry_tag"
-                    android:layout_width="73dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_worry"
+                    android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:gravity="center"
-                    android:text="고민"
-                    android:textColor="@color/cos_black"
-                    android:fontFamily="@font/arita_semibold"
-                    android:background="@drawable/bg_tag_emotion_default"
+                    android:layout_marginHorizontal="8dp"
+                    app:cardBackgroundColor="@color/selector_weekly_report_style_bg"
+                    app:strokeColor="@color/selector_weekly_report_style_stroke"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="99dp"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tv_emotion_tag"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_praise_tag" />
+                    app:layout_constraintStart_toEndOf="@id/cv_emotion"
+                    app:layout_constraintEnd_toStartOf="@id/cv_praise"
+                    android:layout_marginStart="12dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="고민"
+                        android:textColor="@color/selector_weekly_report_style_text"/>
+                </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_praise_tag"
-                    android:layout_width="73dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_praise"
+                    android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:gravity="center"
-                    android:text="칭찬"
-                    android:textColor="@color/cos_black"
-                    android:fontFamily="@font/arita_semibold"
-                    android:background="@drawable/bg_tag_emotion_default"
+                    app:cardBackgroundColor="@color/selector_weekly_report_style_bg"
+                    app:strokeColor="@color/selector_weekly_report_style_stroke"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="99dp"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tv_worry_tag"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_thanks_tag" />
+                    app:layout_constraintStart_toEndOf="@id/cv_worry"
+                    app:layout_constraintEnd_toStartOf="@id/cv_thanks"
+                    android:layout_marginStart="12dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="칭찬"
+                        android:textColor="@color/selector_weekly_report_style_text"/>
+                </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tv_thanks_tag"
-                    android:layout_width="73dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_thanks"
+                    android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:gravity="center"
-                    android:text="감사"
-                    android:textColor="@color/cos_black"
-                    android:fontFamily="@font/arita_semibold"
-                    android:background="@drawable/bg_tag_emotion_default"
+                    app:cardBackgroundColor="@color/selector_weekly_report_style_bg"
+                    app:strokeColor="@color/selector_weekly_report_style_stroke"
+                    app:strokeWidth="1dp"
+                    app:cardCornerRadius="99dp"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tv_praise_tag"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintStart_toEndOf="@id/cv_praise"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="12dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="감사"
+                        android:textColor="@color/selector_weekly_report_style_text"/>
+                </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- 질문 문구 -->
@@ -226,7 +256,7 @@
                     android:id="@+id/iv_emotion1"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    app:srcCompat="@drawable/img_emotion"
+                    app:srcCompat="@drawable/img_emotion_very_sad"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/Circle"
                     app:layout_constraintTop_toTopOf="parent"
@@ -238,7 +268,7 @@
                     android:id="@+id/iv_emotion2"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    app:srcCompat="@drawable/img_emotion"
+                    app:srcCompat="@drawable/img_emotion_sad"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/Circle"
                     app:layout_constraintTop_toTopOf="parent"
@@ -249,7 +279,7 @@
                     android:id="@+id/iv_emotion3"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    app:srcCompat="@drawable/img_emotion"
+                    app:srcCompat="@drawable/img_emotion_neutral"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/Circle"
                     app:layout_constraintTop_toTopOf="parent"
@@ -260,7 +290,7 @@
                     android:id="@+id/iv_emotion4"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    app:srcCompat="@drawable/img_emotion"
+                    app:srcCompat="@drawable/img_emotion_happy"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/Circle"
                     app:layout_constraintTop_toTopOf="parent"
@@ -271,7 +301,7 @@
                     android:id="@+id/iv_emotion5"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    app:srcCompat="@drawable/img_emotion"
+                    app:srcCompat="@drawable/img_emotion_very_happy"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/Circle"
                     app:layout_constraintTop_toTopOf="parent"
@@ -323,7 +353,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:text="0/400"
                     android:textSize="12sp"
                     android:textColor="@color/grey"
@@ -334,20 +364,20 @@
     </androidx.core.widget.NestedScrollView>
 
     <!-- 하단 저장 버튼 -->
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_save"
+        style="@style/SaveButtonStyle"
+        android:enabled="false"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/cos_black"
+        android:layout_height="42dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:text="저장하기"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:fontFamily="@font/arita_semibold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="22dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
