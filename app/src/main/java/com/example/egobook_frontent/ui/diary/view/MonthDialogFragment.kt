@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.egobook_frontent.BlurLevel
-import com.example.egobook_frontent.applyScreenBlur
 import com.example.egobook_frontent.databinding.FragmentMonthDialogBinding
 import com.example.egobook_frontent.removeScreenBlur
 
