@@ -1,5 +1,6 @@
 package com.example.egobook_frontent.ui.diary.view
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -40,6 +41,12 @@ class DiaryDeleteDialogFragment : DialogFragment() {
                 dismiss()
             }
         }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        removeScreenBlur()
+        dismiss()
     }
 
     override fun onDestroyView() {

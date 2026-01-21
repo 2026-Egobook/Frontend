@@ -8,7 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.example.egobook_frontent.BlurLevel
+import com.example.egobook_frontent.applyScreenBlur
 import com.example.egobook_frontent.databinding.FragmentMonthDialogBinding
+import com.example.egobook_frontent.removeScreenBlur
 
 class MonthDialogFragment : DialogFragment() {
 
@@ -30,12 +33,13 @@ class MonthDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isCancelable = true
+        dialog?.setCanceledOnTouchOutside(true)
     }
 
-    // 💡 2. 다이얼로그가 닫힐 때, 전달받은 람다를 실행
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        onDismissListener?.invoke()
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        removeScreenBlur()
+        dismiss()
     }
 
     override fun onDestroyView() {

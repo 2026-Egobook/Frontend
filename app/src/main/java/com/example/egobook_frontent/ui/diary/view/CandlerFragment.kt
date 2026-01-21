@@ -49,12 +49,8 @@ class CandlerFragment : Fragment() {
             tvMonth.setOnClickListener {
                 applyScreenBlur(BlurLevel.BASE) // 블러 효과 적용
 
-                // 다이얼로그를 만들고, onDismissListener에 블러 제거 코드를 람다로 전달.
-                val dialog = MonthDialogFragment().apply {
-                    onDismissListener = {
-                        applyScreenBlur(BlurLevel.NONE) // 블러 제거
-                    }
-                }
+                val dialog = MonthDialogFragment()
+                dialog.isCancelable = true
                 dialog.show(childFragmentManager, "MonthDialog")
             }
         }
@@ -93,6 +89,13 @@ class CandlerFragment : Fragment() {
             }
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        binding.root.post {
+//            applyScreenBlur(BlurLevel.NONE)
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

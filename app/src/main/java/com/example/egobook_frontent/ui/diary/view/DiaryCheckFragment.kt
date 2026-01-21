@@ -15,6 +15,7 @@ class DiaryCheckFragment : Fragment() {
 
     private var _binding: FragmentDiaryCheckBinding? = null
     private val binding get() = _binding!!
+    var onDismissListener: (() -> Unit)? = null
 
     // 💡 1. by navArgs()를 사용하여 전달받은 인자를 가져옵니다.
     private val args: DiaryCheckFragmentArgs by navArgs()
@@ -30,7 +31,7 @@ class DiaryCheckFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 💡 2. 임시 텍스트 대신, 전달받은 args의 데이터를 사용합니다.
+        //임시 텍스트 대신, 전달받은 args의 데이터를 사용합니다.
         binding.tvDiaryContent.text = args.diaryContent
         binding.tvWrittenTime.text = args.diaryTime
 
@@ -46,7 +47,7 @@ class DiaryCheckFragment : Fragment() {
             btnDelete.setOnClickListener {
                 applyScreenBlur(BlurLevel.BASE)
                 val dialog = DiaryDeleteDialogFragment()
-                dialog.isCancelable = false
+                dialog.isCancelable = true
                 dialog.show(parentFragmentManager, "ConfirmDialog")
             }
         }
