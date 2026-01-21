@@ -1,4 +1,4 @@
-package com.example.egobook.ui.square
+package com.example.egobook.ui.square.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.egobook.databinding.ItemSquareFriendListBinding
+import com.example.egobook.ui.square.model.FriendModel
 
 class FriendsListAdapter: ListAdapter<FriendModel, FriendsListAdapter.FriendsListViewHolder>(diffUtil) {
 

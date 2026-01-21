@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layer_white"
-    tools:context=".ui.square.MyRepliesHistoryFragment">
+    tools:context=".ui.square.view.MyRepliesHistoryFragment">
 
     <LinearLayout
         android:id="@+id/ll_my_replies_history_header"

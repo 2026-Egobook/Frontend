@@ -6,7 +6,7 @@
     android:padding="16dp"
     android:background="@color/layer_white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.square.FriendsListFragment">
+    tools:context=".ui.square.view.FriendsListFragment">
 
     <ImageView
         android:id="@+id/iv_friends_list"

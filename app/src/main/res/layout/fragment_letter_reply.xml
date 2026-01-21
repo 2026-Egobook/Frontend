@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/layer_white"
     android:fillViewport="true"
-    tools:context=".ui.square.LetterReplyFragment">
+    tools:context=".ui.square.view.LetterReplyFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

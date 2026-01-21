@@ -38,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/menu_square"
-        android:name="com.example.egobook.ui.square.SquareFragment"
+        android:name="com.example.egobook.ui.square.view.SquareFragment"
         android:label="광장"
         tools:layout="@layout/fragment_square">
         <action
@@ -100,27 +100,27 @@
     </fragment>
     <fragment
         android:id="@+id/letterReplyFragment"
-        android:name="com.example.egobook.ui.square.LetterReplyFragment"
+        android:name="com.example.egobook.ui.square.view.LetterReplyFragment"
         android:label="fragment_letter_reply"
         tools:layout="@layout/fragment_letter_reply" />
     <fragment
         android:id="@+id/letterFragment"
-        android:name="com.example.egobook.ui.square.LetterFragment"
+        android:name="com.example.egobook.ui.square.view.LetterFragment"
         android:label="fragment_letter"
         tools:layout="@layout/fragment_letter" />
     <fragment
         android:id="@+id/squareAllRepliesFragment"
-        android:name="com.example.egobook.ui.square.SquareAllRepliesFragment"
+        android:name="com.example.egobook.ui.square.view.SquareAllRepliesFragment"
         android:label="fragment_square_all_replies"
         tools:layout="@layout/fragment_square_all_replies" />
     <fragment
         android:id="@+id/myRepliesHistoryFragment"
-        android:name="com.example.egobook.ui.square.MyRepliesHistoryFragment"
+        android:name="com.example.egobook.ui.square.view.MyRepliesHistoryFragment"
         android:label="fragment_my_replies_history"
         tools:layout="@layout/fragment_my_replies_history" />
     <fragment
         android:id="@+id/friendsFragment"
-        android:name="com.example.egobook.ui.square.FriendsFragment"
+        android:name="com.example.egobook.ui.square.view.FriendsFragment"
         android:label="fragment_square_friends"
         tools:layout="@layout/fragment_square_friends" />
 

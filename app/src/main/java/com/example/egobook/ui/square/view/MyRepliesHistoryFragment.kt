@@ -1,10 +1,8 @@
-package com.example.egobook.ui.square
+package com.example.egobook.ui.square.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.example.egobook.R
 import com.example.egobook.databinding.FragmentMyRepliesHistoryBinding
 import dagger.hilt.android.AndroidEntryPoint

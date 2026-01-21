@@ -1,4 +1,4 @@
-package com.example.egobook.ui.square
+package com.example.egobook.ui.square.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

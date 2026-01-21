@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layer_white"
-    tools:context=".ui.square.LetterFragment">
+    tools:context=".ui.square.view.LetterFragment">
 
     <LinearLayout
         android:id="@+id/ll_letter_header"

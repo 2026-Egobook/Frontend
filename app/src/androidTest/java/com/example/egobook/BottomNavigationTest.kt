@@ -9,7 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.egobook.ui.counseling.view.EgoRoomFragment
 import com.example.egobook.ui.diary.DiaryFragment
 import com.example.egobook.ui.home.HomeFragment
-import com.example.egobook.ui.square.SquareFragment
+import com.example.egobook.ui.square.view.SquareFragment
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith

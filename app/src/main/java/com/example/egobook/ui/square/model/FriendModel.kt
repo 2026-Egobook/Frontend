@@ -1,4 +1,4 @@
-package com.example.egobook.ui.square
+package com.example.egobook.ui.square.model
 
 data class FriendModel(
     val id: Int,

@@ -1,4 +1,4 @@
-package com.example.egobook.ui.square
+package com.example.egobook.ui.square.view
 
 import android.os.Bundle
 import android.view.View
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.egobook.R
 import com.example.egobook.databinding.FragmentSquareFriendsBinding
+import com.example.egobook.ui.square.adapter.FriendsTabAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class FriendsFragment : Fragment(R.layout.fragment_square_friends) {

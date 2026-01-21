@@ -1,10 +1,12 @@
-package com.example.egobook.ui.square
+package com.example.egobook.ui.square.view
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.egobook.R
 import com.example.egobook.databinding.FragmentFriendsListBinding
+import com.example.egobook.ui.square.adapter.FriendsListAdapter
+import com.example.egobook.ui.square.model.FriendModel
 
 class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
     private lateinit var binding: FragmentFriendsListBinding
