@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.egobook_frontent.BlurLevel
+import com.example.egobook_frontent.applyScreenBlur
 import com.example.egobook_frontent.databinding.FragmentDiaryCheckBinding
 
 class DiaryCheckFragment : Fragment() {
@@ -32,9 +34,21 @@ class DiaryCheckFragment : Fragment() {
         binding.tvDiaryContent.text = args.diaryContent
         binding.tvWrittenTime.text = args.diaryTime
 
-        // 3. 뒤로가기 버튼 클릭 리스너를 설정합니다.
-        binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
+        setClickListener()
+
+    }
+
+    private fun setClickListener() {
+        binding.apply{
+            btnBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
+            btnDelete.setOnClickListener {
+                applyScreenBlur(BlurLevel.BASE)
+                val dialog = DiaryDeleteDialogFragment()
+                dialog.isCancelable = false
+                dialog.show(parentFragmentManager, "ConfirmDialog")
+            }
         }
     }
 
