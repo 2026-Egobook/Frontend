@@ -1,14 +1,17 @@
 package com.example.egobook_frontent.ui.diary.view
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.egobook_frontent.BlurLevel
+import com.example.egobook_frontent.R
 import com.example.egobook_frontent.applyScreenBlur
 import com.example.egobook_frontent.databinding.FragmentCandlerBinding
 import com.example.egobook_frontent.ui.diary.adapter.DayViewContainer
@@ -16,12 +19,14 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.MonthDayBinder
+import java.time.LocalDate
 import java.time.YearMonth
 
 class CandlerFragment : Fragment() {
 
     private var _binding: FragmentCandlerBinding? = null
     private val binding get() = _binding!!
+    private val today = LocalDate.now()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,14 +59,12 @@ class CandlerFragment : Fragment() {
                 dialog.show(childFragmentManager, "MonthDialog")
             }
 
-            // 💡 이전 달로 스크롤
             btnPrevMonth.setOnClickListener {
                 binding.calendarView.findFirstVisibleMonth()?.let {
                     binding.calendarView.smoothScrollToMonth(it.yearMonth.minusMonths(1))
                 }
             }
 
-            // 💡 다음 달로 스크롤
             btnNextMonth.setOnClickListener {
                 binding.calendarView.findFirstVisibleMonth()?.let {
                     binding.calendarView.smoothScrollToMonth(it.yearMonth.plusMonths(1))
@@ -95,8 +98,21 @@ class CandlerFragment : Fragment() {
 
                 if (data.position == DayPosition.MonthDate) {
                     container.binding.calendarDayText.visibility = View.VISIBLE
-                    container.binding.dayEmotionImg.visibility = View.VISIBLE
+
+                    // 오늘 날짜인지 확인
+                    if (data.date == today) {
+                        // 오늘 날짜이면: 초록색 배경, 흰색 텍스트, 감정 이미지는 숨김
+                        container.binding.calendarDayText.setTextColor(Color.WHITE)
+                        container.binding.calendarDayText.setBackgroundResource(R.drawable.today_background)
+                        //container.binding.dayEmotionImg.visibility = View.GONE
+                    } else {
+                        // 오늘이 아니면: 배경 없음, 검은색 텍스트, 감정 이미지는 표시
+                        container.binding.calendarDayText.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_black))
+                        container.binding.calendarDayText.background = null
+                        container.binding.dayEmotionImg.visibility = View.VISIBLE
+                    }
                 } else {
+                    // 현재 달이 아닌 날짜는 모두 숨김
                     container.binding.calendarDayText.visibility = View.INVISIBLE
                     container.binding.dayEmotionImg.visibility = View.INVISIBLE
                 }
