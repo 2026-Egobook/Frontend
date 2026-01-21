@@ -314,7 +314,7 @@
                 android:text="오늘의 질문" />
 
             <TextView
-                android:id="@+id/tv_square_today_question_view_all"
+                android:id="@+id/tv_square_today_question_my_replies_view_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"

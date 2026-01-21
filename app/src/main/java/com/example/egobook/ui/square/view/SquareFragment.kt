@@ -19,5 +19,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
         btnSquareNavigateToFriends.setOnClickListener {
             findNavController().navigate(R.id.action_menu_square_to_friendsFragment)
         }
+        tvSquareTodayQuestionMyRepliesViewAll.setOnClickListener {
+            findNavController().navigate(R.id.action_menu_square_to_myRepliesHistoryFragment)
+        }
     }
 }

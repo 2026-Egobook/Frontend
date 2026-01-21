@@ -49,6 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
             <TextView
+                android:id="@+id/tv_item_square_my_reply_answer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="사용자의 답변이 들어가는 자리 사용자의 답변이 들어가는 자리사용자의 답변이 들어가는 자리 사용자의 답변이 들어가는 자리 사용자의 답변이 들어가는 자리사용자의 답변이 들어가는 자리"

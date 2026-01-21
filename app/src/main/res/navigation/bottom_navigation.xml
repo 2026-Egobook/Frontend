@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_menu_square_to_friendsFragment"
             app:destination="@id/friendsFragment" />
+        <action
+            android:id="@+id/action_menu_square_to_myRepliesHistoryFragment"
+            app:destination="@id/myRepliesHistoryFragment" />
     </fragment>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
