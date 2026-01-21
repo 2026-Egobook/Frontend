@@ -16,6 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
         <ImageView
+            android:id="@+id/iv_item_friend_list_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/default_turtle"/>
@@ -59,7 +60,7 @@
         android:layout_marginStart="4dp"
         app:layout_constraintStart_toEndOf="@id/tv_item_friend_list_name"
         app:layout_constraintTop_toTopOf="@id/tv_item_friend_list_name"
-        app:layout_constraintBottom_toBottomOf="name"/>
+        app:layout_constraintBottom_toBottomOf="@id/tv_item_friend_list_name"/>
 
     <ImageView
         android:layout_width="wrap_content"

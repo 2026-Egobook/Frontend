@@ -6,7 +6,7 @@ import android.view.View
 import com.example.egobook.R
 import com.example.egobook.databinding.FragmentFriendsPendingListBinding
 
-class FriendsPendingFragment : Fragment(R.layout.fragment_friends_pending_list) {
+class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_list) {
     private lateinit var binding: FragmentFriendsPendingListBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

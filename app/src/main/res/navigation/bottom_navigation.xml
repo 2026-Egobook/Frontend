@@ -40,7 +40,11 @@
         android:id="@+id/menu_square"
         android:name="com.example.egobook.ui.square.SquareFragment"
         android:label="광장"
-        tools:layout="@layout/fragment_square"/>
+        tools:layout="@layout/fragment_square">
+        <action
+            android:id="@+id/action_menu_square_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
+    </fragment>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
     <fragment

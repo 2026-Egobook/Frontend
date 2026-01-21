@@ -26,6 +26,7 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_friends_list"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_friends_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
@@ -33,6 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_square_friend_list"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

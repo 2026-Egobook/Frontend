@@ -30,6 +30,7 @@
                 android:text="광장" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_square_navigate_to_friends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="7dp"
