@@ -94,8 +94,6 @@ class CandlerFragment : Fragment() {
         }
     }
 
-    // 💡 3. 더 이상 필요 없는 onDialogDismissed 함수를 삭제합니다.
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

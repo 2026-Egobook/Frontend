@@ -46,7 +46,7 @@
     <style name="Widget.App.Button.Outlined.White" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeColor">@color/white</item>
         <item name="strokeWidth">1dp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/cos_black</item>
         <item name="backgroundTint">@android:color/transparent</item>
         <item name="cornerRadius">4dp</item>
         <item name="android:textSize">12sp</item>
