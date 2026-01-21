@@ -114,5 +114,10 @@
         android:name="com.example.egobook.ui.square.MyRepliesHistoryFragment"
         android:label="fragment_my_replies_history"
         tools:layout="@layout/fragment_my_replies_history" />
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.egobook.ui.square.FriendsFragment"
+        android:label="fragment_square_friends"
+        tools:layout="@layout/fragment_square_friends" />
 
 </navigation>
