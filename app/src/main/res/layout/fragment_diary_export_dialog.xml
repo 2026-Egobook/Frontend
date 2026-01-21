@@ -43,12 +43,14 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_calendar" />
             
-            <MultiAutoCompleteTextView
+            <EditText
                 android:id="@+id/tv_start_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="YYYY.MM.DD"
+                android:inputType="number"
+                android:maxLength="10"
                 android:layout_marginStart="10dp"/>
 
 
@@ -76,13 +78,15 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_calendar" />
 
-            <MultiAutoCompleteTextView
+            <EditText
                 android:id="@+id/tv_last_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="YYYY.MM.DD"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="10dp"
+                android:inputType="number"
+                android:maxLength="10"/>
 
 
         </LinearLayout>
