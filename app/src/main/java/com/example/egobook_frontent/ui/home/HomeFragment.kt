@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.egobook_frontent.BlurLevel
+import com.example.egobook_frontent.NotificationController
 import com.example.egobook_frontent.R
 import com.example.egobook_frontent.applyScreenBlur
 import com.example.egobook_frontent.databinding.FragmentHomeBinding
@@ -49,6 +50,12 @@ class HomeFragment : Fragment() {
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "ConfirmDialog")
         }
+        binding.ivBell.setOnClickListener {
+            val notificationController =
+                checkNotNull(activity as? NotificationController) { "해당 액티비티는 notification controller를 구현하지 않았습니다" }
+            notificationController.openDrawer()
+        }
+
 
         binding.ivRadar.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)

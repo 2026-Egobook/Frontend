@@ -1,12 +1,13 @@
 package com.example.egobook_frontent
 
-import android.R.attr.windowBackground
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.egobook_frontent.databinding.ActivityMainBinding
@@ -14,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), BlurController {
+class MainActivity : AppCompatActivity(), BlurController, NotificationController {
     val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -22,14 +23,10 @@ class MainActivity : AppCompatActivity(), BlurController {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
-            insets
-        }
+        applyDefaultInsets(binding.main)
+        applyDefaultInsets(binding.fcvNotificationDrawer)
         setContentView(binding.root)
         val navHostFragment = binding.fragmentContainer.getFragment<NavHostFragment>()
-
         binding.bottomNavigation.setupWithNavController(navHostFragment.navController)
 
         // navController변수 선언
@@ -49,9 +46,35 @@ class MainActivity : AppCompatActivity(), BlurController {
                     binding.bottomNavigation.visibility = View.VISIBLE
                 }
             }
+
+            if (destination.id == R.id.menu_home) {
+                binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            } else {
+                binding.root.closeDrawer(binding.fcvNotificationDrawer)
+                binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
         }
 
         binding.blurView.setupWith(binding.blurTarget).setFrameClearDrawable(window.decorView.background).setBlurEnabled(false)
+        binding.root.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                super.onDrawerOpened(drawerView)
+                activateBlur(BlurLevel.BASE)
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                super.onDrawerClosed(drawerView)
+                deactivateBlur()
+            }
+        })
+    }
+
+    private fun applyDefaultInsets(targetView: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(targetView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            insets
+        }
     }
 
     override fun activateBlur(blurLevel: BlurLevel) {
@@ -63,5 +86,13 @@ class MainActivity : AppCompatActivity(), BlurController {
 
     override fun deactivateBlur() {
         binding.blurView.setBlurEnabled(false)
+    }
+
+    override fun openDrawer() {
+        binding.root.openDrawer(binding.fcvNotificationDrawer)
+    }
+
+    override fun closerDrawer() {
+        binding.root.closeDrawer(binding.fcvNotificationDrawer)
     }
 }
