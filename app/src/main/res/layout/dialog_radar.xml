@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/yellow_tile"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="24dp">
+
+        <LinearLayout
+            android:id="@+id/ll_radar_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp"
+            app:layout_constraintBottom_toTopOf="@id/iv_radar_heart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/arita_semibold"
+                android:text="나의 성향"
+                android:textColor="@color/neutral"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/iv_radar_close"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_radar_close" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_radar_heart"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_radar_heart"
+            app:layout_constraintBottom_toTopOf="@id/tv_radar_heart"
+            app:layout_constraintEnd_toEndOf="@id/tv_radar_heart"
+            app:layout_constraintStart_toStartOf="@id/tv_radar_heart" />
+
+        <TextView
+            android:id="@+id/tv_radar_heart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arita_semibold"
+            android:text="공감성"
+            android:textColor="@color/neutral"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toTopOf="@id/custom_radar_view"
+            app:layout_constraintEnd_toEndOf="@id/custom_radar_view"
+            app:layout_constraintStart_toStartOf="@id/custom_radar_view" />
+
+        <ImageView
+            android:id="@+id/iv_radar_clover"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_radar_clover"
+            app:layout_constraintBottom_toTopOf="@id/tv_radar_clover"
+            app:layout_constraintEnd_toEndOf="@id/tv_radar_clover"
+            app:layout_constraintStart_toStartOf="@id/tv_radar_clover" />
+
+        <TextView
+            android:id="@+id/tv_radar_clover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/arita_semibold"
+            android:text="성실함"
+            android:textColor="@color/neutral"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/custom_radar_view"
+            app:layout_constraintStart_toEndOf="@id/custom_radar_view"
+            app:layout_constraintTop_toTopOf="@id/custom_radar_view" />
+
+        <ImageView
+            android:id="@+id/iv_radar_diamond"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_radar_diamond"
+            app:layout_constraintBottom_toTopOf="@id/tv_radar_diamond"
+            app:layout_constraintEnd_toEndOf="@id/tv_radar_diamond"
+            app:layout_constraintStart_toStartOf="@id/tv_radar_diamond" />
+
+        <TextView
+            android:id="@+id/tv_radar_diamond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/arita_semibold"
+            android:text="자존감"
+            android:textColor="@color/neutral"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/custom_radar_view"
+            app:layout_constraintEnd_toStartOf="@id/custom_radar_view"
+            app:layout_constraintTop_toTopOf="@id/custom_radar_view" />
+
+        <com.example.egobook_frontent.ui.home.RadarView
+            android:id="@+id/custom_radar_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_radar_heart" />
+
+        <ImageView
+            android:id="@+id/iv_radar_sun"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="-16dp"
+            android:layout_marginEnd="-16dp"
+            android:src="@drawable/ic_radar_sun"
+            app:layout_constraintEnd_toStartOf="@id/custom_radar_view"
+            app:layout_constraintTop_toBottomOf="@id/custom_radar_view" />
+
+        <TextView
+            android:id="@+id/tv_radar_sun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/arita_semibold"
+            android:text="긍정 사고"
+            android:textColor="@color/neutral"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="@id/iv_radar_sun"
+            app:layout_constraintStart_toStartOf="@id/iv_radar_sun"
+            app:layout_constraintTop_toBottomOf="@id/iv_radar_sun" />
+
+        <ImageView
+            android:id="@+id/iv_radar_star"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="-16dp"
+            android:layout_marginTop="-16dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_radar_star"
+            app:layout_constraintStart_toEndOf="@id/custom_radar_view"
+            app:layout_constraintTop_toBottomOf="@id/custom_radar_view" />
+
+        <TextView
+            android:id="@+id/tv_radar_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/arita_semibold"
+            android:text="감정 조절"
+            android:textColor="@color/neutral"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="@id/iv_radar_star"
+            app:layout_constraintStart_toStartOf="@id/iv_radar_star"
+            app:layout_constraintTop_toBottomOf="@id/iv_radar_star" />
+
+        <LinearLayout
+            android:id="@+id/ll_stats_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_radar_sun">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_radar_item"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_radar_heart" />
+
+                <TextView
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/arita_semibold"
+                    android:text="공감성"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/arita_medium"
+                    android:text="Lv. 999"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_radar_item"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_radar_diamond" />
+
+                <TextView
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/arita_semibold"
+                    android:text="자존감"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/arita_medium"
+                    android:text="Lv. 999"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_stats_second"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_stats_first">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_radar_item"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_radar_clover" />
+
+                <TextView
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/arita_semibold"
+                    android:text="성실함"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/arita_medium"
+                    android:text="Lv. 999"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_radar_item"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_radar_sun" />
+
+                <TextView
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/arita_semibold"
+                    android:text="긍정사고"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/arita_medium"
+                    android:text="Lv. 999"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_stats_third"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_stats_second">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_radar_item"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_radar_star" />
+
+                <TextView
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/arita_semibold"
+                    android:text="감정조절"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/arita_medium"
+                    android:text="Lv. 999"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_radar_item"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_radar_heart" />
+
+                <TextView
+                    android:layout_width="52dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/arita_semibold"
+                    android:text="자존감"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/arita_medium"
+                    android:text="Lv. 999"
+                    android:textColor="@color/neutral"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

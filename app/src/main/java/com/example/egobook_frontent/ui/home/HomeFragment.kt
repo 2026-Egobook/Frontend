@@ -56,6 +56,13 @@ class HomeFragment : Fragment() {
             notificationController.openDrawer()
         }
 
+
+        binding.ivRadar.setOnClickListener {
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = RadarDialog()
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "RadarDialog")
+        }
     }
 
     private fun LevelType.getResId(): Int {
