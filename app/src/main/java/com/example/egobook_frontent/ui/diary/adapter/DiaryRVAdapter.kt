@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.egobook_frontent.databinding.ItemDiaryBinding
-import com.example.egobook_frontent.ui.diary.Diary
+import com.example.egobook_frontent.domain.model.Diary
 
 class DiaryRVAdapter(private val diaryList: List<Diary>) : RecyclerView.Adapter<DiaryRVAdapter.ViewHolder>() {
 

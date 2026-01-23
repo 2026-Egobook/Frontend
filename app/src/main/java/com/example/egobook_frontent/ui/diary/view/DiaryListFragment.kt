@@ -7,9 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.egobook_frontent.R
 import com.example.egobook_frontent.databinding.FragmentDiaryListBinding
-import com.example.egobook_frontent.ui.diary.Diary
+import com.example.egobook_frontent.domain.model.Diary
 import com.example.egobook_frontent.ui.diary.adapter.DiaryRVAdapter
 
 class DiaryListFragment : Fragment() {

@@ -56,6 +56,10 @@ class HomeFragment : Fragment() {
             notificationController.openDrawer()
         }
 
+        binding.ivSetting.setOnClickListener {
+
+        }
+
     }
 
     private fun LevelType.getResId(): Int {
