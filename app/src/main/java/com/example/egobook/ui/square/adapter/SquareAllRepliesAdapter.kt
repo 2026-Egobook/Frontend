@@ -5,30 +5,30 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.egobook.databinding.ItemSquareMyReplyBinding
+import com.example.egobook.databinding.ItemSquareQuestionReplyBinding
 import com.example.egobook.ui.square.model.ReplyModel
 
-class MyRepliesHistoryAdapter: ListAdapter<ReplyModel, MyRepliesHistoryAdapter.MyRepliesHistoryViewHolder>(diffUtil) {
+class SquareAllRepliesAdapter: ListAdapter<ReplyModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MyRepliesHistoryViewHolder {
-        val binding = ItemSquareMyReplyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MyRepliesHistoryViewHolder(binding)
+    ): SquareAllRepliesViewHolder {
+        val binding = ItemSquareQuestionReplyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SquareAllRepliesViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: MyRepliesHistoryViewHolder,
+        holder: SquareAllRepliesViewHolder,
         position: Int
     ) {
         return holder.bind(getItem(position))
     }
 
-    class MyRepliesHistoryViewHolder(private val binding: ItemSquareMyReplyBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class SquareAllRepliesViewHolder(private val binding: ItemSquareQuestionReplyBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ReplyModel) = with(binding) {
-            tvItemSquareMyReplyDatetime.text = item.date
-            tvItemSquareMyReplyQuestion.text = item.question
-            tvItemSquareMyReplyAnswer.text = item.answer
+            civItemSquareQuestionReplyUserImage.setImageResource(item.image ?: 0)
+            tvItemSquareQuestionReplyUserLevel.text = "LV ${item.level}"
+            tvItemSquareQuestionReplyUserContent.text = item.answer
         }
     }
 

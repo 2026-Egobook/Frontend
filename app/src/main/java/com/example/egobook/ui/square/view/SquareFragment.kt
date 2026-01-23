@@ -22,5 +22,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
         tvSquareTodayQuestionMyRepliesViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_menu_square_to_myRepliesHistoryFragment)
         }
+        tvSquareAllUsersRepliesViewAll.setOnClickListener {
+            findNavController().navigate(R.id.action_menu_square_to_squareAllRepliesFragment)
+        }
     }
 }
