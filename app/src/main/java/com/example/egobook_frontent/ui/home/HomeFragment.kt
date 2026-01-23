@@ -57,6 +57,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.ivSetting.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_accountFragment)
 
         }
 
