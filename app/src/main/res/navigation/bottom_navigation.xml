@@ -136,6 +136,20 @@
         android:id="@+id/myLettersFragment"
         android:name="com.example.egobook.ui.square.view.MyLettersFragment"
         android:label="fragment_my_letters"
-        tools:layout="@layout/fragment_my_letters" />
+        tools:layout="@layout/fragment_my_letters" >
+        <action
+            android:id="@+id/action_myLettersFragment_to_myLetterDetailFragment"
+            app:destination="@id/myLetterDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myLetterDetailFragment"
+        android:name="com.example.egobook.ui.square.view.MyLetterDetailFragment"
+        android:label="MyLetterDetailFragment"
+        tools:layout="@layout/fragment_my_letter_detail">
+        <argument
+            android:name="letterItem"
+            app:argType="com.example.egobook.ui.square.model.LetterModel"
+            app:nullable="false"/>
+    </fragment>
 
 </navigation>

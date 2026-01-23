@@ -37,6 +37,11 @@
                 android:backgroundTint="@android:color/transparent"
                 android:text="친구"
                 android:textColor="@color/black"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minHeight="0dp"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="24dp"
                 app:cornerRadius="4dp"
                 app:strokeColor="@color/neutral_stroke"
                 app:strokeWidth="1dp" />

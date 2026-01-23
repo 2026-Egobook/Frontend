@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.egobook.databinding.ItemSquareLetterBinding
 import com.example.egobook.ui.square.model.LetterModel
 
-class MyLettersAdapter: ListAdapter<LetterModel, MyLettersAdapter.MyLetterViewHolder>(diffUtil) {
+class MyLettersAdapter(private val onClicked: (LetterModel) -> Unit): ListAdapter<LetterModel, MyLettersAdapter.MyLetterViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -26,6 +26,9 @@ class MyLettersAdapter: ListAdapter<LetterModel, MyLettersAdapter.MyLetterViewHo
     inner class MyLetterViewHolder(private val binding: ItemSquareLetterBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: LetterModel) = with(binding) {
             tvItemSquareLetterDatetime.text = item.dateTime
+            root.setOnClickListener {
+                onClicked(item)
+            }
         }
     }
 

@@ -14,7 +14,10 @@ import com.example.egobook.ui.square.model.ReceivedModel
 
 class MyLettersFragment : Fragment(R.layout.fragment_my_letters) {
     private lateinit var binding: FragmentMyLettersBinding
-    private val adapter = MyLettersAdapter()
+    private val adapter = MyLettersAdapter {
+        val action = MyLettersFragmentDirections.actionMyLettersFragmentToMyLetterDetailFragment(letterItem = it)
+        findNavController().navigate(action)
+    }
     private val dummyData = listOf(
         LetterModel(
             id = 1,
