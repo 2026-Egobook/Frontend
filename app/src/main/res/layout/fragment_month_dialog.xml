@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    tools:context=".ui.diary.view.MonthDialogFragment"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/dialog_background"
+        android:gravity="center_horizontal"
+        android:minWidth="233dp"
+        android:minHeight="278dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 상단 연도 선택 -->
+        <LinearLayout
+            android:id="@+id/year_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_prev_month"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:icon="@drawable/ic_left"
+                app:iconTint="@color/cos_black"
+                app:iconSize="24dp"
+                android:layout_marginEnd="16dp"/>
+
+            <TextView
+                android:id="@+id/tv_dialog_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/arita_semibold"
+                android:text="2025"
+                android:textColor="@color/cos_black"
+                android:textSize="16sp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_next_month"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:icon="@drawable/ic_right"
+                app:iconTint="@color/cos_black"
+                app:iconSize="24dp"
+                android:layout_marginStart="16dp"/>
+        </LinearLayout>
+
+        <!-- 월 선택 격자 -->
+        <GridLayout
+            android:id="@+id/months_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:columnCount="3"
+            android:rowCount="4">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_january"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="1월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_february"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="2월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_march"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="3월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_april"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="4월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_may"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="5월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_june"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="6월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_july"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="7월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_august"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="8월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_september"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="9월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_october"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="10월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_november"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="11월" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_december"
+                style="@style/MonthPickerMaterialButtonStyle"
+                android:text="12월" />
+
+        </GridLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

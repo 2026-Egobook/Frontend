@@ -14,20 +14,30 @@
             android:id="@+id/action_homeFragment_to_storeFragment"
             app:destination="@id/storeFragment" />
 
+        <action
+            android:id="@+id/action_homeFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
+
     </fragment>
 
     <fragment
         android:id="@+id/menu_diary"
-        android:name="com.example.egobook_frontent.ui.diary.DiaryFragment"
+        android:name="com.example.egobook_frontent.ui.diary.view.DiaryFragment"
         android:label="감정일기">
-        <!-- diaryWriteFragment로의 이동 액션 추가 -->
+        <!-- diaryWriteFragment로의 이동 액션 -->
         <action
             android:id="@+id/action_diaryFragment_to_diaryWriteFragment"
             app:destination="@id/diaryWriteFragment" />
-        <!-- CandlerFragment로의 이동 액션 추가 -->
+
+        <!-- CandlerFragment로의 이동 액션 -->
         <action
             android:id="@+id/action_diaryFragment_to_candlerFragment"
             app:destination="@id/candlerFragment" />
+
+        <!-- CandlerFragment로의 이동 액션 -->
+        <action
+            android:id="@+id/action_diaryFragment_to_diaryCheckFragment"
+            app:destination="@id/diaryCheckFragment" />
     </fragment>
     <fragment
         android:id="@+id/menu_ego_room"
@@ -46,14 +56,29 @@
     <!-- diaryWriteFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/diaryWriteFragment"
-        android:name="com.example.egobook_frontent.ui.diary.DiaryWriteFragment"
-        android:label="일기 작성" />
+        android:name="com.example.egobook_frontent.ui.diary.view.DiaryWriteFragment"
+        android:label="일기 작성"/>
 
     <!-- CandlerFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/candlerFragment"
-        android:name="com.example.egobook_frontent.ui.diary.CandlerFragment"
+        android:name="com.example.egobook_frontent.ui.diary.view.CandlerFragment"
         android:label="달력 화면" />
+
+    <!-- DiaryCheckFragment로의 목적지 정의 -->
+    <fragment
+        android:id="@+id/diaryCheckFragment"
+        android:name="com.example.egobook_frontent.ui.diary.view.DiaryCheckFragment"
+        android:label="일기 확인">
+
+        <argument
+            android:name="diaryContent"
+            app:argType="string" />
+        <argument
+            android:name="diaryTime"
+            app:argType="string"
+            app:nullable="true"/>
+    </fragment>
      
     <fragment
         android:id="@+id/counselingWeeklyReportFragment"
@@ -84,8 +109,6 @@
             app:popUpToInclusive="true" />
     </fragment>
 
-
-
     <fragment
         android:id="@+id/storeFragment"
         android:name="com.example.egobook_frontent.ui.shop.StoreFragment" >
@@ -94,6 +117,17 @@
             android:id="@+id/action_storeFragment_to_homeFragment"
             app:popUpTo="@id/menu_home"
             app:destination="@id/menu_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.egobook_frontent.ui.account.AccountFragment">
+
+        <action
+            android:id="@+id/action_accountFragment_to_homeFragment"
+            app:destination="@id/menu_home"
+            app:popUpTo="@id/menu_home"/>
+
     </fragment>
 
 </navigation>

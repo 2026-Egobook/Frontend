@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: HomeViewModel by viewModels()
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { userState ->
                     binding.tvLevel.text = "Lv ${userState.level.number}"
                     binding.ivLevelType.setImageResource(userState.level.type.getResId())
@@ -54,6 +54,11 @@ class HomeFragment : Fragment() {
             val notificationController =
                 checkNotNull(activity as? NotificationController) { "해당 액티비티는 notification controller를 구현하지 않았습니다" }
             notificationController.openDrawer()
+        }
+
+        binding.ivSetting.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_accountFragment)
+
         }
 
         binding.ivRadar.setOnClickListener {
