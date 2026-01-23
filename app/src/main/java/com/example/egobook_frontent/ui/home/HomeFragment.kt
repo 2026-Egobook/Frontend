@@ -56,12 +56,18 @@ class HomeFragment : Fragment() {
             notificationController.openDrawer()
         }
 
-
         binding.ivRadar.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
             val dialog = RadarDialog()
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "RadarDialog")
+        }
+
+        binding.ivCalendar.setOnClickListener {
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = StreakDialog()
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "SteakDialog")
         }
     }
 

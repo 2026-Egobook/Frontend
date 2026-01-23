@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/transparent">
+    
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_white_close"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/iv_background" />
+
+    <ImageView
+        android:id="@+id/iv_background"
+        android:layout_width="312dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:src="@drawable/bg_streak_dialog"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_close"
+        android:layout_marginTop="-5dp" />
+
+    <TextView
+        android:id="@+id/tv_monday"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="4dp"
+        android:text="월"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:background="@drawable/bg_steak_dialog_day_of_week"
+        android:textColor="@color/chip_yellow"
+        app:layout_constraintTop_toTopOf="@id/iv_background"
+        app:layout_constraintEnd_toStartOf="@id/tv_tuesday"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"/>
+
+
+    <TextView
+        android:id="@+id/tv_tuesday"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="4dp"
+        android:text="화"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:background="@drawable/bg_steak_dialog_day_of_week"
+        android:textColor="@color/chip_yellow"
+        app:layout_constraintTop_toTopOf="@id/iv_background"
+        app:layout_constraintEnd_toStartOf="@id/tv_wednesday"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"/>
+
+    <TextView
+        android:id="@+id/tv_wednesday"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="4dp"
+        android:text="수"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:background="@drawable/bg_steak_dialog_day_of_week"
+        android:textColor="@color/chip_yellow"
+        app:layout_constraintTop_toTopOf="@id/iv_background"
+        app:layout_constraintEnd_toStartOf="@id/tv_thursday"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"/>
+
+    <TextView
+        android:id="@+id/tv_thursday"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="4dp"
+        android:text="목"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:background="@drawable/bg_steak_dialog_day_of_week"
+        android:textColor="@color/chip_yellow"
+        app:layout_constraintTop_toTopOf="@id/iv_background"
+        app:layout_constraintEnd_toEndOf="@id/iv_background"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"/>
+
+    <TextView
+        android:id="@+id/tv_friday"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="4dp"
+        android:text="금"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:background="@drawable/bg_steak_dialog_day_of_week"
+        android:textColor="@color/chip_yellow"
+        app:layout_constraintTop_toTopOf="@id/tv_saturday"
+        app:layout_constraintEnd_toStartOf="@id/tv_saturday"
+        android:layout_marginEnd="4dp" />
+
+    <TextView
+        android:id="@+id/tv_saturday"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="4dp"
+        android:text="토"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:background="@drawable/bg_steak_dialog_day_of_week"
+        android:textColor="@color/chip_yellow"
+        app:layout_constraintTop_toTopOf="@id/tv_sunday"
+        app:layout_constraintEnd_toStartOf="@id/tv_sunday"
+        android:layout_marginEnd="4dp" />
+
+    <TextView
+        android:id="@+id/tv_sunday"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="4dp"
+        android:text="일"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:background="@drawable/bg_steak_dialog_day_of_week"
+        android:textColor="@color/chip_yellow"
+        app:layout_constraintTop_toBottomOf="@id/tv_thursday"
+        app:layout_constraintEnd_toEndOf="@id/tv_thursday"
+        android:layout_marginTop="8dp" />
+
+    <ImageView
+        android:id="@+id/iv_stamp_diary_background"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/bg_steak_dialog_stamp_background"
+        app:layout_constraintBottom_toTopOf="@id/tv_write_diary"
+        app:layout_constraintStart_toStartOf="@id/tv_write_diary"
+        app:layout_constraintEnd_toEndOf="@id/tv_write_diary"
+        android:layout_marginBottom="12dp" />
+    
+    <ImageView
+        android:id="@+id/iv_stamp_diary"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        app:layout_constraintTop_toTopOf="@id/iv_stamp_diary_background"
+        app:layout_constraintEnd_toEndOf="@id/iv_stamp_diary_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_stamp_diary_background"
+        app:layout_constraintStart_toStartOf="@id/iv_stamp_diary_background"
+        android:src="@drawable/ic_steak_dialog_stamp" />
+
+
+    <TextView
+        android:id="@+id/tv_write_diary"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="감정일기\n쓰기"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:textSize="14dp"
+        android:textColor="@color/neutral"
+        app:layout_constraintStart_toStartOf="@id/iv_background"
+        app:layout_constraintTop_toTopOf="@id/tv_write_letter"
+        android:layout_marginStart="27dp"
+        android:layout_marginBottom="29dp" />
+
+    <ImageView
+        android:id="@+id/iv_stamp_letter_background"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/bg_steak_dialog_stamp_background"
+        app:layout_constraintBottom_toTopOf="@id/tv_write_letter"
+        app:layout_constraintStart_toStartOf="@id/tv_write_letter"
+        app:layout_constraintEnd_toEndOf="@id/tv_write_letter"
+        android:layout_marginBottom="12dp" />
+
+    <ImageView
+        android:id="@+id/iv_stamp_letter"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/iv_stamp_letter_background"
+        app:layout_constraintEnd_toEndOf="@id/iv_stamp_letter_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_stamp_letter_background"
+        app:layout_constraintStart_toStartOf="@id/iv_stamp_letter_background"
+        android:src="@drawable/ic_steak_dialog_stamp" />
+
+
+    <TextView
+        android:id="@+id/tv_write_letter"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="편지\n쓰기"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:textSize="14dp"
+        android:textColor="@color/neutral"
+        app:layout_constraintBottom_toBottomOf="@id/tv_today_answer"
+        app:layout_constraintEnd_toStartOf="@id/tv_today_answer"
+        app:layout_constraintStart_toEndOf="@id/tv_write_diary"/>
+    
+    <ImageView
+        android:id="@+id/iv_today_answer_stamp_background"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/bg_steak_dialog_stamp_background"
+        app:layout_constraintBottom_toTopOf="@id/tv_today_answer"
+        app:layout_constraintStart_toStartOf="@id/tv_today_answer"
+        app:layout_constraintEnd_toEndOf="@id/tv_today_answer"
+        android:layout_marginBottom="12dp"/>
+
+    <ImageView
+        android:id="@+id/iv_stamp_today_answer"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/iv_today_answer_stamp_background"
+        app:layout_constraintEnd_toEndOf="@id/iv_today_answer_stamp_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_today_answer_stamp_background"
+        app:layout_constraintStart_toStartOf="@id/iv_today_answer_stamp_background"
+        android:src="@drawable/ic_steak_dialog_stamp" />
+
+    <TextView
+        android:id="@+id/tv_today_answer"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="오늘의 질문\n답변하기"
+        android:textAlignment="center"
+        android:fontFamily="@font/arita_semibold"
+        android:textSize="14dp"
+        android:textColor="@color/neutral"
+        app:layout_constraintBottom_toBottomOf="@id/iv_background"
+        app:layout_constraintEnd_toEndOf="@id/iv_background"
+        android:layout_marginBottom="29dp"
+        android:layout_marginEnd="27dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
