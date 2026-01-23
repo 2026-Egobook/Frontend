@@ -63,6 +63,7 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_item_friend_list_name"/>
 
     <ImageView
+        android:id="@+id/iv_item_square_friend_list_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_cancel"
