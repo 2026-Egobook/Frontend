@@ -50,6 +50,9 @@
         <action
             android:id="@+id/action_menu_square_to_squareAllRepliesFragment"
             app:destination="@id/squareAllRepliesFragment" />
+        <action
+            android:id="@+id/action_menu_square_to_myLettersFragment"
+            app:destination="@id/myLettersFragment" />
     </fragment>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
@@ -129,5 +132,10 @@
         android:name="com.example.egobook.ui.square.view.FriendsFragment"
         android:label="fragment_square_friends"
         tools:layout="@layout/fragment_square_friends" />
+    <fragment
+        android:id="@+id/myLettersFragment"
+        android:name="com.example.egobook.ui.square.view.MyLettersFragment"
+        android:label="fragment_my_letters"
+        tools:layout="@layout/fragment_my_letters" />
 
 </navigation>

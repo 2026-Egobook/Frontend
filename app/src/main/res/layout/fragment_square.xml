@@ -260,7 +260,7 @@
                 android:text="내가 쓴 편지" />
 
             <TextView
-                android:id="@+id/tv_square_letter_mine_view_all"
+                android:id="@+id/tv_square_my_letters_view_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
