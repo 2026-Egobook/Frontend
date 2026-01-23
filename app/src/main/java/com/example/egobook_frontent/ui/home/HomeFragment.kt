@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: HomeViewModel by viewModels()
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { userState ->
                     binding.tvLevel.text = "Lv ${userState.level.number}"
                     binding.ivLevelType.setImageResource(userState.level.type.getResId())
@@ -61,6 +61,19 @@ class HomeFragment : Fragment() {
 
         }
 
+        binding.ivRadar.setOnClickListener {
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = RadarDialog()
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "RadarDialog")
+        }
+
+        binding.ivCalendar.setOnClickListener {
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = StreakDialog()
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "SteakDialog")
+        }
     }
 
     private fun LevelType.getResId(): Int {
