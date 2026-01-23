@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    android:layout_marginBottom="21dp">
+    android:layout_marginBottom="21dp"
+    tools:context=".ui.account.AccountFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.account.AccountFragment">
+        android:layout_height="match_parent">
 
         <!--통용 가이드라인-->
         <androidx.constraintlayout.widget.Guideline
