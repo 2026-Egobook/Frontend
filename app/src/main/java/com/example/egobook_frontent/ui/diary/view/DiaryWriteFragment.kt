@@ -1,14 +1,14 @@
-package com.example.egobook_frontent.ui.diary
+package com.example.egobook_frontent.ui.diary.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.egobook_frontent.databinding.FragmentDiaryWriteBinding
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class DiaryWriteFragment : Fragment() {
     private var _binding: FragmentDiaryWriteBinding? = null

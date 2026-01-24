@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.diary
+package com.example.egobook_frontent.ui.diary.adapter
 
 import android.view.View
 import com.example.egobook_frontent.databinding.CalendarDayLayoutBinding

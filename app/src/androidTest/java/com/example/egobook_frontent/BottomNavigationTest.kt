@@ -7,7 +7,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.egobook_frontent.ui.counseling.view.EgoRoomFragment
-import com.example.egobook_frontent.ui.diary.DiaryFragment
+import com.example.egobook_frontent.ui.diary.view.DiaryFragment
 import com.example.egobook_frontent.ui.home.HomeFragment
 import com.example.egobook_frontent.ui.square.view.SquareFragment
 import org.assertj.core.api.Assertions.assertThat

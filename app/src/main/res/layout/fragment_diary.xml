@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.diary.DiaryFragment"
+    tools:context=".ui.diary.view.DiaryFragment"
     android:background="@color/white">
 
     <!--상단 날짜 및 내보내기, 달력 버튼 배치용 -->
@@ -185,17 +185,26 @@
         app:layout_constraintStart_toStartOf="@id/tb_type"
         app:layout_constraintEnd_toEndOf="@id/tb_type"/>
 
-    <!--일기 목록 리사이클러뷰    -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_diary"
-        android:layout_width="match_parent"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_diary"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        tools:listitem="@layout/item_diary"
-        app:layout_constraintTop_toBottomOf="@+id/tab_divider"
+        app:layout_constraintTop_toBottomOf="@id/tab_divider"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingStart="16.75dp"
-        android:paddingEnd="17.75dp"
-        android:visibility="visible"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--일기 목록 리사이클러뷰    -->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rv_diary"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        tools:listitem="@layout/item_diary"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tab_divider"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        android:paddingStart="16.75dp"-->
+<!--        android:paddingEnd="17.75dp"-->
+<!--        android:visibility="visible"/>-->
 
     <!-- 작성된 일기가 없을 때 보여줄 화면 -->
     <LinearLayout

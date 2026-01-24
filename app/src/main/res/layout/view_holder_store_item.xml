@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_store_item"
+    android:layout_width="match_parent"
+    android:layout_height="142dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/store_item_selection_border"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/iv_item"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@color/neutral_subtle"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="center" />
+    
+    <LinearLayout
+        android:id="@+id/ll_item_info"
+        android:layout_width="78dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:background="@drawable/store_item_status_border">
+
+        <ImageView
+            android:id="@+id/iv_store_item_ink"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ink_icon" />
+        
+        <TextView
+            android:id="@+id/tv_item_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arita_semibold"
+            android:textSize="12dp"
+            android:textColor="@color/neutral"
+            android:textAlignment="center"
+            android:text="300"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+    
+
+
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.egobook_frontent.ui.diary
+package com.example.egobook_frontent.domain.model
 
 
 import androidx.annotation.StringRes
