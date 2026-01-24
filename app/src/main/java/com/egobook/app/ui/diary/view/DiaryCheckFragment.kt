@@ -31,9 +31,10 @@ class DiaryCheckFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //임시 텍스트 대신, 전달받은 args의 데이터를 사용합니다.
+        //DiaryListFragment로부터 전달받은 args의 데이터 바인딩.
         binding.tvDiaryContent.text = args.diaryContent
         binding.tvWrittenTime.text = args.diaryTime
+        binding.tvDate.text = args.diaryDate
 
         setClickListener()
 

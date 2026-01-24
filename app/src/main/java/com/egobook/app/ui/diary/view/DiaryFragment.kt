@@ -11,6 +11,7 @@
     import com.egobook.app.R
     import com.egobook.app.applyScreenBlur
     import com.egobook.app.databinding.FragmentDiaryBinding
+    import com.egobook.app.domain.model.DiaryType
     import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
     import com.egobook.app.ui.diary.viewmodel.DiariesEvent
     import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
@@ -79,10 +80,10 @@
         private fun getDiaryTypesByPosition(position: Int): Set<com.egobook.app.domain.model.DiaryType>? {
             return when(position) {
                 0 -> null // 전체
-                1 -> setOf(com.egobook.app.domain.model.DiaryType.EMOTION)
-                2 -> setOf(com.egobook.app.domain.model.DiaryType.WORRY)
-                3 -> setOf(com.egobook.app.domain.model.DiaryType.PRAISE)
-                4 -> setOf(com.egobook.app.domain.model.DiaryType.THANKS)
+                1 -> setOf(DiaryType.EMOTION)
+                2 -> setOf(DiaryType.WORRY)
+                3 -> setOf(DiaryType.PRAISE)
+                4 -> setOf(DiaryType.THANKS)
                 else -> null
             }
         }

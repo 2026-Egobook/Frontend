@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 @HiltViewModel
 class DiariesViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases
-) : ViewModel() { // 💡 ViewModel()을 상속해야 합니다.
+) : ViewModel() {
     private val _state = MutableStateFlow(DiariesState())  // 뷰모델 내부 갱신용
     val state: StateFlow<DiariesState> get() = _state    // 외부(ui) 읽기 전용
 

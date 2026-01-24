@@ -1,5 +1,6 @@
 package com.egobook.app.ui.diary.util
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -11,6 +12,7 @@ import java.time.format.DateTimeFormatter
 private val TIME_FORMATTER =
     DateTimeFormatter.ofPattern("HH:mm")
 
+
 /**
  * UI에서 날짜와 시간을 함께 표시할 때 사용하는 포맷터
  *
@@ -18,6 +20,16 @@ private val TIME_FORMATTER =
  */
 private val DATE_TIME_FORMATTER =
     DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")
+
+
+/**
+ * UI에서 날짜를 한글 형태로 표시할 때 사용하는 포맷터 (LocalDate 전용)
+ *
+ * 예) 2025년 12월 25일
+ */
+private val DATE_KOREAN_FORMATTER =
+    DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+
 
 /**
  * [LocalDateTime]을 UI에서 사용하기 위한 시간 문자열로 변환한다.
@@ -29,6 +41,7 @@ private val DATE_TIME_FORMATTER =
 fun LocalDateTime.toTimeString(): String =
     this.format(TIME_FORMATTER)
 
+
 /**
  * [LocalDateTime]을 UI에서 사용하기 위한 날짜+시간 문자열로 변환한다.
  *
@@ -38,3 +51,14 @@ fun LocalDateTime.toTimeString(): String =
  */
 fun LocalDateTime.toDateTimeString(): String =
     this.format(DATE_TIME_FORMATTER)
+
+
+/**
+ * [LocalDate]를 UI에서 사용하기 위한 한글 날짜 문자열로 변환한다.
+ *
+ * @return yyyy년 MM월 dd일 형식의 날짜 문자열
+ *
+ * 예) 2025년 12월 25일
+ */
+fun LocalDate.toKoreanDateString(): String =
+    this.format(DATE_KOREAN_FORMATTER)

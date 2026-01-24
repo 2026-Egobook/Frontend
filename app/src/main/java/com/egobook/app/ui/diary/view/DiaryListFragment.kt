@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import com.egobook.app.ui.diary.util.toDateTimeString
+import com.egobook.app.ui.diary.util.toKoreanDateString
 
 class DiaryListFragment : Fragment() {
 
@@ -83,7 +84,8 @@ class DiaryListFragment : Fragment() {
                 val action =
                     DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
                         diaryContent = diary.content,
-                        diaryTime = diary.time.toDateTimeString()
+                        diaryTime = diary.time.toDateTimeString(),
+                        diaryDate = diary.date.toKoreanDateString()
                     )
                 findNavController().navigate(action)
             }

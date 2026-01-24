@@ -92,6 +92,12 @@
             android:name="diaryTime"
             app:argType="string"
             app:nullable="true"/>
+
+        <argument
+            android:name="diaryDate"
+            app:argType="string"
+            />
+
     </fragment>
 
     <fragment
