@@ -112,6 +112,7 @@ dependencies {
 
     implementation("me.relex:circleindicator:2.1.6")
     implementation("com.github.Dimezis:BlurView:version-3.2.0")
+    implementation("com.github.bumptech.glide:glide:5.0.5")
 }
 
 kapt {

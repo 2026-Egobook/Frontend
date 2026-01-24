@@ -3,10 +3,11 @@ package com.egobook.app.data.api
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.square.FriendRequestResponse
 import com.egobook.app.data.model.square.FriendResponse
-import retrofit2.Response
+import com.egobook.app.data.model.square.SearchUserResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface FriendsApiService {
     @GET("/friends")
@@ -20,5 +21,8 @@ interface FriendsApiService {
 
     @GET("/friends/requests/outgoing")
     suspend fun fetchOutgoingFriendsRequests(): ApiResponse<List<FriendRequestResponse>>
+
+    @GET("/friends/search")
+    suspend fun searchUser(@Query("keyword") keyword: String): ApiResponse<List<SearchUserResponse>>
 }
 

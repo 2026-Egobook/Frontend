@@ -1,13 +1,16 @@
 package com.egobook.app.ui.square.viewmodel
 
+import androidx.compose.runtime.key
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.DeleteFriendUseCase
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.GetIncomingFriendRequestsUseCase
 import com.egobook.app.domain.usecase.GetOutgoingFriendRequestsUseCase
+import com.egobook.app.domain.usecase.SearchUserUseCase
 import com.egobook.app.ui.square.model.FriendModel
 import com.egobook.app.ui.square.model.FriendRequestModel
+import com.egobook.app.ui.square.model.SearchUserModel
 import com.egobook.app.ui.square.model.toPresentation
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +26,8 @@ class FriendsViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase,
     private val deleteFriendUseCase: DeleteFriendUseCase,
     private val getIncomingFriendRequestsUseCase: GetIncomingFriendRequestsUseCase,
-    private val getOutgoingFriendRequestsUseCase: GetOutgoingFriendRequestsUseCase
+    private val getOutgoingFriendRequestsUseCase: GetOutgoingFriendRequestsUseCase,
+    private val searchUserUseCase: SearchUserUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -77,6 +81,20 @@ class FriendsViewModel @Inject constructor(
                 _outgoingFriendRequestList.value = UiState.Success(domainList.map { it.toPresentation() })
             }.onFailure { error ->
                 _outgoingFriendRequestList.value = UiState.Failure(error.message)
+            }
+        }
+    }
+
+    private val _searchUserResult = MutableSharedFlow<UiState<SearchUserModel?>>()
+    val searchUserResult = _searchUserResult.asSharedFlow()
+
+    fun searchUser(keyword: String) {
+        viewModelScope.launch {
+            _searchUserResult.emit(UiState.Loading)
+            searchUserUseCase(keyword = keyword).onSuccess { domainList ->
+                _searchUserResult.emit(UiState.Success(domainList.map { it.toPresentation() }.firstOrNull()))
+            }.onFailure { error ->
+                _searchUserResult.emit(UiState.Failure(error.message))
             }
         }
     }

@@ -8,8 +8,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.egobook.app.BlurLevel
 import com.egobook.app.R
+import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentFriendsListBinding
+import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.adapter.FriendsListAdapter
 import com.egobook.app.ui.square.model.FriendModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
@@ -23,6 +26,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
 
     private lateinit var dialog: FriendDeleteDialog
     private val adapter = FriendsListAdapter { deleteItem ->
+        applyScreenBlur(BlurLevel.BASE)
         dialog = FriendDeleteDialog(deleteItem = deleteItem)
         dialog.show(childFragmentManager, FriendDeleteDialog.TAG)
     }
@@ -68,6 +72,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
                             is UiState.Success<Long> -> {
                                 Toast.makeText(context, "친구를 삭제했습니다.", Toast.LENGTH_SHORT).show()
                                 dialog.dismiss()
+                                removeScreenBlur()
                                 val deleteId = state.data
                                 val updateList = adapter.currentList.filter { it.id != deleteId }
                                 adapter.submitList(updateList.toList())

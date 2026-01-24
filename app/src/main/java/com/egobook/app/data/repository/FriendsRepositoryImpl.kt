@@ -4,9 +4,11 @@ import com.egobook.app.R
 import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.model.square.FriendRequestResponse
 import com.egobook.app.data.model.square.FriendResponse
+import com.egobook.app.data.model.square.SearchUserResponse
 import com.egobook.app.data.model.square.toDomain
 import com.egobook.app.domain.model.Friend
 import com.egobook.app.domain.model.FriendRequest
+import com.egobook.app.domain.model.SearchUser
 import com.egobook.app.domain.repository.FriendsRepository
 import javax.inject.Inject
 
@@ -94,6 +96,26 @@ class FriendsRepositoryImpl @Inject constructor(private val apiService: FriendsA
             )
         )
         Result.success(dummyData.map { it.toDomain() })
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun searchUser(keyword: String): Result<List<SearchUser>> = try {
+//        val response = apiService.searchUser(keyword = keyword)
+//        if(response.status == 200) {
+//            Result.success(response.data.map { it.toDomain() })
+//        } else {
+//            Result.failure(Exception("Error: ${response.status}"))
+//        }
+        val dummySearchData = listOf(
+            SearchUserResponse(
+                userId = 1000000000000005L,
+                nickname = "개발하는 거북이",
+                level = 42,
+                profileImageUrl = "https://images.unsplash.com/photo-1541344999736-83eca272f6fc?q=80"
+            )
+        )
+        Result.success(dummySearchData.map { it.toDomain() })
     } catch (e: Exception) {
         Result.failure(e)
     }
