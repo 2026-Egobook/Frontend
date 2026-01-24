@@ -7,4 +7,5 @@ interface FriendsRepository {
     suspend fun deleteFriend(deleteId: Long): Result<Long>
     suspend fun fetchFriendList(): Result<List<Friend>>
     suspend fun fetchIncomingFriendRequestList(): Result<List<FriendRequest>>
+    suspend fun fetchOutgoingFriendRequestList(): Result<List<FriendRequest>>
 }

@@ -60,6 +60,44 @@ class FriendsRepositoryImpl @Inject constructor(private val apiService: FriendsA
         Result.failure(e)
     }
 
+    override suspend fun fetchOutgoingFriendRequestList(): Result<List<FriendRequest>> = try {
+//        val response = apiService.fetchOutgoingFriendsRequests()
+//        if(response.status == 200) {
+//            Result.success(response.data.map { it.toDomain() })
+//        } else {
+//            Result.failure(Exception("Error: ${response.status}"))
+//        }
+        val dummyData = listOf(
+            FriendRequestResponse(
+                requestId = 8000000000000001L,
+                userId = 2000000000000001L,
+                nickname = "개발하는진돗개",
+                requestedAt = "2026-01-24T10:00:00.000Z"
+            ),
+            FriendRequestResponse(
+                requestId = 8000000000000002L,
+                userId = 2000000000000002L,
+                nickname = "소프트웨어마법사",
+                requestedAt = "2026-01-24T11:30:00.000Z"
+            ),
+            FriendRequestResponse(
+                requestId = 8000000000000003L,
+                userId = 2000000000000003L,
+                nickname = "커피중독자",
+                requestedAt = "2026-01-24T13:15:00.000Z"
+            ),
+            FriendRequestResponse(
+                requestId = 8000000000000004L,
+                userId = 2000000000000004L,
+                nickname = "야근하는다람쥐",
+                requestedAt = "2026-01-24T15:45:00.000Z"
+            )
+        )
+        Result.success(dummyData.map { it.toDomain() })
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
     override suspend fun deleteFriend(deleteId: Long): Result<Long> = try {
 //        val response = apiService.deleteFriend(friendId = deleteId)
 //        if(response.status == 200) {

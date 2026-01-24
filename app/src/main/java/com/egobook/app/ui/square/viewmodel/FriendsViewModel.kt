@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.DeleteFriendUseCase
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.GetIncomingFriendRequestsUseCase
+import com.egobook.app.domain.usecase.GetOutgoingFriendRequestsUseCase
 import com.egobook.app.ui.square.model.FriendModel
 import com.egobook.app.ui.square.model.FriendRequestModel
 import com.egobook.app.ui.square.model.toPresentation
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class FriendsViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase,
     private val deleteFriendUseCase: DeleteFriendUseCase,
-    private val getIncomingFriendRequestsUseCase: GetIncomingFriendRequestsUseCase
+    private val getIncomingFriendRequestsUseCase: GetIncomingFriendRequestsUseCase,
+    private val getOutgoingFriendRequestsUseCase: GetOutgoingFriendRequestsUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -64,4 +66,19 @@ class FriendsViewModel @Inject constructor(
             }
         }
     }
+
+    private val _outgoingFriendRequestList = MutableStateFlow<UiState<List<FriendRequestModel>>>(UiState.Idle)
+    val outgoingFriendRequestList = _outgoingFriendRequestList.asStateFlow()
+
+    fun fetchOutgoingFriendRequestList() {
+        viewModelScope.launch {
+            _outgoingFriendRequestList.value = UiState.Loading
+            getOutgoingFriendRequestsUseCase().onSuccess { domainList ->
+                _outgoingFriendRequestList.value = UiState.Success(domainList.map { it.toPresentation() })
+            }.onFailure { error ->
+                _outgoingFriendRequestList.value = UiState.Failure(error.message)
+            }
+        }
+    }
+
 }

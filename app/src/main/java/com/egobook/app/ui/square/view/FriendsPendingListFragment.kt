@@ -10,6 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentFriendsPendingListBinding
 import com.egobook.app.databinding.ItemSquareFriendPendingReceivedListBinding
+import com.egobook.app.databinding.ItemSquareFriendPendingSentListBinding
 import com.egobook.app.ui.square.model.FriendRequestModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 import com.egobook.app.util.UiState
@@ -29,6 +30,7 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
 
     private fun fetchData() {
         viewModel.fetchIncomingFriendRequestList()
+        viewModel.fetchOutgoingFriendRequestList()
     }
 
     private fun initObservers() = with(binding) {
@@ -54,6 +56,29 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                     llFriendsPendingListReceived.addView(itemView)
                                 }
                                 tvFriendsPendingListReceivedNum.text = friendRequestList.size.toString()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.outgoingFriendRequestList.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<List<FriendRequestModel>> -> {
+                                val friendRequestList = state.data
+                                llFriendsPendingListSent.removeAllViews() // 기존에 추가되어 있던 뷰들 모두 제거
+                                friendRequestList.forEach { friendRequest ->
+                                    val itemView = layoutInflater.inflate(
+                                        R.layout.item_square_friend_pending_sent_list,
+                                        llFriendsPendingListSent,
+                                        false
+                                    )
+                                    val itemBinding = ItemSquareFriendPendingSentListBinding.bind(itemView)
+                                    itemBinding.tvItemFriendPendingSentListName.text = friendRequest.nickname
+                                    llFriendsPendingListSent.addView(itemView)
+                                }
                             }
                         }
                     }

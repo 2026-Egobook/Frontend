@@ -17,5 +17,8 @@ interface FriendsApiService {
 
     @GET("/friends/requests/incoming")
     suspend fun fetchIncomingFriendsRequests(): ApiResponse<List<FriendRequestResponse>>
+
+    @GET("/friends/requests/outgoing")
+    suspend fun fetchOutgoingFriendsRequests(): ApiResponse<List<FriendRequestResponse>>
 }
 
