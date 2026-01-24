@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class DiaryRepositoryImpl : DiaryRepository {
+class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
 
     //더미데이터 삽입
     private val diariesFlow = MutableStateFlow(

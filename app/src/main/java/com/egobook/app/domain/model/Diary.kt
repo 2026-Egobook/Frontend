@@ -13,7 +13,7 @@ data class Diary(
     val time: LocalDateTime, //시간
     val emotionLevel: EmotionLevel? //없을 수도 있음
 ) {
-    init { //일기 타임에 감정이 포함되어 있어야만 기분 선택 가능
+    init { //일기 타임에 감정이 포함되어 있어야만 기분 선택 가능 -> 도메인 규칙으로 정의
         if (DiaryType.EMOTION !in types && emotionLevel != null) {
             throw IllegalStateException(
                 "emotionLevel은 EMOTION 타입이 포함된 경우에만 설정할 수 있습니다."
@@ -50,9 +50,9 @@ enum class EmotionLevel(val value: String, val displayEmotionLevel: Int) {
     VERY_GOOD("VERY_GOOD", 5);
 
     companion object {
-        fun fromDisplayEmotionLevel(displayEmotionLevel: Int): EmotionLevel {
-            return entries.find { it.displayEmotionLevel == displayEmotionLevel }
-                ?: throw IllegalArgumentException("Unknown emotion level: $displayEmotionLevel")
+        fun fromDisplayLevel(displayLevel: Int): EmotionLevel {
+            return entries.find { it.displayEmotionLevel == displayLevel }
+                ?: throw IllegalArgumentException("Unknown emotion level: $displayLevel")
         }
     }
 

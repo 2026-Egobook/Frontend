@@ -34,7 +34,7 @@
             android:id="@+id/action_diaryFragment_to_candlerFragment"
             app:destination="@id/candlerFragment" />
 
-        <!-- CandlerFragment로의 이동 액션 -->
+        <!-- DiaryCheckFragment로의 이동 액션 -->
         <action
             android:id="@+id/action_diaryFragment_to_diaryCheckFragment"
             app:destination="@id/diaryCheckFragment" />
