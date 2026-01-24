@@ -453,7 +453,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <egobook_frontent.ui.counseling.view.WordBubbleView
+            <com.egobook.app.ui.counseling.view.WordBubbleView
                 android:id="@+id/wbv_counseling_statistics_word_frequency"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
