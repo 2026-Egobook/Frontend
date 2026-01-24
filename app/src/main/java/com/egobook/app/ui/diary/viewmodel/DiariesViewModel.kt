@@ -8,17 +8,17 @@ import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class DiariesViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases
 ) : ViewModel() { // 💡 ViewModel()을 상속해야 합니다.
-    private val _state = MutableStateFlow(DiariesState())
-    val state = _state.asStateFlow()
+    private val _state = MutableStateFlow(DiariesState())  // 뷰모델 내부 갱신용
+    val state: StateFlow<DiariesState> get() = _state    // 외부(ui) 읽기 전용
 
     private var getDiariesJob: Job? = null
 
@@ -38,7 +38,7 @@ class DiariesViewModel @Inject constructor(
         getDiariesJob?.cancel()
         getDiariesJob = diaryUseCases.getDiaries(types)
             .onEach { diaries ->
-                _state.value = _state.value.copy(
+                _state.value = state.value.copy(
                     diaries = diaries,
                     selectedTabType = types
                 )
