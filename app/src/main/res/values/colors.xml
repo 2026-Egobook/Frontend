@@ -10,10 +10,8 @@
     <color name="cos_red_delete">#FFD41A1A</color>
     <color name="cos_light_grey">#F2F2F2</color>
 
-    <color name="cos_red_dark">#D41A1A</color>
 
     <color name="grey_img">#FFD9D9D9</color>
-    <color name="grey_light">#F4F3F3</color>
 
     <color name="brand_grass">#FF95BB2D</color>
     <color name="light_grass">#FFE8EED9</color>
@@ -41,14 +39,6 @@
     <color name="emotion_neutral">#F9E8B0</color>
     <color name="emotion_sad">#C6E9E4</color>
     <color name="emotion_very_sad">#A2C5E9</color>
-    <color name="stacked_bar_chart_text">#806201</color>
-
-    <!-- letter -->
-    <color name="letter_bg_beige">#FCF8E8</color>
-    <color name="letter_bg_pink">#FFC5C5</color>
-    <color name="letter_bg_leaf">#D0DEAD</color>
-    <color name="letter_bg_mint">#BFFBEA</color>
-    <color name="letter_bg_lavender">#E4D4FF</color>
 
     <!-- stroke -->
     <color name="neutral_stroke">#DBDBDB</color>

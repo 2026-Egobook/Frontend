@@ -116,7 +116,7 @@
             app:layout_constraintEnd_toStartOf="@id/custom_radar_view"
             app:layout_constraintTop_toTopOf="@id/custom_radar_view" />
 
-        <com.egobook.app.ui.home.RadarView
+        <com.example.egobook_frontent.ui.home.RadarView
             android:id="@+id/custom_radar_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
