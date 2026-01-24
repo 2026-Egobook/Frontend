@@ -27,4 +27,5 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindSquareRepository(impl: SquareRepositoryImpl): SquareRepository
 
+
 }
