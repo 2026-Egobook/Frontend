@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.DeleteFriendUseCase
 import com.egobook.app.domain.usecase.GetFriendListUseCase
+import com.egobook.app.domain.usecase.GetIncomingFriendRequestsUseCase
 import com.egobook.app.ui.square.model.FriendModel
+import com.egobook.app.ui.square.model.FriendRequestModel
 import com.egobook.app.ui.square.model.toPresentation
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FriendsViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase,
-    private val deleteFriendUseCase: DeleteFriendUseCase
+    private val deleteFriendUseCase: DeleteFriendUseCase,
+    private val getIncomingFriendRequestsUseCase: GetIncomingFriendRequestsUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -44,6 +47,20 @@ class FriendsViewModel @Inject constructor(
                 _deleteFriendResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _deleteFriendResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _incomingFriendRequestList = MutableStateFlow<UiState<List<FriendRequestModel>>>(UiState.Idle)
+    val incomingFriendRequestList = _incomingFriendRequestList.asStateFlow()
+
+    fun fetchIncomingFriendRequestList() {
+        viewModelScope.launch {
+            _incomingFriendRequestList.value = UiState.Loading
+            getIncomingFriendRequestsUseCase().onSuccess { domainList ->
+                _incomingFriendRequestList.value = UiState.Success(domainList.map { it.toPresentation() })
+            }.onFailure { error ->
+                _incomingFriendRequestList.value = UiState.Failure(error.message)
             }
         }
     }

@@ -2,9 +2,11 @@ package com.egobook.app.data.repository
 
 import com.egobook.app.R
 import com.egobook.app.data.api.FriendsApiService
+import com.egobook.app.data.model.square.FriendRequestResponse
 import com.egobook.app.data.model.square.FriendResponse
 import com.egobook.app.data.model.square.toDomain
 import com.egobook.app.domain.model.Friend
+import com.egobook.app.domain.model.FriendRequest
 import com.egobook.app.domain.repository.FriendsRepository
 import javax.inject.Inject
 
@@ -22,6 +24,38 @@ class FriendsRepositoryImpl @Inject constructor(private val apiService: FriendsA
             FriendResponse(id = 3, name = "친구3")
         )
         Result.success(dummyData.map { it.toDomain()})
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun fetchIncomingFriendRequestList(): Result<List<FriendRequest>> = try {
+//        val response = apiService.fetchIncomingFriendsRequests()
+//        if(response.status == 200) {
+//            Result.success(response.data.map { it.toDomain() })
+//        } else {
+//            Result.failure(Exception("Error: ${response.status}"))
+//        }
+        val dummyData = listOf(
+            FriendRequestResponse(
+                requestId = 9007199254740991L,
+                userId = 1000000000000001L,
+                nickname = "말랑카우",
+                requestedAt = "2026-01-24T09:34:26.191Z"
+            ),
+            FriendRequestResponse(
+                requestId = 9007199254740992L,
+                userId = 1000000000000002L,
+                nickname = "코딩하는고양이",
+                requestedAt = "2026-01-24T10:15:00.000Z"
+            ),
+            FriendRequestResponse(
+                requestId = 9007199254740993L,
+                userId = 1000000000000003L,
+                nickname = "안드로이드마스터",
+                requestedAt = "2026-01-24T11:45:12.555Z"
+            )
+        )
+        Result.success(dummyData.map { it.toDomain() })
     } catch (e: Exception) {
         Result.failure(e)
     }

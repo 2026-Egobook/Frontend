@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_friends_pending_list_num"
+            android:id="@+id/tv_friends_pending_list_received_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -37,17 +37,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:orientation="vertical"
-            android:divider="@drawable/divider_height_16dp"
-            app:showDividers="middle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_friends_pending_list_received_title">
-
-            <include layout="@layout/item_square_friend_pending_received_list" />
-
-            <include layout="@layout/item_square_friend_pending_received_list" />
-
-            <include layout="@layout/item_square_friend_pending_received_list" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <TextView
@@ -55,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="내가 한 신청"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/ll_friends_pending_list_received"
             app:layout_constraintStart_toStartOf="parent"/>
 
