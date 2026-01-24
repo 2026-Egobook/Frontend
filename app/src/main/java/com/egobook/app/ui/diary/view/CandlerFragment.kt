@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.BlurLevel
@@ -21,6 +23,8 @@ import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.MonthDayBinder
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
 
 class CandlerFragment : Fragment() {
 
@@ -45,6 +49,8 @@ class CandlerFragment : Fragment() {
             insets
         }
 
+        // 💡 1. 동적 요일 헤더 설정 함수 호출
+        setupDayOfWeekTitles()
         setupCalendar()
 
         binding.apply {
@@ -69,6 +75,20 @@ class CandlerFragment : Fragment() {
                 binding.calendarView.findFirstVisibleMonth()?.let {
                     binding.calendarView.smoothScrollToMonth(it.yearMonth.plusMonths(1))
                 }
+            }
+        }
+    }
+
+    // 요일 헤더를 동적으로 설정하는 함수 추가
+    private fun setupDayOfWeekTitles() {
+        val daysOfWeek = daysOfWeek()
+        // 💡 1. <include> 태그의 ID(titles_layout)를 통해 먼저 접근합니다.
+        // 💡 2. 그 다음, 그 안의 LinearLayout(titlesContainer)을 찾습니다.
+        binding.titlesLayout.titlesContainer.children.forEachIndexed { index, view ->
+            if (view is TextView) {
+                val dayOfWeek = daysOfWeek[index]
+                val title = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                view.text = title
             }
         }
     }
@@ -99,20 +119,16 @@ class CandlerFragment : Fragment() {
                 if (data.position == DayPosition.MonthDate) {
                     container.binding.calendarDayText.visibility = View.VISIBLE
 
-                    // 오늘 날짜인지 확인
                     if (data.date == today) {
-                        // 오늘 날짜이면: 초록색 배경, 흰색 텍스트, 감정 이미지는 숨김
                         container.binding.calendarDayText.setTextColor(Color.WHITE)
                         container.binding.calendarDayText.setBackgroundResource(R.drawable.today_background)
-                        //container.binding.dayEmotionImg.visibility = View.GONE
+                        container.binding.dayEmotionImg.visibility = View.GONE // 오늘 날짜에는 감정 이미지 숨김
                     } else {
-                        // 오늘이 아니면: 배경 없음, 검은색 텍스트, 감정 이미지는 표시
                         container.binding.calendarDayText.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_black))
                         container.binding.calendarDayText.background = null
                         container.binding.dayEmotionImg.visibility = View.VISIBLE
                     }
                 } else {
-                    // 현재 달이 아닌 날짜는 모두 숨김
                     container.binding.calendarDayText.visibility = View.INVISIBLE
                     container.binding.dayEmotionImg.visibility = View.INVISIBLE
                 }
