@@ -42,6 +42,6 @@ class FriendDeleteDialog(private val deleteItem: FriendModel): DialogFragment(R.
     }
 
     companion object {
-        val TAG = FriendDeleteDialog::class.java.simpleName
+        val TAG = "FriendDeleteDialog"
     }
 }
