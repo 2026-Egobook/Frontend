@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "egobook_frontent"
+rootProject.name = "app"
 include(":app")

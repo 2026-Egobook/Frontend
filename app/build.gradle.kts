@@ -12,13 +12,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.egobook_frontent"
+    namespace = "com.egobook.app"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.egobook_frontent"
+        applicationId = "com.egobook.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -26,7 +26,7 @@ android {
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner = "com.example.egobook_frontent.HiltTestRunner"
+        testInstrumentationRunner = "com.egobook.app.HiltTestRunner"
 
     }
 
@@ -104,6 +104,7 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("com.kizitonwose.calendar:view:2.6.0")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     // Hilt 테스트를 위한 의존성 추가
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")

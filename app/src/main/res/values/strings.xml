@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">egobook_frontent</string>
+    <string name="app_name">egobook</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="counseling_daily_praise_notification_on">일기를 작성하면 자정에 칭찬서가 도착해요</string>
     <string name="counseling_daily_praise_notification_off">일간 칭찬서가 도착하지 않아요</string>

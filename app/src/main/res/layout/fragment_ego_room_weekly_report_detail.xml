@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_counseling_weekly_report_detail"
+        tools:context=".ui.counseling.view.EgoRoomWeeklyReportDetailFragment">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_counseling_weekly_report_detail_top_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_counseling_weekly_report_detail_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_chevron_left" />
+
+            <TextView
+                android:id="@+id/tv_counseling_weekly_report_detail_datetime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="2025.12.25" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_counseling_weekly_report_detail_analysis"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_counseling_weekly_report_detail_top_container">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_counseling_weekly_report_detail_analysis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="0dp"
+                app:contentPaddingBottom="16dp"
+                app:contentPaddingLeft="16dp"
+                app:contentPaddingRight="16dp"
+                app:contentPaddingTop="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeWidth="0dp">
+                <TextView
+                    android:id="@+id/tv_counseling_weekly_report_detail_analysis"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/bg_counseling_weekly_report_detail_component"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
+                android:text="이번 주 분석"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_analysis"
+                app:layout_constraintStart_toStartOf="@id/cv_counseling_weekly_report_detail_analysis" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="9.94dp"
+                android:layout_marginBottom="-20dp"
+                android:src="@drawable/img_counseling_weekly_report_detail_analysis"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_analysis"
+                app:layout_constraintEnd_toEndOf="@id/cv_counseling_weekly_report_detail_analysis" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_counseling_weekly_report_detail_praise_point"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+
+            app:layout_constraintEnd_toEndOf="@id/cl_counseling_weekly_report_detail_analysis"
+            app:layout_constraintStart_toStartOf="@id/cl_counseling_weekly_report_detail_analysis"
+            app:layout_constraintTop_toBottomOf="@id/cl_counseling_weekly_report_detail_analysis">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_counseling_weekly_report_detail_praise_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="0dp"
+                app:contentPaddingBottom="16dp"
+                app:contentPaddingLeft="16dp"
+                app:contentPaddingRight="16dp"
+                app:contentPaddingTop="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/tv_counseling_weekly_report_detail_praise_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_counseling_weekly_report_detail_component"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
+                android:text="칭찬 포인트"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_praise_point"
+                app:layout_constraintEnd_toEndOf="@id/cv_counseling_weekly_report_detail_praise_point" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-20dp"
+                android:src="@drawable/img_counseling_weekly_report_detail_praise_point"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_praise_point"
+                app:layout_constraintStart_toStartOf="@id/cv_counseling_weekly_report_detail_praise_point" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_counseling_weekly_report_detail_improvement"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            app:layout_constraintEnd_toEndOf="@id/cl_counseling_weekly_report_detail_praise_point"
+            app:layout_constraintStart_toStartOf="@id/cl_counseling_weekly_report_detail_praise_point"
+            app:layout_constraintTop_toBottomOf="@id/cl_counseling_weekly_report_detail_praise_point">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_counseling_weekly_report_detail_improvement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="0dp"
+                app:contentPaddingBottom="16dp"
+                app:contentPaddingLeft="16dp"
+                app:contentPaddingRight="16dp"
+                app:contentPaddingTop="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/tv_counseling_weekly_report_detail_improvement"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/bg_counseling_weekly_report_detail_component"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
+                android:text="개선할 점"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_improvement"
+                app:layout_constraintStart_toStartOf="@id/cv_counseling_weekly_report_detail_improvement" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8.84dp"
+                android:layout_marginBottom="-20dp"
+                android:src="@drawable/img_counseling_weekly_report_detail_improvement"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_improvement"
+                app:layout_constraintEnd_toEndOf="@id/cv_counseling_weekly_report_detail_improvement" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_counseling_weekly_report_detail_management"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            app:layout_constraintEnd_toEndOf="@id/cl_counseling_weekly_report_detail_improvement"
+            app:layout_constraintStart_toStartOf="@id/cl_counseling_weekly_report_detail_improvement"
+            app:layout_constraintTop_toBottomOf="@id/cl_counseling_weekly_report_detail_improvement">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_counseling_weekly_report_detail_management"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="0dp"
+                app:contentPaddingBottom="16dp"
+                app:contentPaddingLeft="16dp"
+                app:contentPaddingRight="16dp"
+                app:contentPaddingTop="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/tv_counseling_weekly_report_detail_management"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_counseling_weekly_report_detail_component"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
+                android:text="관리 및 조언"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_management"
+                app:layout_constraintEnd_toEndOf="@id/cv_counseling_weekly_report_detail_management" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-20dp"
+                android:src="@drawable/img_counseling_weekly_report_detail_management"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_management"
+                app:layout_constraintStart_toStartOf="@id/cv_counseling_weekly_report_detail_management" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_counseling_weekly_report_detail_encouragement"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            app:layout_constraintEnd_toEndOf="@id/cl_counseling_weekly_report_detail_management"
+            app:layout_constraintStart_toStartOf="@id/cl_counseling_weekly_report_detail_management"
+            app:layout_constraintTop_toBottomOf="@id/cl_counseling_weekly_report_detail_management">
+
+            <ImageView
+                android:id="@+id/iv_counseling_weekly_report_detail_encouragement_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_counseling_weekly_report_detail_encouragement_left"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_counseling_weekly_report_detail_encouragement_title"
+                app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_encouragement"/>
+
+            <TextView
+                android:id="@+id/tv_counseling_weekly_report_detail_encouragement_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="응원 및 격려"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintEnd_toStartOf="@id/iv_counseling_weekly_report_detail_encouragement_right"
+                app:layout_constraintStart_toEndOf="@id/iv_counseling_weekly_report_detail_encouragement_left"
+                app:layout_constraintTop_toTopOf="@id/iv_counseling_weekly_report_detail_encouragement_left"
+                app:layout_constraintBottom_toBottomOf="@id/iv_counseling_weekly_report_detail_encouragement_left"/>
+
+            <ImageView
+                android:id="@+id/iv_counseling_weekly_report_detail_encouragement_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_counseling_weekly_report_detail_encouragement_right"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_counseling_weekly_report_detail_encouragement_title"
+                app:layout_constraintStart_toEndOf="@id/tv_counseling_weekly_report_detail_encouragement_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_counseling_weekly_report_detail_encouragement_title"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_counseling_weekly_report_detail_encouragement"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="0dp"
+                app:contentPaddingBottom="16dp"
+                app:contentPaddingLeft="16dp"
+                app:contentPaddingRight="16dp"
+                app:contentPaddingTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/iv_counseling_weekly_report_detail_encouragement_left"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/tv_counseling_weekly_report_detail_encouragement"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="본 리포트는 사용자의 기록을 기반으로 한 조언이며,\n심리적 문제 발생 시 반드시 전문가의 도움을 받으시길 바랍니다."
+            android:textAlignment="center"
+            android:layout_marginTop="52.61dp"
+            android:layout_marginBottom="49.47dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_counseling_weekly_report_detail_encouragement" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
