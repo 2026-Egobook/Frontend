@@ -2,10 +2,10 @@ package com.egobook.app.di
 
 import com.egobook.app.data.repository.CounselingRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
-import com.egobook.app.data.repository.SquareRepositoryImpl
+import com.egobook.app.data.repository.FriendsRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
 import com.egobook.app.domain.repository.NotificationRepository
-import com.egobook.app.domain.repository.SquareRepository
+import com.egobook.app.domain.repository.FriendsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,6 +25,6 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindSquareRepository(impl: SquareRepositoryImpl): SquareRepository
+    abstract fun bindFriendsRepository(impl: FriendsRepositoryImpl): FriendsRepository
 
 }

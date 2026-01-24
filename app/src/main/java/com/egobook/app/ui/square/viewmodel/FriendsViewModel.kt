@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SquareViewModel @Inject constructor(
+class FriendsViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase,
     private val deleteFriendUseCase: DeleteFriendUseCase
 ): ViewModel() {
@@ -34,10 +34,10 @@ class SquareViewModel @Inject constructor(
         }
     }
 
-    private val _deleteFriendResult = MutableSharedFlow<UiState<Int>>()
+    private val _deleteFriendResult = MutableSharedFlow<UiState<Long>>()
     val deleteFriendStatus = _deleteFriendResult.asSharedFlow()
 
-    fun deleteFriend(deleteId: Int) {
+    fun deleteFriend(deleteId: Long) {
         viewModelScope.launch {
             _deleteFriendResult.emit(UiState.Loading)
             deleteFriendUseCase(deleteId = deleteId).onSuccess {

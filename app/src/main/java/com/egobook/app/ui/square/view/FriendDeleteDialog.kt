@@ -10,12 +10,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.egobook.app.databinding.DialogDeleteFriendBinding
 import com.egobook.app.ui.square.model.FriendModel
-import com.egobook.app.ui.square.viewmodel.SquareViewModel
+import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 
 class FriendDeleteDialog(private val deleteItem: FriendModel): DialogFragment(R.layout.dialog_delete_friend) {
 
     private lateinit var binding: DialogDeleteFriendBinding
-    private val viewModel: SquareViewModel by activityViewModels()
+    private val viewModel: FriendsViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return Dialog(requireContext()).apply {

@@ -27,8 +27,6 @@ class FriendsListAdapter(private val onDeleted: (FriendModel) -> Unit): ListAdap
 
     inner class FriendsListViewHolder(private val binding: ItemSquareFriendListBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: FriendModel) = with(binding) {
-            ivItemFriendListImage.setImageResource(item.image)
-            tvItemFriendListLevel.text = "LV ${item.level}"
             tvItemFriendListName.text = item.name
             ivItemSquareFriendListDelete.setOnClickListener { onDeleted(item) }
         }

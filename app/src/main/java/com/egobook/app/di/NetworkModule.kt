@@ -2,7 +2,7 @@ package com.egobook.app.di
 
 import com.egobook.app.data.api.CounselingApiService
 import com.egobook.app.data.api.NotificationApiService
-import com.egobook.app.data.api.SquareApiService
+import com.egobook.app.data.api.FriendsApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,8 +28,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideSquareService(retrofit: Retrofit): SquareApiService {
-        return retrofit.create(SquareApiService::class.java)
+    fun provideFriendsService(retrofit: Retrofit): FriendsApiService {
+        return retrofit.create(FriendsApiService::class.java)
     }
 
     @Provides
