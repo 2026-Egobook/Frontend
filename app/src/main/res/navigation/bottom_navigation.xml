@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/menu_home"
-        android:name="com.example.egobook.ui.home.HomeFragment"
+        android:name="egobook_frontent.ui.home.HomeFragment"
         android:label="홈" >
         <action
             android:id="@+id/action_homeFragment_to_storeFragment"
@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/menu_diary"
-        android:name="com.example.egobook.ui.diary.DiaryFragment"
+        android:name="egobook_frontent.ui.diary.DiaryFragment"
         android:label="감정일기">
         <!-- diaryWriteFragment로의 이동 액션 추가 -->
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/menu_ego_room"
-        android:name="com.example.egobook.ui.counseling.view.EgoRoomFragment"
+        android:name="egobook_frontent.ui.counseling.view.EgoRoomFragment"
         android:label="에고룸"
         tools:layout="@layout/fragment_ego_room">
         <action
@@ -38,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/menu_square"
-        android:name="com.example.egobook.ui.square.view.SquareFragment"
+        android:name="egobook_frontent.ui.square.view.SquareFragment"
         android:label="광장"
         tools:layout="@layout/fragment_square">
         <action
@@ -58,27 +58,27 @@
     <!-- diaryWriteFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/diaryWriteFragment"
-        android:name="com.example.egobook.ui.diary.DiaryWriteFragment"
+        android:name="egobook_frontent.ui.diary.DiaryWriteFragment"
         android:label="일기 작성" />
 
     <!-- CandlerFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/candlerFragment"
-        android:name="com.example.egobook.ui.diary.CandlerFragment"
+        android:name="egobook_frontent.ui.diary.CandlerFragment"
         android:label="달력 화면" />
      
     <fragment
         android:id="@+id/egoRoomWeeklyReportFragment"
-        android:name="com.example.egobook.ui.counseling.view.EgoRoomWeeklyReportFragment"
+        android:name="egobook_frontent.ui.counseling.view.EgoRoomWeeklyReportFragment"
         android:label="fragment_counseling_weekly_report"
         tools:layout="@layout/fragment_ego_room_weekly_report" >
     </fragment>
     <fragment
         android:id="@+id/egoRoomWeeklyReportDetailFragment"
-        android:name="com.example.egobook.ui.counseling.view.EgoRoomWeeklyReportDetailFragment"
+        android:name="egobook_frontent.ui.counseling.view.EgoRoomWeeklyReportDetailFragment"
         android:label="CounselingWeeklyReportDetailFragment"
         tools:layout="@layout/fragment_ego_room_weekly_report_detail">
-        <argument app:argType="com.example.egobook.ui.counseling.model.WeeklyReportModel"
+        <argument app:argType="egobook_frontent.ui.counseling.model.WeeklyReportModel"
             android:name="weeklyReportItem"
             app:nullable="false"/>
     </fragment>
@@ -86,7 +86,7 @@
     <!-- OnboardingContainerFragment로의 목적지 정의 -->
     <fragment
         android:id="@+id/onboardingContainerFragment"
-        android:name="com.example.egobook.ui.onboarding.view.OnboardingContainerFragment"
+        android:name="egobook_frontent.ui.onboarding.view.OnboardingContainerFragment"
         android:label="온보딩"
         tools:layout="@layout/fragment_onboarding_container">
         <action
@@ -100,7 +100,7 @@
 
     <fragment
         android:id="@+id/storeFragment"
-        android:name="com.example.egobook.ui.shop.StoreFragment" >
+        android:name="egobook_frontent.ui.shop.StoreFragment" >
 
         <action
             android:id="@+id/action_storeFragment_to_homeFragment"
@@ -109,32 +109,32 @@
     </fragment>
     <fragment
         android:id="@+id/letterReplyFragment"
-        android:name="com.example.egobook.ui.square.view.LetterReplyFragment"
+        android:name="egobook_frontent.ui.square.view.LetterReplyFragment"
         android:label="fragment_letter_reply"
         tools:layout="@layout/fragment_letter_reply" />
     <fragment
         android:id="@+id/letterFragment"
-        android:name="com.example.egobook.ui.square.view.LetterFragment"
+        android:name="egobook_frontent.ui.square.view.LetterFragment"
         android:label="fragment_letter"
         tools:layout="@layout/fragment_letter" />
     <fragment
         android:id="@+id/squareAllRepliesFragment"
-        android:name="com.example.egobook.ui.square.view.SquareAllRepliesFragment"
+        android:name="egobook_frontent.ui.square.view.SquareAllRepliesFragment"
         android:label="fragment_square_all_replies"
         tools:layout="@layout/fragment_square_all_replies" />
     <fragment
         android:id="@+id/myRepliesHistoryFragment"
-        android:name="com.example.egobook.ui.square.view.MyRepliesHistoryFragment"
+        android:name="egobook_frontent.ui.square.view.MyRepliesHistoryFragment"
         android:label="fragment_my_replies_history"
         tools:layout="@layout/fragment_my_replies_history" />
     <fragment
         android:id="@+id/friendsFragment"
-        android:name="com.example.egobook.ui.square.view.FriendsFragment"
+        android:name="egobook_frontent.ui.square.view.FriendsFragment"
         android:label="fragment_square_friends"
         tools:layout="@layout/fragment_square_friends" />
     <fragment
         android:id="@+id/myLettersFragment"
-        android:name="com.example.egobook.ui.square.view.MyLettersFragment"
+        android:name="egobook_frontent.ui.square.view.MyLettersFragment"
         android:label="fragment_my_letters"
         tools:layout="@layout/fragment_my_letters" >
         <action
@@ -143,12 +143,12 @@
     </fragment>
     <fragment
         android:id="@+id/myLetterDetailFragment"
-        android:name="com.example.egobook.ui.square.view.MyLetterDetailFragment"
+        android:name="egobook_frontent.ui.square.view.MyLetterDetailFragment"
         android:label="MyLetterDetailFragment"
         tools:layout="@layout/fragment_my_letter_detail">
         <argument
             android:name="letterItem"
-            app:argType="com.example.egobook.ui.square.model.LetterModel"
+            app:argType="egobook_frontent.ui.square.model.LetterModel"
             app:nullable="false"/>
     </fragment>
 
