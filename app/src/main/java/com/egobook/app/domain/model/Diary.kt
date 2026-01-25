@@ -1,7 +1,6 @@
 package com.egobook.app.domain.model
 
 
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 
@@ -9,8 +8,8 @@ data class Diary(
     val id: Long, //일기 id
     val content: String, //내용
     val types: Set<DiaryType>, //중복 방지
-    val date: LocalDate, //날짜
-    val time: LocalDateTime, //시간
+    val createdAt: LocalDateTime, //최초 생성 시각
+    val updatedAt: LocalDateTime, //마지막 수정 시각
     val emotionLevel: EmotionLevel? //없을 수도 있음
 ) {
     init { //일기 타임에 감정이 포함되어 있어야만 기분 선택 가능 -> 도메인 규칙으로 정의
