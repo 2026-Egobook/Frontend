@@ -1,10 +1,10 @@
 package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
-import com.egobook.app.data.model.square.FriendRequestResponse
-import com.egobook.app.data.model.square.FriendResponse
-import com.egobook.app.data.model.square.FriendshipRequest
-import com.egobook.app.data.model.square.SearchUserResponse
+import com.egobook.app.data.model.square.friend.FriendRequestResponse
+import com.egobook.app.data.model.square.friend.FriendResponse
+import com.egobook.app.data.model.square.friend.FriendshipRequest
+import com.egobook.app.data.model.square.friend.SearchUserResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

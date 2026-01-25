@@ -1,12 +1,10 @@
 package com.egobook.app.data.repository
 
-import com.egobook.app.R
 import com.egobook.app.data.api.FriendsApiService
-import com.egobook.app.data.model.square.FriendRequestResponse
-import com.egobook.app.data.model.square.FriendResponse
-import com.egobook.app.data.model.square.FriendshipRequest
-import com.egobook.app.data.model.square.SearchUserResponse
-import com.egobook.app.data.model.square.toDomain
+import com.egobook.app.data.model.square.friend.FriendRequestResponse
+import com.egobook.app.data.model.square.friend.FriendResponse
+import com.egobook.app.data.model.square.friend.SearchUserResponse
+import com.egobook.app.data.model.square.friend.toDomain
 import com.egobook.app.domain.model.Friend
 import com.egobook.app.domain.model.FriendRequest
 import com.egobook.app.domain.model.SearchUser

@@ -1,4 +1,4 @@
-package com.egobook.app.data.model.square
+package com.egobook.app.data.model.square.friend
 
 import com.egobook.app.domain.model.SearchUser
 import com.google.gson.annotations.SerializedName
