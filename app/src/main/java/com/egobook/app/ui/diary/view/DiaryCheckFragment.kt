@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.databinding.FragmentDiaryCheckBinding
 import com.egobook.app.domain.model.Diary
+import com.egobook.app.ui.diary.mapper.ImageMapper
 import com.egobook.app.ui.diary.util.toDateTimeString
 import com.egobook.app.ui.diary.util.toDayOfMonthString
 import com.egobook.app.ui.diary.util.toMonthString
@@ -74,7 +75,12 @@ class DiaryCheckFragment : Fragment() {
         binding.tvDiaryContent.text = diary.content
         binding.tvWrittenTime.text = diary.updatedAt.toDateTimeString()
         binding.tvDate.text = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
-
+        val emotionImageRes = ImageMapper.toEmotionImage(diary.emotionLevel)
+        if (emotionImageRes != null) {
+            binding.ivEmotion.setImageResource(emotionImageRes)
+        } else {
+            binding.ivEmotion.setImageDrawable(null) // or 기본 이미지
+        }
     }
 
     override fun onDestroyView() {
