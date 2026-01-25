@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -64,16 +63,30 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
             diariesFlow.value.find { it.id == id }
         }
 
-    override suspend fun addDiary(diary: Diary): Result<Unit> =
+    override suspend fun addDiary(
+        content: String,
+        types: Set<DiaryType>,
+        emotionLevel: EmotionLevel?
+    ): Result<Diary> =
         runCatching {
-            diariesFlow.update { current ->
-                // id 중복 방지 (서버 붙기 전 임시)
-                val nextId =
-                    (current.maxOfOrNull { it.id } ?: 0L) + 1
+            val now = LocalDateTime.now()
 
-                current + diary.copy(id = nextId)
+            val newDiary = Diary(
+                id = (diariesFlow.value.maxOfOrNull { it.id } ?: 0L) + 1,
+                content = content,
+                types = types,
+                emotionLevel = emotionLevel,
+                createdAt = now,
+                updatedAt = now
+            )
+
+            diariesFlow.update { current ->
+                current + newDiary
             }
+
+            newDiary
         }
+
 
     override suspend fun deleteDiaryById(id: Long): Result<Unit> =
         runCatching {
