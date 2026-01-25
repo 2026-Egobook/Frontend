@@ -88,12 +88,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/emotion_layout"
-        app:layout_constraintStart_toEndOf="@id/iv_emotion"
+        app:layout_constraintStart_toStartOf="@id/emotion_layout"
         android:text="일기 내용"
         android:textColor="@color/cos_black"
         android:fontFamily="@font/arita_medium"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginTop="12dp" />
 
     <View
         android:id="@+id/item_divider"
