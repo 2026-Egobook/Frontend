@@ -9,6 +9,7 @@ import com.egobook.app.R
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.egobook.app.databinding.DialogDeleteFriendBinding
+import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.FriendModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 
@@ -35,7 +36,10 @@ class FriendDeleteDialog(private val deleteItem: FriendModel): DialogFragment(R.
     }
 
     private fun initListeners() = with(binding) {
-        btnDeleteFriendBack.setOnClickListener { dismiss() }
+        btnDeleteFriendBack.setOnClickListener {
+            removeScreenBlur()
+            dismiss()
+        }
         btnDeleteFriendConfirm.setOnClickListener {
             viewModel.deleteFriend(deleteId = deleteItem.id)
         }

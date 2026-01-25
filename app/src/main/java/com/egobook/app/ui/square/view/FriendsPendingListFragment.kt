@@ -3,6 +3,7 @@ package com.egobook.app.ui.square.view
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -50,9 +51,14 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                         R.layout.item_square_friend_pending_received_list,
                                         llFriendsPendingListReceived,
                                         false
-                                    )
+                                    ).apply {
+                                        tag = friendRequest.requestId
+                                    }
                                     val itemBinding = ItemSquareFriendPendingReceivedListBinding.bind(itemView)
                                     itemBinding.tvItemFriendPendingListName.text = friendRequest.nickname
+                                    itemBinding.btnItemSquareFriendPendingListDeny.setOnClickListener {
+                                        viewModel.rejectFriendRequest(requestId = friendRequest.requestId)
+                                    }
                                     llFriendsPendingListReceived.addView(itemView)
                                 }
                                 tvFriendsPendingListReceivedNum.text = friendRequestList.size.toString()
@@ -79,6 +85,23 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                     itemBinding.tvItemFriendPendingSentListName.text = friendRequest.nickname
                                     llFriendsPendingListSent.addView(itemView)
                                 }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.rejectFriendRequestResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Long> -> {
+//                                viewModel.fetchIncomingFriendRequestList() 이 방법은 어떨까? (실제 연결 시 고려해보기)
+                                Toast.makeText(context, "요청된 친구 신청이 거절되었습니다.", Toast.LENGTH_SHORT).show()
+                                val requestId = state.data
+                                val viewToRemove = llFriendsPendingListReceived.findViewWithTag<View>(requestId)
+                                llFriendsPendingListReceived.removeView(viewToRemove)
+                                tvFriendsPendingListReceivedNum.text = (tvFriendsPendingListReceivedNum.text.toString().toInt() - 1).toString()
                             }
                         }
                     }

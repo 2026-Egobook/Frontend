@@ -7,6 +7,7 @@ import com.egobook.app.domain.usecase.DeleteFriendUseCase
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.GetIncomingFriendRequestsUseCase
 import com.egobook.app.domain.usecase.GetOutgoingFriendRequestsUseCase
+import com.egobook.app.domain.usecase.RejectFriendRequestUseCase
 import com.egobook.app.domain.usecase.RequestFriendshipUseCase
 import com.egobook.app.domain.usecase.SearchUserUseCase
 import com.egobook.app.ui.square.model.FriendModel
@@ -29,7 +30,8 @@ class FriendsViewModel @Inject constructor(
     private val getIncomingFriendRequestsUseCase: GetIncomingFriendRequestsUseCase,
     private val getOutgoingFriendRequestsUseCase: GetOutgoingFriendRequestsUseCase,
     private val searchUserUseCase: SearchUserUseCase,
-    private val requestFriendshipUseCase: RequestFriendshipUseCase
+    private val requestFriendshipUseCase: RequestFriendshipUseCase,
+    private val rejectFriendRequestUseCase: RejectFriendRequestUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -111,6 +113,20 @@ class FriendsViewModel @Inject constructor(
                 _requestFriendshipResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _requestFriendshipResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _rejectFriendRequestResult = MutableSharedFlow<UiState<Long>>()
+    val rejectFriendRequestResult = _rejectFriendRequestResult
+
+    fun rejectFriendRequest(requestId: Long) {
+        viewModelScope.launch {
+            _rejectFriendRequestResult.emit(UiState.Loading)
+            rejectFriendRequestUseCase(requestId = requestId).onSuccess { requestId ->
+                _rejectFriendRequestResult.emit(UiState.Success(requestId))
+            }.onFailure { error ->
+                _rejectFriendRequestResult.emit(UiState.Failure(error.message))
             }
         }
     }

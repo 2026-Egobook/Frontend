@@ -12,4 +12,6 @@ interface FriendsRepository {
     suspend fun searchUser(keyword: String): Result<List<SearchUser>>
 
     suspend fun requestFriendship(receiverId: Long): Result<Unit>
+
+    suspend fun rejectFriendRequest(requestId: Long): Result<Long>
 }

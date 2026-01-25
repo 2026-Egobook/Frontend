@@ -30,5 +30,8 @@ interface FriendsApiService {
 
     @POST("/friends/requests")
     suspend fun requestFriendship(@Body request: FriendshipRequest): ApiResponse<Unit>
+
+    @POST("/friends/requests/{requestId}/reject")
+    suspend fun rejectFriendRequest(@Path("requestId") requestId: Long): ApiResponse<Unit>
 }
 
