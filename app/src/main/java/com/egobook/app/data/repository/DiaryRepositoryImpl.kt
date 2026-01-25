@@ -69,6 +69,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
         emotionLevel: EmotionLevel?
     ): Result<Diary> =
         runCatching {
+            //임시 반환 로직 작성
             val now = LocalDateTime.now()
 
             val newDiary = Diary(

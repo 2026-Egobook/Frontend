@@ -20,8 +20,8 @@
     <!--감정 이미지가 들어갈 자리    -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_emotion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         app:srcCompat="@drawable/img_emotion"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/Circle"

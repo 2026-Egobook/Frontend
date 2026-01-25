@@ -98,13 +98,3 @@ fun LocalDateTime.toMonthString(): String =
 fun LocalDateTime.toDayOfMonthString(): String =
     this.format(DAY_OF_MONTH_FORMATTER)
 
-
-/**
- * [LocalDate]를 UI에서 사용하기 위한 한글 날짜 문자열로 변환한다.
- *
- * @return yyyy년 MM월 dd일 형식의 날짜 문자열
- *
- * 예) 2025년 12월 25일
- */
-fun LocalDate.toKoreanDateString(): String =
-    this.format(DATE_KOREAN_FORMATTER)

@@ -17,6 +17,5 @@ interface DiaryRepository {
         emotionLevel: EmotionLevel?
     ): Result<Diary>
 
-
     suspend fun deleteDiaryById(id: Long): Result<Unit>
 }

@@ -3,12 +3,14 @@ package com.egobook.app.ui.diary.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemDiaryBinding
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
+import com.egobook.app.ui.diary.mapper.ImageMapper
 import com.egobook.app.ui.diary.util.toTimeString
 
 class DiaryRVAdapter :
@@ -47,6 +49,16 @@ class DiaryRVAdapter :
         fun bind(diary: Diary) {
             binding.tvDiaryContent.text = diary.content
             binding.tvTime.text = diary.updatedAt.toTimeString()
+
+            val emotionImageRes = ImageMapper.toEmotionImage(diary.emotionLevel)
+            if (emotionImageRes != null) {
+                // 이미지 리소스가 있으면 이미지를 설정하고 보여줌
+                binding.ivEmotion.setImageResource(emotionImageRes)
+                binding.ivEmotion.isVisible = true
+            } else {
+                // 이미지 리소스가 null이면 (감정 일기가 아니면) 숨김
+                binding.ivEmotion.isVisible = false
+            }
 
             // 타입 순서 정의
             val typeOrder = listOf(DiaryType.EMOTION, DiaryType.WORRY, DiaryType.PRAISE, DiaryType.THANKS)
