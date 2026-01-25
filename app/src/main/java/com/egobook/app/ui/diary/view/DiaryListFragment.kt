@@ -87,8 +87,8 @@ class DiaryListFragment : Fragment() {
                 val action =
                     DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
                         diaryContent = diary.content,
-                        diaryTime = diary.time.toDateTimeString(),
-                        diaryDate = "${diary.time.toYearString()}년 ${diary.time.toMonthString()}월 ${diary.time.toDayOfMonthString()}일"
+                        diaryTime = diary.updatedAt.toDateTimeString(),
+                        diaryDate = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
                     )
                 findNavController().navigate(action)
             }

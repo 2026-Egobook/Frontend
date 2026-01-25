@@ -46,7 +46,7 @@ class DiaryRVAdapter :
 
         fun bind(diary: Diary) {
             binding.tvDiaryContent.text = diary.content
-            binding.tvTime.text = diary.time.toTimeString()
+            binding.tvTime.text = diary.updatedAt.toTimeString()
 
             // 타입 순서 정의
             val typeOrder = listOf(DiaryType.EMOTION, DiaryType.WORRY, DiaryType.PRAISE, DiaryType.THANKS)
