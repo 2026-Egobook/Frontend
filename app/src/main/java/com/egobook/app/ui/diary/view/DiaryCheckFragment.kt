@@ -72,15 +72,9 @@ class DiaryCheckFragment : Fragment() {
     // UI를 업데이트하는 로직을 별도 함수로 분리합니다.
     private fun updateUi(diary: Diary) {
         binding.tvDiaryContent.text = diary.content
-        binding.tvWrittenTime.text = diary.updatedAt.toDateTimeString() // 포맷팅 함수 사용
+        binding.tvWrittenTime.text = diary.updatedAt.toDateTimeString()
         binding.tvDate.text = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
 
-//        if (diary.emotionLevel != null) {
-//            binding.ivEmotion.setImageResource(diary.emotionLevel.imageRes)
-//            binding.ivEmotion.visibility = View.VISIBLE
-//        } else {
-//            binding.ivEmotion.visibility = View.GONE
-//        }
     }
 
     override fun onDestroyView() {

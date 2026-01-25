@@ -75,10 +75,10 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
             }
         }
 
-    override suspend fun deleteDiary(diary: Diary): Result<Unit> =
+    override suspend fun deleteDiaryById(id: Long): Result<Unit> =
         runCatching {
             diariesFlow.update { current ->
-                current.filterNot { it.id == diary.id }
+                current.filterNot { it.id == id }
             }
         }
 }
