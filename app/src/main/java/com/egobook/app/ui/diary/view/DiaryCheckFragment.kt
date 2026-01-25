@@ -11,6 +11,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.egobook.app.BlurLevel
+import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentDiaryCheckBinding
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.ui.diary.mapper.ImageMapper
@@ -47,10 +49,17 @@ class DiaryCheckFragment : Fragment() {
     }
 
     private fun setClickListener() {
-        binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
+        binding.apply{
+            btnBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
+            btnDelete.setOnClickListener {
+                applyScreenBlur(BlurLevel.BASE)
+                val dialog = DiaryDeleteDialogFragment()
+                dialog.isCancelable = true
+                dialog.show(parentFragmentManager, "ConfirmDialog")
+            }
         }
-        // 다른 버튼 리스너들은 여기에 추가
     }
 
     // ViewModel의 diary Flow를 직접 구독합니다.
