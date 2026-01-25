@@ -10,7 +10,7 @@ data class Diary(
     val types: Set<DiaryType>, //중복 방지
     val createdAt: LocalDateTime, //최초 생성 시각
     val updatedAt: LocalDateTime, //마지막 수정 시각
-    val emotionLevel: EmotionLevel? //없을 수도 있음
+    val emotionLevel: EmotionLevel? //감정 레벨. null일 수도 있음
 ) {
     init { //일기 타임에 감정이 포함되어 있어야만 기분 선택 가능 -> 도메인 규칙으로 정의
         if (DiaryType.EMOTION !in types && emotionLevel != null) {

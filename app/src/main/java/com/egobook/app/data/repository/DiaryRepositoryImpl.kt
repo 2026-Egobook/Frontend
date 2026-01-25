@@ -21,32 +21,36 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 id = 1L,
                 content = "오늘은 생각보다 괜찮은 하루였다.",
                 types = setOf(DiaryType.EMOTION),
-                date = LocalDate.now(),
-                time = LocalDateTime.now().minusHours(2),
+                // createdAt과 updatedAt이 동일한 경우 (수정되지 않음)
+                createdAt = LocalDateTime.now().minusHours(2),
+                updatedAt = LocalDateTime.now().minusHours(2),
                 emotionLevel = EmotionLevel.GOOD // OK
             ),
             Diary(
                 id = 2L,
                 content = "진로에 대해 계속 고민만 하다 하루가 갔다.",
                 types = setOf(DiaryType.WORRY),
-                date = LocalDate.now().minusDays(1),
-                time = LocalDateTime.now().minusDays(1).withHour(22),
+                createdAt = LocalDateTime.now().minusDays(1).withHour(22),
+                // 10분 후에 수정되었다고 가정
+                updatedAt = LocalDateTime.now().minusDays(1).withHour(22).plusMinutes(10),
                 emotionLevel = null // EMOTION 없음 → null
             ),
             Diary(
                 id = 3L,
                 content = "오늘 나 자신을 조금은 칭찬해주고 싶다.",
                 types = setOf(DiaryType.PRAISE, DiaryType.THANKS),
-                date = LocalDate.now().minusDays(2),
-                time = LocalDateTime.now().minusDays(2).withHour(21),
+                createdAt = LocalDateTime.now().minusDays(2).withHour(21),
+                // 1시간 후에 수정되었다고 가정
+                updatedAt = LocalDateTime.now().minusDays(2).withHour(22),
                 emotionLevel = null
             ),
             Diary(
                 id = 4L,
                 content = "프로젝트를 잘 할 수 있을까 너무 걱정돼요",
                 types = setOf(DiaryType.EMOTION, DiaryType.WORRY),
-                date = LocalDate.now().minusDays(2),
-                time = LocalDateTime.now().minusDays(2).withHour(21),
+                createdAt = LocalDateTime.now().minusDays(3).withHour(10),
+                // 하루 뒤에 수정되었다고 가정
+                updatedAt = LocalDateTime.now().minusDays(2).withHour(11),
                 emotionLevel = EmotionLevel.VERY_BAD
             )
         )
