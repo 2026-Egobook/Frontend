@@ -19,7 +19,7 @@ class GetDiaries @Inject constructor(
                     .filter { diary ->
                         types == null || diary.types.any { it in types }
                     }
-                    .sortedByDescending { it.time }
+                    .sortedByDescending { it.updatedAt }
             }
     }
 }
