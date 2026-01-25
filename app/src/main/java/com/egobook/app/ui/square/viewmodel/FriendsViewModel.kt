@@ -3,6 +3,7 @@ package com.egobook.app.ui.square.viewmodel
 import androidx.compose.runtime.key
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.domain.usecase.AcceptFriendRequestUseCase
 import com.egobook.app.domain.usecase.DeleteFriendUseCase
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.GetIncomingFriendRequestsUseCase
@@ -31,7 +32,8 @@ class FriendsViewModel @Inject constructor(
     private val getOutgoingFriendRequestsUseCase: GetOutgoingFriendRequestsUseCase,
     private val searchUserUseCase: SearchUserUseCase,
     private val requestFriendshipUseCase: RequestFriendshipUseCase,
-    private val rejectFriendRequestUseCase: RejectFriendRequestUseCase
+    private val rejectFriendRequestUseCase: RejectFriendRequestUseCase,
+    private val acceptFriendRequestUseCase: AcceptFriendRequestUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -127,6 +129,20 @@ class FriendsViewModel @Inject constructor(
                 _rejectFriendRequestResult.emit(UiState.Success(requestId))
             }.onFailure { error ->
                 _rejectFriendRequestResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _acceptFriendRequestResult = MutableSharedFlow<UiState<Long>>()
+    val acceptFriendRequestResult = _acceptFriendRequestResult
+
+    fun acceptFriendRequest(requestId: Long) {
+        viewModelScope.launch {
+            _acceptFriendRequestResult.emit(UiState.Loading)
+            acceptFriendRequestUseCase(requestId = requestId).onSuccess { requestId ->
+                _acceptFriendRequestResult.emit(UiState.Success(requestId))
+            }.onFailure { error ->
+                _acceptFriendRequestResult.emit(UiState.Failure(error.message))
             }
         }
     }
