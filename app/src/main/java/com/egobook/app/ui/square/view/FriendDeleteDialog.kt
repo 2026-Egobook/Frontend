@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.egobook.app.databinding.DialogDeleteFriendBinding
 import com.egobook.app.removeScreenBlur
-import com.egobook.app.ui.square.model.FriendModel
+import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 
 class FriendDeleteDialog(private val deleteItem: FriendModel): DialogFragment(R.layout.dialog_delete_friend) {

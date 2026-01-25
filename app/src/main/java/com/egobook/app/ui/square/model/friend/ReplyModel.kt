@@ -1,4 +1,4 @@
-package com.egobook.app.ui.square.model
+package com.egobook.app.ui.square.model.friend
 
 data class ReplyModel(
     val id: Int,

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemSquareLetterBinding
-import com.egobook.app.ui.square.model.LetterModel
+import com.egobook.app.ui.square.model.friend.LetterModel
 
 class MyLettersAdapter(private val onClicked: (LetterModel) -> Unit): ListAdapter<LetterModel, MyLettersAdapter.MyLetterViewHolder>(diffUtil) {
     override fun onCreateViewHolder(

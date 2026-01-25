@@ -15,7 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.egobook.app.databinding.DialogSquareAddFriendBinding
 import com.egobook.app.removeScreenBlur
-import com.egobook.app.ui.square.model.SearchUserModel
+import com.egobook.app.ui.square.model.friend.SearchUserModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch

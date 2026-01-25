@@ -12,7 +12,7 @@ import com.egobook.app.R
 import com.egobook.app.databinding.FragmentFriendsPendingListBinding
 import com.egobook.app.databinding.ItemSquareFriendPendingReceivedListBinding
 import com.egobook.app.databinding.ItemSquareFriendPendingSentListBinding
-import com.egobook.app.ui.square.model.FriendRequestModel
+import com.egobook.app.ui.square.model.friend.FriendRequestModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch

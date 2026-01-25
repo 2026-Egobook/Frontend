@@ -1,6 +1,5 @@
 package com.egobook.app.ui.square.viewmodel
 
-import androidx.compose.runtime.key
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.AcceptFriendRequestUseCase
@@ -12,10 +11,10 @@ import com.egobook.app.domain.usecase.GetOutgoingFriendRequestsUseCase
 import com.egobook.app.domain.usecase.RejectFriendRequestUseCase
 import com.egobook.app.domain.usecase.RequestFriendshipUseCase
 import com.egobook.app.domain.usecase.SearchUserUseCase
-import com.egobook.app.ui.square.model.FriendModel
-import com.egobook.app.ui.square.model.FriendRequestModel
-import com.egobook.app.ui.square.model.SearchUserModel
-import com.egobook.app.ui.square.model.toPresentation
+import com.egobook.app.ui.square.model.friend.FriendModel
+import com.egobook.app.ui.square.model.friend.FriendRequestModel
+import com.egobook.app.ui.square.model.friend.SearchUserModel
+import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

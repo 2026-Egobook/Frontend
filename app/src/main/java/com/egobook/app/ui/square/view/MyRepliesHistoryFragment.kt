@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentMyRepliesHistoryBinding
 import com.egobook.app.ui.square.adapter.MyRepliesHistoryAdapter
-import com.egobook.app.ui.square.model.ReplyModel
+import com.egobook.app.ui.square.model.friend.ReplyModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

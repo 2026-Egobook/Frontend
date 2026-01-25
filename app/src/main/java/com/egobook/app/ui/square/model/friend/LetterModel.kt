@@ -1,4 +1,4 @@
-package com.egobook.app.ui.square.model
+package com.egobook.app.ui.square.model.friend
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

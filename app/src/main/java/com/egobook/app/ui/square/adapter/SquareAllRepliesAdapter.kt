@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemSquareQuestionReplyBinding
-import com.egobook.app.ui.square.model.ReplyModel
+import com.egobook.app.ui.square.model.friend.ReplyModel
 
 class SquareAllRepliesAdapter: ListAdapter<ReplyModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
     override fun onCreateViewHolder(

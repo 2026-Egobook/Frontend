@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentSquareAllRepliesBinding
 import com.egobook.app.ui.square.adapter.SquareAllRepliesAdapter
-import com.egobook.app.ui.square.model.ReplyModel
+import com.egobook.app.ui.square.model.friend.ReplyModel
 
 class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) {
     private lateinit var binding: FragmentSquareAllRepliesBinding

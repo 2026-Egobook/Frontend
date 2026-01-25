@@ -14,7 +14,7 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentFriendsListBinding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.adapter.FriendsListAdapter
-import com.egobook.app.ui.square.model.FriendModel
+import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch
