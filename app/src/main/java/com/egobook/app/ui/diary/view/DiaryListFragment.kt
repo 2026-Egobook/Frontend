@@ -5,10 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryListBinding
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
@@ -18,11 +20,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import com.egobook.app.ui.diary.util.toDateTimeString
-import com.egobook.app.ui.diary.util.toDayOfMonthString
-import com.egobook.app.ui.diary.util.toKoreanDateString
-import com.egobook.app.ui.diary.util.toMonthString
-import com.egobook.app.ui.diary.util.toYearString
 
 class DiaryListFragment : Fragment() {
 
@@ -64,7 +61,7 @@ class DiaryListFragment : Fragment() {
                 }
                 diaryRVAdapter.submitList(filtered)
             }
-            .launchIn(lifecycleScope) // Fragment의 lifecycleScope
+            .launchIn(lifecycleScope)
     }
 
     private fun getDiaryTypesByPosition(position: Int): Set<DiaryType>? {
@@ -79,18 +76,16 @@ class DiaryListFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-
         diaryRVAdapter.setMyItemClickListener(object :
             DiaryRVAdapter.MyItemClickListener {
 
             override fun onItemClick(diary: Diary) {
-                val action =
-                    DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
-                        diaryContent = diary.content,
-                        diaryTime = diary.updatedAt.toDateTimeString(),
-                        diaryDate = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
-                    )
-                findNavController().navigate(action)
+                // 💡 1. 부모 프래그먼트(DiaryFragment)가 생성한 Directions를 사용합니다.
+                val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
+                    diaryId = diary.id
+                )
+                // 💡 2. 부모 프래그먼트의 NavController로 action을 실행합니다.
+                parentFragment?.findNavController()?.navigate(action)
             }
         })
 

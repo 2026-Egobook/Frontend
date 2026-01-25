@@ -86,17 +86,21 @@
         android:label="일기 확인">
 
         <argument
-            android:name="diaryContent"
-            app:argType="string" />
-        <argument
-            android:name="diaryTime"
-            app:argType="string"
-            app:nullable="true"/>
+            android:name="diaryId"
+            app:argType="long" />
 
-        <argument
-            android:name="diaryDate"
-            app:argType="string"
-            />
+<!--        <argument-->
+<!--            android:name="diaryContent"-->
+<!--            app:argType="string" />-->
+<!--        <argument-->
+<!--            android:name="diaryTime"-->
+<!--            app:argType="string"-->
+<!--            app:nullable="true"/>-->
+
+<!--        <argument-->
+<!--            android:name="diaryDate"-->
+<!--            app:argType="string"-->
+<!--            />-->
 
     </fragment>
 
