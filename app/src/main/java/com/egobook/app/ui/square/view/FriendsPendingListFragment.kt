@@ -83,9 +83,14 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                         R.layout.item_square_friend_pending_sent_list,
                                         llFriendsPendingListSent,
                                         false
-                                    )
+                                    ).apply {
+                                        tag = friendRequest.requestId
+                                    }
                                     val itemBinding = ItemSquareFriendPendingSentListBinding.bind(itemView)
                                     itemBinding.tvItemFriendPendingSentListName.text = friendRequest.nickname
+                                    itemBinding.btnItemSquareFriendPendingSentListCancel.setOnClickListener {
+                                        viewModel.cancelFriendRequest(requestId = friendRequest.requestId)
+                                    }
                                     llFriendsPendingListSent.addView(itemView)
                                 }
                             }
@@ -122,6 +127,22 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                 val viewToRemove = llFriendsPendingListReceived.findViewWithTag<View>(requestId)
                                 llFriendsPendingListReceived.removeView(viewToRemove)
                                 tvFriendsPendingListReceivedNum.text = (tvFriendsPendingListReceivedNum.text.toString().toInt() - 1).toString()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.cancelFriendRequestResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Long> -> {
+//                                viewModel.fetchOutgoingFriendRequestList()
+                                Toast.makeText(context, "요청된 친구 신청이 취소되었습니다.", Toast.LENGTH_SHORT).show()
+                                val requestId = state.data
+                                val viewToRemove = llFriendsPendingListSent.findViewWithTag<View>(requestId)
+                                llFriendsPendingListSent.removeView(viewToRemove)
                             }
                         }
                     }

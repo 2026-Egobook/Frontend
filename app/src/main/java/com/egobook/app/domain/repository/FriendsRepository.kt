@@ -16,4 +16,5 @@ interface FriendsRepository {
     suspend fun rejectFriendRequest(requestId: Long): Result<Long>
 
     suspend fun acceptFriendRequest(requestId: Long): Result<Long>
+    suspend fun cancelFriendRequest(requestId: Long): Result<Long>
 }

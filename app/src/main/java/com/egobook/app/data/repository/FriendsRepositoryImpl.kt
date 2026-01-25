@@ -169,4 +169,16 @@ class FriendsRepositoryImpl @Inject constructor(private val apiService: FriendsA
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    override suspend fun cancelFriendRequest(requestId: Long): Result<Long> = try {
+//        val response = apiService.cancelFriendRequest(requestId = requestId)
+//        if(response.status == 200) {
+//            Result.success(requestId)
+//        } else {
+//            Result.failure(Exception("Error: ${response.status}"))
+//        }
+        Result.success(requestId)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

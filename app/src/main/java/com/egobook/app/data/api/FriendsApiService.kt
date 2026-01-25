@@ -34,7 +34,11 @@ interface FriendsApiService {
     @POST("/friends/requests/{requestId}/reject")
     suspend fun rejectFriendRequest(@Path("requestId") requestId: Long): ApiResponse<Unit>
 
-    @POST("friends/requests/{requestId}/accept")
+    @POST("/friends/requests/{requestId}/accept")
     suspend fun acceptFriendRequest(@Path("requestId") requestId: Long): ApiResponse<Unit>
+
+    @DELETE("/friends/requests/{requestId}")
+    suspend fun cancelFriendRequest(@Path("requestId") requestId: Long): ApiResponse<Unit>
 }
+
 
