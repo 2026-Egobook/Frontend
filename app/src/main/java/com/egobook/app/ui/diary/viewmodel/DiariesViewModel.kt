@@ -12,35 +12,41 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.time.LocalDateTime
 
 @HiltViewModel
 class DiariesViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases
 ) : ViewModel() {
     private val _state = MutableStateFlow(DiariesState())  // 뷰모델 내부 갱신용
-    val state: StateFlow<DiariesState> get() = _state    // 외부(ui) 읽기 전용
+    val state = _state.asStateFlow()    // 외부(ui) 읽기 전용
 
     private var getDiariesJob: Job? = null
 
     init {
-        getDiaries(null)
+        getDiaries(LocalDateTime.now(), null)
     }
 
     fun onEvent(event: DiariesEvent) {
         when(event) {
             is DiariesEvent.SwipeTab -> {
-                getDiaries(event.types)
+                getDiaries(state.value.selectedDate, event.types)
+            }
+            is DiariesEvent.ChangeDate -> {
+                getDiaries(event.date, state.value.selectedTabType)
             }
         }
     }
 
-    private fun getDiaries(types: Set<DiaryType>?) {
+    private fun getDiaries(selectedDate: LocalDateTime, types: Set<DiaryType>?) {
         getDiariesJob?.cancel()
-        getDiariesJob = diaryUseCases.getDiaries(types)
+        getDiariesJob = diaryUseCases.getDiaries(selectedDate, types)
             .onEach { diaries ->
                 _state.value = state.value.copy(
                     diaries = diaries,
-                    selectedTabType = types
+                    selectedTabType = types,
+                    selectedDate = selectedDate
                 )
             }
             .launchIn(viewModelScope)
@@ -49,10 +55,11 @@ class DiariesViewModel @Inject constructor(
 
 sealed class DiariesEvent {
     data class SwipeTab(val types: Set<DiaryType>?) : DiariesEvent()
+    data class ChangeDate(val date: LocalDateTime) : DiariesEvent()
 }
 
 data class DiariesState(
     val diaries: List<Diary> = emptyList(),
     val selectedTabType: Set<DiaryType>? = null,
-    val isLoading: Boolean = false
+    val selectedDate: LocalDateTime = LocalDateTime.now()
 )

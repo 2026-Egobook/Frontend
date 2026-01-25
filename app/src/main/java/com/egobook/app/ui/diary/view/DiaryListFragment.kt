@@ -5,9 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.launch
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egobook.app.R
@@ -16,10 +19,12 @@ import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
 import com.egobook.app.ui.diary.adapter.DiaryRVAdapter
 import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class DiaryListFragment : Fragment() {
 
@@ -49,31 +54,32 @@ class DiaryListFragment : Fragment() {
         observeDiaries()
     }
 
+    // [수정] observeDiaries 로직 전체 변경
     private fun observeDiaries() {
-        val types = getDiaryTypesByPosition(tabPosition)
-
-        viewModel.state
-            .map { it.diaries }
-            .distinctUntilChanged()
-            .onEach { diaries ->
-                val filtered = diaries.filter { diary ->
-                    types == null || diary.types.any { it in types }
+        // Fragment의 View 생명주기를 따르도록 수정
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Fragment가 STARTED 상태일 때만 Flow를 구독
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // ViewModel의 state 전체를 관찰
+                viewModel.state.collectLatest { state ->
+                    // ViewModel에서 이미 필터링된 diaries 리스트를 어댑터에 바로 전달
+                    // 이제 날짜가 바뀌거나 탭이 바뀌면 항상 최신 목록을 받아서 표시함
+                    diaryRVAdapter.submitList(state.diaries)
                 }
-                diaryRVAdapter.submitList(filtered)
             }
-            .launchIn(lifecycleScope)
-    }
-
-    private fun getDiaryTypesByPosition(position: Int): Set<DiaryType>? {
-        return when(position) {
-            0 -> null // 전체
-            1 -> setOf(DiaryType.EMOTION)
-            2 -> setOf(DiaryType.WORRY)
-            3 -> setOf(DiaryType.PRAISE)
-            4 -> setOf(DiaryType.THANKS)
-            else -> null
         }
     }
+
+//    private fun getDiaryTypesByPosition(position: Int): Set<DiaryType>? {
+//        return when(position) {
+//            0 -> null // 전체
+//            1 -> setOf(DiaryType.EMOTION)
+//            2 -> setOf(DiaryType.WORRY)
+//            3 -> setOf(DiaryType.PRAISE)
+//            4 -> setOf(DiaryType.THANKS)
+//            else -> null
+//        }
+//    }
 
     private fun initRecyclerView() {
         diaryRVAdapter.setMyItemClickListener(object :

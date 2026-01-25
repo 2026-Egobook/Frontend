@@ -6,6 +6,9 @@
     import android.view.ViewGroup
     import androidx.fragment.app.Fragment
     import androidx.fragment.app.activityViewModels
+    import androidx.lifecycle.Lifecycle
+    import androidx.lifecycle.lifecycleScope
+    import androidx.lifecycle.repeatOnLifecycle
     import androidx.navigation.fragment.findNavController
     import com.egobook.app.BlurLevel
     import com.egobook.app.R
@@ -13,10 +16,15 @@
     import com.egobook.app.databinding.FragmentDiaryBinding
     import com.egobook.app.domain.model.DiaryType
     import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
+    import com.egobook.app.ui.diary.util.toDayOfMonthString
+    import com.egobook.app.ui.diary.util.toMonthString
+    import com.egobook.app.ui.diary.util.toYearString
     import com.egobook.app.ui.diary.viewmodel.DiariesEvent
     import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
     import com.google.android.material.tabs.TabLayout
     import com.google.android.material.tabs.TabLayoutMediator
+    import kotlinx.coroutines.flow.collectLatest
+    import kotlinx.coroutines.launch
     import kotlin.getValue
 
     class DiaryFragment : Fragment() {
@@ -35,14 +43,16 @@
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
-            //뷰페이저 어댑터 설정
             initViewPager()
+            setupClickListener()
+            observeViewModel()
+        }
 
-            //버튼 클릭 리스너
+        private fun setupClickListener() {
             binding.apply {
                 btnAdd.setOnClickListener {
                     findNavController().navigate(R.id.action_diaryFragment_to_diaryWriteFragment)
-            }
+                }
                 btnCalender.setOnClickListener {
                     findNavController().navigate(R.id.action_diaryFragment_to_candlerFragment)
                 }
@@ -51,6 +61,26 @@
                     val dialog = DiaryExportDialogFragment()
                     dialog.isCancelable = true
                     dialog.show(parentFragmentManager, "ConfirmDialog")
+                }
+                btnPrevDate.setOnClickListener {
+                    val prevDate = viewModel.state.value.selectedDate.minusDays(1)
+                    viewModel.onEvent(DiariesEvent.ChangeDate(prevDate))
+                }
+                btnNextDate.setOnClickListener {
+                    val nextDate = viewModel.state.value.selectedDate.plusDays(1)
+                    viewModel.onEvent(DiariesEvent.ChangeDate(nextDate))
+                }
+            }
+        }
+
+        private fun observeViewModel() {
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.state.collectLatest { state ->
+                        binding.tvYear.text = state.selectedDate.toYearString()
+                        binding.tvMonth.text = state.selectedDate.toMonthString()
+                        binding.tvDate.text = state.selectedDate.toDayOfMonthString()
+                    }
                 }
             }
         }
