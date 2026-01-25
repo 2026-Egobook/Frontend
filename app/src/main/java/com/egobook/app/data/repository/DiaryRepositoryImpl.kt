@@ -35,7 +35,10 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
             ),
             Diary(
                 id = 3L,
-                content = "오늘 저녁은 뭘 먹을지 고민이다. 하루 중 가장 큰 고민.",
+                content = "오늘 저녁은 뭘 먹을지 고민이다. 하루 중 가장 큰 고민.고고고고고곡" +
+                        "고고고고고곡고고고고고곡고고고고고곡고고고고고곡고고고고고곡" +
+                        "고고고고고곡고고고고고곡고고고고고곡고고고고고곡고고고고고곡고고고고고곡" +
+                        "고고고고고곡고고고고고곡고고고고고곡고고고고고곡고고고고고곡고고고고고곡",
                 types = setOf(DiaryType.WORRY),
                 createdAt = LocalDateTime.now().withHour(18).withMinute(0),
                 updatedAt = LocalDateTime.now().withHour(18).withMinute(0),
