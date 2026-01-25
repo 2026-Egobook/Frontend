@@ -4,6 +4,7 @@ import com.egobook.app.R
 import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.model.square.FriendRequestResponse
 import com.egobook.app.data.model.square.FriendResponse
+import com.egobook.app.data.model.square.FriendshipRequest
 import com.egobook.app.data.model.square.SearchUserResponse
 import com.egobook.app.data.model.square.toDomain
 import com.egobook.app.domain.model.Friend
@@ -115,7 +116,20 @@ class FriendsRepositoryImpl @Inject constructor(private val apiService: FriendsA
                 profileImageUrl = "https://images.unsplash.com/photo-1541344999736-83eca272f6fc?q=80"
             )
         )
+        val dummySearchEmptyData = emptyList<SearchUserResponse>()
         Result.success(dummySearchData.map { it.toDomain() })
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun requestFriendship(receiverId: Long): Result<Unit> = try {
+//        val response = apiService.requestFriendship(request = FriendshipRequest(receiverId = receiverId))
+//        if(response.status == 200) {
+//            Result.success(Unit)
+//        } else {
+//            Result.failure(Exception("Error: ${response.status}"))
+//        }
+        Result.success(Unit)
     } catch (e: Exception) {
         Result.failure(e)
     }

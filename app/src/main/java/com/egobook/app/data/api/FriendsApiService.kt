@@ -3,9 +3,12 @@ package com.egobook.app.data.api
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.square.FriendRequestResponse
 import com.egobook.app.data.model.square.FriendResponse
+import com.egobook.app.data.model.square.FriendshipRequest
 import com.egobook.app.data.model.square.SearchUserResponse
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -24,5 +27,8 @@ interface FriendsApiService {
 
     @GET("/friends/search")
     suspend fun searchUser(@Query("keyword") keyword: String): ApiResponse<List<SearchUserResponse>>
+
+    @POST("/friends/requests")
+    suspend fun requestFriendship(@Body request: FriendshipRequest): ApiResponse<Unit>
 }
 
