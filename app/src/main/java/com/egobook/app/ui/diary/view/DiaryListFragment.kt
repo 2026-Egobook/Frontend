@@ -54,32 +54,27 @@ class DiaryListFragment : Fragment() {
         observeDiaries()
     }
 
-    // [수정] observeDiaries 로직 전체 변경
     private fun observeDiaries() {
-        // Fragment의 View 생명주기를 따르도록 수정
         viewLifecycleOwner.lifecycleScope.launch {
-            // Fragment가 STARTED 상태일 때만 Flow를 구독
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // ViewModel의 state 전체를 관찰
                 viewModel.state.collectLatest { state ->
-                    // ViewModel에서 이미 필터링된 diaries 리스트를 어댑터에 바로 전달
-                    // 이제 날짜가 바뀌거나 탭이 바뀌면 항상 최신 목록을 받아서 표시함
+
+                    val isEmpty = state.diaries.isEmpty()
+
+                    binding.layoutEmpty.visibility =
+                        if (isEmpty) View.VISIBLE else View.GONE
+
+                    binding.rvDiary.visibility =
+                        if (isEmpty) View.GONE else View.VISIBLE
+
                     diaryRVAdapter.submitList(state.diaries)
+
                 }
             }
         }
     }
 
-//    private fun getDiaryTypesByPosition(position: Int): Set<DiaryType>? {
-//        return when(position) {
-//            0 -> null // 전체
-//            1 -> setOf(DiaryType.EMOTION)
-//            2 -> setOf(DiaryType.WORRY)
-//            3 -> setOf(DiaryType.PRAISE)
-//            4 -> setOf(DiaryType.THANKS)
-//            else -> null
-//        }
-//    }
+
 
     private fun initRecyclerView() {
         diaryRVAdapter.setMyItemClickListener(object :
