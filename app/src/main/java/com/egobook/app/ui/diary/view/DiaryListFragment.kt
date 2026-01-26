@@ -59,6 +59,8 @@ class DiaryListFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collectLatest { state ->
 
+                    diaryRVAdapter.submitList(state.diaries)
+
                     val isEmpty = state.diaries.isEmpty()
 
                     binding.layoutEmpty.visibility =
@@ -66,8 +68,6 @@ class DiaryListFragment : Fragment() {
 
                     binding.rvDiary.visibility =
                         if (isEmpty) View.GONE else View.VISIBLE
-
-                    diaryRVAdapter.submitList(state.diaries)
 
                 }
             }

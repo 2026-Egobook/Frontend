@@ -37,6 +37,13 @@
                                   savedInstanceState: Bundle?
         ): View {
             _binding = FragmentDiaryBinding.inflate(inflater, container, false)
+
+            binding.vpDiary.apply {
+                clipToPadding = true
+                clipChildren = true
+                offscreenPageLimit = 1
+            }
+
             return binding.root
         }
 
