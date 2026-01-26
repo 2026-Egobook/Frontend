@@ -72,7 +72,6 @@
                 }
             }
         }
-
         private fun observeViewModel() {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -80,6 +79,13 @@
                         binding.tvYear.text = state.selectedDate.toYearString()
                         binding.tvMonth.text = state.selectedDate.toMonthString()
                         binding.tvDate.text = state.selectedDate.toDayOfMonthString()
+
+                        val isEmpty = state.diaries.isEmpty()
+
+                        binding.layoutEmpty.visibility =
+                            if (isEmpty) View.VISIBLE else View.GONE
+                        binding.vpDiary.visibility =
+                            if (isEmpty) View.GONE else View.VISIBLE
                     }
                 }
             }
