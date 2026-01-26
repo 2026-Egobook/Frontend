@@ -5,5 +5,5 @@ import com.egobook.app.domain.repository.QuestionRepository
 import javax.inject.Inject
 
 class GetTodayQuestionUseCase @Inject constructor(private val repository: QuestionRepository) {
-    suspend operator fun invoke(): Result<TodayQuestion> = repository.fetchTodayQuestion()
+    suspend operator fun invoke(isSubmit: Boolean): Result<TodayQuestion> = repository.fetchTodayQuestion(isSubmit)
 }
