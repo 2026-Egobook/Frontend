@@ -33,7 +33,7 @@ class DiariesViewModel @Inject constructor(
                 getDiaries(state.value.selectedDate, event.types)
             }
             is DiariesEvent.ChangeDate -> {
-                getDiaries(event.date, state.value.selectedTabType)
+                getDiaries(event.date, null) // 날짜 변경 시 "전체" 탭으로 리셋
             }
         }
     }

@@ -72,10 +72,12 @@
                 btnPrevDate.setOnClickListener {
                     val prevDate = viewModel.state.value.selectedDate.minusDays(1)
                     viewModel.onEvent(DiariesEvent.ChangeDate(prevDate))
+                    binding.vpDiary.setCurrentItem(0, false) // "전체" 탭으로 이동
                 }
                 btnNextDate.setOnClickListener {
                     val nextDate = viewModel.state.value.selectedDate.plusDays(1)
                     viewModel.onEvent(DiariesEvent.ChangeDate(nextDate))
+                    binding.vpDiary.setCurrentItem(0, false) // "전체" 탭으로 이동
                 }
             }
         }
