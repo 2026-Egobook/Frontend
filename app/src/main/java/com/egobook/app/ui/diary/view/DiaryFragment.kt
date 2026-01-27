@@ -63,7 +63,10 @@
         private fun setupClickListener() {
             binding.apply {
                 btnAdd.setOnClickListener {
-                    findNavController().navigate(R.id.action_diaryFragment_to_diaryWriteFragment)
+                    // 현재 선택된 날짜를 ISO 형식으로 변환하여 전달
+                    val selectedDate = viewModel.state.value.selectedDate.toString()
+                    val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryWriteFragment(selectedDate)
+                    findNavController().navigate(action)
                 }
                 btnCalender.setOnClickListener {
                     findNavController().navigate(R.id.action_diaryFragment_to_calenderFragment)

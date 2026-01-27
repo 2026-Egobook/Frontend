@@ -71,7 +71,13 @@
     <fragment
         android:id="@+id/diaryWriteFragment"
         android:name="com.egobook.app.ui.diary.view.DiaryWriteFragment"
-        android:label="일기 작성"/>
+        android:label="일기 작성">
+        
+        <argument
+            android:name="selectedDate"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 
     <!-- CalenderFragment로의 목적지 정의 -->
     <fragment

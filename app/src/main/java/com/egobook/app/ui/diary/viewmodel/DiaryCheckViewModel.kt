@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryCheckViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle //다
 ) : ViewModel() {
 
     private val _diary = MutableStateFlow<Diary?>(null)
