@@ -1,9 +1,11 @@
 package com.egobook.app.di
 
 import com.egobook.app.data.repository.CounselingRepositoryImpl
+import com.egobook.app.data.repository.DiaryRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
 import com.egobook.app.data.repository.SquareRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
+import com.egobook.app.domain.repository.DiaryRepository
 import com.egobook.app.domain.repository.NotificationRepository
 import com.egobook.app.domain.repository.SquareRepository
 import dagger.Binds
@@ -26,5 +28,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindSquareRepository(impl: SquareRepositoryImpl): SquareRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository
+
+
+
 
 }

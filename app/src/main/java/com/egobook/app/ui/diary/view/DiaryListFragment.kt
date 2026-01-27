@@ -5,18 +5,46 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.launch
+import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryListBinding
 import com.egobook.app.domain.model.Diary
+import com.egobook.app.domain.model.DiaryType
 import com.egobook.app.ui.diary.adapter.DiaryRVAdapter
+import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class DiaryListFragment : Fragment() {
 
     private lateinit var binding: FragmentDiaryListBinding
-    private val diaryDatas = mutableListOf<Diary>()
 
+    private val viewModel: DiariesViewModel by activityViewModels()
     private var tabPosition: Int = 0
+    private val diaryRVAdapter = DiaryRVAdapter()
+    
+    // 스크롤 상태 콜백 인터페이스
+    interface OnScrollListener {
+        fun onScrollStateChanged(isScrolled: Boolean)
+    }
+    
+    private var scrollListener: OnScrollListener? = null
+    
+    fun setOnScrollListener(listener: OnScrollListener) {
+        scrollListener = listener
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,59 +62,67 @@ class DiaryListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupDummyData(tabPosition)
         initRecyclerView()
+        observeDiaries()
     }
 
-    private fun setupDummyData(position: Int) {
-        if (diaryDatas.isNotEmpty()) return
+    private fun observeDiaries() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collectLatest { state ->
 
-        when (position) {
-            0 -> diaryDatas.addAll(
-                listOf(
-                    Diary("전체1", null, "17:00"),
-                    Diary("전체2", null, "17:00"),
-                    Diary("전체3", null, "17:00")
-                )
-            )
-            1 -> diaryDatas.addAll(
-                listOf(
-                    Diary("감정1", null, "17:00"),
-                    Diary("감정2", null, "17:00")
-                )
-            )
-            2 -> diaryDatas.addAll(
-                listOf(
-                    Diary("고민1", null, "17:00")
-                )
-            )
-            else -> diaryDatas.addAll(
-                listOf(
-                    Diary("기타1", null, "17:00")
-                )
-            )
+                    diaryRVAdapter.submitList(state.diaries)
+
+                    val isEmpty = state.diaries.isEmpty()
+
+                    binding.layoutEmpty.visibility =
+                        if (isEmpty) View.VISIBLE else View.GONE
+
+                    binding.rvDiary.visibility =
+                        if (isEmpty) View.GONE else View.VISIBLE
+
+                }
+            }
         }
     }
 
-    private fun initRecyclerView() {
-        val diaryRVAdapter = DiaryRVAdapter(diaryDatas)
 
+
+    private fun initRecyclerView() {
         diaryRVAdapter.setMyItemClickListener(object :
             DiaryRVAdapter.MyItemClickListener {
 
             override fun onItemClick(diary: Diary) {
-                val action =
-                    DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
-                        diaryContent = diary.content,
-                        diaryTime = diary.time
-                    )
-                findNavController().navigate(action)
+                // 💡 1. 부모 프래그먼트(DiaryFragment)가 생성한 Directions를 사용합니다.
+                val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
+                    diaryId = diary.id
+                )
+                // 💡 2. 부모 프래그먼트의 NavController로 action을 실행합니다.
+                parentFragment?.findNavController()?.navigate(action)
             }
         })
 
         binding.rvDiary.adapter = diaryRVAdapter
         binding.rvDiary.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        
+        // 스크롤 리스너 추가
+        binding.rvDiary.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager
+                val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: 0
+                
+                // 첫 번째 아이템이 보이지 않으면 스크롤된 상태로 판단
+                scrollListener?.onScrollStateChanged(firstVisiblePosition > 0)
+            }
+        })
+    }
+    
+    // 맨 위로 스크롤하는 public 함수
+    fun scrollToTop() {
+        binding.rvDiary.smoothScrollToPosition(0)
     }
 
     companion object {
