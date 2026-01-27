@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
-import com.egobook.app.databinding.FragmentCandlerBinding
+import com.egobook.app.databinding.FragmentCalenderBinding
 import com.egobook.app.ui.diary.adapter.DayViewContainer
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
@@ -26,9 +26,9 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
-class CandlerFragment : Fragment() {
+class CalenderFragment : Fragment() {
 
-    private var _binding: FragmentCandlerBinding? = null
+    private var _binding: FragmentCalenderBinding? = null
     private val binding get() = _binding!!
     private val today = LocalDate.now()
 
@@ -36,7 +36,7 @@ class CandlerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCandlerBinding.inflate(inflater, container, false)
+        _binding = FragmentCalenderBinding.inflate(inflater, container, false)
         return binding.root
     }
 

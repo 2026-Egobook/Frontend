@@ -29,10 +29,10 @@
             android:id="@+id/action_diaryFragment_to_diaryWriteFragment"
             app:destination="@id/diaryWriteFragment" />
 
-        <!-- CandlerFragment로의 이동 액션 -->
+        <!-- CalenderFragment로의 이동 액션 -->
         <action
-            android:id="@+id/action_diaryFragment_to_candlerFragment"
-            app:destination="@id/candlerFragment" />
+            android:id="@+id/action_diaryFragment_to_calenderFragment"
+            app:destination="@id/calenderFragment" />
 
         <!-- DiaryCheckFragment로의 이동 액션 -->
         <action
@@ -73,10 +73,10 @@
         android:name="com.egobook.app.ui.diary.view.DiaryWriteFragment"
         android:label="일기 작성"/>
 
-    <!-- CandlerFragment로의 목적지 정의 -->
+    <!-- CalenderFragment로의 목적지 정의 -->
     <fragment
-        android:id="@+id/candlerFragment"
-        android:name="com.egobook.app.ui.diary.view.CandlerFragment"
+        android:id="@+id/calenderFragment"
+        android:name="com.egobook.app.ui.diary.view.CalenderFragment"
         android:label="달력 화면" />
 
     <!-- DiaryCheckFragment로의 목적지 정의 -->

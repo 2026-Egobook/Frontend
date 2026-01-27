@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
             when (destination.id) {
                 R.id.onboardingContainerFragment, // 온보딩 화면
                 R.id.diaryWriteFragment,        // 일기 작성 화면
-                R.id.candlerFragment, // 달력 화면
+                R.id.calenderFragment, // 달력 화면
                 R.id.storeFragment,
                     -> {
                     binding.bottomNavigation.visibility = View.GONE

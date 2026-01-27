@@ -66,7 +66,7 @@
                     findNavController().navigate(R.id.action_diaryFragment_to_diaryWriteFragment)
                 }
                 btnCalender.setOnClickListener {
-                    findNavController().navigate(R.id.action_diaryFragment_to_candlerFragment)
+                    findNavController().navigate(R.id.action_diaryFragment_to_calenderFragment)
                 }
                 btnExport.setOnClickListener {
                     applyScreenBlur(BlurLevel.BASE)
