@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryListBinding
 import com.egobook.app.domain.model.Diary
@@ -33,6 +34,17 @@ class DiaryListFragment : Fragment() {
     private val viewModel: DiariesViewModel by activityViewModels()
     private var tabPosition: Int = 0
     private val diaryRVAdapter = DiaryRVAdapter()
+    
+    // 스크롤 상태 콜백 인터페이스
+    interface OnScrollListener {
+        fun onScrollStateChanged(isScrolled: Boolean)
+    }
+    
+    private var scrollListener: OnScrollListener? = null
+    
+    fun setOnScrollListener(listener: OnScrollListener) {
+        scrollListener = listener
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +105,24 @@ class DiaryListFragment : Fragment() {
         binding.rvDiary.adapter = diaryRVAdapter
         binding.rvDiary.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        
+        // 스크롤 리스너 추가
+        binding.rvDiary.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager
+                val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: 0
+                
+                // 첫 번째 아이템이 보이지 않으면 스크롤된 상태로 판단
+                scrollListener?.onScrollStateChanged(firstVisiblePosition > 0)
+            }
+        })
+    }
+    
+    // 맨 위로 스크롤하는 public 함수
+    fun scrollToTop() {
+        binding.rvDiary.smoothScrollToPosition(0)
     }
 
     companion object {

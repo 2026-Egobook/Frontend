@@ -10,6 +10,7 @@
     import androidx.lifecycle.lifecycleScope
     import androidx.lifecycle.repeatOnLifecycle
     import androidx.navigation.fragment.findNavController
+    import androidx.viewpager2.widget.ViewPager2
     import com.egobook.app.BlurLevel
     import com.egobook.app.R
     import com.egobook.app.applyScreenBlur
@@ -32,6 +33,7 @@
         private val binding get() = _binding!!
 
         private val viewModel: DiariesViewModel by activityViewModels()
+        private var currentDiaryListFragment: DiaryListFragment? = null
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?
@@ -50,6 +52,9 @@
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
+            // 초기에는 GoToTop 버튼 숨김
+            binding.btnGoToTop.visibility = View.GONE
+            
             initViewPager()
             setupClickListener()
             observeViewModel()
@@ -78,6 +83,10 @@
                     val nextDate = viewModel.state.value.selectedDate.plusDays(1)
                     viewModel.onEvent(DiariesEvent.ChangeDate(nextDate))
                     binding.vpDiary.setCurrentItem(0, false) // "전체" 탭으로 이동
+                }
+                btnGoToTop.setOnClickListener {
+                    // 현재 보이는 DiaryListFragment의 RecyclerView를 맨 위로 스크롤
+                    currentDiaryListFragment?.scrollToTop()
                 }
             }
         }
@@ -114,6 +123,31 @@
                 override fun onTabUnselected(tab: TabLayout.Tab) {}
                 override fun onTabReselected(tab: TabLayout.Tab) {}
             })
+            
+            // ViewPager 페이지 변경 리스너 추가
+            binding.vpDiary.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    updateCurrentFragment(position)
+                }
+            })
+            
+            // 초기 Fragment 설정
+            updateCurrentFragment(0)
+        }
+        
+        private fun updateCurrentFragment(position: Int) {
+            // ViewPager2에서 현재 보이는 Fragment 가져오기
+            val fragment = childFragmentManager.findFragmentByTag("f$position") as? DiaryListFragment
+            currentDiaryListFragment = fragment
+            
+            // 스크롤 리스너 설정
+            fragment?.setOnScrollListener(object : DiaryListFragment.OnScrollListener {
+                override fun onScrollStateChanged(isScrolled: Boolean) {
+                    // 스크롤 상태에 따라 GoToTop 버튼 표시/숨김
+                    binding.btnGoToTop.visibility = if (isScrolled) View.VISIBLE else View.GONE
+                }
+            })
         }
 
         private fun getDiaryTypesByPosition(position: Int): Set<com.egobook.app.domain.model.DiaryType>? {
@@ -126,7 +160,6 @@
                 else -> null
             }
         }
-
 
         override fun onDestroyView() {
             super.onDestroyView()
