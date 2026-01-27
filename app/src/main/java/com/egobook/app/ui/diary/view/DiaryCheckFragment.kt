@@ -46,6 +46,7 @@ class DiaryCheckFragment : Fragment() {
 
         setClickListener()
         observeDiary()
+        observeDeleteSuccess()
     }
 
     private fun setClickListener() {
@@ -57,6 +58,15 @@ class DiaryCheckFragment : Fragment() {
                 applyScreenBlur(BlurLevel.BASE)
                 val dialog = DiaryDeleteDialogFragment()
                 dialog.isCancelable = true
+                
+                // 삭제 확인 리스너 설정
+                dialog.setOnDeleteConfirmListener(object : DiaryDeleteDialogFragment.OnDeleteConfirmListener {
+                    override fun onDeleteConfirmed() {
+                        // ViewModel의 deleteDiary 호출
+                        viewModel.deleteDiary()
+                    }
+                })
+                
                 dialog.show(parentFragmentManager, "ConfirmDialog")
             }
         }
@@ -89,6 +99,28 @@ class DiaryCheckFragment : Fragment() {
             binding.ivEmotion.setImageResource(emotionImageRes)
         } else {
             binding.ivEmotion.setImageDrawable(null) // or 기본 이미지
+        }
+    }
+
+    // 삭제 성공 여부를 관찰
+    private fun observeDeleteSuccess() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deleteSuccess.collectLatest { success ->
+                    when (success) {
+                        true -> {
+                            Toast.makeText(requireContext(), "일기가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+                        }
+                        false -> {
+                            Toast.makeText(requireContext(), "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        null -> {
+                            // 초기 상태, 아무 작업 없음
+                        }
+                    }
+                }
+            }
         }
     }
 
