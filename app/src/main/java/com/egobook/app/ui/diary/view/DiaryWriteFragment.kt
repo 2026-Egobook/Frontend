@@ -2,6 +2,7 @@ package com.egobook.app.ui.diary.view
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -94,6 +95,9 @@ class DiaryWriteFragment : Fragment() {
     }
     
     private fun setupDiaryContentEditText() {
+        // 최대 글자 수 제한 (400자)
+        binding.etDiaryContent.filters = arrayOf(InputFilter.LengthFilter(400))
+        
         binding.etDiaryContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             
@@ -127,7 +131,7 @@ class DiaryWriteFragment : Fragment() {
                     // 글자수 표시 업데이트 (예: 0/400, 1/400, ...)
                     binding.tvCharCount.text = "${state.charCount}/${state.maxCharCount}"
                     
-                    // "감정" 타입이 선택되었을 때만 감정 선택 섹션 표시
+                    // "감정" 타입이 선택되었을 때만 레벨 선택 섹션 표시
                     val isEmotionSelected = state.selectedTypes.contains("감정")
                     val visibility = if (isEmotionSelected) View.VISIBLE else View.GONE
                     
