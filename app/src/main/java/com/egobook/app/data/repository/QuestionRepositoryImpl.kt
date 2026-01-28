@@ -23,7 +23,13 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
                 questionId = 101L,
                 content = "오늘 가장 집중이 잘 됐던 순간은 언제였나요?",
                 date = "2026-01-19",
-                isUserAnswered = true
+                isUserAnswered = true,
+                myAnswer = TodayQuestionAnswerResponse(
+                    answerId = 9007199254740991L,
+                    content = "오전 10시쯤 커피 마시면서 코딩할 때가 가장 집중이 잘 되었어요.",
+                    visibility = AnswerVisibility.PUBLIC,
+                    answeredAt = "2026-01-28T04:11:36.224Z"
+                )
             )
             Result.success(mockTodayQuestion.toDomain())
         } else {

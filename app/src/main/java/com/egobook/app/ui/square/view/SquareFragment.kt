@@ -162,7 +162,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                 if(todayQuestion.isUserAnswered) {
                                     cvSquareTodayQuestionAnswered.isVisible = true
                                     tvSquareTodayQuestionContentAnswered.text = "Q. ${todayQuestion.content}"
-                                    tvSquareTodayQuestionDescriptionAnswered.text = "사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답" // 필드가 없다!
+                                    tvSquareTodayQuestionDescriptionAnswered.text = todayQuestion.myAnswer?.content
                                 } else {
                                     cvSquareTodayQuestionUnanswered.isVisible = true
                                     tvSquareTodayQuestionContentUnanswered.text = "Q. ${todayQuestion.content}"
