@@ -1,12 +1,19 @@
 package com.egobook.app.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.egobook.app.data.api.QuestionApiService
-import com.egobook.app.data.model.square.question.TodayAnswerRequest
+import com.egobook.app.data.model.square.question.TodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.TodayQuestionResponse
 import com.egobook.app.data.model.square.question.toDomain
+import com.egobook.app.data.repository.paging.QuestionPagingSource
 import com.egobook.app.domain.model.TodayQuestion
+import com.egobook.app.domain.model.square.question.AnswerVisibility
+import com.egobook.app.domain.model.square.question.MyTodayQuestionAnswerItem
 import com.egobook.app.domain.model.square.question.TodayAnswer
 import com.egobook.app.domain.repository.QuestionRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class QuestionRepositoryImpl @Inject constructor(private val apiService: QuestionApiService): QuestionRepository {
@@ -56,4 +63,18 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    /**
+     * 1. Paging3는 첫 번째 호출일 때, pageSize의 3배를 호출한다.
+     * 그 이후 다음부터는 정의했던 pageSize만큼 호출한다.
+     */
+    override fun fetchMyRepliesHistory(size: Int): Flow<PagingData<MyTodayQuestionAnswerItem>> {
+        return Pager(
+            config = PagingConfig(pageSize = size, enablePlaceholders = false), // 1
+            pagingSourceFactory = {
+                QuestionPagingSource(apiService = apiService)
+            }
+        ).flow
+    }
+
 }

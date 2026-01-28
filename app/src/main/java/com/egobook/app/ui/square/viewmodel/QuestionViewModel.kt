@@ -2,8 +2,13 @@ package com.egobook.app.ui.square.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.egobook.app.domain.usecase.GetMyRepliesHistoryUseCase
 import com.egobook.app.domain.usecase.GetTodayQuestionUseCase
 import com.egobook.app.domain.usecase.SubmitTodayAnswerUseCase
+import com.egobook.app.ui.square.model.question.MyTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
 import com.egobook.app.ui.square.model.question.toDomain
@@ -14,13 +19,15 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class QuestionViewModel @Inject constructor(
     private val getTodayQuestionUseCase: GetTodayQuestionUseCase,
-    private val submitTodayAnswerUseCase: SubmitTodayAnswerUseCase
+    private val submitTodayAnswerUseCase: SubmitTodayAnswerUseCase,
+    private val getMyRepliesHistoryUseCase: GetMyRepliesHistoryUseCase
 ): ViewModel() {
 
     private val _todayQuestion = MutableStateFlow<UiState<TodayQuestionModel>>(UiState.Idle)
@@ -47,6 +54,17 @@ class QuestionViewModel @Inject constructor(
                 _submitTodayAnswerResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _submitTodayAnswerResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _myRepliesHistory = MutableStateFlow<PagingData<MyTodayQuestionAnswerItemModel>?>(null)
+    val myRepliesHistory = _myRepliesHistory.asStateFlow()
+
+    fun getMyRepliesHistory(size: Int) {
+        viewModelScope.launch {
+            getMyRepliesHistoryUseCase(size = size).cachedIn(this).collectLatest { domainList ->
+                _myRepliesHistory.value = domainList.map { it.toPresentation() }
             }
         }
     }
