@@ -67,10 +67,11 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
     /**
      * 1. Paging3는 첫 번째 호출일 때, pageSize의 3배를 호출한다.
      * 그 이후 다음부터는 정의했던 pageSize만큼 호출한다.
+     * initialLoadSize 속성을 따로 설정하면 첫 호출때도 원래 사이즈의 3배가 아닌 기존 사이즈만큼 불러온다.
      */
     override fun fetchMyRepliesHistory(size: Int): Flow<PagingData<MyTodayQuestionAnswerItem>> {
         return Pager(
-            config = PagingConfig(pageSize = size, enablePlaceholders = false), // 1
+            config = PagingConfig(pageSize = size, initialLoadSize = size, enablePlaceholders = false), // 1
             pagingSourceFactory = {
                 QuestionPagingSource(apiService = apiService)
             }
