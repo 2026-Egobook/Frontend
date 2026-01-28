@@ -126,6 +126,14 @@ class DiaryWriteFragment : Fragment() {
                 viewModel.contentState.collectLatest { state ->
                     // 글자수 표시 업데이트 (예: 0/400, 1/400, ...)
                     binding.tvCharCount.text = "${state.charCount}/${state.maxCharCount}"
+                    
+                    // "감정" 타입이 선택되었을 때만 감정 선택 섹션 표시
+                    val isEmotionSelected = state.selectedTypes.contains("감정")
+                    val visibility = if (isEmotionSelected) View.VISIBLE else View.GONE
+                    
+                    binding.tvHowIsYourFeeling.visibility = visibility
+                    binding.stateLayout.visibility = visibility
+                    binding.emotionLayout.visibility = visibility
                 }
             }
         }
