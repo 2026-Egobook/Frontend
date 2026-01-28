@@ -21,6 +21,7 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.MonthDayBinder
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -79,9 +80,9 @@ class CalenderFragment : Fragment() {
         }
     }
 
-    // 요일 헤더를 동적으로 설정하는 함수 추가
+    // 요일 헤더를 동적으로 설정하는 함수 추가 (월화수목금토일 순서)
     private fun setupDayOfWeekTitles() {
-        val daysOfWeek = daysOfWeek()
+        val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // 월요일부터 시작
         // 💡 1. <include> 태그의 ID(titles_layout)를 통해 먼저 접근합니다.
         // 💡 2. 그 다음, 그 안의 LinearLayout(titlesContainer)을 찾습니다.
         binding.titlesLayout.titlesContainer.children.forEachIndexed { index, view ->
@@ -89,6 +90,13 @@ class CalenderFragment : Fragment() {
                 val dayOfWeek = daysOfWeek[index]
                 val title = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
                 view.text = title
+                
+                // 일요일은 빨간색으로 표시
+                if (dayOfWeek == DayOfWeek.SUNDAY) {
+                    view.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_red))
+                } else {
+                    view.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark_bage_text))
+                }
             }
         }
     }
@@ -97,7 +105,7 @@ class CalenderFragment : Fragment() {
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)
         val endMonth = currentMonth.plusMonths(100)
-        val firstDayOfWeek = daysOfWeek().first()
+        val firstDayOfWeek = DayOfWeek.MONDAY // 월요일부터 시작
 
         binding.tvYear.text = currentMonth.year.toString()
         binding.tvMonth.text = "${currentMonth.monthValue}월"
@@ -120,13 +128,21 @@ class CalenderFragment : Fragment() {
                     container.binding.calendarDayText.visibility = View.VISIBLE
 
                     if (data.date == today) {
+                        // 오늘 날짜
                         container.binding.calendarDayText.setTextColor(Color.WHITE)
                         container.binding.calendarDayText.setBackgroundResource(R.drawable.today_background)
                         container.binding.dayEmotionImg.visibility = View.GONE // 오늘 날짜에는 감정 이미지 숨김
                     } else {
-                        container.binding.calendarDayText.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_black))
+                        // 일반 날짜
                         container.binding.calendarDayText.background = null
                         container.binding.dayEmotionImg.visibility = View.VISIBLE
+                        
+                        // 일요일은 빨간색, 그 외는 검정색
+                        if (data.date.dayOfWeek == DayOfWeek.SUNDAY) {
+                            container.binding.calendarDayText.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_red))
+                        } else {
+                            container.binding.calendarDayText.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_black))
+                        }
                     }
                 } else {
                     container.binding.calendarDayText.visibility = View.INVISIBLE
