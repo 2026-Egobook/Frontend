@@ -44,6 +44,15 @@ class DiaryCheckViewModel @Inject constructor(
                 }
         }
     }
+    
+    /**
+     * 일기 데이터 새로고침 (수정 후 돌아왔을 때 사용)
+     */
+    fun refreshDiary() {
+        if (diaryId != -1L) {
+            getDiary(diaryId)
+        }
+    }
 
     fun deleteDiary() {
         viewModelScope.launch {

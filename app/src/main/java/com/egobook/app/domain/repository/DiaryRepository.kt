@@ -18,5 +18,12 @@ interface DiaryRepository {
         createdAt: LocalDateTime // 일기가 귀속될 날짜
     ): Result<Diary>
 
+    suspend fun updateDiary(
+        id: Long,
+        content: String,
+        types: Set<DiaryType>,
+        emotionLevel: Int?
+    ): Result<Diary>
+
     suspend fun deleteDiaryById(id: Long): Result<Unit>
 }

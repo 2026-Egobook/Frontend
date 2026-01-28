@@ -161,6 +161,22 @@ class DiaryWriteFragment : Fragment() {
                     // 글자수 표시 업데이트 (예: 0/400, 1/400, ...)
                     binding.tvCharCount.text = "${state.charCount}/${state.maxCharCount}"
                     
+                    // EditText 내용 업데이트 (수정 모드에서 초기 데이터 로드 시)
+                    if (binding.etDiaryContent.text.toString() != state.content) {
+                        binding.etDiaryContent.setText(state.content)
+                        binding.etDiaryContent.setSelection(state.content.length) // 커서를 끝으로
+                    }
+                    
+                    // 일기 타입 카드 선택 상태 업데이트
+                    binding.cvEmotion.isSelected = state.selectedTypes.contains("감정")
+                    binding.tvEmotion.isSelected = state.selectedTypes.contains("감정")
+                    binding.cvWorry.isSelected = state.selectedTypes.contains("고민")
+                    binding.tvWorry.isSelected = state.selectedTypes.contains("고민")
+                    binding.cvPraise.isSelected = state.selectedTypes.contains("칭찬")
+                    binding.tvPraise.isSelected = state.selectedTypes.contains("칭찬")
+                    binding.cvThanks.isSelected = state.selectedTypes.contains("감사")
+                    binding.tvThanks.isSelected = state.selectedTypes.contains("감사")
+                    
                     // "감정" 타입이 선택되었을 때만 레벨 선택 섹션 표시
                     val isEmotionSelected = state.selectedTypes.contains("감정")
                     val visibility = if (isEmotionSelected) View.VISIBLE else View.GONE

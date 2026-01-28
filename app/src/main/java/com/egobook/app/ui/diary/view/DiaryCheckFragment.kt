@@ -50,11 +50,31 @@ class DiaryCheckFragment : Fragment() {
         observeDiary()
         observeDeleteSuccess()
     }
+    
+    override fun onResume() {
+        super.onResume()
+        // 화면이 다시 보여질 때마다 일기 데이터 새로고침 (수정 후 돌아왔을 때 반영)
+        viewModel.refreshDiary()
+    }
 
     private fun setClickListener() {
         binding.apply{
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
+            }
+            btnModify.setOnClickListener {
+                // 수정하기 버튼 클릭 시 DiaryWriteFragment로 이동
+                val currentDiary = viewModel.diary.value
+                if (currentDiary != null) {
+                    val action = DiaryCheckFragmentDirections
+                        .actionDiaryCheckFragmentToDiaryWriteFragment(
+                            selectedDate = currentDiary.createdAt.toString(),
+                            diaryId = currentDiary.id
+                        )
+                    findNavController().navigate(action)
+                } else {
+                    Toast.makeText(requireContext(), "일기 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
             btnDelete.setOnClickListener {
                 applyScreenBlur(BlurLevel.BASE)

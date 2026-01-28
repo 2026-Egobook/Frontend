@@ -77,6 +77,11 @@
             android:name="selectedDate"
             app:argType="string"
             app:nullable="true" />
+        
+        <argument
+            android:name="diaryId"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
 
     <!-- CalenderFragment로의 목적지 정의 -->
@@ -94,6 +99,10 @@
         <argument
             android:name="diaryId"
             app:argType="long" />
+        
+        <action
+            android:id="@+id/action_diaryCheckFragment_to_diaryWriteFragment"
+            app:destination="@id/diaryWriteFragment" />
 
 <!--        <argument-->
 <!--            android:name="diaryContent"-->

@@ -6,6 +6,7 @@ import com.egobook.app.domain.usecase.diaryusecase.DeleteDiary
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.domain.usecase.diaryusecase.GetDiaries
 import com.egobook.app.domain.usecase.diaryusecase.GetDiary
+import com.egobook.app.domain.usecase.diaryusecase.UpdateDiary
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +26,7 @@ object UseCaseModule {
             getDiaries = GetDiaries(repository),
             getDiary = GetDiary(repository),
             addDiary = AddDiary(repository),
+            updateDiary = UpdateDiary(repository),
             deleteDiary = DeleteDiary(repository)
         )
 

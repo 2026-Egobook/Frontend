@@ -246,6 +246,30 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
             newDiary
         }
 
+    override suspend fun updateDiary(
+        id: Long,
+        content: String,
+        types: Set<DiaryType>,
+        emotionLevel: Int?
+    ): Result<Diary> =
+        runCatching {
+            val existing = diariesFlow.value.find { it.id == id }
+                ?: throw IllegalArgumentException("일기를 찾을 수 없습니다.")
+
+            val updatedDiary = existing.copy(
+                content = content,
+                types = types,
+                emotionLevel = emotionLevel,
+                // createdAt은 기존 값 유지 (copy시 자동)
+                writtenAt = LocalDateTime.now() // 수정 시각만 갱신
+            )
+
+            diariesFlow.update { current ->
+                current.map { if (it.id == id) updatedDiary else it }
+            }
+
+            updatedDiary
+        }
 
     override suspend fun deleteDiaryById(id: Long): Result<Unit> =
         runCatching {

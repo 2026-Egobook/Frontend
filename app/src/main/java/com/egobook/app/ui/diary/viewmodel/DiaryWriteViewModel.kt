@@ -30,9 +30,16 @@ class DiaryWriteViewModel @Inject constructor(
     // 저장 성공 여부를 전달하는 이벤트 Flow (일회성 이벤트)
     private val _saveSuccess = MutableSharedFlow<Boolean>()
     val saveSuccess = _saveSuccess.asSharedFlow()
+    
+    // 수정 모드인지 확인 (diaryId가 -1이 아니면 수정 모드)
+    private val diaryId: Long = savedStateHandle.get<Long>("diaryId") ?: -1L
+    private val isEditMode: Boolean get() = diaryId != -1L
 
     init {
         setupDate()
+        if (isEditMode) {
+            loadDiaryForEdit()
+        }
     }
 
     fun setupDate() {
@@ -45,6 +52,35 @@ class DiaryWriteViewModel @Inject constructor(
                 // 파싱 실패 시 현재 날짜 사용
                 _selectedDate.value = LocalDateTime.now()
             }
+        }
+    }
+    
+    /**
+     * 수정 모드: 기존 일기 데이터 로드
+     */
+    private fun loadDiaryForEdit() {
+        viewModelScope.launch {
+            diaryUseCases.getDiary(diaryId)
+                .onSuccess { diary ->
+                    if (diary != null) {
+                        // 기존 일기 데이터로 UI 상태 업데이트
+                        _selectedDate.value = diary.createdAt
+                        
+                        // Domain DiaryType을 UI displayType으로 변환
+                        val displayTypes = diary.types.map { it.displayType }.toSet()
+                        
+                        _contentState.value = _contentState.value.copy(
+                            content = diary.content,
+                            selectedTypes = displayTypes,
+                            selectedEmotionLevel = diary.emotionLevel ?: 3,
+                            charCount = diary.content.length,
+                            isSaveButtonEnabled = true
+                        )
+                    }
+                }
+                .onFailure {
+                    // 로드 실패 시 에러 처리 (필요시 Toast 등으로 알림)
+                }
         }
     }
 
@@ -100,7 +136,7 @@ class DiaryWriteViewModel @Inject constructor(
     }
     
     /**
-     * 일기 저장 처리
+     * 일기 저장 처리 (생성 또는 수정)
      */
     private fun saveDiary() {
         viewModelScope.launch {
@@ -116,14 +152,24 @@ class DiaryWriteViewModel @Inject constructor(
                 null
             }
             
-            // UseCase를 통해 일기 저장
-            // createdAt: 목록에서 선택한 날짜
-            val result = diaryUseCases.addDiary(
-                content = state.content,
-                types = diaryTypes,
-                emotionLevel = emotionLevel,
-                createdAt = _selectedDate.value // savedStateHandle로 받은 선택된 날짜
-            )
+            // 수정 모드 vs 생성 모드 분기
+            val result = if (isEditMode) {
+                // 수정 모드: updateDiary 호출
+                diaryUseCases.updateDiary(
+                    id = diaryId,
+                    content = state.content,
+                    types = diaryTypes,
+                    emotionLevel = emotionLevel
+                )
+            } else {
+                // 생성 모드: addDiary 호출
+                diaryUseCases.addDiary(
+                    content = state.content,
+                    types = diaryTypes,
+                    emotionLevel = emotionLevel,
+                    createdAt = _selectedDate.value // savedStateHandle로 받은 선택된 날짜
+                )
+            }
             
             // 저장 결과 전달
             result.onSuccess {

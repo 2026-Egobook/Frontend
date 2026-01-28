@@ -230,5 +230,4 @@
         app:layout_constraintEnd_toEndOf="@id/gd_right"
         android:layout_marginBottom="16dp"/>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
