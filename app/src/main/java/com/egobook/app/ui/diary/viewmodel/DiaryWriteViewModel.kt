@@ -53,7 +53,15 @@ class DiaryWriteViewModel @Inject constructor(
                 )
             }
             is ContentEvent.ToggleDiaryType -> {
-                // TODO: 일기 유형 토글 처리
+                val currentTypes = _contentState.value.selectedTypes.toMutableSet()
+                if (currentTypes.contains(event.value)) {
+                    currentTypes.remove(event.value)
+                } else {
+                    currentTypes.add(event.value)
+                }
+                _contentState.value = _contentState.value.copy(
+                    selectedTypes = currentTypes
+                )
             }
             is ContentEvent.SaveDiary -> {
                 // TODO: 일기 저장 처리
@@ -71,7 +79,7 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     data class ContentState(
-        val selectedType: String? = null,
+        val selectedTypes: Set<String> = emptySet(),
         val content: String = "",
         val hint: String = "오늘 하루는 어땠나요?",
         val isHintVisible: Boolean = false,

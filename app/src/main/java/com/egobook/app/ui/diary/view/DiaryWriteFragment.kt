@@ -57,9 +57,40 @@ class DiaryWriteFragment : Fragment() {
             findNavController().popBackStack()
         }
         
+        setupDiaryTypeCards()
         setupDiaryContentEditText()
         observeSelectedDate()
         observeContentState()
+    }
+    
+    private fun setupDiaryTypeCards() {
+        // 감정 카드 클릭
+        binding.cvEmotion.setOnClickListener {
+            binding.cvEmotion.isSelected = !binding.cvEmotion.isSelected
+            binding.tvEmotion.isSelected = binding.cvEmotion.isSelected
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.ToggleDiaryType("감정"))
+        }
+        
+        // 고민 카드 클릭
+        binding.cvWorry.setOnClickListener {
+            binding.cvWorry.isSelected = !binding.cvWorry.isSelected
+            binding.tvWorry.isSelected = binding.cvWorry.isSelected
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.ToggleDiaryType("고민"))
+        }
+        
+        // 칭찬 카드 클릭
+        binding.cvPraise.setOnClickListener {
+            binding.cvPraise.isSelected = !binding.cvPraise.isSelected
+            binding.tvPraise.isSelected = binding.cvPraise.isSelected
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.ToggleDiaryType("칭찬"))
+        }
+        
+        // 감사 카드 클릭
+        binding.cvThanks.setOnClickListener {
+            binding.cvThanks.isSelected = !binding.cvThanks.isSelected
+            binding.tvThanks.isSelected = binding.cvThanks.isSelected
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.ToggleDiaryType("감사"))
+        }
     }
     
     private fun setupDiaryContentEditText() {
