@@ -3,10 +3,15 @@ package com.egobook.app.ui.diary.viewmodel
 import androidx.compose.ui.focus.FocusState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
+import com.egobook.app.ui.diary.mapper.DiaryMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -21,6 +26,10 @@ class DiaryWriteViewModel @Inject constructor(
 
     private val _contentState = MutableStateFlow(ContentState())
     val contentState = _contentState.asStateFlow()
+    
+    // 저장 성공 여부를 전달하는 이벤트 Flow (일회성 이벤트)
+    private val _saveSuccess = MutableSharedFlow<Boolean>()
+    val saveSuccess = _saveSuccess.asSharedFlow()
 
     init {
         setupDate()
@@ -84,6 +93,44 @@ class DiaryWriteViewModel @Inject constructor(
                     selectedEmotionLevel = event.level
                 )
             }
+            is ContentEvent.SaveDiary -> {
+                saveDiary()
+            }
+        }
+    }
+    
+    /**
+     * 일기 저장 처리
+     */
+    private fun saveDiary() {
+        viewModelScope.launch {
+            val state = _contentState.value
+            
+            // UI displayType을 Domain DiaryType으로 변환
+            val diaryTypes = DiaryMapper.uiDisplayTypesToDomain(state.selectedTypes)
+            
+            // 감정 타입이 선택되지 않았으면 emotionLevel은 null
+            val emotionLevel = if (state.selectedTypes.contains("감정")) {
+                state.selectedEmotionLevel
+            } else {
+                null
+            }
+            
+            // UseCase를 통해 일기 저장
+            // createdAt: 목록에서 선택한 날짜
+            val result = diaryUseCases.addDiary(
+                content = state.content,
+                types = diaryTypes,
+                emotionLevel = emotionLevel,
+                createdAt = _selectedDate.value // savedStateHandle로 받은 선택된 날짜
+            )
+            
+            // 저장 결과 전달
+            result.onSuccess {
+                _saveSuccess.emit(true) // 저장 성공
+            }.onFailure {
+                _saveSuccess.emit(false) // 저장 실패
+            }
         }
     }
     
@@ -100,6 +147,7 @@ class DiaryWriteViewModel @Inject constructor(
         data class EnteredContent(val value: String): ContentEvent()
         data class ChangeContentFocus(val focusState: FocusState): ContentEvent()
         data class SelectEmotionLevel(val level: Int): ContentEvent()
+        data object SaveDiary: ContentEvent()
     }
 
     data class ContentState(

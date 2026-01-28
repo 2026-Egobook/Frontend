@@ -224,19 +224,19 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
     override suspend fun addDiary(
         content: String,
         types: Set<DiaryType>,
-        emotionLevel: Int? // 1~5 사이의 감정 레벨
+        emotionLevel: Int?, // 1~5 사이의 감정 레벨
+        createdAt: LocalDateTime // 일기가 귀속될 날짜
     ): Result<Diary> =
         runCatching {
-            //임시 반환 로직 작성
-            val now = LocalDateTime.now()
+            val now = LocalDateTime.now() // 작성(수정) 시각
 
             val newDiary = Diary(
                 id = (diariesFlow.value.maxOfOrNull { it.id } ?: 0L) + 1,
                 content = content,
                 types = types,
                 emotionLevel = emotionLevel,
-                createdAt = now,
-                updatedAt = now
+                createdAt = createdAt,  // 선택한 날짜 (일기가 귀속될 날짜)
+                updatedAt = now         // 실제 작성 시각
             )
 
             diariesFlow.update { current ->

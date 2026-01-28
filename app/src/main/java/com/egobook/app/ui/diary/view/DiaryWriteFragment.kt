@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -61,11 +62,17 @@ class DiaryWriteFragment : Fragment() {
             findNavController().popBackStack()
         }
         
+        // 저장하기 버튼 클릭 시 일기 저장
+        binding.btnSave.setOnClickListener {
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.SaveDiary)
+        }
+        
         setupDiaryTypeCards()           // 일기 타입 카드뷰 클릭 리스너 설정
         setupEmotionLevelSelection()    // 감정 레벨 이미지 클릭 리스너 설정
         setupDiaryContentEditText()     // 일기 내용 입력 필드 설정 (글자수 제한, TextWatcher)
         observeSelectedDate()           // 선택된 날짜 관찰 및 UI 업데이트
         observeContentState()           // 컨텐츠 상태 관찰 (글자수, 감정 섹션, 저장 버튼 활성화)
+        observeSaveSuccess()            // 저장 성공/실패 관찰
     }
     
     private fun setupDiaryTypeCards() {
@@ -211,6 +218,23 @@ class DiaryWriteFragment : Fragment() {
             4 -> R.drawable.img_emotion_happy_unselected
             5 -> R.drawable.img_emotion_very_happy_unselected
             else -> R.drawable.img_emotion_neutral_unselected
+        }
+    }
+    
+    private fun observeSaveSuccess() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.saveSuccess.collectLatest { success ->
+                    if (success) {
+                        // 저장 성공
+                        Toast.makeText(requireContext(), "일기가 저장되었습니다", Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack() // 이전 화면으로 이동
+                    } else {
+                        // 저장 실패
+                        Toast.makeText(requireContext(), "일기 저장에 실패했습니다", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
