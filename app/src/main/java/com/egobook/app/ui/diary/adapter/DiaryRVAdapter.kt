@@ -49,7 +49,7 @@ class DiaryRVAdapter :
 
         fun bind(diary: Diary) {
             binding.tvDiaryContent.text = diary.content
-            binding.tvTime.text = diary.updatedAt.toTimeString()
+            binding.tvTime.text = diary.writtenAt.toTimeString()
 
             // 감정 레벨이 있으면 이미지 표시, 없으면 숨김
             if (diary.emotionLevel != null) {

@@ -9,7 +9,7 @@ data class Diary(
     val content: String, //내용
     val types: Set<DiaryType>, //중복 방지
     val createdAt: LocalDateTime, //최초 생성 시각
-    val updatedAt: LocalDateTime, //마지막 수정 시각
+    val writtenAt: LocalDateTime, //마지막 수정 시각
     val emotionLevel: Int? //감정 레벨 (1: 매우 나쁨, 2: 나쁨, 3: 보통, 4: 좋음, 5: 매우 좋음). null일 수도 있음
 ) {
     init {

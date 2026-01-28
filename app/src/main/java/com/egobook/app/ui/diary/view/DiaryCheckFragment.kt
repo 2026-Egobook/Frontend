@@ -93,7 +93,7 @@ class DiaryCheckFragment : Fragment() {
     // UI를 업데이트하는 로직을 별도 함수로 분리
     private fun updateUi(diary: Diary) {
         binding.tvDiaryContent.text = diary.content
-        binding.tvWrittenTime.text = diary.updatedAt.toDateTimeString()
+        binding.tvWrittenTime.text = diary.writtenAt.toDateTimeString()
         binding.tvDate.text = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
         
         // 감정 레벨이 있으면 이미지 표시, 없으면 null
