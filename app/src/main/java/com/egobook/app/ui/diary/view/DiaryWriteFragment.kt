@@ -52,8 +52,22 @@ class DiaryWriteFragment : Fragment() {
         // 하단 시스템 바 영역만큼 패딩을 주어 버튼이 가려지지 않게 함.
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // 기존 패딩은 유지하면서 하단만 시스템 바 높이만큼 추가
-            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom)
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime()) // 키보드
+
+            v.setPadding(
+                v.paddingLeft,
+                v.paddingTop,
+                v.paddingRight,
+                maxOf(systemBars.bottom, ime.bottom)
+            )
+            
+            // 키보드가 올라오면 ScrollView를 맨 아래로 스크롤
+            if (ime.bottom > 0) {
+                binding.svDiaryWrite.post {
+                    binding.svDiaryWrite.fullScroll(View.FOCUS_DOWN)
+                }
+            }
+            
             insets
         }
 
