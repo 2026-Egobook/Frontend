@@ -50,7 +50,6 @@ class CalenderFragment : Fragment() {
             insets
         }
 
-        // 💡 1. 동적 요일 헤더 설정 함수 호출
         setupDayOfWeekTitles()
         setupCalendar()
 
@@ -80,75 +79,145 @@ class CalenderFragment : Fragment() {
         }
     }
 
-    // 요일 헤더를 동적으로 설정하는 함수 추가 (월화수목금토일 순서)
+    // ========== 달력 초기화 ==========
+    
+    /**
+     * 요일 헤더 설정 (월화수목금토일 순서)
+     */
     private fun setupDayOfWeekTitles() {
-        val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // 월요일부터 시작
-        // 💡 1. <include> 태그의 ID(titles_layout)를 통해 먼저 접근합니다.
-        // 💡 2. 그 다음, 그 안의 LinearLayout(titlesContainer)을 찾습니다.
+        val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY)
+        
         binding.titlesLayout.titlesContainer.children.forEachIndexed { index, view ->
             if (view is TextView) {
                 val dayOfWeek = daysOfWeek[index]
-                val title = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                view.text = title
-                
-                // 일요일은 빨간색으로 표시
-                if (dayOfWeek == DayOfWeek.SUNDAY) {
-                    view.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_red))
-                } else {
-                    view.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark_bage_text))
-                }
+                view.text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                view.setTextColor(getDayOfWeekColor(dayOfWeek))
             }
         }
     }
-
+    
+    /**
+     * 달력 설정 및 초기화
+     */
     private fun setupCalendar() {
         val currentMonth = YearMonth.now()
+        
+        initializeCalendarRange(currentMonth)
+        initializeYearMonthText(currentMonth)
+        setupMonthScrollListener()
+        setupDayBinder()
+    }
+    
+    /**
+     * 달력 범위 설정 (과거 100개월 ~ 미래 100개월)
+     */
+    private fun initializeCalendarRange(currentMonth: YearMonth) {
         val startMonth = currentMonth.minusMonths(100)
         val endMonth = currentMonth.plusMonths(100)
-        val firstDayOfWeek = DayOfWeek.MONDAY // 월요일부터 시작
-
+        val firstDayOfWeek = DayOfWeek.MONDAY
+        
+        binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
+        binding.calendarView.scrollToMonth(currentMonth)
+    }
+    
+    /**
+     * 초기 연/월 텍스트 설정
+     */
+    private fun initializeYearMonthText(currentMonth: YearMonth) {
         binding.tvYear.text = currentMonth.year.toString()
         binding.tvMonth.text = "${currentMonth.monthValue}월"
-
+    }
+    
+    /**
+     * 월 스크롤 리스너 설정
+     */
+    private fun setupMonthScrollListener() {
         binding.calendarView.monthScrollListener = { month ->
             binding.tvYear.text = month.yearMonth.year.toString()
             binding.tvMonth.text = "${month.yearMonth.monthValue}월"
         }
-
-        binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
-        binding.calendarView.scrollToMonth(currentMonth)
-
+    }
+    
+    /**
+     * 날짜 바인더 설정
+     */
+    private fun setupDayBinder() {
         binding.calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
-
             override fun bind(container: DayViewContainer, data: CalendarDay) {
-                container.binding.calendarDayText.text = data.date.dayOfMonth.toString()
-
-                if (data.position == DayPosition.MonthDate) {
-                    container.binding.calendarDayText.visibility = View.VISIBLE
-
-                    if (data.date == today) {
-                        // 오늘 날짜
-                        container.binding.calendarDayText.setTextColor(Color.WHITE)
-                        container.binding.calendarDayText.setBackgroundResource(R.drawable.today_background)
-                        container.binding.dayEmotionImg.visibility = View.GONE // 오늘 날짜에는 감정 이미지 숨김
-                    } else {
-                        // 일반 날짜
-                        container.binding.calendarDayText.background = null
-                        container.binding.dayEmotionImg.visibility = View.VISIBLE
-                        
-                        // 일요일은 빨간색, 그 외는 검정색
-                        if (data.date.dayOfWeek == DayOfWeek.SUNDAY) {
-                            container.binding.calendarDayText.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_red))
-                        } else {
-                            container.binding.calendarDayText.setTextColor(ContextCompat.getColor(requireContext(), R.color.cos_black))
-                        }
-                    }
-                } else {
-                    container.binding.calendarDayText.visibility = View.INVISIBLE
-                    container.binding.dayEmotionImg.visibility = View.INVISIBLE
-                }
+                bindCalendarDay(container, data)
             }
+        }
+    }
+    
+    // ========== 날짜 바인딩 로직 ==========
+    
+    /**
+     * 날짜 셀 바인딩
+     */
+    private fun bindCalendarDay(container: DayViewContainer, data: CalendarDay) {
+        container.binding.calendarDayText.text = data.date.dayOfMonth.toString()
+        
+        when {
+            data.position != DayPosition.MonthDate -> bindOutOfMonthDate(container)
+            data.date == today -> bindTodayDate(container)
+            else -> bindRegularDate(container, data.date)
+        }
+    }
+    
+    /**
+     * 이전/다음 달 날짜 바인딩 (숨김 처리)
+     */
+    private fun bindOutOfMonthDate(container: DayViewContainer) {
+        container.binding.calendarDayText.visibility = View.INVISIBLE
+        container.binding.dayEmotionImg.visibility = View.INVISIBLE
+    }
+    
+    /**
+     * 오늘 날짜 바인딩
+     */
+    private fun bindTodayDate(container: DayViewContainer) {
+        container.binding.calendarDayText.apply {
+            visibility = View.VISIBLE
+            setTextColor(Color.WHITE)
+            setBackgroundResource(R.drawable.today_background)
+        }
+        container.binding.dayEmotionImg.visibility = View.GONE
+    }
+    
+    /**
+     * 일반 날짜 바인딩
+     */
+    private fun bindRegularDate(container: DayViewContainer, date: LocalDate) {
+        container.binding.calendarDayText.apply {
+            visibility = View.VISIBLE
+            background = null
+            setTextColor(getDateTextColor(date))
+        }
+        container.binding.dayEmotionImg.visibility = View.VISIBLE
+    }
+    
+    // ========== 색상 헬퍼 함수 ==========
+    
+    /**
+     * 요일 색상 반환 (일요일: 빨강, 그 외: 기본)
+     */
+    private fun getDayOfWeekColor(dayOfWeek: DayOfWeek): Int {
+        return if (dayOfWeek == DayOfWeek.SUNDAY) {
+            ContextCompat.getColor(requireContext(), R.color.cos_red)
+        } else {
+            ContextCompat.getColor(requireContext(), R.color.dark_bage_text)
+        }
+    }
+    
+    /**
+     * 날짜 텍스트 색상 반환 (일요일: 빨강, 그 외: 검정)
+     */
+    private fun getDateTextColor(date: LocalDate): Int {
+        return if (date.dayOfWeek == DayOfWeek.SUNDAY) {
+            ContextCompat.getColor(requireContext(), R.color.cos_red)
+        } else {
+            ContextCompat.getColor(requireContext(), R.color.cos_black)
         }
     }
 
