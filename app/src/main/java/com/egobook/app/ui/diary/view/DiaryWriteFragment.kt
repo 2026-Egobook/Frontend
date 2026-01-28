@@ -61,11 +61,11 @@ class DiaryWriteFragment : Fragment() {
             findNavController().popBackStack()
         }
         
-        setupDiaryTypeCards()
-        setupEmotionLevelSelection()
-        setupDiaryContentEditText()
-        observeSelectedDate()
-        observeContentState()
+        setupDiaryTypeCards()           // 일기 타입 카드뷰 클릭 리스너 설정
+        setupEmotionLevelSelection()    // 감정 레벨 이미지 클릭 리스너 설정
+        setupDiaryContentEditText()     // 일기 내용 입력 필드 설정 (글자수 제한, TextWatcher)
+        observeSelectedDate()           // 선택된 날짜 관찰 및 UI 업데이트
+        observeContentState()           // 컨텐츠 상태 관찰 (글자수, 감정 섹션, 저장 버튼 활성화)
     }
     
     private fun setupDiaryTypeCards() {
@@ -164,6 +164,9 @@ class DiaryWriteFragment : Fragment() {
                     
                     // 선택된 감정 레벨에 따라 이미지 업데이트
                     updateEmotionImages(state.selectedEmotionLevel)
+                    
+                    // 저장 버튼 활성화 상태 업데이트
+                    binding.btnSave.isEnabled = state.isSaveButtonEnabled
                 }
             }
         }

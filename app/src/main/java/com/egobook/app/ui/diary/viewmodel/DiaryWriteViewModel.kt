@@ -42,9 +42,18 @@ class DiaryWriteViewModel @Inject constructor(
     fun onEvent(event: ContentEvent) {
         when (event) {
             is ContentEvent.EnteredContent -> {
-                _contentState.value = _contentState.value.copy(
-                    content = event.value,
-                    charCount = event.value.length
+                val newContent = event.value
+                val newCharCount = newContent.length
+                val currentState = _contentState.value
+                
+                _contentState.value = currentState.copy(
+                    content = newContent,
+                    charCount = newCharCount,
+                    // 저장 버튼 활성화 상태 업데이트: 타입 선택 여부 + 텍스트 입력 여부 체크
+                    isSaveButtonEnabled = isSaveButtonEnabled(
+                        selectedTypes = currentState.selectedTypes,
+                        content = newContent
+                    )
                 )
             }
             is ContentEvent.ChangeContentFocus -> {
@@ -53,14 +62,21 @@ class DiaryWriteViewModel @Inject constructor(
                 )
             }
             is ContentEvent.ToggleDiaryType -> {
-                val currentTypes = _contentState.value.selectedTypes.toMutableSet()
+                val currentState = _contentState.value
+                val currentTypes = currentState.selectedTypes.toMutableSet()
                 if (currentTypes.contains(event.value)) {
                     currentTypes.remove(event.value)
                 } else {
                     currentTypes.add(event.value)
                 }
-                _contentState.value = _contentState.value.copy(
-                    selectedTypes = currentTypes
+                
+                _contentState.value = currentState.copy(
+                    selectedTypes = currentTypes,
+                    // 저장 버튼 활성화 상태 업데이트: 타입 변경 시마다 조건 재검사
+                    isSaveButtonEnabled = isSaveButtonEnabled(
+                        selectedTypes = currentTypes,
+                        content = currentState.content
+                    )
                 )
             }
             is ContentEvent.SelectEmotionLevel -> {
@@ -68,10 +84,15 @@ class DiaryWriteViewModel @Inject constructor(
                     selectedEmotionLevel = event.level
                 )
             }
-            is ContentEvent.SaveDiary -> {
-                // TODO: 일기 저장 처리
-            }
         }
+    }
+    
+    /**
+     * 저장 버튼 활성화 조건 체크
+     * 조건: 1) 하나 이상의 일기 타입 선택 && 2) 텍스트가 조금이라도 있음
+     */
+    private fun isSaveButtonEnabled(selectedTypes: Set<String>, content: String): Boolean {
+        return selectedTypes.isNotEmpty() && content.isNotBlank()
     }
 
     sealed class ContentEvent {
@@ -79,7 +100,6 @@ class DiaryWriteViewModel @Inject constructor(
         data class EnteredContent(val value: String): ContentEvent()
         data class ChangeContentFocus(val focusState: FocusState): ContentEvent()
         data class SelectEmotionLevel(val level: Int): ContentEvent()
-        data class SaveDiary(val content: String): ContentEvent()
     }
 
     data class ContentState(
@@ -89,7 +109,8 @@ class DiaryWriteViewModel @Inject constructor(
         val hint: String = "오늘 하루는 어땠나요?",
         val isHintVisible: Boolean = false,
         val charCount: Int = 0,
-        val maxCharCount: Int = 400
+        val maxCharCount: Int = 400,
+        val isSaveButtonEnabled: Boolean = false // 저장 버튼 활성화 유무
     )
 
 }
