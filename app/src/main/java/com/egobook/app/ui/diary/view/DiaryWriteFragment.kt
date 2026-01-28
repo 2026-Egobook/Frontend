@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -15,12 +16,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryWriteBinding
 import com.egobook.app.ui.diary.util.toDateTimeString
 import com.egobook.app.ui.diary.util.toDayOfMonthString
 import com.egobook.app.ui.diary.util.toMonthString
 import com.egobook.app.ui.diary.util.toYearString
 import com.egobook.app.ui.diary.viewmodel.DiaryWriteViewModel
+import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -59,6 +62,7 @@ class DiaryWriteFragment : Fragment() {
         }
         
         setupDiaryTypeCards()
+        setupEmotionLevelSelection()
         setupDiaryContentEditText()
         observeSelectedDate()
         observeContentState()
@@ -91,6 +95,25 @@ class DiaryWriteFragment : Fragment() {
             binding.cvThanks.isSelected = !binding.cvThanks.isSelected
             binding.tvThanks.isSelected = binding.cvThanks.isSelected
             viewModel.onEvent(DiaryWriteViewModel.ContentEvent.ToggleDiaryType("감사"))
+        }
+    }
+    
+    private fun setupEmotionLevelSelection() {
+        // 각 감정 이미지 클릭 리스너 설정
+        binding.ivEmotion1.setOnClickListener {
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.SelectEmotionLevel(1))
+        }
+        binding.ivEmotion2.setOnClickListener {
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.SelectEmotionLevel(2))
+        }
+        binding.ivEmotion3.setOnClickListener {
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.SelectEmotionLevel(3))
+        }
+        binding.ivEmotion4.setOnClickListener {
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.SelectEmotionLevel(4))
+        }
+        binding.ivEmotion5.setOnClickListener {
+            viewModel.onEvent(DiaryWriteViewModel.ContentEvent.SelectEmotionLevel(5))
         }
     }
     
@@ -138,8 +161,53 @@ class DiaryWriteFragment : Fragment() {
                     binding.tvHowIsYourFeeling.visibility = visibility
                     binding.stateLayout.visibility = visibility
                     binding.emotionLayout.visibility = visibility
+                    
+                    // 선택된 감정 레벨에 따라 이미지 업데이트
+                    updateEmotionImages(state.selectedEmotionLevel)
                 }
             }
+        }
+    }
+    
+    private fun updateEmotionImages(selectedLevel: Int) {
+        // 모든 감정 이미지 업데이트
+        updateEmotionImage(binding.ivEmotion1, 1, selectedLevel)
+        updateEmotionImage(binding.ivEmotion2, 2, selectedLevel)
+        updateEmotionImage(binding.ivEmotion3, 3, selectedLevel)
+        updateEmotionImage(binding.ivEmotion4, 4, selectedLevel)
+        updateEmotionImage(binding.ivEmotion5, 5, selectedLevel)
+    }
+    
+    private fun updateEmotionImage(imageView: ShapeableImageView, level: Int, selectedLevel: Int) {
+        val imageRes = if (level == selectedLevel) {
+            getSelectedEmotionImage(level)
+        } else {
+            getUnselectedEmotionImage(level)
+        }
+        imageView.setImageResource(imageRes)
+    }
+    
+    @DrawableRes
+    private fun getSelectedEmotionImage(level: Int): Int {
+        return when (level) {
+            1 -> R.drawable.img_emotion_very_sad
+            2 -> R.drawable.img_emotion_sad
+            3 -> R.drawable.img_emotion_neutral
+            4 -> R.drawable.img_emotion_happy
+            5 -> R.drawable.img_emotion_very_happy
+            else -> R.drawable.img_emotion_neutral
+        }
+    }
+    
+    @DrawableRes
+    private fun getUnselectedEmotionImage(level: Int): Int {
+        return when (level) {
+            1 -> R.drawable.img_emotion_very_sad_unselectd // 오타 있는 파일명 그대로 사용
+            2 -> R.drawable.img_emotion_sad_unselected
+            3 -> R.drawable.img_emotion_neutral_unselected
+            4 -> R.drawable.img_emotion_happy_unselected
+            5 -> R.drawable.img_emotion_very_happy_unselected
+            else -> R.drawable.img_emotion_neutral_unselected
         }
     }
 

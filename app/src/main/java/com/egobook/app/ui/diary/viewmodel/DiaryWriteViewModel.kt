@@ -63,6 +63,11 @@ class DiaryWriteViewModel @Inject constructor(
                     selectedTypes = currentTypes
                 )
             }
+            is ContentEvent.SelectEmotionLevel -> {
+                _contentState.value = _contentState.value.copy(
+                    selectedEmotionLevel = event.level
+                )
+            }
             is ContentEvent.SaveDiary -> {
                 // TODO: 일기 저장 처리
             }
@@ -70,16 +75,16 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     sealed class ContentEvent {
-
         data class ToggleDiaryType(val value: String): ContentEvent()
         data class EnteredContent(val value: String): ContentEvent()
         data class ChangeContentFocus(val focusState: FocusState): ContentEvent()
+        data class SelectEmotionLevel(val level: Int): ContentEvent()
         data class SaveDiary(val content: String): ContentEvent()
-
     }
 
     data class ContentState(
         val selectedTypes: Set<String> = emptySet(),
+        val selectedEmotionLevel: Int = 3, // 디폴트는 NORMAL (3)
         val content: String = "",
         val hint: String = "오늘 하루는 어땠나요?",
         val isHintVisible: Boolean = false,

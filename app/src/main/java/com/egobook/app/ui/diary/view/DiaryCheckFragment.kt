@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -12,10 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.BlurLevel
+import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentDiaryCheckBinding
 import com.egobook.app.domain.model.Diary
-import com.egobook.app.ui.diary.mapper.DiaryMapper
+import com.egobook.app.domain.model.EmotionLevel
 import com.egobook.app.ui.diary.util.toDateTimeString
 import com.egobook.app.ui.diary.util.toDayOfMonthString
 import com.egobook.app.ui.diary.util.toMonthString
@@ -94,11 +96,27 @@ class DiaryCheckFragment : Fragment() {
         binding.tvDiaryContent.text = diary.content
         binding.tvWrittenTime.text = diary.updatedAt.toDateTimeString()
         binding.tvDate.text = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
-        val emotionImageRes = DiaryMapper.toEmotionImage(diary.emotionLevel)
-        if (emotionImageRes != null) {
+        
+        // 감정 레벨이 있으면 이미지 표시, 없으면 null
+        if (diary.emotionLevel != null) {
+            val emotionImageRes = getEmotionImageRes(diary.emotionLevel)
             binding.ivEmotion.setImageResource(emotionImageRes)
         } else {
-            binding.ivEmotion.setImageDrawable(null) // or 기본 이미지
+            binding.ivEmotion.setImageDrawable(null) // 기본 이미지
+        }
+    }
+    
+    /**
+     * Domain EmotionLevel을 UI 이미지 리소스로 변환
+     */
+    @DrawableRes
+    private fun getEmotionImageRes(emotionLevel: EmotionLevel): Int {
+        return when (emotionLevel) {
+            EmotionLevel.VERY_BAD -> R.drawable.img_emotion_very_sad
+            EmotionLevel.BAD -> R.drawable.img_emotion_sad
+            EmotionLevel.NORMAL -> R.drawable.img_emotion_neutral
+            EmotionLevel.GOOD -> R.drawable.img_emotion_happy
+            EmotionLevel.VERY_GOOD -> R.drawable.img_emotion_very_happy
         }
     }
 
