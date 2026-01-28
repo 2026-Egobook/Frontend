@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemDiaryBinding
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.ui.diary.mapper.ImageMapper
+import com.egobook.app.ui.diary.mapper.DiaryMapper
 import com.egobook.app.ui.diary.util.toTimeString
 
 class DiaryRVAdapter :
@@ -50,7 +50,7 @@ class DiaryRVAdapter :
             binding.tvDiaryContent.text = diary.content
             binding.tvTime.text = diary.updatedAt.toTimeString()
 
-            val emotionImageRes = ImageMapper.toEmotionImage(diary.emotionLevel)
+            val emotionImageRes = DiaryMapper.toEmotionImage(diary.emotionLevel)
             if (emotionImageRes != null) {
                 // 이미지 리소스가 있으면 이미지를 설정하고 보여줌
                 binding.ivEmotion.setImageResource(emotionImageRes)

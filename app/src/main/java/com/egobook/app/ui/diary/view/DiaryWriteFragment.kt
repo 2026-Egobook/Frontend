@@ -1,6 +1,8 @@
 package com.egobook.app.ui.diary.view
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +57,22 @@ class DiaryWriteFragment : Fragment() {
             findNavController().popBackStack()
         }
         
+        setupDiaryContentEditText()
         observeSelectedDate()
+        observeContentState()
+    }
+    
+    private fun setupDiaryContentEditText() {
+        binding.etDiaryContent.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // 텍스트가 변경될 때마다 ViewModel에 Event 전달
+                viewModel.onEvent(DiaryWriteViewModel.ContentEvent.EnteredContent(s?.toString() ?: ""))
+            }
+            
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
     
     private fun observeSelectedDate() {
@@ -67,6 +84,17 @@ class DiaryWriteFragment : Fragment() {
                     
                     // 현재 시간을 "2025.12.25 17:32" 형식으로 표시
                     binding.tvInputTime.text = LocalDateTime.now().toDateTimeString()
+                }
+            }
+        }
+    }
+    
+    private fun observeContentState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.contentState.collectLatest { state ->
+                    // 글자수 표시 업데이트 (예: 0/400, 1/400, ...)
+                    binding.tvCharCount.text = "${state.charCount}/${state.maxCharCount}"
                 }
             }
         }
