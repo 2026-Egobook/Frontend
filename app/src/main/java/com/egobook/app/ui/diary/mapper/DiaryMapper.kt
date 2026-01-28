@@ -1,7 +1,6 @@
 package com.egobook.app.ui.diary.mapper
 
 import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.model.EmotionLevel
 
 /**
  * Domain 모델과 UI 레이어 간의 데이터 변환을 담당하는 매퍼
@@ -46,18 +45,6 @@ object DiaryMapper {
     }
     
     // ========== EmotionLevel 변환 ==========
-    
-    /**
-     * UI 감정 레벨 (1~5) -> Domain EmotionLevel
-     */
-    fun uiLevelToDomain(level: Int): EmotionLevel {
-        return EmotionLevel.fromDisplayLevel(level)
-    }
-    
-    /**
-     * Domain EmotionLevel -> UI 감정 레벨 (1~5)
-     */
-    fun domainToUiLevel(emotionLevel: EmotionLevel): Int {
-        return emotionLevel.displayEmotionLevel
-    }
+    // emotionLevel이 Int로 변경되어 별도 변환 불필요
+    // Domain과 UI 모두 Int (1~5)를 사용
 }

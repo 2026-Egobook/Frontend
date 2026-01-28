@@ -17,7 +17,6 @@ import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentDiaryCheckBinding
 import com.egobook.app.domain.model.Diary
-import com.egobook.app.domain.model.EmotionLevel
 import com.egobook.app.ui.diary.util.toDateTimeString
 import com.egobook.app.ui.diary.util.toDayOfMonthString
 import com.egobook.app.ui.diary.util.toMonthString
@@ -107,16 +106,17 @@ class DiaryCheckFragment : Fragment() {
     }
     
     /**
-     * Domain EmotionLevel을 UI 이미지 리소스로 변환
+     * 감정 레벨 (1~5)을 UI 이미지 리소스로 변환
      */
     @DrawableRes
-    private fun getEmotionImageRes(emotionLevel: EmotionLevel): Int {
+    private fun getEmotionImageRes(emotionLevel: Int): Int {
         return when (emotionLevel) {
-            EmotionLevel.VERY_BAD -> R.drawable.img_emotion_very_sad
-            EmotionLevel.BAD -> R.drawable.img_emotion_sad
-            EmotionLevel.NORMAL -> R.drawable.img_emotion_neutral
-            EmotionLevel.GOOD -> R.drawable.img_emotion_happy
-            EmotionLevel.VERY_GOOD -> R.drawable.img_emotion_very_happy
+            1 -> R.drawable.img_emotion_very_sad
+            2 -> R.drawable.img_emotion_sad
+            3 -> R.drawable.img_emotion_neutral
+            4 -> R.drawable.img_emotion_happy
+            5 -> R.drawable.img_emotion_very_happy
+            else -> R.drawable.img_emotion_neutral // 기본값
         }
     }
 

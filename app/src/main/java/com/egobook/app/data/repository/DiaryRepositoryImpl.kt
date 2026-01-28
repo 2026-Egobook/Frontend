@@ -2,7 +2,6 @@ package com.egobook.app.data.repository
 
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.model.EmotionLevel
 import com.egobook.app.domain.repository.DiaryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +22,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.EMOTION, DiaryType.THANKS),
                 createdAt = LocalDateTime.now().withHour(8).withMinute(30),
                 updatedAt = LocalDateTime.now().withHour(8).withMinute(30),
-                emotionLevel = EmotionLevel.VERY_GOOD
+                emotionLevel = 5 // VERY_GOOD
             ),
             Diary(
                 id = 2L,
@@ -31,7 +30,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.PRAISE, DiaryType.EMOTION),
                 createdAt = LocalDateTime.now().withHour(9).withMinute(0),
                 updatedAt = LocalDateTime.now().withHour(9).withMinute(0),
-                emotionLevel = EmotionLevel.GOOD
+                emotionLevel = 4 // GOOD
             ),
             Diary(
                 id = 3L,
@@ -55,7 +54,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.EMOTION, DiaryType.WORRY),
                 createdAt = LocalDateTime.now().withHour(13).withMinute(10),
                 updatedAt = LocalDateTime.now().withHour(13).withMinute(15),
-                emotionLevel = EmotionLevel.BAD
+                emotionLevel = 2 // BAD
             ),
             Diary(
                 id = 6L,
@@ -63,7 +62,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.WORRY, DiaryType.EMOTION),
                 createdAt = LocalDateTime.now().withHour(14).withMinute(30),
                 updatedAt = LocalDateTime.now().withHour(14).withMinute(30),
-                emotionLevel = EmotionLevel.BAD
+                emotionLevel = 2 // BAD
             ),
             Diary(
                 id = 7L,
@@ -71,7 +70,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.THANKS, DiaryType.EMOTION),
                 createdAt = LocalDateTime.now().withHour(15).withMinute(20),
                 updatedAt = LocalDateTime.now().withHour(15).withMinute(20),
-                emotionLevel = EmotionLevel.GOOD
+                emotionLevel = 4 // GOOD
             ),
             Diary(
                 id = 8L,
@@ -87,7 +86,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.PRAISE, DiaryType.EMOTION),
                 createdAt = LocalDateTime.now().withHour(17).withMinute(30),
                 updatedAt = LocalDateTime.now().withHour(17).withMinute(30),
-                emotionLevel = EmotionLevel.VERY_GOOD
+                emotionLevel = 5 // VERY_GOOD
             ),
             Diary(
                 id = 10L,
@@ -103,7 +102,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.THANKS, DiaryType.EMOTION),
                 createdAt = LocalDateTime.now().withHour(19).withMinute(30),
                 updatedAt = LocalDateTime.now().withHour(19).withMinute(30),
-                emotionLevel = EmotionLevel.GOOD
+                emotionLevel = 4 // GOOD
             ),
             Diary(
                 id = 12L,
@@ -127,7 +126,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.PRAISE, DiaryType.EMOTION),
                 createdAt = LocalDateTime.now().withHour(22).withMinute(0),
                 updatedAt = LocalDateTime.now().withHour(22).withMinute(0),
-                emotionLevel = EmotionLevel.GOOD
+                emotionLevel = 4 // GOOD
             ),
             Diary(
                 id = 15L,
@@ -145,7 +144,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.EMOTION),
                 createdAt = LocalDateTime.now().minusDays(1).withHour(23).withMinute(50),
                 updatedAt = LocalDateTime.now().minusDays(1).withHour(23).withMinute(50),
-                emotionLevel = EmotionLevel.VERY_BAD
+                emotionLevel = 1 // VERY_BAD
             ),
             Diary(
                 id = 17L,
@@ -191,7 +190,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.EMOTION, DiaryType.WORRY),
                 createdAt = LocalDateTime.now().minusDays(4).withHour(10).withMinute(0),
                 updatedAt = LocalDateTime.now().minusDays(3).withHour(11).withMinute(0), // 하루 뒤에 수정
-                emotionLevel = EmotionLevel.VERY_BAD
+                emotionLevel = 1 // VERY_BAD
             ),
 
             // --- 일주일 전 날짜 ---
@@ -201,7 +200,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.EMOTION),
                 createdAt = LocalDateTime.now().minusWeeks(1).withHour(16).withMinute(0),
                 updatedAt = LocalDateTime.now().minusWeeks(1).withHour(16).withMinute(0),
-                emotionLevel = EmotionLevel.GOOD
+                emotionLevel = 4 // GOOD
             ),
             Diary(
                 id = 23L,
@@ -209,7 +208,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
                 types = setOf(DiaryType.EMOTION, DiaryType.WORRY, DiaryType.PRAISE, DiaryType.THANKS),
                 createdAt = LocalDateTime.now().minusWeeks(1).withHour(23).withMinute(0),
                 updatedAt = LocalDateTime.now().minusWeeks(1).withHour(23).withMinute(0),
-                emotionLevel = EmotionLevel.NORMAL
+                emotionLevel = 3 // NORMAL
             )
         )
     )
@@ -225,7 +224,7 @@ class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
     override suspend fun addDiary(
         content: String,
         types: Set<DiaryType>,
-        emotionLevel: EmotionLevel?
+        emotionLevel: Int? // 1~5 사이의 감정 레벨
     ): Result<Diary> =
         runCatching {
             //임시 반환 로직 작성
