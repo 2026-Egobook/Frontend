@@ -17,6 +17,7 @@ import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentDiaryCheckBinding
 import com.egobook.app.domain.model.Diary
+import com.egobook.app.domain.model.DiaryType
 import com.egobook.app.ui.diary.util.toDateTimeString
 import com.egobook.app.ui.diary.util.toDayOfMonthString
 import com.egobook.app.ui.diary.util.toMonthString
@@ -102,6 +103,21 @@ class DiaryCheckFragment : Fragment() {
             binding.ivEmotion.setImageResource(emotionImageRes)
         } else {
             binding.ivEmotion.setImageDrawable(null) // 기본 이미지
+        }
+        
+        // 일기 타입 표시 (selector를 통해 선택된 타입만 하이라이트)
+        setDiaryTypes(diary.types)
+    }
+    
+    /**
+     * 일기 타입에 따라 CardView의 선택 상태를 세팅
+     */
+    private fun setDiaryTypes(types: Set<DiaryType>) {
+        binding.apply {
+            cvEmotion.isSelected = DiaryType.EMOTION in types
+            cvThought.isSelected = DiaryType.WORRY in types
+            cvPraise.isSelected = DiaryType.PRAISE in types
+            cvGratitude.isSelected = DiaryType.THANKS in types
         }
     }
     
