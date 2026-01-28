@@ -23,7 +23,8 @@ fun TodayQuestion.toPresentation(): TodayQuestionModel = TodayQuestionModel(
     questionId = questionId,
     content = content,
     date = date,
-    isUserAnswered = isUserAnswered
+    isUserAnswered = isUserAnswered,
+    myAnswer = myAnswer?.toPresentation()
 )
 
 fun TodayQuestionAnswer.toPresentation(): TodayQuestionAnswerModel = TodayQuestionAnswerModel(

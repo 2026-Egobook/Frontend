@@ -1,5 +1,6 @@
 package com.egobook.app.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -44,7 +45,8 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
                 questionId = 101L,
                 content = "오늘 가장 집중이 잘 됐던 순간은 언제였나요?",
                 date = "2026-01-19",
-                isUserAnswered = false
+                isUserAnswered = false,
+                myAnswer = null
             )
             Result.success(mockTodayQuestion.toDomain())
         }
