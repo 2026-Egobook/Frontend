@@ -3,30 +3,30 @@ package com.egobook.app.data.repository.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.egobook.app.data.api.QuestionApiService
-import com.egobook.app.data.model.square.question.toDomain
 import com.egobook.app.domain.model.square.question.AnswerVisibility
 import com.egobook.app.domain.model.square.question.MyTodayQuestionAnswerItem
 import kotlinx.coroutines.delay
 
 /**
- * 1. 첫 로딩 시에 key 값이 null로 내려온다.
+ * 1. "새로고침(Refresh) 이벤트 발생시 반환하는 페이지부터 다시 읽어라"는 의미
+ * 2. 첫 로딩 시에 key 값이 null로 내려온다.
  */
-class QuestionPagingSource(private val apiService: QuestionApiService): PagingSource<Int, MyTodayQuestionAnswerItem>() {
+class MyRepliesHistoryPagingSource(private val apiService: QuestionApiService): PagingSource<Int, MyTodayQuestionAnswerItem>() {
 
     override fun getRefreshKey(state: PagingState<Int, MyTodayQuestionAnswerItem>): Int {
-        return 0
+        return 1 // 1
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MyTodayQuestionAnswerItem> {
         return try {
-            val page = params.key ?: 1 // 1
+            val page = params.key ?: 1 // 2
             val size = params.loadSize
 
 //            val result = apiService.fetchMyRepliesHistory(page = page, size = size).data
 //            LoadResult.Page(
 //                data = result.content.map { it.toDomain() },
-//                prevKey = null,
-//                nextKey = result.page + 1
+//                prevKey = if(result.page == 1) null else result.page - 1,
+//                nextKey = if(result.hasNext) result.page + 1 else null
 //            )
 
             if(page > 1) delay(1000)

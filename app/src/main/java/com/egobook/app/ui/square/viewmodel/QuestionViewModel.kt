@@ -6,8 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.egobook.app.domain.usecase.GetMyRepliesHistoryUseCase
+import com.egobook.app.domain.usecase.GetTodayFriendsRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayQuestionUseCase
 import com.egobook.app.domain.usecase.SubmitTodayAnswerUseCase
+import com.egobook.app.ui.square.model.question.FriendTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.model.question.MyTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
@@ -27,7 +29,8 @@ import javax.inject.Inject
 class QuestionViewModel @Inject constructor(
     private val getTodayQuestionUseCase: GetTodayQuestionUseCase,
     private val submitTodayAnswerUseCase: SubmitTodayAnswerUseCase,
-    private val getMyRepliesHistoryUseCase: GetMyRepliesHistoryUseCase
+    private val getMyRepliesHistoryUseCase: GetMyRepliesHistoryUseCase,
+    private val getTodayFriendsRepliesUseCase: GetTodayFriendsRepliesUseCase
 ): ViewModel() {
 
     private val _todayQuestion = MutableStateFlow<UiState<TodayQuestionModel>>(UiState.Idle)
@@ -65,6 +68,17 @@ class QuestionViewModel @Inject constructor(
         viewModelScope.launch {
             getMyRepliesHistoryUseCase(size = size).cachedIn(this).collectLatest { domainList ->
                 _myRepliesHistory.value = domainList.map { it.toPresentation() }
+            }
+        }
+    }
+
+    private val _todayFriendsReplies = MutableStateFlow<PagingData<FriendTodayQuestionAnswerItemModel>?>(null)
+    val todayFriendsReplies = _todayFriendsReplies.asStateFlow()
+
+    fun getTodayFriendsReplies(size: Int) {
+        viewModelScope.launch {
+            getTodayFriendsRepliesUseCase(size = size).cachedIn(this).collectLatest { domainList ->
+                _todayFriendsReplies.value = domainList.map { it.toPresentation() }
             }
         }
     }

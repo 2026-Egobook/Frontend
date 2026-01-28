@@ -1,6 +1,5 @@
 package com.egobook.app.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -8,9 +7,11 @@ import com.egobook.app.data.api.QuestionApiService
 import com.egobook.app.data.model.square.question.TodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.TodayQuestionResponse
 import com.egobook.app.data.model.square.question.toDomain
-import com.egobook.app.data.repository.paging.QuestionPagingSource
+import com.egobook.app.data.repository.paging.FriendRepliesPagingSource
+import com.egobook.app.data.repository.paging.MyRepliesHistoryPagingSource
 import com.egobook.app.domain.model.TodayQuestion
 import com.egobook.app.domain.model.square.question.AnswerVisibility
+import com.egobook.app.domain.model.square.question.FriendTodayQuestionAnswerItem
 import com.egobook.app.domain.model.square.question.MyTodayQuestionAnswerItem
 import com.egobook.app.domain.model.square.question.TodayAnswer
 import com.egobook.app.domain.repository.QuestionRepository
@@ -75,7 +76,16 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
         return Pager(
             config = PagingConfig(pageSize = size, initialLoadSize = size, enablePlaceholders = false), // 1
             pagingSourceFactory = {
-                QuestionPagingSource(apiService = apiService)
+                MyRepliesHistoryPagingSource(apiService = apiService)
+            }
+        ).flow
+    }
+
+    override fun fetchTodayFriendsReplies(size: Int): Flow<PagingData<FriendTodayQuestionAnswerItem>> {
+        return Pager(
+            config = PagingConfig(pageSize = size, initialLoadSize = size, enablePlaceholders = false),
+            pagingSourceFactory = {
+                FriendRepliesPagingSource(apiService = apiService)
             }
         ).flow
     }

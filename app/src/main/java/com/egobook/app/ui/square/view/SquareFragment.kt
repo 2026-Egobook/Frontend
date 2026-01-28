@@ -18,10 +18,12 @@ import com.egobook.app.R
 import com.egobook.app.databinding.FragmentSquareBinding
 import com.egobook.app.databinding.LayoutPopupVisibilityTypeBinding
 import com.egobook.app.domain.model.square.question.AnswerVisibility
+import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
 import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class SquareFragment : Fragment(R.layout.fragment_square) {
@@ -30,16 +32,26 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
     private var visibilityType = AnswerVisibility.PUBLIC // 오늘의 질문 답변 제출할 때 필요한 변수
 
+    private val adapter by lazy {
+        TodayQuestionFriendRepliesAdapter()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSquareBinding.bind(view)
         fetchData()
+        initViews()
         initListeners()
         initObservers()
     }
 
     private fun fetchData() {
         questionViewModel.getTodayQuestion(isSubmit = false)
+        questionViewModel.getTodayFriendsReplies(size = 10)
+    }
+
+    private fun initViews() = with(binding) {
+        rvSquareTodayQuestionFriendReply.adapter = adapter
     }
 
     private fun initListeners() = with(binding) {
@@ -184,6 +196,13 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                 cvSquareTodayQuestionWriting.isVisible = false
                                 questionViewModel.getTodayQuestion(isSubmit = true)
                             }
+                        }
+                    }
+                }
+                launch {
+                    questionViewModel.todayFriendsReplies.collectLatest { pagingData ->
+                        if(pagingData != null) {
+                            adapter.submitData(lifecycle = lifecycle, pagingData = pagingData)
                         }
                     }
                 }
