@@ -44,6 +44,9 @@ class MyRepliesHistoryFragment : Fragment(R.layout.fragment_my_replies_history) 
         ivMyRepliesHistoryBack.setOnClickListener {
             findNavController().popBackStack()
         }
+        btnMyRepliesHistoryScrollUp.setOnClickListener {
+            rvMyRepliesHistory.smoothScrollToPosition(0)
+        }
     }
 
     private fun initObservers() = with(binding) {
