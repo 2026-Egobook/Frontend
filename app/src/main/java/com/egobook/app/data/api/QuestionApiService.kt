@@ -1,7 +1,7 @@
 package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
-import com.egobook.app.data.model.square.question.FriendTodayQuestionAnswerResponse
+import com.egobook.app.data.model.square.question.UserTodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.MyTodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.TodayAnswerRequest
 import com.egobook.app.data.model.square.question.TodayQuestionResponse
@@ -27,6 +27,12 @@ interface QuestionApiService {
     suspend fun fetchTodayFriendReplies(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 10
-    ): ApiResponse<FriendTodayQuestionAnswerResponse>
+    ): ApiResponse<UserTodayQuestionAnswerResponse>
+
+    @GET("/questions/answers/all")
+    suspend fun fetchTodayAllUserReplies(
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 10
+    ): ApiResponse<UserTodayQuestionAnswerResponse>
 
 }

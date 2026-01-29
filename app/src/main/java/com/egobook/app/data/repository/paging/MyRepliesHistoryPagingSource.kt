@@ -10,6 +10,9 @@ import kotlinx.coroutines.delay
 /**
  * 1. "새로고침(Refresh) 이벤트 발생시 반환하는 페이지부터 다시 읽어라"는 의미
  * 2. 첫 로딩 시에 key 값이 null로 내려온다.
+ * PagingSource에 들어가는 key 값은 데이터의 페이지 번호를 나타낸다.
+ * PagingSource<Int, Item> = 정수 형태의 페이지 번호를 줄 테니, 해당 페이지의 아이템들을 가져오라는 의미
+ * params.key가 우리가 정의한 'Int' 타입의 키이다
  */
 class MyRepliesHistoryPagingSource(private val apiService: QuestionApiService): PagingSource<Int, MyTodayQuestionAnswerItem>() {
 

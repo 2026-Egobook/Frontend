@@ -1,12 +1,12 @@
 package com.egobook.app.data.model.square.question
 
-import com.egobook.app.domain.model.square.question.FriendTodayQuestionAnswer
-import com.egobook.app.domain.model.square.question.FriendTodayQuestionAnswerItem
+import com.egobook.app.domain.model.square.question.UserTodayQuestionAnswer
+import com.egobook.app.domain.model.square.question.UserTodayQuestionAnswerItem
 import com.google.gson.annotations.SerializedName
 
-data class FriendTodayQuestionAnswerResponse(
+data class UserTodayQuestionAnswerResponse(
     @SerializedName("content")
-    val content: List<FriendTodayQuestionAnswerItemResponse>,
+    val content: List<UserTodayQuestionAnswerItemResponse>,
     @SerializedName("currentSlice")
     val page: Int,
     @SerializedName("size")
@@ -15,7 +15,7 @@ data class FriendTodayQuestionAnswerResponse(
     val hasNext: Boolean
 )
 
-data class FriendTodayQuestionAnswerItemResponse(
+data class UserTodayQuestionAnswerItemResponse(
     @SerializedName("answerId")
     val answerId: Long,
     @SerializedName("userId")
@@ -28,16 +28,16 @@ data class FriendTodayQuestionAnswerItemResponse(
     val createdAt: String
 )
 
-fun FriendTodayQuestionAnswerResponse.toDomain(): FriendTodayQuestionAnswer =
-    FriendTodayQuestionAnswer(
+fun UserTodayQuestionAnswerResponse.toDomain(): UserTodayQuestionAnswer =
+    UserTodayQuestionAnswer(
         content = content.map { it.toDomain() },
         page = page,
         size = size,
         hasNext = hasNext
     )
 
-fun FriendTodayQuestionAnswerItemResponse.toDomain(): FriendTodayQuestionAnswerItem =
-    FriendTodayQuestionAnswerItem(
+fun UserTodayQuestionAnswerItemResponse.toDomain(): UserTodayQuestionAnswerItem =
+    UserTodayQuestionAnswerItem(
         answerId = answerId,
         userId = userId,
         nickname = nickname,

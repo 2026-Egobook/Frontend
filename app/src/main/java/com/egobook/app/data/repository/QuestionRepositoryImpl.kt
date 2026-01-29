@@ -7,11 +7,12 @@ import com.egobook.app.data.api.QuestionApiService
 import com.egobook.app.data.model.square.question.TodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.TodayQuestionResponse
 import com.egobook.app.data.model.square.question.toDomain
+import com.egobook.app.data.repository.paging.AllUserRepliesPagingSource
 import com.egobook.app.data.repository.paging.FriendRepliesPagingSource
 import com.egobook.app.data.repository.paging.MyRepliesHistoryPagingSource
 import com.egobook.app.domain.model.TodayQuestion
 import com.egobook.app.domain.model.square.question.AnswerVisibility
-import com.egobook.app.domain.model.square.question.FriendTodayQuestionAnswerItem
+import com.egobook.app.domain.model.square.question.UserTodayQuestionAnswerItem
 import com.egobook.app.domain.model.square.question.MyTodayQuestionAnswerItem
 import com.egobook.app.domain.model.square.question.TodayAnswer
 import com.egobook.app.domain.repository.QuestionRepository
@@ -71,6 +72,11 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
      * 1. Paging3는 첫 번째 호출일 때, pageSize의 3배를 호출한다.
      * 그 이후 다음부터는 정의했던 pageSize만큼 호출한다.
      * initialLoadSize 속성을 따로 설정하면 첫 호출때도 원래 사이즈의 3배가 아닌 기존 사이즈만큼 불러온다.
+     * enablePlaceholders: 데이터가 아직 로드되지 않은 부분에 Skeleton UI(Placeholder)을 미리 만들어줄 것인가?
+     * 서버에서 전체 데이터 개수를 받아올 수 있고, 부드러운 스크롤 경헙과 스켈레톤 UI를 제공하고 싶다면 true
+     * 전체 개수를 알 지 못하고 무한 스크롤 형태를 원한다면 false 사용
+     * config: 데이터를 어떻게 가져올 것인가?
+     * pagingSourceFactory: 데이터를 어디서 가져올 것인가?
      */
     override fun fetchMyRepliesHistory(size: Int): Flow<PagingData<MyTodayQuestionAnswerItem>> {
         return Pager(
@@ -81,11 +87,20 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
         ).flow
     }
 
-    override fun fetchTodayFriendsReplies(size: Int): Flow<PagingData<FriendTodayQuestionAnswerItem>> {
+    override fun fetchTodayFriendsReplies(size: Int): Flow<PagingData<UserTodayQuestionAnswerItem>> {
         return Pager(
             config = PagingConfig(pageSize = size, initialLoadSize = size, enablePlaceholders = false),
             pagingSourceFactory = {
                 FriendRepliesPagingSource(apiService = apiService)
+            }
+        ).flow
+    }
+
+    override fun fetchTodayAllUserReplies(size: Int): Flow<PagingData<UserTodayQuestionAnswerItem>> {
+        return Pager(
+            config = PagingConfig(pageSize = size, initialLoadSize = size, enablePlaceholders = false),
+            pagingSourceFactory = {
+                AllUserRepliesPagingSource(apiService = apiService)
             }
         ).flow
     }

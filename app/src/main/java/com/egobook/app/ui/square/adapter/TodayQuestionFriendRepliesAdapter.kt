@@ -6,12 +6,12 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemSquareFriendAnswerBinding
-import com.egobook.app.ui.square.model.question.FriendTodayQuestionAnswerItemModel
+import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
 
-class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<FriendTodayQuestionAnswerItemModel, TodayQuestionFriendRepliesAdapter.TodayQuestionFriendRepliesViewHolder>(diffUtil) {
+class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnswerItemModel, TodayQuestionFriendRepliesAdapter.TodayQuestionFriendRepliesViewHolder>(diffUtil) {
 
     class TodayQuestionFriendRepliesViewHolder(private val binding: ItemSquareFriendAnswerBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: FriendTodayQuestionAnswerItemModel) = with(binding) {
+        fun bind(item: UserTodayQuestionAnswerItemModel) = with(binding) {
             tvItemSquareFriendAnswerUserName.text = item.nickname
             tvItemSquareFriendAnswerUserContent.text = item.content
         }
@@ -36,17 +36,17 @@ class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<FriendTodayQuestionAn
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<FriendTodayQuestionAnswerItemModel>() {
+        val diffUtil = object : DiffUtil.ItemCallback<UserTodayQuestionAnswerItemModel>() {
             override fun areItemsTheSame(
-                oldItem: FriendTodayQuestionAnswerItemModel,
-                newItem: FriendTodayQuestionAnswerItemModel
+                oldItem: UserTodayQuestionAnswerItemModel,
+                newItem: UserTodayQuestionAnswerItemModel
             ): Boolean {
                 return oldItem.answerId == newItem.answerId
             }
 
             override fun areContentsTheSame(
-                oldItem: FriendTodayQuestionAnswerItemModel,
-                newItem: FriendTodayQuestionAnswerItemModel
+                oldItem: UserTodayQuestionAnswerItemModel,
+                newItem: UserTodayQuestionAnswerItemModel
             ): Boolean {
                 return oldItem == newItem
             }

@@ -6,13 +6,14 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.egobook.app.domain.usecase.GetMyRepliesHistoryUseCase
+import com.egobook.app.domain.usecase.GetTodayAllUserRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayFriendsRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayQuestionUseCase
 import com.egobook.app.domain.usecase.SubmitTodayAnswerUseCase
-import com.egobook.app.ui.square.model.question.FriendTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.model.question.MyTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
+import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.model.question.toDomain
 import com.egobook.app.ui.square.model.question.toPresentation
 import com.egobook.app.util.UiState
@@ -30,7 +31,8 @@ class QuestionViewModel @Inject constructor(
     private val getTodayQuestionUseCase: GetTodayQuestionUseCase,
     private val submitTodayAnswerUseCase: SubmitTodayAnswerUseCase,
     private val getMyRepliesHistoryUseCase: GetMyRepliesHistoryUseCase,
-    private val getTodayFriendsRepliesUseCase: GetTodayFriendsRepliesUseCase
+    private val getTodayFriendsRepliesUseCase: GetTodayFriendsRepliesUseCase,
+    private val getTodayAllUserRepliesUseCase: GetTodayAllUserRepliesUseCase
 ): ViewModel() {
 
     private val _todayQuestion = MutableStateFlow<UiState<TodayQuestionModel>>(UiState.Idle)
@@ -66,19 +68,30 @@ class QuestionViewModel @Inject constructor(
 
     fun getMyRepliesHistory(size: Int) {
         viewModelScope.launch {
-            getMyRepliesHistoryUseCase(size = size).cachedIn(this).collectLatest { domainList ->
-                _myRepliesHistory.value = domainList.map { it.toPresentation() }
+            getMyRepliesHistoryUseCase(size = size).cachedIn(this).collectLatest { pagingData ->
+                _myRepliesHistory.value = pagingData.map { it.toPresentation() }
             }
         }
     }
 
-    private val _todayFriendsReplies = MutableStateFlow<PagingData<FriendTodayQuestionAnswerItemModel>?>(null)
+    private val _todayFriendsReplies = MutableStateFlow<PagingData<UserTodayQuestionAnswerItemModel>?>(null)
     val todayFriendsReplies = _todayFriendsReplies.asStateFlow()
 
     fun getTodayFriendsReplies(size: Int) {
         viewModelScope.launch {
-            getTodayFriendsRepliesUseCase(size = size).cachedIn(this).collectLatest { domainList ->
-                _todayFriendsReplies.value = domainList.map { it.toPresentation() }
+            getTodayFriendsRepliesUseCase(size = size).cachedIn(this).collectLatest { pagingData ->
+                _todayFriendsReplies.value = pagingData.map { it.toPresentation() }
+            }
+        }
+    }
+
+    private val _todayAllUserReplies = MutableStateFlow<PagingData<UserTodayQuestionAnswerItemModel>?>(null)
+    val todayAllUserReplies = _todayAllUserReplies.asStateFlow()
+
+    fun getTodayAllUserReplies(size: Int) {
+        viewModelScope.launch {
+            getTodayAllUserRepliesUseCase(size = size).cachedIn(this).collectLatest { pagingData ->
+                _todayFriendsReplies.value = pagingData.map { it.toPresentation() }
             }
         }
     }

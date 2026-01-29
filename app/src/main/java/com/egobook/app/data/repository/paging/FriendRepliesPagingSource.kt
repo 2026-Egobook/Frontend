@@ -3,17 +3,16 @@ package com.egobook.app.data.repository.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.egobook.app.data.api.QuestionApiService
-import com.egobook.app.data.model.square.question.toDomain
-import com.egobook.app.domain.model.square.question.FriendTodayQuestionAnswerItem
+import com.egobook.app.domain.model.square.question.UserTodayQuestionAnswerItem
 import kotlinx.coroutines.delay
 
 class FriendRepliesPagingSource(private val apiService: QuestionApiService) :
-    PagingSource<Int, FriendTodayQuestionAnswerItem>() {
-    override fun getRefreshKey(state: PagingState<Int, FriendTodayQuestionAnswerItem>): Int? {
+    PagingSource<Int, UserTodayQuestionAnswerItem>() {
+    override fun getRefreshKey(state: PagingState<Int, UserTodayQuestionAnswerItem>): Int? {
         return 1
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FriendTodayQuestionAnswerItem> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UserTodayQuestionAnswerItem> {
         return try {
             val page = params.key ?: 1
             val size = params.loadSize
@@ -27,7 +26,7 @@ class FriendRepliesPagingSource(private val apiService: QuestionApiService) :
             if (page > 1) delay(1000)
 
             val mockContent = List(size) { index ->
-                FriendTodayQuestionAnswerItem(
+                UserTodayQuestionAnswerItem(
                     answerId = (page * size + index).toLong(),
                     userId = (page * size + index).toLong(),
                     nickname = "아무개씨",
