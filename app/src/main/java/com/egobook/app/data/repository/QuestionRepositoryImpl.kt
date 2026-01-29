@@ -110,4 +110,15 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
         ).flow
     }
 
+    override suspend fun deleteMyQuestionAnswer(answerId: Long): Result<Unit> = try {
+        val response = apiService.deleteMyQuestionAnswer(answerId = answerId)
+        if(response.status == 200) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
 }

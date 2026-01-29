@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.egobook.app.domain.usecase.DeleteMyQuestionAnswerUseCase
 import com.egobook.app.domain.usecase.GetMyRepliesHistoryUseCase
 import com.egobook.app.domain.usecase.GetTodayAllUserRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayFriendsRepliesUseCase
@@ -34,7 +35,8 @@ class QuestionViewModel @Inject constructor(
     private val getMyRepliesHistoryUseCase: GetMyRepliesHistoryUseCase,
     private val getTodayFriendsRepliesUseCase: GetTodayFriendsRepliesUseCase,
     private val getTodayAllUserRepliesUseCase: GetTodayAllUserRepliesUseCase,
-    private val updateTodayAnswerUseCase: UpdateTodayAnswerUseCase
+    private val updateTodayAnswerUseCase: UpdateTodayAnswerUseCase,
+    private val deleteMyQuestionAnswerUseCase: DeleteMyQuestionAnswerUseCase
 ): ViewModel() {
 
     private val _todayQuestion = MutableStateFlow<UiState<TodayQuestionModel>>(UiState.Idle)
@@ -108,6 +110,20 @@ class QuestionViewModel @Inject constructor(
                 _updateTodayAnswerResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _updateTodayAnswerResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _deleteMyQuestionAnswerResult = MutableSharedFlow<UiState<Unit>>()
+    val deleteMyQuestionAnswerResult = _deleteMyQuestionAnswerResult
+
+    fun deleteMyQuestionAnswer(answerId: Long) {
+        viewModelScope.launch {
+            _deleteMyQuestionAnswerResult.emit(UiState.Loading)
+            deleteMyQuestionAnswerUseCase(answerId = answerId).onSuccess {
+                _deleteMyQuestionAnswerResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _deleteMyQuestionAnswerResult.emit(UiState.Failure(error.message))
             }
         }
     }

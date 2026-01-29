@@ -14,5 +14,6 @@ interface QuestionRepository {
     fun fetchTodayFriendsReplies(size: Int): Flow<PagingData<UserTodayQuestionAnswerItem>>
     fun fetchTodayAllUserReplies(size: Int): Flow<PagingData<UserTodayQuestionAnswerItem>>
     suspend fun updateTodayAnswer(updatedAnswer: TodayAnswer): Result<Unit>
+    suspend fun deleteMyQuestionAnswer(answerId: Long): Result<Unit>
 }
 

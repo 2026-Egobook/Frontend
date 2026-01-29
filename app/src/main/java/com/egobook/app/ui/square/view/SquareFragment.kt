@@ -194,22 +194,20 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                 val todayQuestion = state.data
                                 todayQuestionContent = todayQuestion.content
                                 if(todayQuestion.isUserAnswered) {
-                                    // 조회용
                                     cvSquareTodayQuestionAnswered.isVisible = true
                                     tvSquareTodayQuestionContentAnswered.text = "Q. ${todayQuestion.content}"
                                     tvSquareTodayQuestionDescriptionAnswered.text = todayQuestion.myAnswer?.content
-
-                                    // 수정용
                                     tvSquareTodayQuestionContentWriting.text = "Q. ${todayQuestion.content}"
                                     tvSquareTodayQuestionInputVisibilityType.text = todayQuestion.myAnswer?.visibility?.title
                                     etSquareTodayQuestionInput.setText(todayQuestion.myAnswer?.content)
-
                                     visibilityType = todayQuestion.myAnswer?.visibility ?: AnswerVisibility.PUBLIC
                                     submitButtonStatus = SubmitStatus.UPDATE
                                 } else {
                                     cvSquareTodayQuestionUnanswered.isVisible = true
                                     tvSquareTodayQuestionContentUnanswered.text = "Q. ${todayQuestion.content}"
                                     tvSquareTodayQuestionContentWriting.text = "Q. ${todayQuestion.content}"
+                                    etSquareTodayQuestionInput.setText("")
+                                    visibilityType = AnswerVisibility.PUBLIC
                                     submitButtonStatus = SubmitStatus.CREATE
                                 }
                             }
