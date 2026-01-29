@@ -1,14 +1,16 @@
 package com.egobook.app.di
 
 import com.egobook.app.data.repository.CounselingRepositoryImpl
+import com.egobook.app.data.repository.DiaryRepositoryImpl
 import com.egobook.app.data.repository.FriendsRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
-import com.egobook.app.data.repository.QuestionRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
+import com.egobook.app.data.repository.QuestionRepositoryImpl
+import com.egobook.app.domain.repository.DiaryRepository
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.NotificationRepository
-import com.egobook.app.domain.repository.QuestionRepository
 import dagger.Binds
+import com.egobook.app.domain.repository.QuestionRepository
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -32,4 +34,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindQuestionRepository(impl: QuestionRepositoryImpl): QuestionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository
+
+
+
+
 }

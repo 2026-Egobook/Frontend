@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="16dp"
-    android:paddingEnd="16dp">
+    android:paddingEnd="16dp"
+    android:maxHeight="120dp">
 
     <TextView
         android:id="@+id/tv_time"
@@ -20,8 +21,8 @@
     <!--감정 이미지가 들어갈 자리    -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_emotion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         app:srcCompat="@drawable/img_emotion"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/Circle"
@@ -82,18 +83,30 @@
             android:layout_marginEnd="4dp"/>
         
     </LinearLayout>
-    
+
     <TextView
         android:id="@+id/tv_diary_content"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/emotion_layout"
-        app:layout_constraintStart_toEndOf="@id/iv_emotion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+
         android:text="일기 내용"
         android:textColor="@color/cos_black"
+        android:textSize="14sp"
         android:fontFamily="@font/arita_medium"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"/>
+
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:lineHeight="18sp"
+        android:includeFontPadding="false"
+        android:breakStrategy="high_quality"
+        />
 
     <View
         android:id="@+id/item_divider"

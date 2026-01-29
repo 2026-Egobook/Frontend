@@ -4,21 +4,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.egobook.app.BlurLevel
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentDiaryCheckBinding
+import com.egobook.app.domain.model.Diary
+import com.egobook.app.ui.diary.mapper.ImageMapper
+import com.egobook.app.ui.diary.util.toDateTimeString
+import com.egobook.app.ui.diary.util.toDayOfMonthString
+import com.egobook.app.ui.diary.util.toMonthString
+import com.egobook.app.ui.diary.util.toYearString
+import com.egobook.app.ui.diary.viewmodel.DiaryCheckViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class DiaryCheckFragment : Fragment() {
 
     private var _binding: FragmentDiaryCheckBinding? = null
     private val binding get() = _binding!!
-    var onDismissListener: (() -> Unit)? = null
 
-    // 💡 1. by navArgs()를 사용하여 전달받은 인자를 가져옵니다.
-    private val args: DiaryCheckFragmentArgs by navArgs()
+    private val viewModel: DiaryCheckViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,12 +44,8 @@ class DiaryCheckFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //임시 텍스트 대신, 전달받은 args의 데이터를 사용합니다.
-        binding.tvDiaryContent.text = args.diaryContent
-        binding.tvWrittenTime.text = args.diaryTime
-
         setClickListener()
-
+        observeDiary()
     }
 
     private fun setClickListener() {
@@ -50,6 +59,36 @@ class DiaryCheckFragment : Fragment() {
                 dialog.isCancelable = true
                 dialog.show(parentFragmentManager, "ConfirmDialog")
             }
+        }
+    }
+
+    // ViewModel의 diary Flow를 직접 구독합니다.
+    private fun observeDiary() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.diary.collectLatest { diary ->
+                    if (diary != null) {
+                        // diary 객체가 null이 아닐 때 UI를 업데이트합니다.
+                        updateUi(diary)
+                    } else {
+                        // diary가 null이면 (데이터 로딩 실패 등) 사용자에게 알립니다.
+                        Toast.makeText(requireContext(), "일기를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    // UI를 업데이트하는 로직을 별도 함수로 분리
+    private fun updateUi(diary: Diary) {
+        binding.tvDiaryContent.text = diary.content
+        binding.tvWrittenTime.text = diary.updatedAt.toDateTimeString()
+        binding.tvDate.text = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
+        val emotionImageRes = ImageMapper.toEmotionImage(diary.emotionLevel)
+        if (emotionImageRes != null) {
+            binding.ivEmotion.setImageResource(emotionImageRes)
+        } else {
+            binding.ivEmotion.setImageDrawable(null) // or 기본 이미지
         }
     }
 
