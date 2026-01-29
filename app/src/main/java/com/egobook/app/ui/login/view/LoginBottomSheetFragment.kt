@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.egobook.app.MainActivity
 import com.egobook.app.databinding.FragmentLoginBottomSheetBinding
+import com.egobook.app.ui.onboarding.view.OnboardingActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class LoginBottomSheetFragment : BottomSheetDialogFragment() {
@@ -29,8 +29,8 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
 
         //임시 구현
         binding.btnBottomGoogleLogin.setOnClickListener {
-            // 1. MainActivity로 가는 Intent 생성
-            val intent = Intent(requireActivity(), MainActivity::class.java)
+            // 1. OnboardingActivity로 가는 Intent 생성
+            val intent = Intent(requireActivity(), OnboardingActivity::class.java)
             startActivity(intent)
 
             // 2. 현재 부모 Activity(LoginActivity)와 바텀시트를 모두 종료

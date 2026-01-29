@@ -29,6 +29,12 @@
             android:exported="true"
             android:windowSoftInputMode="adjustPan"/>
 
+        <activity
+            android:name=".ui.onboarding.view.OnboardingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+
     </application>
 
 

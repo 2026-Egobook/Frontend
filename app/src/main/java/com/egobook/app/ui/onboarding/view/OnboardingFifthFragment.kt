@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import com.egobook.app.R
 import com.egobook.app.databinding.FragmentOnboardingFifthBinding
 
 class OnboardingFifthFragment : Fragment() {
@@ -27,7 +25,8 @@ class OnboardingFifthFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnStartEgobook.setOnClickListener {
-            findNavController().navigate(R.id.action_onboarding_to_home)
+            // OnboardingActivity의 메서드 호출
+            (activity as? OnboardingActivity)?.navigateToMain()
         }
 
     }
