@@ -27,13 +27,10 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //임시 구현
         binding.btnBottomGoogleLogin.setOnClickListener {
-            // 1. OnboardingActivity로 가는 Intent 생성
+            // 바로 OnboardingActivity로 이동
             val intent = Intent(requireActivity(), OnboardingActivity::class.java)
             startActivity(intent)
-
-            // 2. 현재 부모 Activity(LoginActivity)와 바텀시트를 모두 종료
             requireActivity().finish()
             dismiss()
         }

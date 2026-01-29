@@ -1,23 +1,40 @@
 package com.egobook.app.ui.login.view
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
 import android.text.style.MetricAffectingSpan
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.egobook.app.BuildConfig
 import com.egobook.app.R
+import com.egobook.app.data.local.TokenStorage
 import com.egobook.app.databinding.ActivityLoginBinding
-
+import com.egobook.app.ui.onboarding.view.OnboardingActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+    private val tokenStorage by lazy { TokenStorage.getInstance(this) }
+
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
 
     private val blurRadius = 5f
 
@@ -33,10 +50,29 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        setupGoogleSignIn()
         setupGuideText()
         setupBlur()
         setupClickListeners()
 
+    }
+
+    private fun setupGoogleSignIn() {
+        // Google Sign-In 결과를 받을 ActivityResultLauncher 초기화
+        googleSignInLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            handleSignInResult(task)
+        }
+
+        // Google Sign-In 옵션 설정
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
     private fun setupBlur() {
@@ -49,11 +85,66 @@ class LoginActivity : AppCompatActivity() {
         binding.blurView.visibility = View.GONE
     }
     private fun setupClickListeners() {
+        // 상단 로그인 버튼 - 바텀시트 띄우기
         binding.btnLogin.setOnClickListener {
             binding.blurView.visibility = View.VISIBLE
 
             LoginBottomSheetFragment()
                 .show(supportFragmentManager, LoginBottomSheetFragment.TAG)
+        }
+
+        // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기
+        binding.btnGoogleLogin.setOnClickListener {
+            signInWithGoogle()
+        }
+    }
+
+    private fun signInWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        googleSignInLauncher.launch(signInIntent)
+    }
+
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            val idToken = account.idToken
+
+            if (idToken != null) {
+                // Google ID Token 저장
+                tokenStorage.saveGoogleIdToken(idToken)
+
+                Log.d(TAG, "Google Sign-In 성공")
+                Log.d(TAG, "이름: ${account.displayName}")
+                Log.d(TAG, "이메일: ${account.email}")
+                Log.d(TAG, "ID Token 저장 완료")
+
+                Toast.makeText(
+                    this,
+                    "로그인 성공: ${account.displayName}",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                // OnboardingActivity로 이동
+                val intent = Intent(this, OnboardingActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Log.e(TAG, "ID Token이 null입니다")
+                Toast.makeText(
+                    this,
+                    "로그인 실패: 토큰을 받지 못했습니다",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        } catch (e: ApiException) {
+            // 로그인 실패
+            Log.e(TAG, "Google Sign-In 실패: ${e.statusCode}", e)
+            Toast.makeText(
+                this,
+                "로그인 실패: ${e.message}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -99,5 +190,9 @@ class LoginActivity : AppCompatActivity() {
         private fun applyCustomTypeface(paint: TextPaint) {
             paint.typeface = typeface
         }
+    }
+
+    companion object {
+        private const val TAG = "LoginActivity"
     }
 }
