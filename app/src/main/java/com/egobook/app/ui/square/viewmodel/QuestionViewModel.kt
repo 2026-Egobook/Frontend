@@ -10,6 +10,7 @@ import com.egobook.app.domain.usecase.GetTodayAllUserRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayFriendsRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayQuestionUseCase
 import com.egobook.app.domain.usecase.SubmitTodayAnswerUseCase
+import com.egobook.app.domain.usecase.UpdateTodayAnswerUseCase
 import com.egobook.app.ui.square.model.question.MyTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
@@ -32,16 +33,17 @@ class QuestionViewModel @Inject constructor(
     private val submitTodayAnswerUseCase: SubmitTodayAnswerUseCase,
     private val getMyRepliesHistoryUseCase: GetMyRepliesHistoryUseCase,
     private val getTodayFriendsRepliesUseCase: GetTodayFriendsRepliesUseCase,
-    private val getTodayAllUserRepliesUseCase: GetTodayAllUserRepliesUseCase
+    private val getTodayAllUserRepliesUseCase: GetTodayAllUserRepliesUseCase,
+    private val updateTodayAnswerUseCase: UpdateTodayAnswerUseCase
 ): ViewModel() {
 
     private val _todayQuestion = MutableStateFlow<UiState<TodayQuestionModel>>(UiState.Idle)
     val todayQuestion = _todayQuestion.asStateFlow()
 
-    fun getTodayQuestion(isSubmit: Boolean) {
+    fun getTodayQuestion() {
         viewModelScope.launch {
             _todayQuestion.value = UiState.Loading
-            getTodayQuestionUseCase(isSubmit).onSuccess { question ->
+            getTodayQuestionUseCase().onSuccess { question ->
                 _todayQuestion.value = UiState.Success(question.toPresentation())
             }.onFailure { error ->
                 _todayQuestion.value = UiState.Failure(error.message)
@@ -92,6 +94,20 @@ class QuestionViewModel @Inject constructor(
         viewModelScope.launch {
             getTodayAllUserRepliesUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
                 _todayAllUserReplies.value = pagingData.map { it.toPresentation() }
+            }
+        }
+    }
+
+    private val _updateTodayAnswerResult = MutableSharedFlow<UiState<Unit>>()
+    val updateTodayAnswerResult = _updateTodayAnswerResult.asSharedFlow()
+
+    fun updateTodayAnswer(updatedAnswer: TodayAnswerModel) {
+        viewModelScope.launch {
+            _updateTodayAnswerResult.emit(UiState.Loading)
+            updateTodayAnswerUseCase(updatedAnswer = updatedAnswer.toDomain()).onSuccess {
+                _updateTodayAnswerResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _updateTodayAnswerResult.emit(UiState.Failure(error.message))
             }
         }
     }

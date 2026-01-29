@@ -18,7 +18,9 @@ import com.egobook.app.R
 import com.egobook.app.databinding.FragmentSquareBinding
 import com.egobook.app.databinding.LayoutPopupVisibilityTypeBinding
 import com.egobook.app.domain.model.square.question.AnswerVisibility
+import com.egobook.app.domain.model.square.question.TodayAnswer
 import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
+import com.egobook.app.ui.square.model.question.SubmitStatus
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
 import com.egobook.app.ui.square.viewmodel.QuestionViewModel
@@ -38,6 +40,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
     private var todayQuestionContent: String? = null
 
+    private var submitButtonStatus: SubmitStatus = SubmitStatus.CREATE
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSquareBinding.bind(view)
@@ -48,7 +52,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     }
 
     private fun fetchData() {
-        questionViewModel.getTodayQuestion(isSubmit = false)
+        questionViewModel.getTodayQuestion()
         questionViewModel.getTodayFriendsReplies(size = 5)
     }
 
@@ -97,10 +101,24 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
             }
         })
         btnSquareTodayQuestionInputSave.setOnClickListener {
-            questionViewModel.submitTodayAnswer(answer = TodayAnswerModel(
-                content = etSquareTodayQuestionInput.text.toString(),
-                visibilityType = visibilityType
-            ))
+            when(submitButtonStatus) {
+                SubmitStatus.CREATE -> {
+                    questionViewModel.submitTodayAnswer(answer = TodayAnswerModel(
+                        content = etSquareTodayQuestionInput.text.toString(),
+                        visibilityType = visibilityType
+                    ))
+                }
+                SubmitStatus.UPDATE -> {
+                    questionViewModel.updateTodayAnswer(updatedAnswer = TodayAnswerModel(
+                        content = etSquareTodayQuestionInput.text.toString(),
+                        visibilityType = visibilityType
+                    ))
+                }
+            }
+        }
+        cvSquareTodayQuestionAnswered.setOnClickListener {
+            cvSquareTodayQuestionAnswered.isVisible = false
+            cvSquareTodayQuestionWriting.isVisible = true
         }
     }
 
@@ -176,13 +194,23 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                 val todayQuestion = state.data
                                 todayQuestionContent = todayQuestion.content
                                 if(todayQuestion.isUserAnswered) {
+                                    // 조회용
                                     cvSquareTodayQuestionAnswered.isVisible = true
                                     tvSquareTodayQuestionContentAnswered.text = "Q. ${todayQuestion.content}"
                                     tvSquareTodayQuestionDescriptionAnswered.text = todayQuestion.myAnswer?.content
+
+                                    // 수정용
+                                    tvSquareTodayQuestionContentWriting.text = "Q. ${todayQuestion.content}"
+                                    tvSquareTodayQuestionInputVisibilityType.text = todayQuestion.myAnswer?.visibility?.title
+                                    etSquareTodayQuestionInput.setText(todayQuestion.myAnswer?.content)
+
+                                    visibilityType = todayQuestion.myAnswer?.visibility ?: AnswerVisibility.PUBLIC
+                                    submitButtonStatus = SubmitStatus.UPDATE
                                 } else {
                                     cvSquareTodayQuestionUnanswered.isVisible = true
                                     tvSquareTodayQuestionContentUnanswered.text = "Q. ${todayQuestion.content}"
                                     tvSquareTodayQuestionContentWriting.text = "Q. ${todayQuestion.content}"
+                                    submitButtonStatus = SubmitStatus.CREATE
                                 }
                             }
                         }
@@ -194,11 +222,10 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<*> -> {
-                                // 답변 전송이 성공한 경우
+                            is UiState.Success<Unit> -> {
                                 Toast.makeText(context, "답변 전송이 완료되었습니다.", Toast.LENGTH_SHORT).show()
                                 cvSquareTodayQuestionWriting.isVisible = false
-                                questionViewModel.getTodayQuestion(isSubmit = true)
+                                questionViewModel.getTodayQuestion()
                             }
                         }
                     }
@@ -207,6 +234,20 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                     questionViewModel.todayFriendsReplies.collectLatest { pagingData ->
                         if(pagingData != null) {
                             adapter.submitData(lifecycle = lifecycle, pagingData = pagingData)
+                        }
+                    }
+                }
+                launch {
+                    questionViewModel.updateTodayAnswerResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                Toast.makeText(context, "답변 업데이트가 되었습니다.", Toast.LENGTH_SHORT).show()
+                                cvSquareTodayQuestionWriting.isVisible = false
+                                questionViewModel.getTodayQuestion()
+                            }
                         }
                     }
                 }

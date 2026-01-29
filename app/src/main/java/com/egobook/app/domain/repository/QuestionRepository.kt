@@ -8,10 +8,11 @@ import com.egobook.app.domain.model.square.question.TodayAnswer
 import kotlinx.coroutines.flow.Flow
 
 interface QuestionRepository {
-    suspend fun fetchTodayQuestion(isSubmit: Boolean): Result<TodayQuestion>
+    suspend fun fetchTodayQuestion(): Result<TodayQuestion>
     suspend fun submitTodayAnswer(answer: TodayAnswer): Result<Unit>
     fun fetchMyRepliesHistory(size: Int): Flow<PagingData<MyTodayQuestionAnswerItem>>
     fun fetchTodayFriendsReplies(size: Int): Flow<PagingData<UserTodayQuestionAnswerItem>>
     fun fetchTodayAllUserReplies(size: Int): Flow<PagingData<UserTodayQuestionAnswerItem>>
+    suspend fun updateTodayAnswer(updatedAnswer: TodayAnswer): Result<Unit>
 }
 

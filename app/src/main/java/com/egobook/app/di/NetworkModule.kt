@@ -1,6 +1,7 @@
 package com.egobook.app.di
 
 import com.egobook.app.BuildConfig
+import com.egobook.app.data.interceptor.AuthInterceptor
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -38,11 +39,14 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient {
         return OkHttpClient.Builder().apply {
             connectTimeout(5, TimeUnit.SECONDS)
             readTimeout(5, TimeUnit.SECONDS)
             writeTimeout(5, TimeUnit.SECONDS)
+            addInterceptor(authInterceptor)
         }.build()
     }
 }

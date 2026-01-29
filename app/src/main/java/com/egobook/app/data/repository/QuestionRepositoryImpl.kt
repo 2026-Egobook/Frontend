@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.QuestionApiService
+import com.egobook.app.data.model.square.question.TodayAnswerRequest
 import com.egobook.app.data.model.square.question.TodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.TodayQuestionResponse
 import com.egobook.app.data.model.square.question.toDomain
@@ -19,51 +20,43 @@ import com.egobook.app.domain.repository.QuestionRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class QuestionRepositoryImpl @Inject constructor(private val apiService: QuestionApiService): QuestionRepository {
+class QuestionRepositoryImpl @Inject constructor(private val apiService: QuestionApiService) :
+    QuestionRepository {
 
-    override suspend fun fetchTodayQuestion(isSubmit: Boolean): Result<TodayQuestion> = try {
-//        val response = apiService.fetchTodayQuestion()
-//        if(response.status == 200) {
-//            Result.success(response.data.toDomain())
-//        } else {
-//            Result.failure(Exception("Error: ${response.status}"))
-//        }
-        if(isSubmit) {
-            val mockTodayQuestion = TodayQuestionResponse(
-                questionId = 101L,
-                content = "오늘 가장 집중이 잘 됐던 순간은 언제였나요?",
-                date = "2026-01-19",
-                isUserAnswered = true,
-                myAnswer = TodayQuestionAnswerResponse(
-                    answerId = 9007199254740991L,
-                    content = "오전 10시쯤 커피 마시면서 코딩할 때가 가장 집중이 잘 되었어요.",
-                    visibility = AnswerVisibility.PUBLIC,
-                    answeredAt = "2026-01-28T04:11:36.224Z"
-                )
-            )
-            Result.success(mockTodayQuestion.toDomain())
+    override suspend fun fetchTodayQuestion(): Result<TodayQuestion> = try {
+        val response = apiService.fetchTodayQuestion()
+        if(response.status == 200) {
+            Result.success(response.data.toDomain())
         } else {
-            val mockTodayQuestion = TodayQuestionResponse(
-                questionId = 101L,
-                content = "오늘 가장 집중이 잘 됐던 순간은 언제였나요?",
-                date = "2026-01-19",
-                isUserAnswered = false,
-                myAnswer = null
-            )
-            Result.success(mockTodayQuestion.toDomain())
+            Result.failure(Exception("Error: ${response.status}"))
         }
     } catch (e: Exception) {
         Result.failure(e)
     }
 
     override suspend fun submitTodayAnswer(answer: TodayAnswer): Result<Unit> = try {
-//        val response = apiService.submitTodayAnswer(answer = TodayAnswerRequest(content = answer.content, visibilityType = answer.visibilityType.value))
-//        if(response.status == 200) {
-//            Result.success(Unit)
-//        } else {
-//            Result.failure(Exception("Error: ${response.status}"))
-//        }
-        Result.success(Unit)
+        val response = apiService.submitTodayAnswer(
+            answer = TodayAnswerRequest(
+                content = answer.content,
+                visibilityType = answer.visibilityType
+            )
+        )
+        if (response.status == 200) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun updateTodayAnswer(updatedAnswer: TodayAnswer): Result<Unit> = try {
+        val response = apiService.updateTodayAnswer(updatedAnswer = TodayAnswerRequest(content = updatedAnswer.content, visibilityType = updatedAnswer.visibilityType))
+        if(response.status == 200) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
     } catch (e: Exception) {
         Result.failure(e)
     }
@@ -80,7 +73,11 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
      */
     override fun fetchMyRepliesHistory(size: Int): Flow<PagingData<MyTodayQuestionAnswerItem>> {
         return Pager(
-            config = PagingConfig(pageSize = size, initialLoadSize = size, enablePlaceholders = false), // 1
+            config = PagingConfig(
+                pageSize = size,
+                initialLoadSize = size,
+                enablePlaceholders = false
+            ), // 1
             pagingSourceFactory = {
                 MyRepliesHistoryPagingSource(apiService = apiService)
             }
@@ -89,7 +86,11 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
 
     override fun fetchTodayFriendsReplies(size: Int): Flow<PagingData<UserTodayQuestionAnswerItem>> {
         return Pager(
-            config = PagingConfig(pageSize = size, initialLoadSize = size, enablePlaceholders = false),
+            config = PagingConfig(
+                pageSize = size,
+                initialLoadSize = size,
+                enablePlaceholders = false
+            ),
             pagingSourceFactory = {
                 FriendRepliesPagingSource(apiService = apiService)
             }
@@ -98,7 +99,11 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
 
     override fun fetchTodayAllUserReplies(size: Int): Flow<PagingData<UserTodayQuestionAnswerItem>> {
         return Pager(
-            config = PagingConfig(pageSize = size, initialLoadSize = size, enablePlaceholders = false),
+            config = PagingConfig(
+                pageSize = size,
+                initialLoadSize = size,
+                enablePlaceholders = false
+            ),
             pagingSourceFactory = {
                 AllUserRepliesPagingSource(apiService = apiService)
             }

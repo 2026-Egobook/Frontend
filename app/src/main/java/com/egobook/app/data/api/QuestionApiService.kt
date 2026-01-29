@@ -8,6 +8,7 @@ import com.egobook.app.data.model.square.question.TodayQuestionResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface QuestionApiService {
@@ -34,5 +35,10 @@ interface QuestionApiService {
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 10
     ): ApiResponse<UserTodayQuestionAnswerResponse>
+
+    @PUT("/questions/answers")
+    suspend fun updateTodayAnswer(
+        @Body updatedAnswer: TodayAnswerRequest
+    ): ApiResponse<Unit>
 
 }
