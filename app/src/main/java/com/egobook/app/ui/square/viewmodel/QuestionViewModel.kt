@@ -68,7 +68,7 @@ class QuestionViewModel @Inject constructor(
 
     fun getMyRepliesHistory(size: Int) {
         viewModelScope.launch {
-            getMyRepliesHistoryUseCase(size = size).cachedIn(this).collectLatest { pagingData ->
+            getMyRepliesHistoryUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
                 _myRepliesHistory.value = pagingData.map { it.toPresentation() }
             }
         }
@@ -79,7 +79,7 @@ class QuestionViewModel @Inject constructor(
 
     fun getTodayFriendsReplies(size: Int) {
         viewModelScope.launch {
-            getTodayFriendsRepliesUseCase(size = size).cachedIn(this).collectLatest { pagingData ->
+            getTodayFriendsRepliesUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
                 _todayFriendsReplies.value = pagingData.map { it.toPresentation() }
             }
         }
@@ -90,8 +90,8 @@ class QuestionViewModel @Inject constructor(
 
     fun getTodayAllUserReplies(size: Int) {
         viewModelScope.launch {
-            getTodayAllUserRepliesUseCase(size = size).cachedIn(this).collectLatest { pagingData ->
-                _todayFriendsReplies.value = pagingData.map { it.toPresentation() }
+            getTodayAllUserRepliesUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
+                _todayAllUserReplies.value = pagingData.map { it.toPresentation() }
             }
         }
     }
