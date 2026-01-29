@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemSquareQuestionReplyBinding
 import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
 
-class SquareAllRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnswerItemModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
+class SquareAllRepliesAdapter(private val onReportClick: () -> Unit): PagingDataAdapter<UserTodayQuestionAnswerItemModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): SquareAllRepliesViewHolder {
         val binding = ItemSquareQuestionReplyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SquareAllRepliesViewHolder(binding)
+        return SquareAllRepliesViewHolder(binding, onReportClick)
     }
 
     override fun onBindViewHolder(
@@ -28,9 +28,15 @@ class SquareAllRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnswerItemMode
         }
     }
 
-    inner class SquareAllRepliesViewHolder(private val binding: ItemSquareQuestionReplyBinding): RecyclerView.ViewHolder(binding.root) {
+    class SquareAllRepliesViewHolder(
+        private val binding: ItemSquareQuestionReplyBinding,
+        private val onReportClick: () -> Unit
+    ): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: UserTodayQuestionAnswerItemModel) = with(binding) {
             tvItemSquareQuestionReplyUserContent.text = item.content
+            ivSquareQuestionReplyReport.setOnClickListener {
+                onReportClick()
+            }
         }
     }
 
