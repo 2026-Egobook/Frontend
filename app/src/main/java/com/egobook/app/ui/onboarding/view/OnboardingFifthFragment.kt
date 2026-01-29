@@ -26,7 +26,7 @@ class OnboardingFifthFragment : Fragment() {
 
         binding.btnStartEgobook.setOnClickListener {
             // OnboardingActivity의 메서드 호출
-            (activity as? OnboardingActivity)?.navigateToMain()
+            (activity as? OnboardingActivity)?.navigateToMainActivity()
         }
 
     }

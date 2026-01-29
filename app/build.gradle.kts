@@ -112,6 +112,9 @@ dependencies {
 
     implementation("me.relex:circleindicator:2.1.6")
     implementation("com.github.Dimezis:BlurView:version-3.2.0")
+
+    // Google Sign-In for Spring Backend
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }
 
 kapt {

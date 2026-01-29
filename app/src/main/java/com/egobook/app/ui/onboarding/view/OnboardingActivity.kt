@@ -38,7 +38,7 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     // OnboardingFifthFragment에서 호출할 메서드
-    fun navigateToMain() {
+    fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish() // 온보딩 액티비티 종료
