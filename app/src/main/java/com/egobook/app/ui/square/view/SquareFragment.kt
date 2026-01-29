@@ -36,6 +36,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
         TodayQuestionFriendRepliesAdapter()
     }
 
+    private var todayQuestionContent: String? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSquareBinding.bind(view)
@@ -62,7 +64,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
             findNavController().navigate(R.id.action_menu_square_to_myRepliesHistoryFragment)
         }
         tvSquareAllUsersRepliesViewAll.setOnClickListener {
-            findNavController().navigate(R.id.action_menu_square_to_squareAllRepliesFragment)
+            val action = SquareFragmentDirections.actionMenuSquareToSquareAllRepliesFragment(todayQuestionContent = todayQuestionContent)
+            findNavController().navigate(action)
         }
         tvSquareMyLettersViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_menu_square_to_myLettersFragment)
@@ -171,6 +174,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                             UiState.Loading -> {}
                             is UiState.Success<TodayQuestionModel> -> {
                                 val todayQuestion = state.data
+                                todayQuestionContent = todayQuestion.content
                                 if(todayQuestion.isUserAnswered) {
                                     cvSquareTodayQuestionAnswered.isVisible = true
                                     tvSquareTodayQuestionContentAnswered.text = "Q. ${todayQuestion.content}"

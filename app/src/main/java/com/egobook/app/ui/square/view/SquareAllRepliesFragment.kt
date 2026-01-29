@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentSquareAllRepliesBinding
 import com.egobook.app.ui.square.adapter.SquareAllRepliesAdapter
@@ -19,6 +20,8 @@ class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) 
     private lateinit var binding: FragmentSquareAllRepliesBinding
     private val adapter = SquareAllRepliesAdapter()
     private val viewModel: QuestionViewModel by activityViewModels()
+
+    private val args: SquareAllRepliesFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,12 +37,16 @@ class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) 
     }
 
     private fun initViews() = with(binding) {
+        tvSquareAllRepliesTodayQuestion.text = "Q. \n${args.todayQuestionContent}"
         rvSquareAllReplies.adapter = adapter
     }
 
     private fun initListeners() = with(binding) {
         ivSquareAllRepliesBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+        fabSquareAllReplies.setOnClickListener {
+            rvSquareAllReplies.smoothScrollToPosition(0)
         }
     }
 
