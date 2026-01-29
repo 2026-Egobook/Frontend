@@ -28,6 +28,14 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.egobook.app.HiltTestRunner"
 
+        // Google Client ID from local.properties
+        val properties = org.jetbrains.kotlin.konan.properties.Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { properties.load(it) }
+        }
+        val googleClientId = properties.getProperty("GOOGLE_CLIENT_ID", "")
+        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"$googleClientId\"")
     }
 
     buildTypes {
@@ -52,6 +60,7 @@ android {
     
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     testOptions {
