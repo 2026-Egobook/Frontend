@@ -53,7 +53,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
     private fun fetchData() {
         questionViewModel.getTodayQuestion()
-        questionViewModel.getTodayFriendsReplies(size = 5)
+        questionViewModel.getTodayFriendsReplies(size = 3)
     }
 
     private fun initViews() = with(binding) {

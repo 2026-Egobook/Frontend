@@ -38,8 +38,4 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository
-
-
-
-
 }
