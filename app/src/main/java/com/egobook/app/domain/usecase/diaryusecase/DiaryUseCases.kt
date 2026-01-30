@@ -7,5 +7,6 @@ data class DiaryUseCases @Inject constructor (
     val getDiaries: GetDiaries,
     val getDiary: GetDiary,
     val addDiary: AddDiary,
+    val updateDiary: UpdateDiary,
     val deleteDiary: DeleteDiary
 )

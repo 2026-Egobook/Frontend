@@ -90,7 +90,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="감정"
-                android:textColor="@color/selector_weekly_report_style_text"/>
+                android:textColor="@color/selector_diary_write_style_text"/>
         </com.google.android.material.card.MaterialCardView>
 
         <!-- 2. 두 번째 카드뷰 (고민) -->
@@ -113,7 +113,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="고민"
-                android:textColor="@color/selector_weekly_report_style_text"/>
+                android:textColor="@color/selector_diary_write_style_text"/>
         </com.google.android.material.card.MaterialCardView>
 
         <!-- 3. 세 번째 카드뷰 (칭찬) -->
@@ -135,7 +135,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="칭찬"
-                android:textColor="@color/selector_weekly_report_style_text"/>
+                android:textColor="@color/selector_diary_write_style_text"/>
         </com.google.android.material.card.MaterialCardView>
 
         <!-- 4. 네 번째 카드뷰 (감사) -->
@@ -157,7 +157,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="감사"
-                android:textColor="@color/selector_weekly_report_style_text"/>
+                android:textColor="@color/selector_diary_write_style_text"/>
         </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -205,6 +205,19 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_modify"
+        style="@style/ModifyButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="34dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="수정하기"
+        app:layout_constraintBottom_toTopOf="@id/btn_delete"
+        app:layout_constraintStart_toStartOf="@id/gd_left"
+        app:layout_constraintEnd_toEndOf="@id/gd_right"
+        android:layout_marginBottom="10dp"/>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_delete"
         style="@style/DeleteButtonStyle"
         android:layout_width="0dp"
@@ -216,6 +229,5 @@
         app:layout_constraintStart_toStartOf="@id/gd_left"
         app:layout_constraintEnd_toEndOf="@id/gd_right"
         android:layout_marginBottom="16dp"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,17 @@ class DiaryDeleteDialogFragment : DialogFragment() {
     private var _binding: FragmentDiaryDeleteDialogBinding? = null
     private val binding get() = _binding!!
 
+    // 삭제 확인 콜백 인터페이스
+    interface OnDeleteConfirmListener {
+        fun onDeleteConfirmed()
+    }
+
+    private var deleteConfirmListener: OnDeleteConfirmListener? = null
+
+    fun setOnDeleteConfirmListener(listener: OnDeleteConfirmListener) {
+        deleteConfirmListener = listener
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,6 +48,8 @@ class DiaryDeleteDialogFragment : DialogFragment() {
                 dismiss()
             }
             btnDelete.setOnClickListener {
+                // 삭제 확인 콜백 호출
+                deleteConfirmListener?.onDeleteConfirmed()
                 removeScreenBlur()
                 dismiss()
             }

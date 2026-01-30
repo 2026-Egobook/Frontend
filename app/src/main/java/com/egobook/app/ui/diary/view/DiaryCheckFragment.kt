@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -12,10 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.BlurLevel
+import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentDiaryCheckBinding
 import com.egobook.app.domain.model.Diary
-import com.egobook.app.ui.diary.mapper.ImageMapper
+import com.egobook.app.domain.model.DiaryType
 import com.egobook.app.ui.diary.util.toDateTimeString
 import com.egobook.app.ui.diary.util.toDayOfMonthString
 import com.egobook.app.ui.diary.util.toMonthString
@@ -46,6 +48,13 @@ class DiaryCheckFragment : Fragment() {
 
         setClickListener()
         observeDiary()
+        observeDeleteSuccess()
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // 화면이 다시 보여질 때마다 일기 데이터 새로고침 (수정 후 돌아왔을 때 반영)
+        viewModel.refreshDiary()
     }
 
     private fun setClickListener() {
@@ -53,10 +62,33 @@ class DiaryCheckFragment : Fragment() {
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
             }
+            btnModify.setOnClickListener {
+                // 수정하기 버튼 클릭 시 DiaryWriteFragment로 이동
+                val currentDiary = viewModel.diary.value
+                if (currentDiary != null) {
+                    val action = DiaryCheckFragmentDirections
+                        .actionDiaryCheckFragmentToDiaryWriteFragment(
+                            selectedDate = currentDiary.createdAt.toString(),
+                            diaryId = currentDiary.id
+                        )
+                    findNavController().navigate(action)
+                } else {
+                    Toast.makeText(requireContext(), "일기 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
             btnDelete.setOnClickListener {
                 applyScreenBlur(BlurLevel.BASE)
                 val dialog = DiaryDeleteDialogFragment()
                 dialog.isCancelable = true
+                
+                // 삭제 확인 리스너 설정
+                dialog.setOnDeleteConfirmListener(object : DiaryDeleteDialogFragment.OnDeleteConfirmListener {
+                    override fun onDeleteConfirmed() {
+                        // ViewModel의 deleteDiary 호출
+                        viewModel.deleteDiary()
+                    }
+                })
+                
                 dialog.show(parentFragmentManager, "ConfirmDialog")
             }
         }
@@ -82,13 +114,67 @@ class DiaryCheckFragment : Fragment() {
     // UI를 업데이트하는 로직을 별도 함수로 분리
     private fun updateUi(diary: Diary) {
         binding.tvDiaryContent.text = diary.content
-        binding.tvWrittenTime.text = diary.updatedAt.toDateTimeString()
+        binding.tvWrittenTime.text = diary.writtenAt.toDateTimeString()
         binding.tvDate.text = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
-        val emotionImageRes = ImageMapper.toEmotionImage(diary.emotionLevel)
-        if (emotionImageRes != null) {
+        
+        // 감정 레벨이 있으면 이미지 표시, 없으면 null
+        if (diary.emotionLevel != null) {
+            val emotionImageRes = getEmotionImageRes(diary.emotionLevel)
             binding.ivEmotion.setImageResource(emotionImageRes)
         } else {
-            binding.ivEmotion.setImageDrawable(null) // or 기본 이미지
+            binding.ivEmotion.setImageDrawable(null) // 기본 이미지
+        }
+        
+        // 일기 타입 표시 (selector를 통해 선택된 타입만 하이라이트)
+        setDiaryTypes(diary.types)
+    }
+    
+    /**
+     * 일기 타입에 따라 CardView의 선택 상태를 세팅
+     */
+    private fun setDiaryTypes(types: Set<DiaryType>) {
+        binding.apply {
+            cvEmotion.isSelected = DiaryType.EMOTION in types
+            cvThought.isSelected = DiaryType.WORRY in types
+            cvPraise.isSelected = DiaryType.PRAISE in types
+            cvGratitude.isSelected = DiaryType.THANKS in types
+        }
+    }
+    
+    /**
+     * 감정 레벨 (1~5)을 UI 이미지 리소스로 변환
+     */
+    @DrawableRes
+    private fun getEmotionImageRes(emotionLevel: Int): Int {
+        return when (emotionLevel) {
+            1 -> R.drawable.img_emotion_very_sad
+            2 -> R.drawable.img_emotion_sad
+            3 -> R.drawable.img_emotion_neutral
+            4 -> R.drawable.img_emotion_happy
+            5 -> R.drawable.img_emotion_very_happy
+            else -> R.drawable.img_emotion_neutral // 기본값
+        }
+    }
+
+    // 삭제 성공 여부를 관찰
+    private fun observeDeleteSuccess() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deleteSuccess.collectLatest { success ->
+                    when (success) {
+                        true -> {
+                            Toast.makeText(requireContext(), "일기가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+                        }
+                        false -> {
+                            Toast.makeText(requireContext(), "삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        null -> {
+                            // 초기 상태, 아무 작업 없음
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -9,13 +9,21 @@ data class Diary(
     val content: String, //내용
     val types: Set<DiaryType>, //중복 방지
     val createdAt: LocalDateTime, //최초 생성 시각
-    val updatedAt: LocalDateTime, //마지막 수정 시각
-    val emotionLevel: EmotionLevel? //감정 레벨. null일 수도 있음
+    val writtenAt: LocalDateTime, //마지막 수정 시각
+    val emotionLevel: Int? //감정 레벨 (1: 매우 나쁨, 2: 나쁨, 3: 보통, 4: 좋음, 5: 매우 좋음). null일 수도 있음
 ) {
-    init { //일기 타임에 감정이 포함되어 있어야만 기분 선택 가능 -> 도메인 규칙으로 정의
+    init {
+        //일기 타입에 감정이 포함되어 있어야만 기분 선택 가능 -> 도메인 규칙으로 정의
         if (DiaryType.EMOTION !in types && emotionLevel != null) {
             throw IllegalStateException(
                 "emotionLevel은 EMOTION 타입이 포함된 경우에만 설정할 수 있습니다."
+            )
+        }
+        
+        // emotionLevel이 null이 아닌 경우 1~5 범위 체크
+        if (emotionLevel != null && emotionLevel !in 1..5) {
+            throw IllegalArgumentException(
+                "emotionLevel은 1~5 사이의 값이어야 합니다. 현재 값: $emotionLevel"
             )
         }
     }
@@ -28,10 +36,6 @@ enum class DiaryType(val value: String, val displayType: String) {
     THANKS("THANKS", "감사");
 
 
-    /**
-     * API value로 DiaryType 찾기 (예: "EMOTION", "WORRY") -> 추후 작성 예정
-     * UI 문자열 형식도 지원 (예: "EMOTION(감정)", "고민")
-     */
     companion object {
         fun fromDisplayType(displayType: String): DiaryType {
             return entries.find { it.displayType == displayType }
@@ -39,20 +43,4 @@ enum class DiaryType(val value: String, val displayType: String) {
         }
 
     }
-}
-
-enum class EmotionLevel(val value: String, val displayEmotionLevel: Int) {
-    VERY_BAD("VERY_BAD", 1),
-    BAD("BAD", 2),
-    NORMAL("NORMAL", 3),
-    GOOD("GOOD", 4),
-    VERY_GOOD("VERY_GOOD", 5);
-
-    companion object {
-        fun fromDisplayLevel(displayLevel: Int): EmotionLevel {
-            return entries.find { it.displayEmotionLevel == displayLevel }
-                ?: throw IllegalArgumentException("Unknown emotion level: $displayLevel")
-        }
-    }
-
 }

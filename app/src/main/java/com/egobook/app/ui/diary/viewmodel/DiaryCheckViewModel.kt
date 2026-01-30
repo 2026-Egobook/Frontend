@@ -14,15 +14,18 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryCheckViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle //다
 ) : ViewModel() {
 
-    // 💡 1. UiState 대신, nullable한 Diary 객체를 직접 상태로 관리합니다.
     private val _diary = MutableStateFlow<Diary?>(null)
     val diary = _diary.asStateFlow()
 
+    private val _deleteSuccess = MutableStateFlow<Boolean?>(null)
+    val deleteSuccess = _deleteSuccess.asStateFlow()
+
+    private val diaryId: Long = savedStateHandle.get<Long>("diaryId") ?: -1L
+
     init {
-        val diaryId: Long = savedStateHandle.get<Long>("diaryId") ?: -1L
         if (diaryId != -1L) {
             getDiary(diaryId)
         }
@@ -32,12 +35,33 @@ class DiaryCheckViewModel @Inject constructor(
         viewModelScope.launch {
             diaryUseCases.getDiary(id)
                 .onSuccess { fetchedDiary ->
-                    // 💡 2. 성공 시, _diary StateFlow의 값을 직접 업데이트합니다.
+                    // _diary StateFlow의 값을 직접 업데이트.
                     _diary.value = fetchedDiary
                 }
                 .onFailure {
-                    // 💡 3. 실패 시, 크래시를 방지하고 상태를 null로 유지합니다.
+                    // 실패 시, 크래시를 방지하고 상태를 null로 유지.
                     _diary.value = null
+                }
+        }
+    }
+    
+    /**
+     * 일기 데이터 새로고침 (수정 후 돌아왔을 때 사용)
+     */
+    fun refreshDiary() {
+        if (diaryId != -1L) {
+            getDiary(diaryId)
+        }
+    }
+
+    fun deleteDiary() {
+        viewModelScope.launch {
+            diaryUseCases.deleteDiary(diaryId)
+                .onSuccess {
+                    _deleteSuccess.value = true
+                }
+                .onFailure {
+                    _deleteSuccess.value = false
                 }
         }
     }
