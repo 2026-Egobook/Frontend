@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.egobook.app.R
 import com.egobook.app.data.local.UserTokenStorage
 import com.egobook.app.databinding.ActivityLoginBinding
@@ -27,10 +28,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
-    private val userTokenStorage by lazy { UserTokenStorage.getInstance(this) }
+    
+    @Inject
+    lateinit var userTokenStorage: UserTokenStorage
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
@@ -111,23 +118,25 @@ class LoginActivity : AppCompatActivity() {
 
             if (idToken != null) {
                 // Google ID Token 저장
-                userTokenStorage.saveGoogleIdToken(idToken)
+                lifecycleScope.launch {
+                    userTokenStorage.saveIdToken(idToken)
+                    
+                    Log.d(TAG, "Google Sign-In 성공")
+                    Log.d(TAG, "이름: ${account.displayName}")
+                    Log.d(TAG, "이메일: ${account.email}")
+                    Log.d(TAG, "ID Token 저장 완료")
 
-                Log.d(TAG, "Google Sign-In 성공")
-                Log.d(TAG, "이름: ${account.displayName}")
-                Log.d(TAG, "이메일: ${account.email}")
-                Log.d(TAG, "ID Token 저장 완료")
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "로그인 성공: ${account.displayName}",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-                Toast.makeText(
-                    this,
-                    "로그인 성공: ${account.displayName}",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                // OnboardingActivity로 이동
-                val intent = Intent(this, OnboardingActivity::class.java)
-                startActivity(intent)
-                finish()
+                    // OnboardingActivity로 이동
+                    val intent = Intent(this@LoginActivity, OnboardingActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             } else {
                 Log.e(TAG, "ID Token이 null입니다")
                 Toast.makeText(
