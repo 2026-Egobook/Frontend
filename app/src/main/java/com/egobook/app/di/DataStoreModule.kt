@@ -17,6 +17,5 @@ object DataStoreModule {
     @Singleton
     fun provideUserTokenStorage(
         @ApplicationContext context: Context
-    ): UserTokenStorage = TODO()
-
+    ): UserTokenStorage = UserTokenStorage(context)
 }

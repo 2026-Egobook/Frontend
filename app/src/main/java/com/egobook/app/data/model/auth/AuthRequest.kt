@@ -29,7 +29,7 @@ data class AccessTokenRequest(
 @Serializable
 data class RefreshTokenRequest(
     @SerialName("idToken")
-    val accessToken: String
+    val idToken: String
 )
 
 //Guest로그인 상태에서 Token 재발급
@@ -39,7 +39,7 @@ data class TokenRequestAgainByGuest(
     val deviceUid: String,
 
     @SerialName("recoverToken")
-    val accessToken: String,
+    val recoverToken: String,
 
 )
 
