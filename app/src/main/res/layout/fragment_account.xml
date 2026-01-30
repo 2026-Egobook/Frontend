@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    android:layout_marginBottom="21dp"
-    tools:context=".ui.account.AccountFragment">
+    tools:context=".ui.account.AccountFragment"
+    android:background="#F4F7EE"
+    android:paddingBottom="21dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout"
@@ -120,7 +121,7 @@
             app:layout_constraintStart_toStartOf="@id/gd_start"
             app:layout_constraintEnd_toEndOf="@id/gd_end"
             android:paddingVertical="16dp"
-            android:background="@drawable/bg_date_input_box">
+            android:background="@drawable/bg_introduce_features">
             
             <TextView
                 android:id="@+id/tv_introduce_feature"

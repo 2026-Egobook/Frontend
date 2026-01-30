@@ -6,23 +6,18 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class LoginViewModel : ViewModel()  {
 
-    private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState = _uiState.asStateFlow()
-
-    init{
-
-    }
-
-
+    private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
+    val loginUiState = _loginUiState.asStateFlow()
 
     sealed class LoginEvent {
 
     }
 
-    data class LoginUiState (
-        val isLoading: Boolean = false,
-        val successToSignIn: Boolean = false,
-        val successLogin: Boolean = false
-    )
+    sealed class LoginUiState {
+        data object Idle : LoginUiState()
+        data object Loading : LoginUiState()
+//        data class Success(val user: User) : LoginUiState()
+//        data class Error(val message: String) : LoginUiState()
+    }
 
 }
