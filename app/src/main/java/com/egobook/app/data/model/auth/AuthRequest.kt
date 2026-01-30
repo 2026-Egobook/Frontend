@@ -25,9 +25,9 @@ data class AccessTokenRequest(
     val refreshToken: String
 )
 
-//Refresh Token 재발급
+//Tokens 재발급 - refreshToken까지 만료시
 @Serializable
-data class RefreshTokenRequest(
+data class TokensRequest(
     @SerialName("idToken")
     val idToken: String
 )
