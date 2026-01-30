@@ -7,4 +7,11 @@
 
     <style name="Theme.Egobook" parent="Base.Theme.Egobook" />
 
+    <style name="Theme.SeeMeet.TransparentStatusBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!--drawerlayout statusbar -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
 </resources>
