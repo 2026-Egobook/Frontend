@@ -158,7 +158,9 @@
         android:id="@+id/squareAllRepliesFragment"
         android:name="com.egobook.app.ui.square.view.SquareAllRepliesFragment"
         android:label="fragment_square_all_replies"
-        tools:layout="@layout/fragment_square_all_replies" />
+        tools:layout="@layout/fragment_square_all_replies">
+        <argument android:name="todayQuestionContent" app:argType="string" app:nullable="true"/>
+    </fragment>
     <fragment
         android:id="@+id/myRepliesHistoryFragment"
         android:name="com.egobook.app.ui.square.view.MyRepliesHistoryFragment"
@@ -185,7 +187,7 @@
         tools:layout="@layout/fragment_my_letter_detail">
         <argument
             android:name="letterItem"
-            app:argType="com.egobook.app.ui.square.model.LetterModel"
+            app:argType="com.egobook.app.ui.square.model.friend.LetterModel"
             app:nullable="false"/>
     </fragment>
 

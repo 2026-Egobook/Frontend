@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemSquareFriendListBinding
-import com.egobook.app.ui.square.model.FriendModel
+import com.egobook.app.ui.square.model.friend.FriendModel
 
 class FriendsListAdapter(private val onDeleted: (FriendModel) -> Unit): ListAdapter<FriendModel, FriendsListAdapter.FriendsListViewHolder>(diffUtil) {
 
@@ -27,8 +27,6 @@ class FriendsListAdapter(private val onDeleted: (FriendModel) -> Unit): ListAdap
 
     inner class FriendsListViewHolder(private val binding: ItemSquareFriendListBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: FriendModel) = with(binding) {
-            ivItemFriendListImage.setImageResource(item.image)
-            tvItemFriendListLevel.text = "LV ${item.level}"
             tvItemFriendListName.text = item.name
             ivItemSquareFriendListDelete.setOnClickListener { onDeleted(item) }
         }

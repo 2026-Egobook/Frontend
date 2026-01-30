@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.egobook.app.BlurLevel
 import com.egobook.app.R
+import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentSquareFriendsBinding
 import com.egobook.app.ui.square.adapter.FriendsTabAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -31,6 +33,11 @@ class FriendsFragment : Fragment(R.layout.fragment_square_friends) {
     private fun initListeners() = with(binding) {
         ivSquareFriendsBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+        btnSquareFriendsAdd.setOnClickListener {
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = FriendAddDialog()
+            dialog.show(childFragmentManager, FriendAddDialog.TAG)
         }
     }
 }

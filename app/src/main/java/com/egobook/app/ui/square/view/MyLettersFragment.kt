@@ -7,8 +7,8 @@ import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentMyLettersBinding
 import com.egobook.app.ui.square.adapter.MyLettersAdapter
-import com.egobook.app.ui.square.model.LetterModel
-import com.egobook.app.ui.square.model.ReceivedModel
+import com.egobook.app.ui.square.model.friend.LetterModel
+import com.egobook.app.ui.square.model.friend.ReceivedModel
 
 class MyLettersFragment : Fragment(R.layout.fragment_my_letters) {
     private lateinit var binding: FragmentMyLettersBinding
