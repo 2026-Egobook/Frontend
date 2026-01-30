@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layer_white"
-    tools:context=".ui.square.view.LetterFragment">
+    tools:context=".ui.square.view.LetterWriteFragment">
 
     <LinearLayout
         android:id="@+id/ll_letter_header"
@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/iv_letter_write_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -31,55 +32,110 @@
             android:text="편지 쓰기" />
     </LinearLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_letter_color_beige"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_letter_color_beige"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:src="@color/letter_bg_beige"
+        app:cardBackgroundColor="@color/letter_bg_beige"
+        app:strokeColor="@color/selector_letter_paper_color_stroke"
+        app:strokeWidth="2dp"
+        app:contentPadding="8dp"
+        app:shapeAppearanceOverlay="@style/CircleShape"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_letter_header" />
+        app:layout_constraintTop_toBottomOf="@id/ll_letter_header">
+        <ImageView
+            android:id="@+id/iv_letter_color_beige_checked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_check"
+            android:visibility="gone"/>
+    </com.google.android.material.card.MaterialCardView>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_letter_color_pink"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_letter_color_pink"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
-        android:src="@color/letter_bg_pink"
-        app:layout_constraintBottom_toBottomOf="@id/iv_letter_color_beige"
-        app:layout_constraintStart_toEndOf="@id/iv_letter_color_beige"
-        app:layout_constraintTop_toTopOf="@id/iv_letter_color_beige" />
+        app:cardBackgroundColor="@color/letter_bg_pink"
+        app:strokeColor="@color/selector_letter_paper_color_stroke"
+        app:strokeWidth="2dp"
+        app:contentPadding="8dp"
+        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_beige"
+        app:layout_constraintStart_toEndOf="@id/cv_letter_color_beige"
+        app:layout_constraintTop_toTopOf="@id/cv_letter_color_beige">
+        <ImageView
+            android:id="@+id/iv_letter_color_pink_checked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_check"
+            android:visibility="gone"/>
+    </com.google.android.material.card.MaterialCardView>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_letter_color_leaf"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_letter_color_leaf"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
-        android:src="@color/letter_bg_leaf"
-        app:layout_constraintBottom_toBottomOf="@id/iv_letter_color_pink"
-        app:layout_constraintStart_toEndOf="@id/iv_letter_color_pink"
-        app:layout_constraintTop_toTopOf="@id/iv_letter_color_pink" />
+        app:cardBackgroundColor="@color/letter_bg_leaf"
+        app:strokeColor="@color/selector_letter_paper_color_stroke"
+        app:strokeWidth="2dp"
+        app:contentPadding="8dp"
+        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_pink"
+        app:layout_constraintStart_toEndOf="@id/cv_letter_color_pink"
+        app:layout_constraintTop_toTopOf="@id/cv_letter_color_pink">
+        <ImageView
+            android:id="@+id/iv_letter_color_leaf_checked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_check"
+            android:visibility="gone"/>
+    </com.google.android.material.card.MaterialCardView>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_letter_color_mint"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_letter_color_mint"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
-        android:src="@color/letter_bg_mint"
-        app:layout_constraintBottom_toBottomOf="@id/iv_letter_color_leaf"
-        app:layout_constraintStart_toEndOf="@id/iv_letter_color_leaf"
-        app:layout_constraintTop_toTopOf="@id/iv_letter_color_leaf" />
+        app:cardBackgroundColor="@color/letter_bg_mint"
+        app:strokeColor="@color/selector_letter_paper_color_stroke"
+        app:strokeWidth="2dp"
+        app:contentPadding="8dp"
+        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_leaf"
+        app:layout_constraintStart_toEndOf="@id/cv_letter_color_leaf"
+        app:layout_constraintTop_toTopOf="@id/cv_letter_color_leaf">
+        <ImageView
+            android:id="@+id/iv_letter_color_mint_checked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_check"
+            android:visibility="gone"/>
+    </com.google.android.material.card.MaterialCardView>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_letter_color_lavender"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_letter_color_lavender"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
-        android:src="@color/letter_bg_lavender"
-        app:layout_constraintBottom_toBottomOf="@id/iv_letter_color_mint"
-        app:layout_constraintStart_toEndOf="@id/iv_letter_color_mint"
-        app:layout_constraintTop_toTopOf="@id/iv_letter_color_mint" />
+        app:cardBackgroundColor="@color/letter_bg_lavender"
+        app:strokeColor="@color/selector_letter_paper_color_stroke"
+        app:strokeWidth="2dp"
+        app:contentPadding="8dp"
+        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_mint"
+        app:layout_constraintStart_toEndOf="@id/cv_letter_color_mint"
+        app:layout_constraintTop_toTopOf="@id/cv_letter_color_mint">
+        <ImageView
+            android:id="@+id/iv_letter_color_lavender_checked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_check"
+            android:visibility="gone"/>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_letter_container"
@@ -88,10 +144,10 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="28dp"
         app:cardBackgroundColor="@color/letter_bg_beige"
-        app:cardCornerRadius="4dp"
+        app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_letter_color_beige"
+        app:layout_constraintTop_toBottomOf="@id/cv_letter_color_beige"
         app:strokeWidth="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,19 +172,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/iv_letter_content"
+            <EditText
+                android:id="@+id/cv_letter_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="사용자가 작성하는 편지 내용 사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용\n\n
-
-사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용\n\n
-
-사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용사용자가 작성하는 편지 내용"
+                android:backgroundTint="@android:color/transparent"
+                android:hint="편지를 작성해 보세요"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_letter_tooltip" />
+                app:layout_constraintTop_toBottomOf="@id/iv_letter_tooltip"/>
 
             <TextView
                 android:id="@+id/iv_letter_total_words"
@@ -138,7 +191,7 @@
                 android:text="360/360"
                 android:textColor="@color/neutral_subtle"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_letter_content" />
+                app:layout_constraintTop_toBottomOf="@id/cv_letter_content" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -160,6 +213,8 @@
         android:backgroundTint="@color/neutral"
         android:text="친구에게 보내기"
         android:layout_marginStart="16dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         app:cornerRadius="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cv_letter_container"
@@ -173,6 +228,8 @@
         android:text="누군가에게 보내기"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="12dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         app:cornerRadius="4dp"
         app:layout_constraintStart_toEndOf="@id/btn_letter_send_friend"
         app:layout_constraintTop_toTopOf="@id/btn_letter_send_friend"

@@ -120,6 +120,9 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
             cvSquareTodayQuestionAnswered.isVisible = false
             cvSquareTodayQuestionWriting.isVisible = true
         }
+        cvSquareWriteLetter.setOnClickListener {
+            findNavController().navigate(R.id.action_menu_square_to_letterWriteFragment)
+        }
     }
 
     /**
