@@ -130,6 +130,9 @@ dependencies {
     
     implementation("com.github.bumptech.glide:glide:5.0.5")
     implementation("androidx.paging:paging-runtime:3.3.6")
+
+    //SplashScreen API
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }
 
 ksp {
