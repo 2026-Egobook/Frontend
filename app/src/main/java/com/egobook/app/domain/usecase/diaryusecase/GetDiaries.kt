@@ -26,7 +26,7 @@ class GetDiaries @Inject constructor(
 
                         isSameDate && isCorrectType
                     }
-                    .sortedByDescending { it.updatedAt }
+                    .sortedByDescending { it.writtenAt }
             }
     }
 }
