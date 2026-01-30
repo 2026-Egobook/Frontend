@@ -1,14 +1,22 @@
 import org.gradle.kotlin.dsl.testRuntimeOnly
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("kotlinx-serialization")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
     id("org.jlleitschuh.gradle.ktlint")
+    id("com.google.devtools.ksp")
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if(localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -28,6 +36,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.egobook.app.HiltTestRunner"
 
+        val baseUrl = localProperties.getProperty("BACKEND_BASE_URL")
+        buildConfigField("String", "BACKEND_BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
@@ -52,6 +62,7 @@ android {
     
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     testOptions {
@@ -72,7 +83,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.lifecycle.livedata.ktx)
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
@@ -81,6 +92,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp:5.3.2")
     implementation(platform("androidx.compose:compose-bom:2024.02.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
@@ -108,12 +120,16 @@ dependencies {
 
     // Hilt 테스트를 위한 의존성 추가
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
 
     implementation("me.relex:circleindicator:2.1.6")
     implementation("com.github.Dimezis:BlurView:version-3.2.0")
+    implementation("com.github.bumptech.glide:glide:5.0.5")
+
+    implementation("androidx.paging:paging-runtime:3.3.6")
 }
 
-kapt {
-    correctErrorTypes = true
+ksp {
+    arg("dagger.fastInit", "enabled")
+    arg("dagger.hilt.android.internal.projectType", "APP")
 }

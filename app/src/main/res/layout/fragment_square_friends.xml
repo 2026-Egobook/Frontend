@@ -32,12 +32,14 @@
             android:text="친구" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_square_friends_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingVertical="8dp"
             android:paddingHorizontal="24dp"
             android:layout_marginEnd="16dp"
-
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:backgroundTint="@android:color/transparent"
             android:text="친구 추가"
             android:textColor="@color/black"

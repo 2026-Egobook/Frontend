@@ -1,14 +1,16 @@
 package com.egobook.app.di
 
-import com.egobook.app.data.api.CounselingApiService
-import com.egobook.app.data.api.NotificationApiService
-import com.egobook.app.data.api.SquareApiService
+import com.egobook.app.BuildConfig
+import com.egobook.app.data.interceptor.AuthInterceptor
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -16,28 +18,35 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
-    fun provideCounselingService(retrofit: Retrofit): CounselingApiService {
-        return retrofit.create(CounselingApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideNotificationService(retrofit: Retrofit): NotificationApiService {
-        return retrofit.create(NotificationApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideSquareService(retrofit: Retrofit): SquareApiService {
-        return retrofit.create(SquareApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(
+        client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.egobook.com/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BuildConfig.BACKEND_BASE_URL)
+            .addConverterFactory(gsonConverterFactory)
+            .client(client)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGsonConverterFactory(): GsonConverterFactory {
+        return GsonConverterFactory.create(
+            GsonBuilder().create()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder().apply {
+            connectTimeout(5, TimeUnit.SECONDS)
+            readTimeout(5, TimeUnit.SECONDS)
+            writeTimeout(5, TimeUnit.SECONDS)
+            addInterceptor(authInterceptor)
+        }.build()
     }
 }
