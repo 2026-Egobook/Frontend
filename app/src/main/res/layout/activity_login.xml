@@ -17,7 +17,7 @@
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/img_login_background">
+            android:background="@drawable/img_login_background_ver2">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_login"
@@ -32,6 +32,51 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:letterSpacing="-0.03"/>
+            
+            <LinearLayout
+                android:layout_width="261dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="125dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clipToPadding="false"
+                android:clipChildren="false">
+
+                <ImageView
+                    android:id="@+id/iv_turtle"
+                    android:layout_width="136dp"
+                    android:layout_height="85.5dp"
+                    android:src="@drawable/img_turtle_login"
+                    android:elevation="10dp" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"/>
+
+                <ImageView
+                    android:id="@+id/iv_app_title"
+                    android:layout_width="200dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_app_title"/>
+                
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"/>
+
+                <TextView
+                    android:id="@+id/tv_introduce_app"
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:text="@string/introduce_app_comment"
+                    android:textSize="14sp"
+                    android:textColor="#344408"
+                    android:fontFamily="@font/arita_medium"
+                    android:gravity="center" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_start_guide"

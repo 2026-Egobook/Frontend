@@ -142,6 +142,9 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.0")
     implementation("androidx.datastore:datastore-preferences-core:1.2.0")
 
+    //ColoredShadowImageView
+    implementation("com.github.armcha:ColoredShadowImageView:1.1.0")
+
 }
 
 ksp {

@@ -5,6 +5,8 @@
     <string name="counseling_daily_praise_notification_off">일간 칭찬서가 도착하지 않아요</string>
     <string name="counseling_weekly_report_notification_on">매주 월요일 자정 에고북이 작성한 리포트가 도착해요</string>
     <string name="counseling_weekly_report_notification_off">주간 리포트가 도착하지 않아요</string>
+    <string name="introduce_app_comment">모든 이들의 평안한 날을 위해</string>
+
     <!-- TODO: Remove or change this placeholder text -->
 
     <!-- Diary Types -->
