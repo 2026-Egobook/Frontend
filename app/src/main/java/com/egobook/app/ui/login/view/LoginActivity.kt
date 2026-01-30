@@ -18,7 +18,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.egobook.app.R
-import com.egobook.app.data.local.TokenStorage
+import com.egobook.app.data.local.UserTokenStorage
 import com.egobook.app.databinding.ActivityLoginBinding
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -30,7 +30,7 @@ import com.google.android.gms.tasks.Task
 
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
-    private val tokenStorage by lazy { TokenStorage.getInstance(this) }
+    private val userTokenStorage by lazy { UserTokenStorage.getInstance(this) }
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
@@ -62,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            handleSignInResult(task)
+            handleSignInResult(task) //회원가입 성공 여부에 따른 로직
         }
 
         // Google Sign-In 옵션 설정
@@ -103,6 +103,7 @@ class LoginActivity : AppCompatActivity() {
         googleSignInLauncher.launch(signInIntent)
     }
 
+    //회원가입 성공 여부에 따른 로직
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
@@ -110,7 +111,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (idToken != null) {
                 // Google ID Token 저장
-                tokenStorage.saveGoogleIdToken(idToken)
+                userTokenStorage.saveGoogleIdToken(idToken)
 
                 Log.d(TAG, "Google Sign-In 성공")
                 Log.d(TAG, "이름: ${account.displayName}")

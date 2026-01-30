@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 /**
  * Google ID Token을 저장하고 관리하는 클래스
  */
-class TokenStorage private constructor(context: Context) {
+class UserTokenStorage private constructor(context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
@@ -22,11 +22,11 @@ class TokenStorage private constructor(context: Context) {
         private const val KEY_GOOGLE_ID_TOKEN = "google_id_token"
         
         @Volatile
-        private var INSTANCE: TokenStorage? = null
+        private var INSTANCE: UserTokenStorage? = null
         
-        fun getInstance(context: Context): TokenStorage {
+        fun getInstance(context: Context): UserTokenStorage {
             return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: TokenStorage(context.applicationContext).also { INSTANCE = it }
+                INSTANCE ?: UserTokenStorage(context.applicationContext).also { INSTANCE = it }
             }
         }
     }
