@@ -611,7 +611,7 @@
                         android:insetBottom="0dp"
                         android:text="저장하기"
                         android:textColor="@color/selector_square_button_text"
-                        app:backgroundTint="@color/selector_square_today_question_save_button_bg"
+                        app:backgroundTint="@color/selector_square_button_bg"
                         android:enabled="false"
                         app:cornerRadius="4dp"
                         app:layout_constraintBottom_toBottomOf="@id/ll_square_today_question_visibility_type"

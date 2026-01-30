@@ -1,6 +1,8 @@
 package com.egobook.app.ui.square.view
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -42,5 +44,28 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
                 }
             }
         }
+        etLetterWriteContent.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(p0: Editable?) = Unit
+            override fun beforeTextChanged(
+                p0: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) = Unit
+            override fun onTextChanged(
+                text: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                btnLetterSendAnonymous.isEnabled = !text.isNullOrBlank()
+                btnLetterSendFriend.isEnabled = !text.isNullOrBlank()
+                tvLetterWriteContentLength.text = "${text?.length}/$MAX_LENGTH"
+            }
+        })
+    }
+
+    companion object {
+        private const val MAX_LENGTH = 360
     }
 }

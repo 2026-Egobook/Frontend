@@ -65,6 +65,9 @@
         <action
             android:id="@+id/action_menu_square_to_myLettersFragment"
             app:destination="@id/myLettersFragment" />
+        <action
+            android:id="@+id/action_menu_square_to_letterWriteFragment"
+            app:destination="@id/letterWriteFragment" />
     </fragment>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
@@ -163,10 +166,10 @@
         android:label="fragment_letter_reply"
         tools:layout="@layout/fragment_letter_reply" />
     <fragment
-        android:id="@+id/letterFragment"
-        android:name="com.egobook.app.ui.square.view.LetterFragment"
+        android:id="@+id/letterWriteFragment"
+        android:name="com.egobook.app.ui.square.view.LetterWriteFragment"
         android:label="fragment_letter"
-        tools:layout="@layout/fragment_letter" />
+        tools:layout="@layout/fragment_letter_write" />
     <fragment
         android:id="@+id/squareAllRepliesFragment"
         android:name="com.egobook.app.ui.square.view.SquareAllRepliesFragment"
