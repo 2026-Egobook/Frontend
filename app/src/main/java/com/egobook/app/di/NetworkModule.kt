@@ -1,6 +1,7 @@
 package com.egobook.app.di
 
 import com.egobook.app.BuildConfig
+import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.interceptor.AuthInterceptor
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -49,4 +50,10 @@ object NetworkModule {
             addInterceptor(authInterceptor)
         }.build()
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthApiService(retrofit: Retrofit): AuthApiService =
+        retrofit.create(AuthApiService::class.java)
+
 }
