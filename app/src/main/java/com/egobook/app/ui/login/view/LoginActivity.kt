@@ -19,7 +19,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.egobook.app.R
-import com.egobook.app.data.local.UserTokenStorage
+import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.databinding.ActivityLoginBinding
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     
     @Inject
-    lateinit var userTokenStorage: UserTokenStorage
+    lateinit var userInfoStorage: UserInfoStorage
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
@@ -119,7 +119,7 @@ class LoginActivity : AppCompatActivity() {
             if (idToken != null) {
                 // Google ID Token 저장
                 lifecycleScope.launch {
-                    userTokenStorage.saveIdToken(idToken)
+                    userInfoStorage.saveIdToken(idToken)
                     
                     Log.d(TAG, "Google Sign-In 성공")
                     Log.d(TAG, "이름: ${account.displayName}")

@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.egobook.app.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -18,7 +18,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
  * 사용자 인증 토큰 및 디바이스 정보를 저장하고 관리하는 로컬 저장소
  */
 @Singleton
-class UserTokenStorage @Inject constructor(
+class UserInfoStorage @Inject constructor(
     private val context: Context
 ) {
     private val dataStore = context.dataStore
@@ -38,6 +38,24 @@ class UserTokenStorage @Inject constructor(
     fun getIdToken(): Flow<String?> {
         return dataStore.data.map { preferences ->
             preferences[KEY_ID_TOKEN]
+        }
+    }
+
+    /**
+     * Access Token 저장
+     */
+    suspend fun saveAccessToken(token: String) {
+        dataStore.edit { preferences ->
+            preferences[KEY_ACCESS_TOKEN] = token
+        }
+    }
+
+    /**
+     * Access Token 읽기
+     */
+    fun getAccessToken(): Flow<String?> {
+        return dataStore.data.map { preferences ->
+            preferences[KEY_ACCESS_TOKEN]
         }
     }
 
@@ -99,14 +117,16 @@ class UserTokenStorage @Inject constructor(
      * 모든 토큰과 디바이스 정보 저장
      */
     suspend fun saveAllTokens(
-        idToken: String,
+        accessToken: String,
         refreshToken: String,
+        idToken: String? = null,
         recoverToken: String? = null,
         deviceUid: String? = null
     ) {
         dataStore.edit { preferences ->
-            preferences[KEY_ID_TOKEN] = idToken
+            preferences[KEY_ACCESS_TOKEN] = accessToken
             preferences[KEY_REFRESH_TOKEN] = refreshToken
+            idToken?.let { preferences[KEY_ID_TOKEN] = it }
             recoverToken?.let { preferences[KEY_RECOVER_TOKEN] = it }
             deviceUid?.let { preferences[KEY_DEVICE_UID] = it }
         }
@@ -124,8 +144,13 @@ class UserTokenStorage @Inject constructor(
     //저장할 키값 종류 정의
     companion object {
         private val KEY_ID_TOKEN = stringPreferencesKey("id_token")
+
+        private val KEY_USER_EMAIL = stringPreferencesKey("user_email")
+        private val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KEY_RECOVER_TOKEN = stringPreferencesKey("recover_token")
         private val KEY_DEVICE_UID = stringPreferencesKey("device_uid")
+
+
     }
 }

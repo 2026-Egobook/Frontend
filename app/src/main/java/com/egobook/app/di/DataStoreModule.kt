@@ -1,7 +1,7 @@
 package com.egobook.app.di
 
 import android.content.Context
-import com.egobook.app.data.local.UserTokenStorage
+import com.egobook.app.data.local.UserInfoStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,5 +17,5 @@ object DataStoreModule {
     @Singleton
     fun provideUserTokenStorage(
         @ApplicationContext context: Context
-    ): UserTokenStorage = UserTokenStorage(context)
+    ): UserInfoStorage = UserInfoStorage(context)
 }

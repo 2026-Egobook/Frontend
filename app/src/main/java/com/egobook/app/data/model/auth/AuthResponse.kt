@@ -51,7 +51,7 @@ data class AccessTokenResponse(
     val data: TokenData
 )
 
-////Tokens 재발급 - refreshToken까지 만료시
+//Tokens 재발급 - refreshToken까지 만료시
 @Serializable
 data class TokensResponse(
     @SerialName("status")

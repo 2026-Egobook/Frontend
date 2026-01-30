@@ -7,7 +7,9 @@ import com.egobook.app.data.model.auth.TokenRequestByGoogle
 import com.egobook.app.data.model.auth.TokenRequestByGuest
 import com.egobook.app.data.model.auth.TokenResponseAgainByGuest
 import com.egobook.app.data.model.auth.TokenResponseByGoogle
+import com.egobook.app.data.model.auth.TokenResponseByGuest
 import com.egobook.app.data.model.auth.TokensRequest
+import com.egobook.app.data.model.auth.TokensResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -22,9 +24,9 @@ interface AuthApiService {
 
     //Guest 최초 둘러보기
     @POST("auth/guest/login")
-    suspend fun guestSignUp(
+    suspend fun guestLogin(
         @Body request: TokenRequestByGuest
-    ): Response<TokenResponseByGoogle>
+    ): Response<TokenResponseByGuest>
 
     //액세스토큰 재발급
     @POST("auth/refresh")
@@ -36,7 +38,7 @@ interface AuthApiService {
     @POST("auth/google/recertification")
     suspend fun reGetTokens(
         @Body request: TokensRequest
-    ): Response<TokensRequest>
+    ): Response<TokensResponse>
 
     //Guest로그인 상태에서 Tokens 재발급
     @POST("auth/google/recertification")
