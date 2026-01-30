@@ -14,6 +14,8 @@ class AccountFragment : Fragment() {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
 
+    private val blurRadius = 5f
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,10 +29,26 @@ class AccountFragment : Fragment() {
         setClickListeners()
     }
 
+    private fun setupBlur() {
+        binding.blurView.setupWith(binding.blurTarget)
+            .setBlurRadius(blurRadius)
+            .setBlurAutoUpdate(true)
+    }
+    fun clearBlur() {
+        binding.blurView.visibility = View.GONE
+    }
+
+
     private fun setClickListeners() {
         binding.apply {
             btnBack.setOnClickListener {
                 findNavController().navigate(R.id.action_accountFragment_to_homeFragment)
+            }
+
+            btnIntegrate.setOnClickListener {
+                binding.blurView.visibility = View.VISIBLE
+                AccountBottomSheetFragment()
+                    .show(childFragmentManager, AccountBottomSheetFragment.TAG)
             }
         }
 

@@ -49,8 +49,7 @@
                     android:id="@+id/iv_turtle"
                     android:layout_width="136dp"
                     android:layout_height="85.5dp"
-                    android:src="@drawable/img_turtle_login"
-                    android:elevation="10dp" />
+                    android:src="@drawable/img_turtle_login"/>
 
                 <Space
                     android:layout_width="match_parent"

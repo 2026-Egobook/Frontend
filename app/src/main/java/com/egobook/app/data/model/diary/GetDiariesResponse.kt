@@ -1,5 +1,6 @@
 package com.egobook.app.data.model.diary
 
+
 data class GetDiariesResponse (
     val dailyCount: Int,
     val diaries: DiarySliceResponse
