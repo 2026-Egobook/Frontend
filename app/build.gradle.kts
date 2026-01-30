@@ -127,12 +127,20 @@ dependencies {
 
     // Google Sign-In for Spring Backend
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-    
+
+    //Glide
     implementation("com.github.bumptech.glide:glide:5.0.5")
+
+    //Paging
     implementation("androidx.paging:paging-runtime:3.3.6")
 
     //SplashScreen API
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.2.0")
+    implementation("androidx.datastore:datastore-preferences-core:1.2.0")
+
 }
 
 ksp {
