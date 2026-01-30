@@ -12,4 +12,8 @@ class AuthInterceptor @Inject constructor(): Interceptor {
             .build()
         return chain.proceed(newRequest)
     }
+
+    companion object {
+        const val USER_ACCESS_TOKEN = ""
+    }
 }
