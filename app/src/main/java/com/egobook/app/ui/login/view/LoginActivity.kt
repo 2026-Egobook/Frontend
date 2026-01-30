@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.egobook.app.BuildConfig
 import com.egobook.app.R
 import com.egobook.app.data.local.TokenStorage
 import com.egobook.app.databinding.ActivityLoginBinding
@@ -68,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Google Sign-In 옵션 설정
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .requestIdToken(getString(R.string.google_web_client_id))
             .requestEmail()
             .build()
 
