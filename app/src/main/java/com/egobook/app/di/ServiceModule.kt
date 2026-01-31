@@ -17,12 +17,6 @@ import javax.inject.Singleton
 object ServiceModule {
     @Provides
     @Singleton
-    fun provideAuthService(retrofit: Retrofit): AuthApiService {
-        return retrofit.create(AuthApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
     fun provideCounselingService(retrofit: Retrofit): CounselingApiService {
         return retrofit.create(CounselingApiService::class.java)
     }
@@ -44,4 +38,9 @@ object ServiceModule {
     fun provideQuestionService(retrofit: Retrofit): QuestionApiService {
         return retrofit.create(QuestionApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthApiService =
+        retrofit.create(AuthApiService::class.java)
 }

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -20,9 +21,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.egobook.app.MainActivity
 import com.egobook.app.R
-import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.databinding.ActivityLoginBinding
-import com.egobook.app.ui.onboarding.view.OnboardingActivity
+import com.egobook.app.ui.login.viewmodel.LoginViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -31,14 +31,11 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
-    
-    @Inject
-    lateinit var userInfoStorage: UserInfoStorage
+    private val viewModel: LoginViewModel by viewModels()
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
@@ -58,9 +55,10 @@ class LoginActivity : AppCompatActivity() {
         }
 
         setupGoogleSignIn()
-        setupGuideText()
-        setupBlur()
-        setupClickListeners()
+        setupViewModel() //
+        setupGuideText() //폰트 커스텀 적용
+        setupBlur() //블러뷰
+        setupClickListeners() //클릭리스너 설정
 
     }
 
@@ -115,28 +113,12 @@ class LoginActivity : AppCompatActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            val idToken = account.idToken
+            val idToken = account.idToken //id토큰 추출
 
             if (idToken != null) {
-                // Google ID Token 저장
+                // ViewModel에서 로그인 시도
                 lifecycleScope.launch {
-                    userInfoStorage.saveIdToken(idToken)
-                    
-                    Log.d(TAG, "Google Sign-In 성공")
-                    Log.d(TAG, "이름: ${account.displayName}")
-                    Log.d(TAG, "이메일: ${account.email}")
-                    Log.d(TAG, "ID Token 저장 완료")
-
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "로그인 성공: ${account.displayName}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    // MainActivity로 이동 - 임시 구현
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    viewModel.signUpWithGoogleToken(idToken) //id토큰 전달
                 }
             } else {
                 Log.e(TAG, "ID Token이 null입니다")
@@ -152,12 +134,45 @@ class LoginActivity : AppCompatActivity() {
             Log.e(TAG, "Google Sign-In 실패: ${e.statusCode}", e)
             Toast.makeText(
                 this,
-                "로그인 실패: ${e.message}",
+                "회원가입 실패: ${e.message}",
                 Toast.LENGTH_SHORT
             ).show()
         }
     }
 
+    //뷰모델의 loginUiState 관찰(구독)
+    private fun setupViewModel() {
+        lifecycleScope.launch {
+            viewModel.loginUiState.collect { state ->
+                when (state) {
+                    is LoginViewModel.LoginUiState.Success -> {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "회원가입 성공!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToMain()
+                    }
+                    is LoginViewModel.LoginUiState.Error -> {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "회원가입 실패: ${state.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun navigateToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+//========================================특정 char 폰트 커스텀===========================================================
     private fun setupGuideText() {
         val fullText = "시작 시 이용약관 및\n개인정보 수집 및 이용에 동의하게 됩니다"
         val spannableString = SpannableString(fullText)
@@ -200,7 +215,9 @@ class LoginActivity : AppCompatActivity() {
         private fun applyCustomTypeface(paint: TextPaint) {
             paint.typeface = typeface
         }
+
     }
+//=======================================================================================================================
 
     companion object {
         private const val TAG = "LoginActivity"

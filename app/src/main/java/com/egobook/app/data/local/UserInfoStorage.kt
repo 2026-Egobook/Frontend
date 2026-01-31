@@ -144,8 +144,6 @@ class UserInfoStorage @Inject constructor(
     //저장할 키값 종류 정의
     companion object {
         private val KEY_ID_TOKEN = stringPreferencesKey("id_token")
-
-        private val KEY_USER_EMAIL = stringPreferencesKey("user_email")
         private val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KEY_RECOVER_TOKEN = stringPreferencesKey("recover_token")
