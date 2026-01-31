@@ -39,12 +39,13 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import org.json.JSONObject
 import android.util.Base64
-import kotlin.coroutines.resumeWithException
 
 @AndroidEntryPoint
 class LoginActivity @Inject constructor(
     private val userInfoStorage: UserInfoStorage
 ) : AppCompatActivity() {
+    var keepSplash = true
+
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by viewModels()
 
@@ -54,9 +55,13 @@ class LoginActivity @Inject constructor(
     private val blurRadius = 5f
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Thread.sleep(3000) // 3초 지연
-        splashLogic() //자동 로그인 가능여부 처리
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { keepSplash }
+
+        lifecycleScope.launch {
+            splashLogic()
+            keepSplash = false  // 로직 완료 후 사라짐
+        }
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -77,7 +82,7 @@ class LoginActivity @Inject constructor(
 
     }
 
-    //======================================스플래시 회면에서의 자동 로그인 시도===============================================
+    //===========================================스플래시 회면에서의 자동 로그인 시도===============================================
     private fun splashLogic() {
         lifecycleScope.launch {
 
@@ -91,7 +96,7 @@ class LoginActivity @Inject constructor(
             // Access Token 유효 -> 로그인 성공
             if (accessToken != null && isTokenValid(accessToken)) {
                 Log.d(TAG, "저장된 AccessToken 유효 → 자동 로그인")
-                val account = performSilentSignIn()
+                performSilentSignIn()
                 navigateToMain()
                 return@launch
             }
@@ -100,12 +105,11 @@ class LoginActivity @Inject constructor(
             if (refreshToken != null && isTokenValid(refreshToken)) {
                 Log.d(TAG, "Access Token 만료 → Refresh 토큰을 통한 갱신 시도")
                 TODO("액세스 토큰 갱신 로직구현 - refreshAccessToken() 호출 후 결과 처리")
-                val account = performSilentSignIn()
+                performSilentSignIn()
                 navigateToMain()
                 return@launch
             } else {
                 Log.d(TAG, "Refresh 토큰도 만료 → 로그인 화면 유지")
-                return@launch
             }
         }
     }
@@ -123,6 +127,7 @@ class LoginActivity @Inject constructor(
 
     //토큰 유효성 체크 (JWT exp 필드 확인)
     fun isTokenValid(token: String): Boolean {
+        //JWT 파싱
         val parts = token.split(".")
         if (parts.size != 3) return false
 
@@ -257,6 +262,7 @@ class LoginActivity @Inject constructor(
         finish()
     }
 
+
 //========================================특정 char 폰트 커스텀===========================================================
     private fun setupGuideText() {
         val fullText = "시작 시 이용약관 및\n개인정보 수집 및 이용에 동의하게 됩니다"
@@ -285,9 +291,7 @@ class LoginActivity @Inject constructor(
         binding.tvStartGuide.text = spannableString
     }
 
-    /**
-     * 모든 API 레벨에서 커스텀 폰트를 적용하기 위한 Span 클래스
-     */
+    //모든 API 레벨에서 커스텀 폰트를 적용하기 위한 Span 클래스
     private class CustomTypefaceSpan(private val typeface: Typeface) : MetricAffectingSpan() {
         override fun updateDrawState(ds: TextPaint) {
             applyCustomTypeface(ds)
@@ -302,7 +306,9 @@ class LoginActivity @Inject constructor(
         }
 
     }
+
 //=======================================================================================================================
+
 
     companion object {
         private const val TAG = "LoginActivity"
