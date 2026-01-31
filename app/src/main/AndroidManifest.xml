@@ -16,12 +16,10 @@
         android:theme="@style/Theme.Egobook"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".SplashActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.login.view.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Splash"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

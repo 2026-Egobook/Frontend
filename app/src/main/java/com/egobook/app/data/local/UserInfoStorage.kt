@@ -121,14 +121,12 @@ class UserInfoStorage @Inject constructor(
         refreshToken: String,
         idToken: String? = null,
         recoverToken: String? = null,
-        deviceUid: String? = null
     ) {
         dataStore.edit { preferences ->
             preferences[KEY_ACCESS_TOKEN] = accessToken
             preferences[KEY_REFRESH_TOKEN] = refreshToken
             idToken?.let { preferences[KEY_ID_TOKEN] = it }
             recoverToken?.let { preferences[KEY_RECOVER_TOKEN] = it }
-            deviceUid?.let { preferences[KEY_DEVICE_UID] = it }
         }
     }
 

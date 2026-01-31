@@ -16,11 +16,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.egobook.app.MainActivity
 import com.egobook.app.R
+import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.databinding.ActivityLoginBinding
 import com.egobook.app.ui.login.viewmodel.LoginViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -30,10 +32,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
+import kotlin.coroutines.resume
+import org.json.JSONObject
+import android.util.Base64
+import kotlin.coroutines.resumeWithException
 
 @AndroidEntryPoint
-class LoginActivity : AppCompatActivity() {
+class LoginActivity @Inject constructor(
+    private val userInfoStorage: UserInfoStorage
+) : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by viewModels()
 
@@ -43,6 +54,10 @@ class LoginActivity : AppCompatActivity() {
     private val blurRadius = 5f
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Thread.sleep(3000) // 3초 지연
+        splashLogic() //자동 로그인 가능여부 처리
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
@@ -60,6 +75,84 @@ class LoginActivity : AppCompatActivity() {
         setupBlur() //블러뷰
         setupClickListeners() //클릭리스너 설정
 
+    }
+
+    private fun splashLogic() {
+        lifecycleScope.launch {
+            val account = suspendCancellableCoroutine<GoogleSignInAccount?> { continuation ->
+                googleSignInClient.silentSignIn().addOnSuccessListener { account ->
+                    continuation.resume(account)
+                }.addOnFailureListener { exception ->
+                    Log.e(TAG, "Silent sign-in failed", exception)
+                    continuation.resume(null)
+                }
+            }
+
+            if (account != null && account.idToken != null) {
+                // 저장된 액세스 토큰 확인(datastore에서 가지고옴)
+                val accessToken = userInfoStorage.getAccessToken().first()
+
+                if (accessToken != null) {
+                    if (isAccessTokenValid(accessToken)) {
+                        // 액세스 토큰 유효함
+                        Log.d(TAG, "Silent Google Login 성공 - 저장된 토큰 유효함")
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "자동 로그인 성공",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToMain()
+                    } else {
+                        // 액세스 토큰 만료됨 - 리프레시 토큰으로 갱신 시도
+                        TODO("액세스 토큰 갱신 로직구현 - refreshAccessToken() 호출 후 결과 처리")
+                    }
+                }
+            } else {
+                Log.d(TAG, "Silent Google Login 실패 - 로그인 필요")
+                // 자동 로그인 실패하면 아무것도 하지 않음 (로그인 화면 표시)
+            }
+        }
+
+        // 리프레시 토큰 만료 분기
+        lifecycleScope.launch {
+            val tokenResult = attemptRefreshAccessToken()
+            if (tokenResult.isSuccess) {
+                // 리프레시 성공 - 액세스 토큰 갱신됨
+                TODO("액세스 토큰으로 API 호출 후 메인 이동")
+            } else {
+                // 리프레시 토큰도 만료됨 - 전체 토큰 재발급 시도
+                TODO("전체 토큰 재발급 로직구현 - refreshTokens() 호출 후 결과 처리")
+            }
+        }
+    }
+
+    //액세스 토큰 유효성 체크
+    fun isAccessTokenValid(token: String): Boolean {
+        val parts = token.split(".")
+        if (parts.size != 3) return false
+
+        // payload 디코딩 (Base64 URL Safe)
+        val payload = try {
+            val decoded = Base64.decode(parts[1], Base64.URL_SAFE or Base64.NO_WRAP)
+            String(decoded)
+        } catch (e: Exception) {
+            return false
+        }
+
+        // JSON에서 exp 필드 추출
+        val exp = try {
+            JSONObject(payload).getLong("exp")
+        } catch (e: Exception) {
+            return false
+        }
+
+        val currentTime = System.currentTimeMillis() / 1000
+        return exp > currentTime
+    }
+
+
+    private suspend fun attemptRefreshAccessToken(): Result<Unit> {
+        return TODO("refreshAccessToken 호출 및 결과 반환 로직 구현")
     }
 
     private fun setupGoogleSignIn() {
