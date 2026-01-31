@@ -12,5 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
-        tools:listitem="@layout/item_friend_list"/>
+        tools:listitem="@layout/item_friend_popup_list"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 </com.google.android.material.card.MaterialCardView>
