@@ -3,18 +3,24 @@ package com.egobook.app.ui.square.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.GetFriendListUseCase
+import com.egobook.app.domain.usecase.letter.SendLetterUseCase
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.model.friend.toPresentation
+import com.egobook.app.ui.square.model.letter.SendLetterModel
+import com.egobook.app.ui.square.model.letter.toDomain
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LetterViewModel @Inject constructor(
-    private val getFriendListUseCase: GetFriendListUseCase
+    private val getFriendListUseCase: GetFriendListUseCase,
+    private val sendLetterUseCase: SendLetterUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -27,6 +33,20 @@ class LetterViewModel @Inject constructor(
                 _friendList.value = UiState.Success(domainList.map { it.toPresentation() })
             }.onFailure { error ->
                 _friendList.value = UiState.Failure(error.message)
+            }
+        }
+    }
+
+    private val _sendLetterResult = MutableSharedFlow<UiState<Unit>>()
+    val sendLetterResult = _sendLetterResult.asSharedFlow()
+
+    fun sendLetter(letter: SendLetterModel) {
+        viewModelScope.launch {
+            _sendLetterResult.emit(UiState.Loading)
+            sendLetterUseCase(letter = letter.toDomain()).onSuccess {
+                _sendLetterResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _sendLetterResult.emit(UiState.Failure(error.message))
             }
         }
     }

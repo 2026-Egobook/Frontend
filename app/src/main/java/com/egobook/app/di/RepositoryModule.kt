@@ -3,11 +3,13 @@ package com.egobook.app.di
 import com.egobook.app.data.repository.CounselingRepositoryImpl
 import com.egobook.app.data.repository.DiaryRepositoryImpl
 import com.egobook.app.data.repository.FriendsRepositoryImpl
+import com.egobook.app.data.repository.LetterRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
 import com.egobook.app.data.repository.QuestionRepositoryImpl
 import com.egobook.app.domain.repository.DiaryRepository
 import com.egobook.app.domain.repository.FriendsRepository
+import com.egobook.app.domain.repository.LetterRepository
 import com.egobook.app.domain.repository.NotificationRepository
 import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
@@ -38,4 +40,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLetterRepository(impl: LetterRepositoryImpl): LetterRepository
 }

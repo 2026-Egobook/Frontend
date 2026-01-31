@@ -23,7 +23,7 @@ import com.egobook.app.databinding.FragmentLetterWriteBinding
 import com.egobook.app.databinding.LayoutPopupFriendListBinding
 import com.egobook.app.ui.square.adapter.FriendPopupListAdapter
 import com.egobook.app.ui.square.model.friend.FriendModel
-import com.egobook.app.ui.square.model.letter.LetterSendType
+import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
 import com.google.android.material.card.MaterialCardView
@@ -102,7 +102,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
         }
         btnLetterSendAnonymous.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
-            val dialog = LetterSendDialog(LetterSendType.RANDOM).apply {
+            val dialog = LetterSendDialog(LetterMode.RANDOM).apply {
                 isCancelable = false
             }
             dialog.show(childFragmentManager, LetterSendDialog.TAG)

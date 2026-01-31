@@ -2,6 +2,7 @@ package com.egobook.app.di
 
 import com.egobook.app.data.api.CounselingApiService
 import com.egobook.app.data.api.FriendsApiService
+import com.egobook.app.data.api.LetterApiService
 import com.egobook.app.data.api.NotificationApiService
 import com.egobook.app.data.api.QuestionApiService
 import dagger.Module
@@ -36,5 +37,11 @@ object ServiceModule {
     @Singleton
     fun provideQuestionService(retrofit: Retrofit): QuestionApiService {
         return retrofit.create(QuestionApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLetterService(retrofit: Retrofit): LetterApiService {
+        return retrofit.create(LetterApiService::class.java)
     }
 }
