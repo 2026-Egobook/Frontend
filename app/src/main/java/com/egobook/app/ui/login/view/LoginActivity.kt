@@ -18,6 +18,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.egobook.app.MainActivity
 import com.egobook.app.R
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.databinding.ActivityLoginBinding
@@ -132,8 +133,8 @@ class LoginActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    // OnboardingActivity로 이동
-                    val intent = Intent(this@LoginActivity, OnboardingActivity::class.java)
+                    // MainActivity로 이동 - 임시 구현
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }

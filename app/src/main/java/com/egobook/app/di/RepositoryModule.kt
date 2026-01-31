@@ -5,10 +5,12 @@ import com.egobook.app.data.repository.DiaryRepositoryImpl
 import com.egobook.app.data.repository.FriendsRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
+import com.egobook.app.data.repository.auth.AuthRepositoryImpl
 import com.egobook.app.data.repository.QuestionRepositoryImpl
 import com.egobook.app.domain.repository.DiaryRepository
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.NotificationRepository
+import com.egobook.app.domain.repository.auth.AuthRepository
 import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
 import dagger.Module
@@ -34,6 +36,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindQuestionRepository(impl: QuestionRepositoryImpl): QuestionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
     @Binds
     @Singleton

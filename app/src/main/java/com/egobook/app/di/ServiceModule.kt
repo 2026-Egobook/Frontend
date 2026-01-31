@@ -1,5 +1,6 @@
 package com.egobook.app.di
 
+import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.api.CounselingApiService
 import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.api.NotificationApiService
@@ -14,6 +15,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceModule {
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthApiService {
+        return retrofit.create(AuthApiService::class.java)
+    }
+
     @Provides
     @Singleton
     fun provideCounselingService(retrofit: Retrofit): CounselingApiService {
