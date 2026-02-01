@@ -1,5 +1,6 @@
 package com.egobook.app.di
 
+import com.egobook.app.data.api.AIApiService
 import com.egobook.app.data.api.CounselingApiService
 import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.api.LetterApiService
@@ -17,31 +18,38 @@ import javax.inject.Singleton
 object ServiceModule {
     @Provides
     @Singleton
-    fun provideCounselingService(retrofit: Retrofit): CounselingApiService {
+    fun provideCounselingService(@BackendApi retrofit: Retrofit): CounselingApiService {
         return retrofit.create(CounselingApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideNotificationService(retrofit: Retrofit): NotificationApiService {
+    fun provideNotificationService(@BackendApi retrofit: Retrofit): NotificationApiService {
         return retrofit.create(NotificationApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideFriendsService(retrofit: Retrofit): FriendsApiService {
+    fun provideFriendsService(@BackendApi retrofit: Retrofit): FriendsApiService {
         return retrofit.create(FriendsApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideQuestionService(retrofit: Retrofit): QuestionApiService {
+    fun provideQuestionService(@BackendApi retrofit: Retrofit): QuestionApiService {
         return retrofit.create(QuestionApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideLetterService(retrofit: Retrofit): LetterApiService {
+    fun provideLetterService(@BackendApi retrofit: Retrofit): LetterApiService {
         return retrofit.create(LetterApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideAIService(@AIApi retrofit: Retrofit): AIApiService {
+        return retrofit.create(AIApiService::class.java)
+    }
+
 }

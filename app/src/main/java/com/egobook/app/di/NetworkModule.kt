@@ -18,12 +18,27 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
-    fun provideRetrofit(
-        client: OkHttpClient,
+    @BackendApi
+    fun provideBackendRetrofit(
+        @BackendApi client: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_BASE_URL)
+            .addConverterFactory(gsonConverterFactory)
+            .client(client)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @AIApi
+    fun provideAIRetrofit(
+        @AIApi client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.AI_BASE_URL)
             .addConverterFactory(gsonConverterFactory)
             .client(client)
             .build()
@@ -39,13 +54,28 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
+    @BackendApi
+    fun provideBackendOkHttpClient(
         authInterceptor: AuthInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder().apply {
             connectTimeout(5, TimeUnit.SECONDS)
             readTimeout(5, TimeUnit.SECONDS)
             writeTimeout(5, TimeUnit.SECONDS)
+            addInterceptor(authInterceptor)
+        }.build()
+    }
+
+    @Provides
+    @Singleton
+    @AIApi
+    fun provideAIOkHttpClient(
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder().apply {
+            connectTimeout(10, TimeUnit.SECONDS)
+            readTimeout(60, TimeUnit.SECONDS)
+            writeTimeout(60, TimeUnit.SECONDS)
             addInterceptor(authInterceptor)
         }.build()
     }

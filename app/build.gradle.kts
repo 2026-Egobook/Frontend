@@ -36,8 +36,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.egobook.app.HiltTestRunner"
 
-        val baseUrl = localProperties.getProperty("BACKEND_BASE_URL")
-        buildConfigField("String", "BACKEND_BASE_URL", "\"$baseUrl\"")
+        val backendBaseUrl = localProperties.getProperty("BACKEND_BASE_URL")
+        buildConfigField("String", "BACKEND_BASE_URL", "\"$backendBaseUrl\"")
+        val aiBaseUrl = localProperties.getProperty("AI_BASE_URL")
+        buildConfigField("String", "AI_BASE_URL", "\"$aiBaseUrl\"")
     }
 
     buildTypes {
