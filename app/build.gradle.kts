@@ -127,8 +127,10 @@ dependencies {
     implementation("me.relex:circleindicator:2.1.6")
     implementation("com.github.Dimezis:BlurView:version-3.2.0")
 
-    // Google Sign-In for Spring Backend
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    //Credential Google Sign-In
+    implementation("androidx.credentials:credentials:1.6.0-rc01")
+    implementation("androidx.credentials:credentials-play-services-auth:1.6.0-rc01")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.2.0")
 
     //Glide
     implementation("com.github.bumptech.glide:glide:5.0.5")

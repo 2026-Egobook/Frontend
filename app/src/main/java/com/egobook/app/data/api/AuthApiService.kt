@@ -2,7 +2,7 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.auth.AccessTokenRequest
 import com.egobook.app.data.model.auth.AccessTokenResponse
-import com.egobook.app.data.model.auth.TokenRequestAgainByGuest
+import com.egobook.app.data.model.auth.TokensRequestAgainByGuest
 import com.egobook.app.data.model.auth.TokenRequestByGoogle
 import com.egobook.app.data.model.auth.TokenRequestByGuest
 import com.egobook.app.data.model.auth.TokenResponseAgainByGuest
@@ -43,7 +43,7 @@ interface AuthApiService {
     //Guest로그인 상태에서 Tokens 재발급
     @POST("auth/google/recertification")
     suspend fun reGetTokensByGuest(
-        @Body request: TokenRequestAgainByGuest
+        @Body request: TokensRequestAgainByGuest
     ): Response<TokenResponseAgainByGuest>
 
 

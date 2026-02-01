@@ -24,24 +24,6 @@ class UserInfoStorage @Inject constructor(
     private val dataStore = context.dataStore
 
     /**
-     * ID Token 저장
-     */
-    suspend fun saveIdToken(token: String) {
-        dataStore.edit { preferences ->
-            preferences[KEY_ID_TOKEN] = token
-        }
-    }
-
-    /**
-     * ID Token 읽기
-     */
-    fun getIdToken(): Flow<String?> {
-        return dataStore.data.map { preferences ->
-            preferences[KEY_ID_TOKEN]
-        }
-    }
-
-    /**
      * Access Token 저장
      */
     suspend fun saveAccessToken(token: String) {
@@ -125,7 +107,6 @@ class UserInfoStorage @Inject constructor(
         dataStore.edit { preferences ->
             preferences[KEY_ACCESS_TOKEN] = accessToken
             preferences[KEY_REFRESH_TOKEN] = refreshToken
-            idToken?.let { preferences[KEY_ID_TOKEN] = it }
             recoverToken?.let { preferences[KEY_RECOVER_TOKEN] = it }
         }
     }
@@ -141,7 +122,6 @@ class UserInfoStorage @Inject constructor(
 
     //저장할 키값 종류 정의
     companion object {
-        private val KEY_ID_TOKEN = stringPreferencesKey("id_token")
         private val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KEY_RECOVER_TOKEN = stringPreferencesKey("recover_token")

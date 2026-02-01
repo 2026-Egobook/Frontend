@@ -32,9 +32,9 @@ data class TokensRequest(
     val idToken: String
 )
 
-//Guest로그인 상태에서 Token 재발급
+//Guest로그인 상태에서 Tokens 재발급
 @Serializable
-data class TokenRequestAgainByGuest(
+data class TokensRequestAgainByGuest(
     @SerialName("deviceUid")
     val deviceUid: String,
 
