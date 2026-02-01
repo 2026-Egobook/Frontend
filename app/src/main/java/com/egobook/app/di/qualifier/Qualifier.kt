@@ -1,4 +1,4 @@
-package com.egobook.app.di
+package com.egobook.app.di.qualifier
 
 import jakarta.inject.Qualifier
 

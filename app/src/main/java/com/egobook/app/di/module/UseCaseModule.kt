@@ -1,4 +1,4 @@
-package com.egobook.app.di
+package com.egobook.app.di.module
 
 import com.egobook.app.domain.repository.DiaryRepository
 import com.egobook.app.domain.usecase.diaryusecase.AddDiary

@@ -1,7 +1,9 @@
-package com.egobook.app.di
+package com.egobook.app.di.module
 
 import com.egobook.app.BuildConfig
 import com.egobook.app.data.interceptor.AuthInterceptor
+import com.egobook.app.di.qualifier.AIApi
+import com.egobook.app.di.qualifier.BackendApi
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides

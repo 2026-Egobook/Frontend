@@ -1,4 +1,4 @@
-package com.egobook.app.di
+package com.egobook.app.di.module
 
 import com.egobook.app.data.api.AIApiService
 import com.egobook.app.data.api.CounselingApiService
@@ -6,6 +6,8 @@ import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.api.LetterApiService
 import com.egobook.app.data.api.NotificationApiService
 import com.egobook.app.data.api.QuestionApiService
+import com.egobook.app.di.qualifier.AIApi
+import com.egobook.app.di.qualifier.BackendApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

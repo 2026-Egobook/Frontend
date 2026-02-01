@@ -1,4 +1,4 @@
-package com.egobook.app.di
+package com.egobook.app.di.module
 
 import com.egobook.app.data.repository.CounselingRepositoryImpl
 import com.egobook.app.data.repository.DiaryRepositoryImpl
