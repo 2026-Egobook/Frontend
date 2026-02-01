@@ -19,6 +19,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.first
 import com.egobook.app.MainActivity
 import com.egobook.app.R
 import com.egobook.app.data.local.UserInfoStorage
@@ -57,12 +58,14 @@ class LoginActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { keepSplash }
 
-        lifecycleScope.launch {
-            splashLogic()
-            keepSplash = false  // 로직 완료 후 사라짐
-        }
-
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            try {
+                splashLogic()
+            } finally {
+                keepSplash = false
+            }
+        }
         enableEdgeToEdge()
         setContentView(binding.root)
 
@@ -83,7 +86,16 @@ class LoginActivity : AppCompatActivity() {
 
     //===========================================스플래시 회면에서의 자동 로그인 시도===============================================
     private suspend fun splashLogic() {
+        // 리프레시 토큰 먼저 확인
+        val refreshToken = userInfoStorage.getRefreshToken().first()
+        val hasRefreshToken = !refreshToken.isNullOrEmpty()
 
+        if (!hasRefreshToken) {
+            Log.d(TAG, "리프레시 토큰 없음 → 로그인 화면 표시")
+            return@splashLogic // 자동 로그인 시도하지 않음
+        }
+
+        // 리프레시 토큰이 있으면 구글 자동 로그인 시도
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(true)
             .setServerClientId(getString(R.string.google_web_client_id))
@@ -102,7 +114,7 @@ class LoginActivity : AppCompatActivity() {
             handleSignIn(result)
         } catch (e: GetCredentialException) {
             // 자동 로그인 실패 -> 로그인 액티비티로 이동
-            Log.d(TAG, "회원가입한 적 없음 → 로그인 화면으로 이동")
+            Log.d(TAG, "자동 로그인 실패 → 로그인 화면 표시")
         }
     }
 
