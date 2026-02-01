@@ -3,11 +3,14 @@ package com.egobook.app.ui.square.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.GetFriendListUseCase
+import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.model.friend.toPresentation
+import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
 import com.egobook.app.ui.square.model.letter.toDomain
+import com.egobook.app.ui.square.model.letter.toPresentation
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LetterViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase,
-    private val sendLetterUseCase: SendLetterUseCase
+    private val sendLetterUseCase: SendLetterUseCase,
+    private val detectAbusiveContentUseCase: DetectAbusiveContentUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -47,6 +51,20 @@ class LetterViewModel @Inject constructor(
                 _sendLetterResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _sendLetterResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _detectAbusiveContentResult = MutableSharedFlow<UiState<AbusiveContentModel>>()
+    val detectAbusiveContentResult = _detectAbusiveContentResult.asSharedFlow()
+
+    fun detectAbusiveContent(text: String) {
+        viewModelScope.launch {
+            _detectAbusiveContentResult.emit(UiState.Loading)
+            detectAbusiveContentUseCase(text = text).onSuccess { domain ->
+                _detectAbusiveContentResult.emit(UiState.Success(domain.toPresentation()))
+            }.onFailure { error ->
+                _detectAbusiveContentResult.emit(UiState.Failure(error.message))
             }
         }
     }
