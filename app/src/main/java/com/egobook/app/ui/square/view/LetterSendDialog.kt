@@ -10,8 +10,9 @@ import com.egobook.app.R
 import com.egobook.app.databinding.DialogLetterSendBinding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.domain.model.square.letter.LetterMode
+import com.egobook.app.ui.square.model.friend.FriendModel
 
-class LetterSendDialog(private val type: LetterMode): DialogFragment(R.layout.dialog_letter_send) {
+class LetterSendDialog(private val type: LetterMode, private val friendInfo: FriendModel? = null): DialogFragment(R.layout.dialog_letter_send) {
 
     private lateinit var binding: DialogLetterSendBinding
 
@@ -31,7 +32,7 @@ class LetterSendDialog(private val type: LetterMode): DialogFragment(R.layout.di
     private fun initViews() = with(binding) {
         when(type) {
             LetterMode.FRIEND -> {
-                tvLetterSendTitle.text = "친구이름에게\n편지를 보낼까요?"
+                tvLetterSendTitle.text = "${friendInfo?.name}에게\n편지를 보낼까요?"
                 tvLetterSendDescription.text = "상대에게 내 이름이 보여요"
             }
             LetterMode.RANDOM -> {

@@ -102,7 +102,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
         }
         btnLetterSendAnonymous.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
-            val dialog = LetterSendDialog(LetterMode.RANDOM).apply {
+            val dialog = LetterSendDialog(LetterMode.RANDOM, friendInfo = null).apply {
                 isCancelable = false
             }
             dialog.show(childFragmentManager, LetterSendDialog.TAG)
@@ -131,6 +131,9 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
                 tvLetterWriteReceiver.text = "To ${friendInfo.name}"
                 tvLetterWriteSender.text = "From 로그인한 유저" // TODO: 나중에 유저 정보 받아오기
                 popupWindow.dismiss()
+                val dialog = LetterSendDialog(type = LetterMode.FRIEND, friendInfo = friendInfo).apply { isCancelable = false }
+                dialog.show(childFragmentManager, LetterSendDialog.TAG)
+                applyScreenBlur(BlurLevel.BASE)
             }
             val dividerDrawable = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
