@@ -47,7 +47,6 @@ class LoginActivity : AppCompatActivity() {
     @Inject lateinit var userInfoStorage: UserInfoStorage
     private lateinit var request: GetCredentialRequest //로그인 요청 -> 구글에서 id토큰 받아오는 request
     private var keepSplash = true
-    private var isNavigatingToMain = false
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by viewModels()
     private val blurRadius = 5f
@@ -118,31 +117,6 @@ class LoginActivity : AppCompatActivity() {
 
     //=======================================================================================================================
 
-    private fun handleSignIn(result: GetCredentialResponse) {
-
-        val credential = result.credential
-
-        // 기대하는 건 Google 로그인뿐
-        if (credential is CustomCredential &&
-            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-        ) {
-            try {
-                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                val idToken = googleIdTokenCredential.idToken
-
-                Log.d(TAG, "Google ID Token 받음")
-
-                // 발급받은 id토큰으로 회원가입 시도
-                viewModel.onEvent(LoginEvent.TrySingInByGoogle(idToken))
-
-            } catch (e: GoogleIdTokenParsingException) {
-                Log.e(TAG, "구글 토큰 파싱 실패", e)
-            }
-
-        } else {
-            Log.e(TAG, "구글 로그인 credential 아님")
-        }
-    }
 
     //토큰 유효성 체크
     fun isTokenValid(token: String): Boolean {
@@ -214,6 +188,32 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleSignIn(result: GetCredentialResponse) {
+
+        val credential = result.credential
+
+        // 기대하는 건 Google 로그인뿐
+        if (credential is CustomCredential &&
+            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+        ) {
+            try {
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                val idToken = googleIdTokenCredential.idToken
+
+                Log.d(TAG, "Google ID Token 받음")
+
+                // 발급받은 id토큰으로 회원가입 시도
+                viewModel.onEvent(LoginEvent.TrySingInByGoogle(idToken))
+
+            } catch (e: GoogleIdTokenParsingException) {
+                Log.e(TAG, "구글 토큰 파싱 실패", e)
+            }
+
+        } else {
+            Log.e(TAG, "구글 로그인 credential 아님")
+        }
+    }
+
     private fun observeLoginState() {
         lifecycleScope.launch {
             viewModel.loginState.collect { state ->
@@ -265,7 +265,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
-        isNavigatingToMain = true
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
