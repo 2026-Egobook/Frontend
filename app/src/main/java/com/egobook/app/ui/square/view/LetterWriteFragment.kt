@@ -24,6 +24,7 @@ import com.egobook.app.databinding.LayoutPopupFriendListBinding
 import com.egobook.app.ui.square.adapter.FriendPopupListAdapter
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.domain.model.square.letter.LetterMode
+import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
 import com.google.android.material.card.MaterialCardView
@@ -40,6 +41,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
     private val viewModel: LetterViewModel by activityViewModels()
 
     private lateinit var friendList: List<FriendModel>
+    private var letterColor: LetterBackgroundColor = LetterBackgroundColor.BEIGE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,11 +72,26 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
                 clickedView.isSelected = true
                 (clickedView as MaterialCardView).getChildAt(0).isVisible = true
                 when(clickedView.id) {
-                    R.id.cv_letter_color_beige -> { cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_beige, null)}
-                    R.id.cv_letter_color_pink -> { cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_pink, null)}
-                    R.id.cv_letter_color_leaf -> { cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_leaf, null)}
-                    R.id.cv_letter_color_mint -> { cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_mint, null)}
-                    R.id.cv_letter_color_lavender -> { cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_lavender, null)}
+                    R.id.cv_letter_color_beige -> {
+                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_beige, null)
+                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.BEIGE
+                    }
+                    R.id.cv_letter_color_pink -> {
+                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_pink, null)
+                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.PINK
+                    }
+                    R.id.cv_letter_color_leaf -> {
+                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_leaf, null)
+                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.LEAF
+                    }
+                    R.id.cv_letter_color_mint -> {
+                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_mint, null)
+                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.MINT
+                    }
+                    R.id.cv_letter_color_lavender -> {
+                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_lavender, null)
+                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.LAVENDER
+                    }
                 }
             }
         }
@@ -102,10 +119,12 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
         }
         btnLetterSendAnonymous.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
-            val dialog = LetterSendDialog(LetterMode.RANDOM, friendInfo = null).apply {
+            val dialog = LetterSendDialog(LetterMode.RANDOM, friendInfo = null, letterContent = etLetterWriteContent.text.toString(), letterColor = letterColor).apply {
                 isCancelable = false
             }
             dialog.show(childFragmentManager, LetterSendDialog.TAG)
+            tvLetterWriteReceiver.text = "To 낯선 고북이"
+            tvLetterWriteSender.text = "From 또다른 고북이"
         }
     }
 
@@ -131,7 +150,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
                 tvLetterWriteReceiver.text = "To ${friendInfo.name}"
                 tvLetterWriteSender.text = "From 로그인한 유저" // TODO: 나중에 유저 정보 받아오기
                 popupWindow.dismiss()
-                val dialog = LetterSendDialog(type = LetterMode.FRIEND, friendInfo = friendInfo).apply { isCancelable = false }
+                val dialog = LetterSendDialog(mode = LetterMode.FRIEND, friendInfo = friendInfo, letterContent = etLetterWriteContent.text.toString(), letterColor = letterColor).apply { isCancelable = false }
                 dialog.show(childFragmentManager, LetterSendDialog.TAG)
                 applyScreenBlur(BlurLevel.BASE)
             }
