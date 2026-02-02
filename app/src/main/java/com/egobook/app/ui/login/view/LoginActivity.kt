@@ -35,7 +35,6 @@ import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.exceptions.GetCredentialException
-import com.egobook.app.ui.login.view.LoginBottomSheetFragment.Companion.TAG
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -84,38 +83,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun handleSignIn(result: GetCredentialResponse, isAutoLogin: Boolean = false) {
-
-        val credential = result.credential
-
-        // 기대하는 건 Google 로그인뿐
-        if (credential is CustomCredential &&
-            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-        ) {
-            try {
-                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                val idToken = googleIdTokenCredential.idToken
-
-                Log.d(TAG, "Google ID Token 받음")
-
-                // 구글 id토큰으로 서버에서 토큰 발급 요청
-                if (isAutoLogin) {
-                    // 자동로그인 시도
-                    viewModel.onAutoEvent(AutoEvent.TryAutoLoginByGoogle())
-                } else {
-                    // 회원가입 시도
-                    viewModel.onEvent(LoginEvent.TrySingInByGoogle(idToken))
-                }
-
-            } catch (e: GoogleIdTokenParsingException) {
-                Log.e(TAG, "구글 토큰 파싱 실패", e)
-            }
-
-        } else {
-            Log.e(TAG, "구글 로그인 credential 아님")
-        }
-    }
-
     //===========================================스플래시 화면에서의 자동 로그인 시도===============================================
     private suspend fun splashLogic() {
         // 리프레시 토큰 먼저 확인
@@ -151,6 +118,38 @@ class LoginActivity : AppCompatActivity() {
     }
 
     //=======================================================================================================================
+
+    private fun handleSignIn(result: GetCredentialResponse, isAutoLogin: Boolean = false) {
+
+        val credential = result.credential
+
+        // 기대하는 건 Google 로그인뿐
+        if (credential is CustomCredential &&
+            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+        ) {
+            try {
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                val idToken = googleIdTokenCredential.idToken
+
+                Log.d(TAG, "Google ID Token 받음")
+
+                // 자동로그인인 경우와 회원가입인 경우 분기
+                if (isAutoLogin) {
+                    // 자동로그인 시도
+                    viewModel.onAutoEvent(AutoEvent.TryAutoLoginByGoogle)
+                } else {
+                    // 발급받은 id토큰으로 회원가입 시도
+                    viewModel.onEvent(LoginEvent.TrySingInByGoogle(idToken))
+                }
+
+            } catch (e: GoogleIdTokenParsingException) {
+                Log.e(TAG, "구글 토큰 파싱 실패", e)
+            }
+
+        } else {
+            Log.e(TAG, "구글 로그인 credential 아님")
+        }
+    }
 
     private fun setupBlur() {
         binding.blurView.setupWith(binding.blurTarget)

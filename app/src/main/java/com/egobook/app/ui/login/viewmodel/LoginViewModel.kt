@@ -73,7 +73,7 @@ class LoginViewModel @Inject constructor(
 
     //자동 로그인 이벤트 정의
     sealed class AutoEvent {
-        data class TryAutoLoginByGoogle() : AutoEvent()
+        object TryAutoLoginByGoogle : AutoEvent()
         object TryAutoLoginByGuest : AutoEvent()
     }
 
