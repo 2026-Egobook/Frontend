@@ -38,13 +38,16 @@ import androidx.credentials.exceptions.GetCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+import org.json.JSONObject
+import android.util.Base64
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     @Inject lateinit var userInfoStorage: UserInfoStorage
     private lateinit var request: GetCredentialRequest //로그인 요청 -> 구글에서 id토큰 받아오는 request
-    var keepSplash = true
+    private var keepSplash = true
+    private var isNavigatingToMain = false
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by viewModels()
     private val blurRadius = 5f
@@ -85,41 +88,37 @@ class LoginActivity : AppCompatActivity() {
 
     //===========================================스플래시 화면에서의 자동 로그인 시도===============================================
     private suspend fun splashLogic() {
-        // 리프레시 토큰 먼저 확인
+        //액세스 토큰 확인
+        val accessToken = userInfoStorage.getAccessToken().first()
+        val hasAccessToken = !accessToken.isNullOrEmpty()
+
+        // 리프레시 토큰도 확인
         val refreshToken = userInfoStorage.getRefreshToken().first()
         val hasRefreshToken = !refreshToken.isNullOrEmpty()
 
-        if (!hasRefreshToken) {
-            Log.d(TAG, "리프레시 토큰 없음 → 로그인 화면 표시")
-            return@splashLogic // 자동 로그인 시도하지 않음
-        }
+        when {
+            hasAccessToken && isTokenValid(accessToken) -> {
+                Log.d(TAG, "AccessToken 유효 → 자동 로그인")
+                navigateToMain()
+                return@splashLogic
+            }
+            hasRefreshToken -> {
+                Log.d(TAG, "AccessToken 만료 → RefreshToken으로 재발급 시도")
+                viewModel.onAutoEvent(AutoEvent.TryAutoLoginByGoogle)
+                navigateToMain()
+                return@splashLogic
+            }
+            else -> {
+                Log.d(TAG, "리프레스 토큰 없음 → 로그인 화면 표시")
+                return@splashLogic
+            }
 
-        // 리프레시 토큰이 있으면 구글 자동 로그인 시도
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(true)
-            .setServerClientId(getString(R.string.google_web_client_id))
-            .setAutoSelectEnabled(true)
-            .build()
-
-        request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        try {
-            val result = credentialManager.getCredential(
-                request = request,
-                context = this@LoginActivity
-            )
-            handleSignIn(result, isAutoLogin = true)
-        } catch (e: GetCredentialException) {
-            // 자동 로그인 실패 -> 로그인 액티비티로 이동
-            Log.d(TAG, "자동 로그인 실패 → 로그인 화면 표시")
         }
     }
 
     //=======================================================================================================================
 
-    private fun handleSignIn(result: GetCredentialResponse, isAutoLogin: Boolean = false) {
+    private fun handleSignIn(result: GetCredentialResponse) {
 
         val credential = result.credential
 
@@ -133,14 +132,8 @@ class LoginActivity : AppCompatActivity() {
 
                 Log.d(TAG, "Google ID Token 받음")
 
-                // 자동로그인인 경우와 회원가입인 경우 분기
-                if (isAutoLogin) {
-                    // 자동로그인 시도
-                    viewModel.onAutoEvent(AutoEvent.TryAutoLoginByGoogle)
-                } else {
-                    // 발급받은 id토큰으로 회원가입 시도
-                    viewModel.onEvent(LoginEvent.TrySingInByGoogle(idToken))
-                }
+                // 발급받은 id토큰으로 회원가입 시도
+                viewModel.onEvent(LoginEvent.TrySingInByGoogle(idToken))
 
             } catch (e: GoogleIdTokenParsingException) {
                 Log.e(TAG, "구글 토큰 파싱 실패", e)
@@ -149,6 +142,30 @@ class LoginActivity : AppCompatActivity() {
         } else {
             Log.e(TAG, "구글 로그인 credential 아님")
         }
+    }
+
+    //토큰 유효성 체크
+    fun isTokenValid(token: String): Boolean {
+        val parts = token.split(".")
+        if (parts.size != 3) return false
+
+        // payload 디코딩 (Base64 URL Safe)
+        val payload = try {
+            val decoded = Base64.decode(parts[1], Base64.URL_SAFE or Base64.NO_WRAP)
+            String(decoded)
+        } catch (e: Exception) {
+            return false
+        }
+
+        // JSON에서 exp 필드 추출
+        val exp = try {
+            JSONObject(payload).getLong("exp")
+        } catch (e: Exception) {
+            return false
+        }
+
+        val currentTime = System.currentTimeMillis() / 1000
+        return exp > currentTime
     }
 
     private fun setupBlur() {
@@ -187,9 +204,8 @@ class LoginActivity : AppCompatActivity() {
                         request = request,
                         context = this@LoginActivity
                     )
-                    handleSignIn(result, isAutoLogin = false)
+                    handleSignIn(result)
                 } catch (e: GetCredentialException) {
-                    // 자동 로그인 실패 -> 로그인 액티비티로 이동
                     Log.d(TAG, "회원가입 실패")
                 }
 
@@ -249,6 +265,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
+        isNavigatingToMain = true
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()

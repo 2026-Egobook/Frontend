@@ -1,6 +1,5 @@
 package com.egobook.app.ui.login.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.data.local.UserInfoStorage
