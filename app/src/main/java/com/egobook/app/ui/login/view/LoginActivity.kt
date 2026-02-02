@@ -26,6 +26,7 @@ import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.databinding.ActivityLoginBinding
 import com.egobook.app.ui.login.viewmodel.LoginViewModel
 import com.egobook.app.ui.login.viewmodel.LoginViewModel.AutoEvent as AutoEvent
+import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginEvent as LoginEvent
 import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginState as LoginState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.exceptions.GetCredentialException
+import com.egobook.app.ui.login.view.LoginBottomSheetFragment.Companion.TAG
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -42,7 +44,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 class LoginActivity : AppCompatActivity() {
 
     @Inject lateinit var userInfoStorage: UserInfoStorage
-    private lateinit var request: GetCredentialRequest
+    private lateinit var request: GetCredentialRequest //로그인 요청 -> 구글에서 id토큰 받아오는 request
     var keepSplash = true
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by viewModels()
@@ -51,8 +53,6 @@ class LoginActivity : AppCompatActivity() {
     private val credentialManager by lazy {
         CredentialManager.create(this)
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        //observeLoginState()
+        observeLoginState()
         observeAutoLoginState()
         setupGuideText() //폰트 커스텀 적용
         setupBlur() //블러뷰
@@ -84,7 +84,39 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    //===========================================스플래시 회면에서의 자동 로그인 시도===============================================
+    private fun handleSignIn(result: GetCredentialResponse, isAutoLogin: Boolean = false) {
+
+        val credential = result.credential
+
+        // 기대하는 건 Google 로그인뿐
+        if (credential is CustomCredential &&
+            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+        ) {
+            try {
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                val idToken = googleIdTokenCredential.idToken
+
+                Log.d(TAG, "Google ID Token 받음")
+
+                // 구글 id토큰으로 서버에서 토큰 발급 요청
+                if (isAutoLogin) {
+                    // 자동로그인 시도
+                    viewModel.onAutoEvent(AutoEvent.TryAutoLoginByGoogle())
+                } else {
+                    // 회원가입 시도
+                    viewModel.onEvent(LoginEvent.TrySingInByGoogle(idToken))
+                }
+
+            } catch (e: GoogleIdTokenParsingException) {
+                Log.e(TAG, "구글 토큰 파싱 실패", e)
+            }
+
+        } else {
+            Log.e(TAG, "구글 로그인 credential 아님")
+        }
+    }
+
+    //===========================================스플래시 화면에서의 자동 로그인 시도===============================================
     private suspend fun splashLogic() {
         // 리프레시 토큰 먼저 확인
         val refreshToken = userInfoStorage.getRefreshToken().first()
@@ -111,35 +143,10 @@ class LoginActivity : AppCompatActivity() {
                 request = request,
                 context = this@LoginActivity
             )
-            handleSignIn(result)
+            handleSignIn(result, isAutoLogin = true)
         } catch (e: GetCredentialException) {
             // 자동 로그인 실패 -> 로그인 액티비티로 이동
             Log.d(TAG, "자동 로그인 실패 → 로그인 화면 표시")
-        }
-    }
-
-    private fun handleSignIn(result: GetCredentialResponse) {
-
-        val credential = result.credential
-
-        // 기대하는 건 Google 로그인뿐
-        if (credential is CustomCredential &&
-            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-        ) {
-            try {
-                //val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-
-                Log.d(TAG, "Google ID Token 받음")
-
-                // 서버에서 토큰 가져오기 요청 -> 성공 시 메인액티비티로
-                viewModel.onAutoEvent(AutoEvent.TryAutoLoginByGoogle)
-
-            } catch (e: GoogleIdTokenParsingException) {
-                Log.e(TAG, "구글 토큰 파싱 실패", e)
-            }
-
-        } else {
-            Log.e(TAG, "구글 로그인 credential 아님")
         }
     }
 
@@ -165,34 +172,57 @@ class LoginActivity : AppCompatActivity() {
 
         // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기
         binding.btnGoogleLogin.setOnClickListener {
-            TODO()
+            val googleIdOption = GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(true)
+                .setServerClientId(getString(R.string.google_web_client_id))
+                .setAutoSelectEnabled(true)
+                .build()
+
+            request = GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOption)
+                .build()
+
+            lifecycleScope.launch {
+                try {
+                    val result = credentialManager.getCredential(
+                        request = request,
+                        context = this@LoginActivity
+                    )
+                    handleSignIn(result, isAutoLogin = false)
+                } catch (e: GetCredentialException) {
+                    // 자동 로그인 실패 -> 로그인 액티비티로 이동
+                    Log.d(TAG, "회원가입 실패")
+                }
+
+            }
+
         }
     }
 
-//    private fun observeLoginState() {
-//        lifecycleScope.launch {
-//            viewModel.loginState.collect { state ->
-//                when (state) {
-//                    is LoginState.Success -> {
-//                        Toast.makeText(
-//                            this@LoginActivity,
-//                            "회원가입 성공!",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                        navigateToMain()
-//                    }
-//                    is LoginState.Error -> {
-//                        Toast.makeText(
-//                            this@LoginActivity,
-//                            "회원가입 실패: ${state.message}",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                    else -> {}
-//                }
-//            }
-//        }
-//    }
+    private fun observeLoginState() {
+        lifecycleScope.launch {
+            viewModel.loginState.collect { state ->
+                when (state) {
+                    is LoginState.Success -> {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "회원가입 성공!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToMain()
+                    }
+                    is LoginState.Error -> {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "회원가입 실패: ${state.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
 
     private fun observeAutoLoginState() {
         lifecycleScope.launch {
@@ -218,8 +248,6 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-
-
 
     private fun navigateToMain() {
         val intent = Intent(this, MainActivity::class.java)

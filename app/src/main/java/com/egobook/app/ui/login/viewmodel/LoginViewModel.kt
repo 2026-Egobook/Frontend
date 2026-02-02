@@ -28,6 +28,16 @@ class LoginViewModel @Inject constructor(
     //"로그인 화면" 에서의 이벤트만 처리하는 용도.
     fun onEvent(event: LoginEvent) {
         when (event) {
+            is LoginEvent.TrySingInByGoogle -> {
+                viewModelScope.launch {
+                    _loginState.value = LoginState.Loading
+                    val result = authUseCases.googleSignUp(event.idToken)
+                    result.fold(
+                        onSuccess = { _loginState.value = LoginState.Success },
+                        onFailure = { error -> _loginState.value = LoginState.Error(error.message ?: "알 수 없는 오류") }
+                    )
+                }
+            }
             is LoginEvent.TryLoginByGoogle -> {
                 TODO()
             }
@@ -56,13 +66,14 @@ class LoginViewModel @Inject constructor(
     }
 
     sealed class LoginEvent {
-        object TryLoginByGoogle : LoginEvent()
-        object TryGuestLogin : LoginEvent()
+        data class TrySingInByGoogle(val idToken: String) : LoginEvent() //회원가입
+        data class TryLoginByGoogle(val idToken: String) : LoginEvent() //구글 로그인
+        object TryGuestLogin : LoginEvent() //게스트 로그인
     }
 
     //자동 로그인 이벤트 정의
     sealed class AutoEvent {
-        object TryAutoLoginByGoogle : AutoEvent()
+        data class TryAutoLoginByGoogle() : AutoEvent()
         object TryAutoLoginByGuest : AutoEvent()
     }
 
