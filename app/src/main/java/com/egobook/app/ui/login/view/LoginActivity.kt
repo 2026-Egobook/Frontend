@@ -108,7 +108,7 @@ class LoginActivity : AppCompatActivity() {
                 return@splashLogic
             }
             else -> {
-                Log.d(TAG, "리프레스 토큰 없음 → 로그인 화면 표시")
+                Log.d(TAG, "리프레스 토큰 없음 or 만료 → 로그인 화면 표시")
                 return@splashLogic
             }
 
@@ -152,12 +152,40 @@ class LoginActivity : AppCompatActivity() {
         binding.blurView.visibility = View.GONE
     }
     private fun setupClickListeners() {
-        // 상단 로그인 버튼 - 바텀시트 띄우기
+        // 상단 로그인 버튼 - 콜백 인터페이스 세팅 & 바텀시트 띄우기
         binding.btnLogin.setOnClickListener {
             binding.blurView.visibility = View.VISIBLE
 
-            LoginBottomSheetFragment()
-                .show(supportFragmentManager, LoginBottomSheetFragment.TAG)
+            val loginBottomSheet = LoginBottomSheetFragment()
+            loginBottomSheet.setOnLoginConfirmListener(object : LoginBottomSheetFragment.OnLoginConfirmListener {
+                override fun onLoginConfirmed() {
+
+                    val googleIdOption = GetGoogleIdOption.Builder()
+                        .setFilterByAuthorizedAccounts(true)
+                        .setServerClientId(getString(R.string.google_web_client_id))
+                        .setAutoSelectEnabled(true)
+                        .build()
+
+                    request = GetCredentialRequest.Builder()
+                        .addCredentialOption(googleIdOption)
+                        .build()
+
+                    lifecycleScope.launch {
+                        try {
+                            val result = credentialManager.getCredential(
+                                request = request,
+                                context = this@LoginActivity
+                            )
+                            handleSignIn(result, isLogin = true)
+                        } catch (e: GetCredentialException) {
+                            Log.d(TAG, "로그인 실패")
+                        }
+
+                    }
+                }
+
+            })
+            loginBottomSheet.show(supportFragmentManager, LoginBottomSheetFragment.TAG)
         }
 
         // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기
@@ -178,7 +206,7 @@ class LoginActivity : AppCompatActivity() {
                         request = request,
                         context = this@LoginActivity
                     )
-                    handleSignIn(result)
+                    handleSignIn(result, isLogin = false)
                 } catch (e: GetCredentialException) {
                     Log.d(TAG, "회원가입 실패")
                 }
@@ -188,11 +216,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleSignIn(result: GetCredentialResponse) {
-
+    private fun handleSignIn(result: GetCredentialResponse, isLogin: Boolean = false) {
         val credential = result.credential
 
-        // 기대하는 건 Google 로그인뿐
         if (credential is CustomCredential &&
             credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
         ) {
@@ -202,10 +228,14 @@ class LoginActivity : AppCompatActivity() {
 
                 Log.d(TAG, "Google ID Token 받음")
 
-                // 발급받은 id토큰으로 회원가입 시도
-                viewModel.onEvent(LoginEvent.TrySingInByGoogle(idToken))
+                // 회원가입 vs 로그인 분기
+                if (isLogin) {
+                    viewModel.onEvent(LoginEvent.TryLoginByGoogle(idToken))  // 로그인
+                } else {
+                    viewModel.onEvent(LoginEvent.TrySignInByGoogle(idToken))  // 회원가입
+                }
 
-            } catch (e: GoogleIdTokenParsingException) {
+            } catch (e: GetCredentialException) {
                 Log.e(TAG, "구글 토큰 파싱 실패", e)
             }
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.egobook.app.databinding.FragmentLoginBottomSheetBinding
+import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -14,6 +15,17 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentLoginBottomSheetBinding? = null
     private val binding get() = _binding!!
+
+    // 로그인 확인 콜백 인터페이스
+    interface OnLoginConfirmListener {
+        fun onLoginConfirmed()
+    }
+
+    private var loginConfirmListener: OnLoginConfirmListener? = null
+
+    fun setOnLoginConfirmListener(listener: OnLoginConfirmListener) {
+        loginConfirmListener = listener
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,11 +40,14 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnBottomGoogleLogin.setOnClickListener {
-            // 바로 OnboardingActivity로 이동
-            val intent = Intent(requireActivity(), OnboardingActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
+            // 로그인 확인 콜백 호출
+            loginConfirmListener?.onLoginConfirmed()
             dismiss()
+            // 바로 OnboardingActivity로 이동 - 임시 구현
+            //val intent = Intent(requireActivity(), OnboardingActivity::class.java)
+            //startActivity(intent)
+            //requireActivity().finish()
+            //dismiss()
         }
     }
 
