@@ -3,12 +3,11 @@ package com.egobook.app.ui.shop
 import com.egobook.app.data.interceptor.AuthInterceptor
 import com.egobook.app.di.NetworkModule
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-
+import java.util.concurrent.ConcurrentHashMap
 interface StoreRepository {
     fun loadStoreItems(itemType: ItemType): Flow<CustomItem>
 }
@@ -64,32 +63,29 @@ class NetworkStoreRepository : StoreRepository {
             while (true) {
                 try {
                     val response = storeService.loadItemsResponse(
-                        category = itemType.toDto(), // "BACK" 등이 정확한지 확인
+                        category = itemType.toDto(),
                         slice = currentPage,
                         size = 6
                     ).data
 
-                    // 데이터 방출 (Emit)
                     response.content.forEach { dto ->
                         emit(
                             CustomItem(
                                 dto.itemId.toString(),
                                 itemType,
                                 Price(dto.price),
-                                if (dto.isPurchased) ItemStatus.PURCHASED else ItemStatus.PURCHASABLE
+                                if (dto.isPurchased) ItemStatus.PURCHASED else ItemStatus.PURCHASABLE,
+                                ItemImage.Url(dto.imageUrl)
                             )
                         )
                     }
 
-                    // 다음 페이지가 없으면 정상 종료
                     if (!response.hasNext) {
                         break
                     }
                     currentPage++
 
                 } catch (e: Exception) {
-                    // 3. 에러 발생 시 로그를 찍고 반복문을 탈출합니다.
-                    // e.printStackTrace()를 보면 어떤 에러인지 로그창(Logcat)에만 뜨고 앱은 계속 실행됩니다.
                     android.util.Log.e(
                         "StoreRepository",
                         "페이지 $currentPage 로드 중 에러 발생: $e"
