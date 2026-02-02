@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.domain.usecase.authusecase.AuthUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -16,6 +18,10 @@ class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
     private val userInfoStorage: UserInfoStorage
 ) : ViewModel()  {
+    private val _isFirstSignUp = MutableSharedFlow<Unit>()
+    val isFirstSignUp = _isFirstSignUp.asSharedFlow()
+
+    private val _signUpError = MutableSharedFlow<String>()
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState = _loginState.asStateFlow()
@@ -32,8 +38,14 @@ class LoginViewModel @Inject constructor(
                     _loginState.value = LoginState.Loading
                     val result = authUseCases.googleSignUp(event.idToken)
                     result.fold(
-                        onSuccess = { _loginState.value = LoginState.Success },
-                        onFailure = { error -> _loginState.value = LoginState.Error(error.message ?: "알 수 없는 오류") }
+                        onSuccess = {
+                            _isFirstSignUp.emit(Unit)
+                            _loginState.value = LoginState.Idle  // 로딩 해제
+                        },
+                        onFailure = { error ->
+                            _signUpError.emit(error.message ?: "알 수 없는 오류")
+                            _loginState.value = LoginState.Idle  // 로딩 해제
+                        }
                     )
                 }
             }

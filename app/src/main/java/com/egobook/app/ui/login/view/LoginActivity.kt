@@ -40,6 +40,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import org.json.JSONObject
 import android.util.Base64
+import com.egobook.app.ui.onboarding.view.OnboardingActivity
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -91,6 +92,7 @@ class LoginActivity : AppCompatActivity() {
 
         observeLoginState()
         observeAutoLoginState()
+        observeFirstSignUp()
         setupGuideText() //폰트 커스텀 적용
         setupBlur() //블러뷰
         setupClickListeners() //클릭리스너 설정
@@ -246,7 +248,7 @@ class LoginActivity : AppCompatActivity() {
                     is LoginState.Success -> {
                         Toast.makeText(
                             this@LoginActivity,
-                            "회원가입 성공!",
+                            "로그인 성공!",
                             Toast.LENGTH_SHORT
                         ).show()
                         navigateToMain()
@@ -254,7 +256,7 @@ class LoginActivity : AppCompatActivity() {
                     is LoginState.Error -> {
                         Toast.makeText(
                             this@LoginActivity,
-                            "회원가입 실패: ${state.message}",
+                            "로그인 실패: ${state.message}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -289,8 +291,22 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun observeFirstSignUp() {
+        lifecycleScope.launch {
+            viewModel.isFirstSignUp.collect {
+                navigateToOnboarding() //온보딩 화면 이동
+            }
+        }
+    }
+
     private fun navigateToMain() {
         val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun navigateToOnboarding() {
+        val intent = Intent(this, OnboardingActivity::class.java)
         startActivity(intent)
         finish()
     }
