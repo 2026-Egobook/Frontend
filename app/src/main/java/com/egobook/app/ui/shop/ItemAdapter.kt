@@ -12,6 +12,7 @@ import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.egobook.app.R
 
 class ItemAdapter :
@@ -34,9 +35,17 @@ class ItemAdapter :
         val itemStatus: TextView = view.findViewById(R.id.tv_item_status)
         val itemPriceIcon: ImageView = view.findViewById(R.id.iv_store_item_ink)
         val itemInfoLayout: LinearLayout = view.findViewById(R.id.ll_item_info)
+        val itemImage: ImageView = view.findViewById(R.id.iv_item)
         val root: View = view.rootView
 
         fun binding(item: CustomItem) {
+
+            item.image?.let { image ->
+                when(image) {
+                    is ItemImage.Url -> itemImage.load(image.path)
+                }
+            }
+
             when (item.itemStatus) {
                 ItemStatus.PURCHASED -> {
                     itemStatus.text = "보유중"
