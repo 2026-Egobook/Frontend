@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:paddingVertical="24dp"
     android:paddingHorizontal="16dp"
-    android:background="@drawable/bg_round_dialog">
+    android:background="@drawable/bg_round_and_white_dialog">
 
     <TextView
         android:id="@+id/tv_letter_send_title"

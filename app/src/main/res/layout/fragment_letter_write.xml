@@ -42,7 +42,7 @@
         app:strokeColor="@color/selector_letter_paper_color_stroke"
         app:strokeWidth="2dp"
         app:contentPadding="8dp"
-        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:shapeAppearanceOverlay="@style/Circle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ll_letter_header">
         <ImageView
@@ -62,7 +62,7 @@
         app:strokeColor="@color/selector_letter_paper_color_stroke"
         app:strokeWidth="2dp"
         app:contentPadding="8dp"
-        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:shapeAppearanceOverlay="@style/Circle"
         app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_beige"
         app:layout_constraintStart_toEndOf="@id/cv_letter_color_beige"
         app:layout_constraintTop_toTopOf="@id/cv_letter_color_beige">
@@ -83,7 +83,7 @@
         app:strokeColor="@color/selector_letter_paper_color_stroke"
         app:strokeWidth="2dp"
         app:contentPadding="8dp"
-        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:shapeAppearanceOverlay="@style/Circle"
         app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_pink"
         app:layout_constraintStart_toEndOf="@id/cv_letter_color_pink"
         app:layout_constraintTop_toTopOf="@id/cv_letter_color_pink">
@@ -104,7 +104,7 @@
         app:strokeColor="@color/selector_letter_paper_color_stroke"
         app:strokeWidth="2dp"
         app:contentPadding="8dp"
-        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:shapeAppearanceOverlay="@style/Circle"
         app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_leaf"
         app:layout_constraintStart_toEndOf="@id/cv_letter_color_leaf"
         app:layout_constraintTop_toTopOf="@id/cv_letter_color_leaf">
@@ -125,7 +125,7 @@
         app:strokeColor="@color/selector_letter_paper_color_stroke"
         app:strokeWidth="2dp"
         app:contentPadding="8dp"
-        app:shapeAppearanceOverlay="@style/CircleShape"
+        app:shapeAppearanceOverlay="@style/Circle"
         app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_mint"
         app:layout_constraintStart_toEndOf="@id/cv_letter_color_mint"
         app:layout_constraintTop_toTopOf="@id/cv_letter_color_mint">
