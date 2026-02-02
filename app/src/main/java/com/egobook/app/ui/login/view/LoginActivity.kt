@@ -45,11 +45,23 @@ import android.util.Base64
 class LoginActivity : AppCompatActivity() {
 
     @Inject lateinit var userInfoStorage: UserInfoStorage
-    private lateinit var request: GetCredentialRequest //로그인 요청 -> 구글에서 id토큰 받아오는 request
+    private lateinit var request: GetCredentialRequest
     private var keepSplash = true
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by viewModels()
     private val blurRadius = 5f
+
+    private fun getGoogleRequest(): GetCredentialRequest {
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(true)
+            .setServerClientId(getString(R.string.google_web_client_id))
+            .setAutoSelectEnabled(true)
+            .build()
+
+        return GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+    }
 
     private val credentialManager by lazy {
         CredentialManager.create(this)
@@ -159,16 +171,7 @@ class LoginActivity : AppCompatActivity() {
             val loginBottomSheet = LoginBottomSheetFragment()
             loginBottomSheet.setOnLoginConfirmListener(object : LoginBottomSheetFragment.OnLoginConfirmListener {
                 override fun onLoginConfirmed() {
-
-                    val googleIdOption = GetGoogleIdOption.Builder()
-                        .setFilterByAuthorizedAccounts(true)
-                        .setServerClientId(getString(R.string.google_web_client_id))
-                        .setAutoSelectEnabled(true)
-                        .build()
-
-                    request = GetCredentialRequest.Builder()
-                        .addCredentialOption(googleIdOption)
-                        .build()
+                    request = getGoogleRequest()
 
                     lifecycleScope.launch {
                         try {
@@ -190,15 +193,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기
         binding.btnGoogleLogin.setOnClickListener {
-            val googleIdOption = GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(true)
-                .setServerClientId(getString(R.string.google_web_client_id))
-                .setAutoSelectEnabled(true)
-                .build()
-
-            request = GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
-                .build()
+            request = getGoogleRequest()
 
             lifecycleScope.launch {
                 try {
