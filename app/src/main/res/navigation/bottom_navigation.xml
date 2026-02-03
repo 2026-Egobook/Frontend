@@ -167,7 +167,12 @@
         android:id="@+id/letterReplyFragment"
         android:name="com.egobook.app.ui.square.view.LetterReplyFragment"
         android:label="fragment_letter_reply"
-        tools:layout="@layout/fragment_letter_reply" />
+        tools:layout="@layout/fragment_letter_reply">
+        <argument
+            android:name="letterItem"
+            app:argType="com.egobook.app.ui.square.model.letter.ArrivedPendingLetterItemModel"
+            app:nullable="false"/>
+    </fragment>
     <fragment
         android:id="@+id/letterWriteFragment"
         android:name="com.egobook.app.ui.square.view.LetterWriteFragment"

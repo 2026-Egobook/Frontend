@@ -62,7 +62,8 @@ class ArrivedPendingLetterDialog(
         btnArrivedPendingLetterReply.setOnClickListener {
             dismiss()
             removeScreenBlur()
-            findNavController().navigate(R.id.action_menu_square_to_letterReplyFragment)
+            val action = SquareFragmentDirections.actionMenuSquareToLetterReplyFragment(letterItem = letterInfo)
+            findNavController().navigate(action)
         }
     }
 

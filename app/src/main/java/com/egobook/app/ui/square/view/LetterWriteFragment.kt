@@ -21,9 +21,9 @@ import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentLetterWriteBinding
 import com.egobook.app.databinding.LayoutPopupFriendListBinding
+import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.adapter.FriendPopupListAdapter
 import com.egobook.app.ui.square.model.friend.FriendModel
-import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
