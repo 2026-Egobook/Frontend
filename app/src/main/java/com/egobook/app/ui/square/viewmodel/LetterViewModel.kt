@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
+import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
+import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
 import com.egobook.app.ui.square.model.letter.toDomain
 import com.egobook.app.ui.square.model.letter.toPresentation
@@ -24,7 +26,8 @@ import javax.inject.Inject
 class LetterViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase,
     private val sendLetterUseCase: SendLetterUseCase,
-    private val detectAbusiveContentUseCase: DetectAbusiveContentUseCase
+    private val detectAbusiveContentUseCase: DetectAbusiveContentUseCase,
+    private val getArrivedPendingLetterUseCase: GetArrivedPendingLetterUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -65,6 +68,20 @@ class LetterViewModel @Inject constructor(
                 _detectAbusiveContentResult.emit(UiState.Success(domain.toPresentation()))
             }.onFailure { error ->
                 _detectAbusiveContentResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _arrivedPendingLetterResult = MutableStateFlow<UiState<ArrivedPendingLetterModel>>(UiState.Idle) // stateflow vs sharedflow
+    val arrivedPendingLetterResult = _arrivedPendingLetterResult.asStateFlow()
+
+    fun getArrivedPendingLetter() {
+        viewModelScope.launch {
+            _arrivedPendingLetterResult.value = UiState.Loading
+            getArrivedPendingLetterUseCase().onSuccess { domain ->
+                _arrivedPendingLetterResult.value = UiState.Success(domain.toPresentation())
+            }.onFailure { error ->
+                _arrivedPendingLetterResult.value = UiState.Failure(error.message)
             }
         }
     }

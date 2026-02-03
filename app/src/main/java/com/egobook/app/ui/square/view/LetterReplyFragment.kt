@@ -8,6 +8,7 @@ import com.egobook.app.databinding.FragmentLetterReplyBinding
 
 class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
     private lateinit var binding: FragmentLetterReplyBinding
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLetterReplyBinding.bind(view)
