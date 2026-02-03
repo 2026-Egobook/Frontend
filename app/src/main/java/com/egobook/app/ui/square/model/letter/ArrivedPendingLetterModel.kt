@@ -15,6 +15,7 @@ data class ArrivedPendingLetterItemModel(
     val mode: LetterMode,
     val fromLabel: String,
     val content: String,
+    val letterColor: LetterBackgroundColor,
     val arrivedAt: String,
     val replyDeadlineAt: String
 )
@@ -31,5 +32,6 @@ fun ArrivedPendingLetterItem.toPresentation(): ArrivedPendingLetterItemModel =
         fromLabel = fromLabel,
         content = content,
         arrivedAt = arrivedAt,
-        replyDeadlineAt = replyDeadlineAt
+        replyDeadlineAt = replyDeadlineAt,
+        letterColor = letterColor
     )

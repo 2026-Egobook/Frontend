@@ -4,6 +4,7 @@ import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetterItem
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.model.square.letter.LetterStatus
+import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
 import com.google.gson.annotations.SerializedName
 
 data class ArrivedPendingLetterResponse(
@@ -25,7 +26,9 @@ data class ArrivedPendingLetterItemResponse(
     @SerializedName("arrivedAt")
     val arrivedAt: String,
     @SerializedName("replyDeadlineAt")
-    val replyDeadlineAt: String
+    val replyDeadlineAt: String,
+    @SerializedName("letterColor")
+    val letterColor: LetterBackgroundColor // TODO: 백엔드한테 필드 넣어달라고 하기
 )
 
 fun ArrivedPendingLetterResponse.toDomain(): ArrivedPendingLetter = ArrivedPendingLetter(
@@ -39,5 +42,6 @@ fun ArrivedPendingLetterItemResponse.toDomain(): ArrivedPendingLetterItem = Arri
     fromLabel = fromLabel,
     content = content,
     arrivedAt = arrivedAt,
-    replyDeadlineAt = replyDeadlineAt
+    replyDeadlineAt = replyDeadlineAt,
+    letterColor = letterColor
 )

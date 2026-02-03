@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_menu_square_to_letterWriteFragment"
             app:destination="@id/letterWriteFragment" />
+        <action
+            android:id="@+id/action_menu_square_to_letterReplyFragment"
+            app:destination="@id/letterReplyFragment" />
     </fragment>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
