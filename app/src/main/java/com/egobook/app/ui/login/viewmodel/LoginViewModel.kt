@@ -65,35 +65,12 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onAutoEvent(event: AutoEvent) {
-        when (event) {
-            is AutoEvent.TryAutoLoginByGoogle -> {
-                viewModelScope.launch {
-                    _autoLoginState.value = LoginState.Loading
-                    val result = authUseCases.googleAutoLogin()
-                    result.fold(
-                        onSuccess = { _autoLoginState.value = LoginState.Success },
-                        onFailure = { error -> _autoLoginState.value = LoginState.Error(error.message ?: "알 수 없는 오류") }
-                    )
-                }
-            }
-            is AutoEvent.TryAutoLoginByGuest -> {
-                TODO()
-            }
-        }
-    }
-
     sealed class LoginEvent {
         data class TrySignInByGoogle(val idToken: String) : LoginEvent() //회원가입
         data class TryLoginByGoogle(val idToken: String) : LoginEvent() //구글 로그인
         object TryGuestLogin : LoginEvent() //게스트 로그인
     }
 
-    //자동 로그인 이벤트 정의
-    sealed class AutoEvent {
-        object TryAutoLoginByGoogle : AutoEvent()
-        object TryAutoLoginByGuest : AutoEvent()
-    }
 
     sealed class LoginState {
         data object Idle : LoginState()

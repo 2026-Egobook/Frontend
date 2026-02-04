@@ -25,7 +25,6 @@ import com.egobook.app.R
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.databinding.ActivityLoginBinding
 import com.egobook.app.ui.login.viewmodel.LoginViewModel
-import com.egobook.app.ui.login.viewmodel.LoginViewModel.AutoEvent as AutoEvent
 import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginEvent as LoginEvent
 import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginState as LoginState
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +46,6 @@ class LoginActivity : AppCompatActivity() {
 
     @Inject lateinit var userInfoStorage: UserInfoStorage
     private lateinit var request: GetCredentialRequest
-    private var keepSplash = true
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by viewModels()
     private val blurRadius = 5f
@@ -57,8 +55,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { keepSplash }
 
         super.onCreate(savedInstanceState)
 
@@ -73,7 +69,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         observeLoginState()
-        observeAutoLoginState()
         observeFirstSignUp()
         setupGuideText() //폰트 커스텀 적용
         setupBlur() //블러뷰
@@ -193,31 +188,6 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(
                             this@LoginActivity,
                             "로그인 실패: ${state.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    else -> {}
-                }
-            }
-        }
-    }
-
-    private fun observeAutoLoginState() {
-        lifecycleScope.launch {
-            viewModel.autoLoginState.collect { state ->
-                when (state) {
-                    is LoginState.Success -> {
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "자동 로그인 성공!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        navigateToMain()
-                    }
-                    is LoginState.Error -> {
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "자동 로그인 실패: ${state.message}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

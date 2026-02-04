@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 //진짜 스플래시 화면으로 쓰는 용도
@@ -23,6 +24,8 @@ class IntroActivity : ComponentActivity() {
     @Inject lateinit var userInfoStorage: UserInfoStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.d("onCreate 시작")
+        
         // SplashScreen API는 빠르게 종료 (배경색만 잠깐 보여줌)
         installSplashScreen()
 
@@ -37,25 +40,40 @@ class IntroActivity : ComponentActivity() {
             insets
         }
 
+        Timber.d("UI 설정 완료, 코루틴 시작")
+        
         // IntroActivity UI가 렌더링된 후 로직 실행
-        findViewById<android.view.View>(R.id.main).post {
-            lifecycleScope.launch {
+        lifecycleScope.launch {
+            try {
+                // UI 렌더링을 위한 짧은 대기
+                delay(100)
                 splashLogic()
+            } catch (e: Exception) {
+                // 예외 발생 시 로그인 화면으로 이동
+                Timber.e(e, "예외 발생: ${e.message}")
+                navigateToLogin()
             }
         }
     }
 
     private suspend fun splashLogic() {
-        delay(1500)
+        Timber.d("splashLogic 시작")
+        
+        // IntroActivity UI를 보여주는 시간
+        delay(1400)
 
         //액세스 토큰 읽기
         val accessToken = userInfoStorage.getAccessToken().first()
         val hasAccessToken = !accessToken.isNullOrEmpty()
+        
+        Timber.d("토큰 존재 여부: $hasAccessToken")
 
         //액세스 토큰이 있다면 메인 화면으로, 없다면 로그인 화면으로 이동
         if(hasAccessToken) {
+            Timber.d("메인 화면으로 이동")
             navigateToMain()
         } else {
+            Timber.d("로그인 화면으로 이동")
             navigateToLogin()
         }
     }
