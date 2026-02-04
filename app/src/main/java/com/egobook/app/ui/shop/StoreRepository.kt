@@ -1,13 +1,13 @@
 package com.egobook.app.ui.shop
 
-import com.egobook.app.data.interceptor.AuthInterceptor
-import com.egobook.app.di.NetworkModule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
+import javax.inject.Singleton
+
 interface StoreRepository {
     fun loadStoreItems(itemType: ItemType): Flow<CustomItem>
 }
@@ -53,11 +53,16 @@ data class CustomItemGroupDto(
 )
 
 
-class NetworkStoreRepository : StoreRepository {
+@Singleton
+class NetworkStoreRepository @Inject constructor(
+    private val retrofit: Retrofit
+) : StoreRepository {
+    
+    private val storeService by lazy {
+        retrofit.create(NetworkStoreService::class.java)
+    }
+    
     override fun loadStoreItems(itemType: ItemType): Flow<CustomItem> {
-        val httpClient = NetworkModule.provideOkHttpClient(AuthInterceptor())
-        val retrofit = NetworkModule.provideRetrofit(httpClient, GsonConverterFactory.create())
-        val storeService = retrofit.create(NetworkStoreService::class.java)
         return flow {
             var currentPage = 1
             while (true) {

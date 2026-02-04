@@ -11,6 +11,8 @@ import com.egobook.app.domain.repository.DiaryRepository
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.NotificationRepository
 import com.egobook.app.domain.repository.auth.AuthRepository
+import com.egobook.app.ui.shop.NetworkStoreRepository
+import com.egobook.app.ui.shop.StoreRepository
 import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
 import dagger.Module
@@ -44,4 +46,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindStoreRepository(impl: NetworkStoreRepository): StoreRepository
 }
