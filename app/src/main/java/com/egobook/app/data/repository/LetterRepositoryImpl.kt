@@ -3,6 +3,7 @@ package com.egobook.app.data.repository
 import com.egobook.app.data.api.AIApiService
 import com.egobook.app.data.api.LetterApiService
 import com.egobook.app.data.model.square.letter.DetectAbusiveContentRequest
+import com.egobook.app.data.model.square.letter.ReplyLetterRequest
 import com.egobook.app.data.model.square.letter.toData
 import com.egobook.app.data.model.square.letter.toDomain
 import com.egobook.app.domain.model.square.letter.AbusiveContentAnalysis
@@ -13,6 +14,7 @@ import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.domain.model.square.letter.SendLetter
 import com.egobook.app.domain.repository.LetterRepository
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.ReplyLetter
 import javax.inject.Inject
 
 class LetterRepositoryImpl @Inject constructor(
@@ -68,7 +70,24 @@ class LetterRepositoryImpl @Inject constructor(
                 letterColor = LetterBackgroundColor.BEIGE
             )
         )
+        val emptyMockData = ArrivedPendingLetter(
+            letter = null
+        )
         Result.success(mockData)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun replyLetter(letterId: Long, text: String): Result<ReplyLetter> = try {
+        val response = letterApiService.replyLetter(
+            letterId = letterId,
+            request = ReplyLetterRequest(text = text)
+        )
+        if (response.status == 200) {
+            Result.success(response.data.toDomain())
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
     } catch (e: Exception) {
         Result.failure(e)
     }

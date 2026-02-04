@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
+import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
+import com.egobook.app.ui.square.model.letter.ReplyLetterModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
 import com.egobook.app.ui.square.model.letter.toDomain
 import com.egobook.app.ui.square.model.letter.toPresentation
@@ -27,7 +29,8 @@ class LetterViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase,
     private val sendLetterUseCase: SendLetterUseCase,
     private val detectAbusiveContentUseCase: DetectAbusiveContentUseCase,
-    private val getArrivedPendingLetterUseCase: GetArrivedPendingLetterUseCase
+    private val getArrivedPendingLetterUseCase: GetArrivedPendingLetterUseCase,
+    private val replyLetterUseCase: ReplyLetterUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -82,6 +85,20 @@ class LetterViewModel @Inject constructor(
                 _arrivedPendingLetterResult.value = UiState.Success(domain.toPresentation())
             }.onFailure { error ->
                 _arrivedPendingLetterResult.value = UiState.Failure(error.message)
+            }
+        }
+    }
+
+    private val _replyLetterResult = MutableSharedFlow<UiState<ReplyLetterModel>>()
+    val replyLetterResult = _replyLetterResult.asSharedFlow()
+
+    fun replyLetter(letterId: Long, text: String) {
+        viewModelScope.launch {
+            _replyLetterResult.emit(UiState.Loading)
+            replyLetterUseCase(letterId = letterId, text = text).onSuccess { domain ->
+                _replyLetterResult.emit(UiState.Success(domain.toPresentation()))
+            }.onFailure { error ->
+                _replyLetterResult.emit(UiState.Failure(error.message))
             }
         }
     }

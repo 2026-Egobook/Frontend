@@ -2,11 +2,14 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.square.letter.ArrivedPendingLetterResponse
+import com.egobook.app.data.model.square.letter.ReplyLetterRequest
+import com.egobook.app.data.model.square.letter.ReplyLetterResponse
 import com.egobook.app.data.model.square.letter.SendLetterRequest
 import com.egobook.app.data.model.square.letter.SendLetterResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface LetterApiService {
     @POST("/plaza/letters")
@@ -14,4 +17,10 @@ interface LetterApiService {
 
     @GET("/plaza/letters/inbox/next")
     suspend fun fetchArrivedPendingLetter(): ApiResponse<ArrivedPendingLetterResponse>
+
+    @POST("/plaza/letters/{letterId}/reply")
+    suspend fun replyLetter(
+        @Path("letterId") letterId: Long,
+        @Body request: ReplyLetterRequest
+    ): ApiResponse<ReplyLetterResponse>
 }

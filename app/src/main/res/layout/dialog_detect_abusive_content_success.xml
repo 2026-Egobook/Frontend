@@ -5,7 +5,8 @@
     android:background="@drawable/bg_round_and_white_dialog"
     android:paddingVertical="24dp"
     android:paddingHorizontal="16dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/tv_detect_abusive_content_success_title"
@@ -43,7 +44,7 @@
         android:id="@+id/btn_detect_abusive_success"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="잉크 1 획득!"
+        tools:text="잉크 1 획득!"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/brand"
         android:insetTop="0dp"
