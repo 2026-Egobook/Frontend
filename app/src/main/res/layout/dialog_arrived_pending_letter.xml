@@ -7,7 +7,7 @@
     android:background="@android:color/transparent">
 
     <ImageView
-        android:id="@+id/iv_arrived_pending_letter_cancel"
+        android:id="@+id/iv_arrived_pending_letter_defer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="12dp"
@@ -27,7 +27,7 @@
         app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_arrived_pending_letter_cancel">
+        app:layout_constraintTop_toBottomOf="@id/iv_arrived_pending_letter_defer">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

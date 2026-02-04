@@ -6,11 +6,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.DialogArrivedPendingLetterPopupBinding
+import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterItemModel
+import com.egobook.app.ui.square.viewmodel.LetterViewModel
+import com.egobook.app.util.UiState
+import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -18,6 +26,7 @@ import java.time.format.DateTimeFormatter
 
 class ArrivedPendingLetterPopupDialog(private val letterInfo: ArrivedPendingLetterItemModel): DialogFragment(R.layout.dialog_arrived_pending_letter_popup) {
     private lateinit var binding: DialogArrivedPendingLetterPopupBinding
+    private val viewModel: LetterViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return Dialog(requireContext()).apply {
@@ -29,6 +38,7 @@ class ArrivedPendingLetterPopupDialog(private val letterInfo: ArrivedPendingLett
         binding = DialogArrivedPendingLetterPopupBinding.bind(view)
         initViews()
         initListeners()
+        initObservers()
     }
 
     private fun initViews() = with(binding) {
@@ -38,13 +48,30 @@ class ArrivedPendingLetterPopupDialog(private val letterInfo: ArrivedPendingLett
 
     private fun initListeners() = with(binding) {
         btnArrivedPendingLetterReplyLater.setOnClickListener {
-            // TODO: 로직 작성하기 (상태 변경, API 연동 등)
+            viewModel.deferReplyLetter(letterId = letterInfo.letterId)
         }
         btnArrivedPendingLetterConfirm.setOnClickListener {
             val dialog = ArrivedPendingLetterDialog(letterInfo = letterInfo).apply { isCancelable = false }
             dialog.show(parentFragmentManager, ArrivedPendingLetterDialog.TAG)
-            applyScreenBlur(BlurLevel.BASE)
             dismiss()
+        }
+    }
+
+    private fun initObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deferReplyLetterResult.collect { state ->
+                    when(state) {
+                        is UiState.Failure -> {}
+                        UiState.Idle -> {}
+                        UiState.Loading -> {}
+                        is UiState.Success<Unit> -> {
+                            removeScreenBlur()
+                            dismiss()
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -10,4 +10,5 @@ interface LetterRepository {
     suspend fun detectAbusiveContent(text: String): Result<AbusiveContentAnalysis>
     suspend fun fetchArrivedPendingLetter(): Result<ArrivedPendingLetter>
     suspend fun replyLetter(letterId: Long, text: String): Result<ReplyLetter>
+    suspend fun deferReplyLetter(letterId: Long): Result<Unit>
 }

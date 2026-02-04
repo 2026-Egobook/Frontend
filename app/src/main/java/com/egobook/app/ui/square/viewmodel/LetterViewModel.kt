@@ -3,6 +3,7 @@ package com.egobook.app.ui.square.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.GetFriendListUseCase
+import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
@@ -30,7 +31,8 @@ class LetterViewModel @Inject constructor(
     private val sendLetterUseCase: SendLetterUseCase,
     private val detectAbusiveContentUseCase: DetectAbusiveContentUseCase,
     private val getArrivedPendingLetterUseCase: GetArrivedPendingLetterUseCase,
-    private val replyLetterUseCase: ReplyLetterUseCase
+    private val replyLetterUseCase: ReplyLetterUseCase,
+    private val deferReplyLetterUseCase: DeferReplyLetterUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -99,6 +101,20 @@ class LetterViewModel @Inject constructor(
                 _replyLetterResult.emit(UiState.Success(domain.toPresentation()))
             }.onFailure { error ->
                 _replyLetterResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _deferReplyLetterResult = MutableSharedFlow<UiState<Unit>>()
+    val deferReplyLetterResult = _deferReplyLetterResult.asSharedFlow()
+
+    fun deferReplyLetter(letterId: Long) {
+        viewModelScope.launch {
+            _deferReplyLetterResult.emit(UiState.Loading)
+            deferReplyLetterUseCase(letterId = letterId).onSuccess {
+                _deferReplyLetterResult.emit(UiState.Success(Unit))
+            }.onFailure { error ->
+                _deferReplyLetterResult.emit(UiState.Failure(error.message))
             }
         }
     }

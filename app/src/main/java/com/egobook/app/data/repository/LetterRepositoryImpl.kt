@@ -91,4 +91,15 @@ class LetterRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    override suspend fun deferReplyLetter(letterId: Long): Result<Unit> = try {
+        val response = letterApiService.deferReplyLetter(letterId = letterId)
+        if (response.status == 200) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

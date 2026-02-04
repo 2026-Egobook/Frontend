@@ -23,4 +23,9 @@ interface LetterApiService {
         @Path("letterId") letterId: Long,
         @Body request: ReplyLetterRequest
     ): ApiResponse<ReplyLetterResponse>
+
+    @POST("/plaza/letters/{letterId}/defer")
+    suspend fun deferReplyLetter(
+        @Path("letterId") letterId: Long
+    ): ApiResponse<Unit>
 }
