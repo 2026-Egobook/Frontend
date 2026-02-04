@@ -35,8 +35,15 @@ class TokenAuthenticator @Inject constructor(
 
         return runBlocking {
             try {
-                // 리프레시 토큰 가져오기
+                // 액세스,리프레시 토큰 가져오기
+                val accessToken = userInfoStorage.getAccessToken().first()
                 val refreshToken = userInfoStorage.getRefreshToken().first()
+                
+                if (accessToken.isNullOrEmpty()) {
+                    Timber.e("로컬에 액세스 토큰이 없음")
+                    handleLogout()
+                    return@runBlocking null
+                }
                 
                 if (refreshToken.isNullOrEmpty()) {
                     Timber.e("로컬에 리프레시 토큰이 없음")
@@ -46,7 +53,10 @@ class TokenAuthenticator @Inject constructor(
 
                 // 액세스 토큰 갱신 API 호출
                 val tokenResponse = authApiService.getAccessToken(
-                    AccessTokenRequest(refreshToken = refreshToken)
+                    AccessTokenRequest(
+                        accessToken = accessToken,
+                        refreshToken = refreshToken
+                    )
                 )
 
                 if (tokenResponse.isSuccessful && tokenResponse.body() != null) {
@@ -55,7 +65,7 @@ class TokenAuthenticator @Inject constructor(
                     // 새 액세스 토큰을 DataStore에 저장
                     userInfoStorage.saveAccessToken(newAccessToken)
                     
-                    Timber.d("토큰 갱신 성공")
+                    Timber.d("액세스 토큰 갱신 성공")
                     
                     // 새 토큰으로 재요청
                     Timber.d("갱신된 액세스 토큰으로 재요청")

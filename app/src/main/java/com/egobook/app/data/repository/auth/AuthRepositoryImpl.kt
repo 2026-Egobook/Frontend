@@ -86,7 +86,10 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun refreshAccessToken(): Result<Unit> {
         return try {
-            // Refresh Token 읽기
+            // Access, Refresh Token 읽기
+            val accessToken = userInfoStorage.getAccessToken().first()
+                ?: return Result.failure(Exception("액세스 토큰을 찾을 수 없습니다."))
+
             val refreshToken = userInfoStorage.getRefreshToken().first()
                 ?: return Result.failure(Exception("리프레시 토큰을 찾을 수 없습니다."))
 
@@ -94,7 +97,10 @@ class AuthRepositoryImpl @Inject constructor(
 
             // API 요청
             val response = apiService.getAccessToken(
-                AccessTokenRequest(refreshToken = refreshToken)
+                AccessTokenRequest(
+                    accessToken = accessToken,
+                    refreshToken = refreshToken
+                )
             )
 
             Timber.d("응답 코드: ${response.code()}")

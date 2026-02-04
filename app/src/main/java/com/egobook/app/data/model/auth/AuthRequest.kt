@@ -21,6 +21,8 @@ data class TokenRequestByGuest(
 //액세스토큰 재발급
 @Serializable
 data class AccessTokenRequest(
+    @SerialName("accessToken")
+    val accessToken: String,
     @SerialName("refreshToken")
     val refreshToken: String
 )
