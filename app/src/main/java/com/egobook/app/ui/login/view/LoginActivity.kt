@@ -52,18 +52,6 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels()
     private val blurRadius = 5f
 
-    private fun getGoogleRequest(): GetCredentialRequest {
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(true)
-            .setServerClientId(getString(R.string.google_web_client_id))
-            .setAutoSelectEnabled(true)
-            .build()
-
-        return GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-    }
-
     private val credentialManager by lazy {
         CredentialManager.create(this)
     }
@@ -147,6 +135,18 @@ class LoginActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    private fun getGoogleRequest(): GetCredentialRequest {
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(true)
+            .setServerClientId(getString(R.string.google_web_client_id))
+            .setAutoSelectEnabled(true)
+            .build()
+
+        return GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
     }
 
     private fun handleSignIn(result: GetCredentialResponse, isLogin: Boolean = false) {

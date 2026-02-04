@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,30 +11,22 @@ import androidx.lifecycle.lifecycleScope
 import com.egobook.app.MainActivity
 import com.egobook.app.R
 import com.egobook.app.data.local.UserInfoStorage
-import com.egobook.app.ui.onboarding.view.OnboardingActivity
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 //진짜 스플래시 화면으로 쓰는 용도
+@AndroidEntryPoint
 class IntroActivity : ComponentActivity() {
     @Inject lateinit var userInfoStorage: UserInfoStorage
 
-    private var keepSplash = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { keepSplash }
+        // SplashScreen API는 빠르게 종료 (배경색만 잠깐 보여줌)
+        installSplashScreen()
 
         super.onCreate(savedInstanceState)
-
-        lifecycleScope.launch {
-            try {
-                splashLogic()
-            } finally {
-                keepSplash = false
-            }
-        }
 
         actionBar?.hide()
         enableEdgeToEdge()
@@ -46,9 +37,17 @@ class IntroActivity : ComponentActivity() {
             insets
         }
 
+        // IntroActivity UI가 렌더링된 후 로직 실행
+        findViewById<android.view.View>(R.id.main).post {
+            lifecycleScope.launch {
+                splashLogic()
+            }
+        }
     }
 
     private suspend fun splashLogic() {
+        delay(1500)
+
         //액세스 토큰 읽기
         val accessToken = userInfoStorage.getAccessToken().first()
         val hasAccessToken = !accessToken.isNullOrEmpty()
