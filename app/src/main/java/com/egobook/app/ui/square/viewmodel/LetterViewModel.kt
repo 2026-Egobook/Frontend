@@ -6,6 +6,7 @@ import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
+import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
 import com.egobook.app.ui.square.model.friend.FriendModel
@@ -32,7 +33,8 @@ class LetterViewModel @Inject constructor(
     private val detectAbusiveContentUseCase: DetectAbusiveContentUseCase,
     private val getArrivedPendingLetterUseCase: GetArrivedPendingLetterUseCase,
     private val replyLetterUseCase: ReplyLetterUseCase,
-    private val deferReplyLetterUseCase: DeferReplyLetterUseCase
+    private val deferReplyLetterUseCase: DeferReplyLetterUseCase,
+    private val giveUpReplyLetterUseCase: GiveUpReplyLetterUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -115,6 +117,20 @@ class LetterViewModel @Inject constructor(
                 _deferReplyLetterResult.emit(UiState.Success(Unit))
             }.onFailure { error ->
                 _deferReplyLetterResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _giveUpReplyLetterResult = MutableSharedFlow<UiState<Unit>>()
+    val giveUpReplyLetterResult = _giveUpReplyLetterResult.asSharedFlow()
+
+    fun giveUpReplyLetter(letterId: Long) {
+        viewModelScope.launch {
+            _giveUpReplyLetterResult.emit(UiState.Loading)
+            giveUpReplyLetterUseCase(letterId = letterId).onSuccess {
+                _giveUpReplyLetterResult.emit(UiState.Success(Unit))
+            }.onFailure { error ->
+                _giveUpReplyLetterResult.emit(UiState.Failure(error.message))
             }
         }
     }

@@ -28,4 +28,9 @@ interface LetterApiService {
     suspend fun deferReplyLetter(
         @Path("letterId") letterId: Long
     ): ApiResponse<Unit>
+
+    @POST("/plaza/letters/{letterId}/give-up")
+    suspend fun giveUpReplyLetter(
+        @Path("letterId") letterId: Long
+    ): ApiResponse<Unit>
 }

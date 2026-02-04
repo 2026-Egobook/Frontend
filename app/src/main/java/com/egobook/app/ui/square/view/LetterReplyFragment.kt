@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.egobook.app.BlurLevel
 import com.egobook.app.R
@@ -105,6 +106,9 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
         btnLetterReply.setOnClickListener {
             viewModel.detectAbusiveContent(text = etLetterReplyContent.text.toString())
         }
+        ivLetterReplyBack.setOnClickListener {
+            viewModel.deferReplyLetter(letterId = letterItem.letterId)
+        }
     }
 
     private fun showTooltipPopup(anchorView: View) {
@@ -175,6 +179,18 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
                                 }
                                 dialog.show(parentFragmentManager, DetectAbusiveContentSuccessDialog.TAG)
                                 applyScreenBlur(BlurLevel.BASE)
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.deferReplyLetterResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                findNavController().popBackStack()
                             }
                         }
                     }

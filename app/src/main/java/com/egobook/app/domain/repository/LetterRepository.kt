@@ -11,4 +11,5 @@ interface LetterRepository {
     suspend fun fetchArrivedPendingLetter(): Result<ArrivedPendingLetter>
     suspend fun replyLetter(letterId: Long, text: String): Result<ReplyLetter>
     suspend fun deferReplyLetter(letterId: Long): Result<Unit>
+    suspend fun giveUpReplyLetter(letterId: Long): Result<Unit>
 }

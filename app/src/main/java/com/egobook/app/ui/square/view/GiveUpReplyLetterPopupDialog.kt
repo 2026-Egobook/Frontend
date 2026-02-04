@@ -43,19 +43,37 @@ class GiveUpReplyLetterPopupDialog(
         btnGiveUpReplyLetterDefer.setOnClickListener {
             viewModel.deferReplyLetter(letterId = letterInfo.letterId)
         }
+        btnGiveUpReplyLetter.setOnClickListener {
+            viewModel.giveUpReplyLetter(letterId = letterInfo.letterId)
+        }
     }
 
     private fun initObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.deferReplyLetterResult.collect { state ->
-                    when(state) {
-                        is UiState.Failure -> {}
-                        UiState.Idle -> {}
-                        UiState.Loading -> {}
-                        is UiState.Success<Unit> -> {
-                            removeScreenBlur()
-                            dismiss()
+                launch {
+                    viewModel.deferReplyLetterResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                removeScreenBlur()
+                                dismiss()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.giveUpReplyLetterResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                removeScreenBlur()
+                                dismiss()
+                            }
                         }
                     }
                 }
