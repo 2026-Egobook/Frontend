@@ -38,7 +38,7 @@ android {
 
         val baseUrl = localProperties.getProperty("BACKEND_BASE_URL")
         buildConfigField("String", "BACKEND_BASE_URL", "\"$baseUrl\"")
-        
+
         val googleClientId = localProperties.getProperty("GOOGLE_WEB_CLIENT_ID")
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleClientId\"")
 
@@ -140,6 +140,8 @@ dependencies {
 
     //Paging
     implementation("androidx.paging:paging-runtime:3.3.6")
+
+    implementation("io.coil-kt:coil:2.7.0")
 
     //SplashScreen API
     implementation("androidx.core:core-splashscreen:1.0.1")

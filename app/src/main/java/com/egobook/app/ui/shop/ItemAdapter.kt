@@ -9,11 +9,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.updatePadding
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.egobook.app.R
 
-class ItemAdapter(private val items: List<CustomItem>) :
-    RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+class ItemAdapter :
+    ListAdapter<CustomItem, ItemAdapter.ItemViewHolder>(ItemDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -25,18 +28,24 @@ class ItemAdapter(private val items: List<CustomItem>) :
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.binding(items[position])
+        holder.binding(getItem(position))
     }
-
-    override fun getItemCount() = items.size
 
     class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemStatus: TextView = view.findViewById(R.id.tv_item_status)
         val itemPriceIcon: ImageView = view.findViewById(R.id.iv_store_item_ink)
         val itemInfoLayout: LinearLayout = view.findViewById(R.id.ll_item_info)
+        val itemImage: ImageView = view.findViewById(R.id.iv_item)
         val root: View = view.rootView
 
         fun binding(item: CustomItem) {
+
+            item.image?.let { image ->
+                when(image) {
+                    is ItemImage.Url -> itemImage.load(image.path)
+                }
+            }
+
             when (item.itemStatus) {
                 ItemStatus.PURCHASED -> {
                     itemStatus.text = "보유중"
@@ -55,6 +64,18 @@ class ItemAdapter(private val items: List<CustomItem>) :
                     itemPriceIcon.visibility = VISIBLE
                     root.background = null
                 }
+            }
+        }
+    }
+
+    companion object {
+        private val ItemDiffCallback = object : DiffUtil.ItemCallback<CustomItem>() {
+            override fun areItemsTheSame(oldItem: CustomItem, newItem: CustomItem): Boolean {
+                return oldItem.id == newItem.id // 고유 ID 비교
+            }
+
+            override fun areContentsTheSame(oldItem: CustomItem, newItem: CustomItem): Boolean {
+                return oldItem == newItem // 전체 객체 내용 비교
             }
         }
     }
