@@ -1,9 +1,13 @@
 package com.egobook.app.data.interceptor
 
+import android.content.Context
+import android.content.Intent
 import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.auth.AccessTokenRequest
 import com.egobook.app.di.AuthRetrofit
+import com.egobook.app.ui.login.view.LoginActivity
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -14,6 +18,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class TokenAuthenticator @Inject constructor(
+    @param:ApplicationContext private val context: Context,
     private val userInfoStorage: UserInfoStorage,
     @param:AuthRetrofit private val authApiService: AuthApiService
 ) : Authenticator {
@@ -35,6 +40,7 @@ class TokenAuthenticator @Inject constructor(
                 
                 if (refreshToken.isNullOrEmpty()) {
                     Timber.e("로컬에 리프레시 토큰이 없음")
+                    handleLogout()
                     return@runBlocking null
                 }
 
@@ -52,18 +58,38 @@ class TokenAuthenticator @Inject constructor(
                     Timber.d("토큰 갱신 성공")
                     
                     // 새 토큰으로 재요청
+                    Timber.d("갱신된 액세스 토큰으로 재요청")
                     response.request.newBuilder()
                         .header("Authorization", "Bearer $newAccessToken")
                         .build()
+
                 } else {
-                    Timber.e("토큰 갱신 실패: ${tokenResponse.code()}")
+                    // 리프레시 토큰 갱신 실패 -> 리프레시 토큰 만료로 판단
+                    Timber.e("리프레시 토큰 갱신 실패: ${tokenResponse.code()}, 로그아웃 처리")
+                    handleLogout()
                     null
                 }
             } catch (e: Exception) {
-                Timber.e(e, "토큰 갱신 중 예외 발생")
+                Timber.e(e, "토큰 갱신 중 예외 발생, 로그아웃 처리")
+                handleLogout()
                 null
             }
         }
+    }
+
+    /**
+     * 로그아웃 처리: 로그인 화면으로 이동
+     */
+    private fun handleLogout() {
+        Timber.d("로그아웃 처리 시작")
+        
+        // 로그인 화면으로 이동
+        val intent = Intent(context, LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        context.startActivity(intent)
+        
+        Timber.d("로그인 화면으로 이동")
     }
 
     /**

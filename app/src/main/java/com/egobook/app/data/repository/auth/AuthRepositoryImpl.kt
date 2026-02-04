@@ -30,8 +30,10 @@ class AuthRepositoryImpl @Inject constructor(
                 userInfoStorage.saveAllTokens(
                     accessToken = tokenData.accessToken,
                     refreshToken = tokenData.refreshToken
-                ) // ✅ idToken 저장 안 함
-
+                )
+                val loginType = UserInfoStorage.LoginType.GOOGLE
+                userInfoStorage.saveLoginType(loginType)
+                Timber.d("구글 회원가입 성공, loginType=$loginType")
                 Result.success(Unit)
             } else {
                 Result.failure(Exception("회원가입 요청 실패: ${response.code()}"))
@@ -66,8 +68,11 @@ class AuthRepositoryImpl @Inject constructor(
                     refreshToken = tokenData.refreshToken,
                     recoverToken = tokenData.recoverToken
                 )
-                
-                Timber.d("게스트 로그인 성공")
+
+                //로그인 타입 저장
+                val loginType = UserInfoStorage.LoginType.GUEST
+                userInfoStorage.saveLoginType(loginType)
+                Timber.d("게스트 로그인 성공, loginType=$loginType")
                 Result.success(Unit)
             } else {
                 Timber.e("게스트 로그인 실패: ${response.code()}")

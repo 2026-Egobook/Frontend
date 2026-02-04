@@ -7,6 +7,6 @@ class GuestReLogin @Inject constructor(
     private val repository: AuthRepository
 ){
     suspend operator fun invoke(): Result<Unit> {
-        return repository.refreshGuestTokens()
+        return repository.refreshGuestTokens() //토큰들 갱신
     }
 }

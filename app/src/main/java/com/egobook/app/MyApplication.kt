@@ -5,12 +5,19 @@ import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 @HiltAndroidApp
-class MyApplication: Application() {
+class MyApplication : Application() {
+
     override fun onCreate() {
         super.onCreate()
+
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            Timber.plant(AppDebugTree())
         }
     }
 
+    private class AppDebugTree : Timber.DebugTree() {
+        override fun createStackElementTag(element: StackTraceElement): String {
+            return "TIMBER"
+        }
+    }
 }

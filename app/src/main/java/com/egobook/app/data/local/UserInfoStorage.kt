@@ -23,6 +23,31 @@ class UserInfoStorage @Inject constructor(
 ) {
     private val dataStore = context.dataStore
 
+
+    /**
+     * LoginType 저장
+     */
+    suspend fun saveLoginType(type: LoginType) {
+        dataStore.edit { preferences ->
+            preferences[LOGIN_TYPE] = type.name
+        }
+    }
+
+    /**
+     * LoginType 읽기
+     */
+    fun getLoginType(): Flow<LoginType?> {
+        return dataStore.data.map { preferences ->
+            preferences[LOGIN_TYPE]?.let {
+                try {
+                    LoginType.valueOf(it)
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            }
+        }
+    }
+
     /**
      * Access Token 저장
      */
@@ -120,8 +145,14 @@ class UserInfoStorage @Inject constructor(
         }
     }
 
+    enum class LoginType {
+        GOOGLE, GUEST
+    }
+
     //저장할 키값 종류 정의
     companion object {
+
+        private val LOGIN_TYPE = stringPreferencesKey("login_type")
         private val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KEY_RECOVER_TOKEN = stringPreferencesKey("recover_token")
