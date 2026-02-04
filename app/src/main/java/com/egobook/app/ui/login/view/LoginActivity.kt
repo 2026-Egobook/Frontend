@@ -15,11 +15,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.first
 import com.egobook.app.MainActivity
 import com.egobook.app.R
 import com.egobook.app.data.local.UserInfoStorage
@@ -34,6 +32,7 @@ import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.exceptions.GetCredentialException
+import com.egobook.app.BuildConfig
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
@@ -139,7 +138,7 @@ class LoginActivity : AppCompatActivity() {
     private fun getGoogleRequest(): GetCredentialRequest {
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(true)
-            .setServerClientId(getString(R.string.google_web_client_id))
+            .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
             .setAutoSelectEnabled(true)
             .build()
 

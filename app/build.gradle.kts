@@ -38,6 +38,9 @@ android {
 
         val baseUrl = localProperties.getProperty("BACKEND_BASE_URL")
         buildConfigField("String", "BACKEND_BASE_URL", "\"$baseUrl\"")
+        
+        val googleClientId = localProperties.getProperty("GOOGLE_WEB_CLIENT_ID")
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleClientId\"")
 
     }
 
