@@ -127,6 +127,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:5.0.5")
 
     implementation("androidx.paging:paging-runtime:3.3.6")
+
+    implementation("io.coil-kt:coil:2.7.0")
 }
 
 ksp {
