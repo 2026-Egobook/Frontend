@@ -1,4 +1,4 @@
-package com.egobook.app.data.model.response
+package com.egobook.app.data.model.diary
 
 data class GetDiaryResponse (
     val diaryId: Long,
@@ -18,5 +18,3 @@ data class GetDiaryResponse (
     val updatedAt: String
 
 )
-
-
