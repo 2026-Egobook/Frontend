@@ -17,7 +17,7 @@
     <style name="AppTheme.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_color</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/empty_splash</item>  <!-- 투명 -->
-        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="31">2000</item>
+        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="31">1000</item>
         <item name="postSplashScreenTheme" tools:targetApi="31">@style/Theme.Egobook</item>
     </style>
 

@@ -145,7 +145,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.0")
     implementation("androidx.datastore:datastore-preferences-core:1.2.0")
 
-
+    //Timber
+    implementation("com.jakewharton.timber:timber:5.0.1")
 }
 
 ksp {

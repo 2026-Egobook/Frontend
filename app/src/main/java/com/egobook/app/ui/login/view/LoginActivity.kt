@@ -73,13 +73,7 @@ class LoginActivity : AppCompatActivity() {
         splashScreen.setKeepOnScreenCondition { keepSplash }
 
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            try {
-                splashLogic()
-            } finally {
-                keepSplash = false
-            }
-        }
+
         enableEdgeToEdge()
         setContentView(binding.root)
 
@@ -98,64 +92,6 @@ class LoginActivity : AppCompatActivity() {
         setupClickListeners() //클릭리스너 설정
 
     }
-
-    //===========================================스플래시 화면에서의 자동 로그인 시도===============================================
-    private suspend fun splashLogic() {
-        //액세스 토큰 확인
-        val accessToken = userInfoStorage.getAccessToken().first()
-        val hasAccessToken = !accessToken.isNullOrEmpty()
-
-        // 리프레시 토큰도 확인
-        val refreshToken = userInfoStorage.getRefreshToken().first()
-        val hasRefreshToken = !refreshToken.isNullOrEmpty()
-
-        when {
-            hasAccessToken && isTokenValid(accessToken) -> {
-                Log.d(TAG, "AccessToken 유효 → 자동 로그인")
-                navigateToMain()
-                return@splashLogic
-            }
-            hasRefreshToken -> {
-                Log.d(TAG, "AccessToken 만료 → RefreshToken으로 재발급 시도")
-                viewModel.onAutoEvent(AutoEvent.TryAutoLoginByGoogle)
-                navigateToMain()
-                return@splashLogic
-            }
-            else -> {
-                Log.d(TAG, "리프레스 토큰 없음 or 만료 → 로그인 화면 표시")
-                return@splashLogic
-            }
-
-        }
-    }
-
-    //=======================================================================================================================
-
-
-    //토큰 유효성 체크
-    fun isTokenValid(token: String): Boolean {
-        val parts = token.split(".")
-        if (parts.size != 3) return false
-
-        // payload 디코딩 (Base64 URL Safe)
-        val payload = try {
-            val decoded = Base64.decode(parts[1], Base64.URL_SAFE or Base64.NO_WRAP)
-            String(decoded)
-        } catch (e: Exception) {
-            return false
-        }
-
-        // JSON에서 exp 필드 추출
-        val exp = try {
-            JSONObject(payload).getLong("exp")
-        } catch (e: Exception) {
-            return false
-        }
-
-        val currentTime = System.currentTimeMillis() / 1000
-        return exp > currentTime
-    }
-
     private fun setupBlur() {
         binding.blurView.setupWith(binding.blurTarget)
             .setBlurRadius(blurRadius)
