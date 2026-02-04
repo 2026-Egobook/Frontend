@@ -54,7 +54,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_letter_color_pink"
+        android:id="@+id/cv_letter_write_color_pink"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
@@ -75,18 +75,18 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_letter_color_leaf"
+        android:id="@+id/cv_letter_write_color_green"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
-        app:cardBackgroundColor="@color/letter_bg_leaf"
+        app:cardBackgroundColor="@color/letter_bg_green"
         app:strokeColor="@color/selector_letter_paper_color_stroke"
         app:strokeWidth="2dp"
         app:contentPadding="8dp"
         app:shapeAppearanceOverlay="@style/Circle"
-        app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_pink"
-        app:layout_constraintStart_toEndOf="@id/cv_letter_color_pink"
-        app:layout_constraintTop_toTopOf="@id/cv_letter_color_pink">
+        app:layout_constraintBottom_toBottomOf="@id/cv_letter_write_color_pink"
+        app:layout_constraintStart_toEndOf="@id/cv_letter_write_color_pink"
+        app:layout_constraintTop_toTopOf="@id/cv_letter_write_color_pink">
         <ImageView
             android:id="@+id/iv_letter_color_leaf_checked"
             android:layout_width="match_parent"
@@ -96,18 +96,18 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_letter_color_mint"
+        android:id="@+id/cv_letter_write_color_blue"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
-        app:cardBackgroundColor="@color/letter_bg_mint"
+        app:cardBackgroundColor="@color/letter_bg_blue"
         app:strokeColor="@color/selector_letter_paper_color_stroke"
         app:strokeWidth="2dp"
         app:contentPadding="8dp"
         app:shapeAppearanceOverlay="@style/Circle"
-        app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_leaf"
-        app:layout_constraintStart_toEndOf="@id/cv_letter_color_leaf"
-        app:layout_constraintTop_toTopOf="@id/cv_letter_color_leaf">
+        app:layout_constraintBottom_toBottomOf="@id/cv_letter_write_color_green"
+        app:layout_constraintStart_toEndOf="@id/cv_letter_write_color_green"
+        app:layout_constraintTop_toTopOf="@id/cv_letter_write_color_green">
         <ImageView
             android:id="@+id/iv_letter_color_mint_checked"
             android:layout_width="match_parent"
@@ -117,18 +117,18 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_letter_color_lavender"
+        android:id="@+id/cv_letter_write_color_purple"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="12dp"
-        app:cardBackgroundColor="@color/letter_bg_lavender"
+        app:cardBackgroundColor="@color/letter_bg_purple"
         app:strokeColor="@color/selector_letter_paper_color_stroke"
         app:strokeWidth="2dp"
         app:contentPadding="8dp"
         app:shapeAppearanceOverlay="@style/Circle"
-        app:layout_constraintBottom_toBottomOf="@id/cv_letter_color_mint"
-        app:layout_constraintStart_toEndOf="@id/cv_letter_color_mint"
-        app:layout_constraintTop_toTopOf="@id/cv_letter_color_mint">
+        app:layout_constraintBottom_toBottomOf="@id/cv_letter_write_color_blue"
+        app:layout_constraintStart_toEndOf="@id/cv_letter_write_color_blue"
+        app:layout_constraintTop_toTopOf="@id/cv_letter_write_color_blue">
         <ImageView
             android:id="@+id/iv_letter_color_lavender_checked"
             android:layout_width="match_parent"

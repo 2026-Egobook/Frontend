@@ -24,18 +24,17 @@ import com.egobook.app.databinding.LayoutPopupFriendListBinding
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.adapter.FriendPopupListAdapter
 import com.egobook.app.ui.square.model.friend.FriendModel
-import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
-import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
     private lateinit var binding: FragmentLetterWriteBinding
-    private val letterColorList by lazy {
-        listOf(binding.cvLetterColorBeige, binding.cvLetterColorPink, binding.cvLetterColorLeaf, binding.cvLetterColorMint, binding.cvLetterColorLavender)
+    private val premiumLetterColorList by lazy {
+        listOf(binding.cvLetterWriteColorPink, binding.cvLetterWriteColorGreen, binding.cvLetterWriteColorBlue, binding.cvLetterWriteColorPurple)
     }
 
     private val viewModel: LetterViewModel by activityViewModels()
@@ -63,36 +62,17 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
 
     private fun initListeners() = with(binding) {
         ivLetterWriteBack.setOnClickListener { findNavController().popBackStack() }
-        letterColorList.forEach { letterColor ->
+        premiumLetterColorList.forEach { letterColor ->
             letterColor.setOnClickListener { clickedView ->
-                letterColorList.forEach { card ->
-                    card.isSelected = false
-                    card.getChildAt(0).isVisible = false
+                val letterColor = when(clickedView.id) {
+                    R.id.cv_letter_write_color_pink -> LetterBackgroundColor.PINK
+                    R.id.cv_letter_write_color_green -> LetterBackgroundColor.GREEN
+                    R.id.cv_letter_write_color_blue -> LetterBackgroundColor.BLUE
+                    else -> LetterBackgroundColor.PURPLE
                 }
-                clickedView.isSelected = true
-                (clickedView as MaterialCardView).getChildAt(0).isVisible = true
-                when(clickedView.id) {
-                    R.id.cv_letter_color_beige -> {
-                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_beige, null)
-                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.BEIGE
-                    }
-                    R.id.cv_letter_color_pink -> {
-                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_pink, null)
-                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.PINK
-                    }
-                    R.id.cv_letter_color_leaf -> {
-                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_leaf, null)
-                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.LEAF
-                    }
-                    R.id.cv_letter_color_mint -> {
-                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_mint, null)
-                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.MINT
-                    }
-                    R.id.cv_letter_color_lavender -> {
-                        cvLetterContainer.backgroundTintList = resources.getColorStateList(R.color.letter_bg_lavender, null)
-                        this@LetterWriteFragment.letterColor = LetterBackgroundColor.LAVENDER
-                    }
-                }
+                val dialog = PremiumLetterBuyDialog(letterColor = letterColor).apply { isCancelable = false }
+                dialog.show(childFragmentManager, PremiumLetterBuyDialog.TAG)
+                applyScreenBlur(BlurLevel.BASE)
             }
         }
         etLetterWriteContent.addTextChangedListener(object: TextWatcher {
