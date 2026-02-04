@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Egobook"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.login.view.IntroActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.login.view.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"
