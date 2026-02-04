@@ -11,7 +11,7 @@ import com.egobook.app.R
 import com.egobook.app.databinding.DialogArrivedPendingLetterBinding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterItemModel
-import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
@@ -41,9 +41,9 @@ class ArrivedPendingLetterDialog(
             when(letterInfo.letterColor) {
                 LetterBackgroundColor.BEIGE -> resources.getColorStateList(R.color.letter_bg_beige, null)
                 LetterBackgroundColor.PINK -> resources.getColorStateList(R.color.letter_bg_pink, null)
-                LetterBackgroundColor.LEAF -> resources.getColorStateList(R.color.letter_bg_leaf, null)
-                LetterBackgroundColor.MINT -> resources.getColorStateList(R.color.letter_bg_mint, null)
-                LetterBackgroundColor.LAVENDER -> resources.getColorStateList(R.color.letter_bg_lavender, null)
+                LetterBackgroundColor.GREEN -> resources.getColorStateList(R.color.letter_bg_green, null)
+                LetterBackgroundColor.BLUE -> resources.getColorStateList(R.color.letter_bg_blue, null)
+                LetterBackgroundColor.PURPLE -> resources.getColorStateList(R.color.letter_bg_purple, null)
             }
     }
 

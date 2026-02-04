@@ -12,7 +12,7 @@ import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.domain.model.square.letter.SendLetter
 import com.egobook.app.domain.repository.LetterRepository
-import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import javax.inject.Inject
 
 class LetterRepositoryImpl @Inject constructor(

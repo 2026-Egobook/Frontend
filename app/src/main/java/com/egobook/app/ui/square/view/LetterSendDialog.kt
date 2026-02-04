@@ -18,7 +18,7 @@ import com.egobook.app.removeScreenBlur
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
-import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.ui.square.model.letter.SendLetterModel
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState

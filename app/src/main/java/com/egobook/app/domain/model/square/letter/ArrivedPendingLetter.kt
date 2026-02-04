@@ -1,7 +1,5 @@
 package com.egobook.app.domain.model.square.letter
 
-import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
-
 data class ArrivedPendingLetter(
     val letter: ArrivedPendingLetterItem? = null
 )

@@ -1,5 +1,6 @@
 package com.egobook.app.ui.square.model.letter
 
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.model.square.letter.SendLetter
 

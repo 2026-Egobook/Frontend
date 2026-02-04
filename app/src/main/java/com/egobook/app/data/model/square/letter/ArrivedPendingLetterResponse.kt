@@ -4,7 +4,7 @@ import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetterItem
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.model.square.letter.LetterStatus
-import com.egobook.app.ui.square.model.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.google.gson.annotations.SerializedName
 
 data class ArrivedPendingLetterResponse(
