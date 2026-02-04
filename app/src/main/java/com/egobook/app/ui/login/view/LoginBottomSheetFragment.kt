@@ -43,11 +43,6 @@ class LoginBottomSheetFragment : BottomSheetDialogFragment() {
             // 로그인 확인 콜백 호출
             loginConfirmListener?.onLoginConfirmed()
             dismiss()
-            // 바로 OnboardingActivity로 이동 - 임시 구현
-            //val intent = Intent(requireActivity(), OnboardingActivity::class.java)
-            //startActivity(intent)
-            //requireActivity().finish()
-            //dismiss()
         }
     }
 

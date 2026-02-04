@@ -1,7 +1,6 @@
 package com.egobook.app.di
 
 import android.content.Context
-import com.egobook.app.data.local.UUIDProvider
 import com.egobook.app.data.local.UserInfoStorage
 import dagger.Module
 import dagger.Provides
@@ -19,9 +18,5 @@ object DataStoreModule {
     fun provideUserTokenStorage(
         @ApplicationContext context: Context
     ): UserInfoStorage = UserInfoStorage(context)
-
-    @Provides
-    @Singleton
-    fun provideUUIDProvider(): UUIDProvider = UUIDProvider
 
 }

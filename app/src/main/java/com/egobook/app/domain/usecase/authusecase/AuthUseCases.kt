@@ -7,5 +7,7 @@ import javax.inject.Inject
 data class AuthUseCases @Inject constructor (
     val googleSignUp: GoogleSignUp,
     val googleAutoLogin: GoogleAutoLogin,
-    val googleLogin: GoogleLogin
+    val googleLogin: GoogleLogin,
+    val guestLogin: GuestLogin,
+    val guestReLogin: GuestReLogin
 )

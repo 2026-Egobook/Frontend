@@ -23,7 +23,7 @@ interface AuthApiService {
     ): Response<TokenResponseByGoogle>
 
     //Guest 최초 둘러보기
-    @POST("auth/guest/login")
+    @POST("auth/guest/join")
     suspend fun guestLogin(
         @Body request: TokenRequestByGuest
     ): Response<TokenResponseByGuest>

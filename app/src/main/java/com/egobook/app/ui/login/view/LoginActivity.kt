@@ -36,9 +36,6 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.exceptions.GetCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import org.json.JSONObject
-import android.util.Base64
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
 
 @AndroidEntryPoint
@@ -70,6 +67,8 @@ class LoginActivity : AppCompatActivity() {
 
         observeLoginState()
         observeFirstSignUp()
+        observeGuestSignUp()
+        observeSignUpError()
         setupGuideText() //폰트 커스텀 적용
         setupBlur() //블러뷰
         setupClickListeners() //클릭리스너 설정
@@ -110,6 +109,11 @@ class LoginActivity : AppCompatActivity() {
 
             })
             loginBottomSheet.show(supportFragmentManager, LoginBottomSheetFragment.TAG)
+        }
+
+        //게스트 로그인 버튼 클릭이벤트
+        binding.btnGuestLogin.setOnClickListener {
+            viewModel.onEvent(LoginEvent.TryGuestLogin)
         }
 
         // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기
@@ -171,7 +175,6 @@ class LoginActivity : AppCompatActivity() {
             Log.e(TAG, "구글 로그인 credential 아님")
         }
     }
-
     private fun observeLoginState() {
         lifecycleScope.launch {
             viewModel.loginState.collect { state ->
@@ -201,6 +204,26 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.isFirstSignUp.collect {
                 navigateToOnboarding() //온보딩 화면 이동
+            }
+        }
+    }
+
+    private fun observeGuestSignUp() {
+        lifecycleScope.launch {
+            viewModel.isGuestSignUp.collect {
+                navigateToOnboarding() //온보딩 화면 이동
+            }
+        }
+    }
+
+    private fun observeSignUpError() {
+        lifecycleScope.launch {
+            viewModel.signUpError.collect { errorMessage ->
+                Toast.makeText(
+                    this@LoginActivity,
+                    "회원가입 실패: $errorMessage",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

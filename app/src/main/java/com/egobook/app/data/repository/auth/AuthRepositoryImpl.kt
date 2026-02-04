@@ -1,23 +1,22 @@
 package com.egobook.app.data.repository.auth
 
-import android.util.Log
 import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.auth.AccessTokenRequest
 import com.egobook.app.data.model.auth.TokensRequest
 import com.egobook.app.data.model.auth.TokenRequestByGoogle
+import com.egobook.app.data.model.auth.TokenRequestByGuest
 import com.egobook.app.data.model.auth.TokensRequestAgainByGuest
 import com.egobook.app.domain.repository.auth.AuthRepository
+import timber.log.Timber
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
+import java.util.UUID
 
 class AuthRepositoryImpl @Inject constructor(
     private val apiService: AuthApiService,
-    private val userInfoStorage: UserInfoStorage
+    private val userInfoStorage: UserInfoStorage,
 ) : AuthRepository {
-    companion object {
-        private const val TAG = "AuthRepository"
-    }
 
     override suspend fun googleSignUp(idToken: String): Result<Unit> {
         return try {
@@ -44,7 +43,40 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun guestLogin(): Result<Unit> {
-        TODO("Not yet implemented")
+        return try {
+            // 앱 설치 인스턴스 고유 UUID
+            val deviceUid = UUID.randomUUID().toString()
+            
+            Timber.d("게스트 로그인 시도: deviceUid=$deviceUid")
+            
+            // Guest 로그인 API 요청
+            val response = apiService.guestLogin(
+                TokenRequestByGuest(deviceUid = deviceUid)
+            )
+            
+            if (response.isSuccessful && response.body() != null) {
+                val tokenData = response.body()!!.data
+                
+                // UUID 저장
+                userInfoStorage.saveDeviceUid(deviceUid)
+                
+                // 토큰 저장
+                userInfoStorage.saveAllTokens(
+                    accessToken = tokenData.accessToken,
+                    refreshToken = tokenData.refreshToken,
+                    recoverToken = tokenData.recoverToken
+                )
+                
+                Timber.d("게스트 로그인 성공")
+                Result.success(Unit)
+            } else {
+                Timber.e("게스트 로그인 실패: ${response.code()}")
+                Result.failure(Exception("게스트 로그인 실패: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "게스트 로그인 중 오류")
+            Result.failure(e)
+        }
     }
 
     override suspend fun refreshAccessToken(): Result<Unit> {
@@ -53,15 +85,15 @@ class AuthRepositoryImpl @Inject constructor(
             val refreshToken = userInfoStorage.getRefreshToken().first()
                 ?: return Result.failure(Exception("리프레시 토큰을 찾을 수 없습니다."))
 
-            Log.d(TAG, "액세스 토큰 재발급 시도 시작")
+            Timber.d("액세스 토큰 재발급 시도 시작")
 
             // API 요청
             val response = apiService.getAccessToken(
                 AccessTokenRequest(refreshToken = refreshToken)
             )
 
-            Log.d(TAG, "응답 코드: ${response.code()}")
-            Log.d(TAG, "응답 성공 여부: ${response.isSuccessful}")
+            Timber.d("응답 코드: ${response.code()}")
+            Timber.d("응답 성공 여부: ${response.isSuccessful}")
 
             // 응답 성공시
             if (response.isSuccessful && response.body() != null) {
@@ -75,7 +107,7 @@ class AuthRepositoryImpl @Inject constructor(
                 Result.failure(Exception("액세스 토큰 재발급 실패: ${response.code()}"))
             }
         } catch (e: Exception) {
-            Log.e(TAG, "액세스 토큰 재발급 중 오류", e)
+            Timber.e(e, "액세스 토큰 재발급 중 오류")
             Result.failure(e)
         }
     }
@@ -90,7 +122,7 @@ class AuthRepositoryImpl @Inject constructor(
                 val tokenData = response.body()!!.data
 
                 userInfoStorage.saveAllTokens(
-                    accessToken = tokenData.accessToken,
+                    accessToken =   tokenData.accessToken,
                     refreshToken = tokenData.refreshToken
                 )
 
@@ -106,25 +138,29 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun refreshGuestTokens(): Result<Unit> {
         return try {
-            // Device UID 및 Recover Token 읽기
+            // Device UID 및 Access Token, Recover Token 읽기
             val deviceUid = userInfoStorage.getDeviceUid().first()
                 ?: return Result.failure(Exception("디바이스 UID를 찾을 수 없습니다."))
+
+            val accessToken = userInfoStorage.getAccessToken().first()
+                ?: return Result.failure(Exception("accessToken을 찾을 수 없습니다."))
 
             val recoverToken = userInfoStorage.getRecoverToken().first()
                 ?: return Result.failure(Exception("recoverToken을 찾을 수 없습니다."))
 
-            Log.d(TAG, "게스트 토큰 재발급 시도")
+            Timber.d("게스트 토큰 재발급 시도")
 
             // API 요청
             val response = apiService.reGetTokensByGuest(
                 TokensRequestAgainByGuest(
                     deviceUid = deviceUid,
+                    accessToken = accessToken,
                     recoverToken = recoverToken
                 )
             )
 
-            Log.d(TAG, "응답 코드: ${response.code()}")
-            Log.d(TAG, "응답 성공 여부: ${response.isSuccessful}")
+            Timber.d("응답 코드: ${response.code()}")
+            Timber.d("응답 성공 여부: ${response.isSuccessful}")
 
             // 응답 성공시
             if (response.isSuccessful && response.body() != null) {
@@ -139,7 +175,7 @@ class AuthRepositoryImpl @Inject constructor(
                 Result.failure(Exception("게스트 토큰 재발급 실패: ${response.code()}"))
             }
         } catch (e: Exception) {
-            Log.e(TAG, "게스트 토큰 재발급 중 오류", e)
+            Timber.e(e, "게스트 토큰 재발급 중 오류")
             Result.failure(e)
         }
     }

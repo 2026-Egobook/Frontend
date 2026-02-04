@@ -16,12 +16,14 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-    private val userInfoStorage: UserInfoStorage
 ) : ViewModel()  {
     private val _isFirstSignUp = MutableSharedFlow<Unit>()
     val isFirstSignUp = _isFirstSignUp.asSharedFlow()
+    private val _isGuestSignUp = MutableSharedFlow<Unit>()
+    val isGuestSignUp = _isGuestSignUp.asSharedFlow()
 
     private val _signUpError = MutableSharedFlow<String>()
+    val signUpError = _signUpError.asSharedFlow()
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState = _loginState.asStateFlow()
@@ -33,6 +35,7 @@ class LoginViewModel @Inject constructor(
     //"로그인 화면" 에서의 이벤트만 처리하는 용도.
     fun onEvent(event: LoginEvent) {
         when (event) {
+            //최초 구글 회원가입일 시엔 _isFirstSignUp을 emit하여 온보딩 화면으로 이동하도록 설계
             is LoginEvent.TrySignInByGoogle -> {
                 viewModelScope.launch {
                     _loginState.value = LoginState.Loading
@@ -59,8 +62,22 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
+            //게스트 로그인(회원가입)일 시엔 _isGuestSignUp을 emit하여 온보딩 화면으로 이동하도록 설계
             is LoginEvent.TryGuestLogin -> {
-                TODO()
+                viewModelScope.launch{
+                    _loginState.value = LoginState.Loading
+                    val result = authUseCases.guestLogin()
+                    result.fold(
+                        onSuccess = {
+                            _isGuestSignUp.emit(Unit)
+                            _loginState.value = LoginState.Idle  // 로딩 해제
+                        },
+                        onFailure = { error ->
+                            _signUpError.emit(error.message ?: "알 수 없는 오류")
+                            _loginState.value = LoginState.Idle  // 로딩 해제
+                        }
+                    )
+                }
             }
         }
     }
