@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
@@ -43,8 +42,8 @@ class DetectAbusiveContentSuccessDialog(private val status: LetterStatus, privat
                         ReplyReward.INK -> {
                             rewardList.add("${ReplyReward.INK.label} ${reward.amount}") // 잉크 1
                         }
-                        ReplyReward.SINCERITY -> {
-                            rewardList.add("${ReplyReward.SINCERITY.label} ${reward.amount}") // 공감성 1
+                        ReplyReward.EMPATHY -> {
+                            rewardList.add("${ReplyReward.EMPATHY.label} ${reward.amount}") // 공감성 1
                         }
                     }
                 }
