@@ -5,7 +5,7 @@ import android.content.Intent
 import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.auth.AccessTokenRequest
-import com.egobook.app.di.AuthRetrofit
+import com.egobook.app.di.qualifier.AuthRetrofit
 import com.egobook.app.ui.login.view.LoginActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first

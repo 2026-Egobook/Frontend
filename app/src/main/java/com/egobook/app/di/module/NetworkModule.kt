@@ -1,9 +1,11 @@
 package com.egobook.app.di
 
 import com.egobook.app.BuildConfig
-import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.interceptor.AuthInterceptor
 import com.egobook.app.data.interceptor.TokenAuthenticator
+import com.egobook.app.di.qualifier.AIApi
+import com.egobook.app.di.qualifier.AuthRetrofit
+import com.egobook.app.di.qualifier.BackendApi
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -14,16 +16,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Qualifier
 import javax.inject.Singleton
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AuthRetrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
     @Provides
     @Singleton
     @BackendApi
@@ -52,12 +50,21 @@ object NetworkModule {
             .build()
     }
 
+    /**
+     * 토큰 갱신용 Retrofit
+     */
     @Provides
     @Singleton
-    fun provideGsonConverterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create(
-            GsonBuilder().create()
-        )
+    @AuthRetrofit
+    fun provideAuthRetrofit(
+        @AuthRetrofit client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BACKEND_BASE_URL)
+            .addConverterFactory(gsonConverterFactory)
+            .client(client)
+            .build()
     }
 
     /**
@@ -82,35 +89,6 @@ object NetworkModule {
             writeTimeout(15, TimeUnit.SECONDS)
             addInterceptor(loggingInterceptor)
         }.build()
-    }
-
-    /**
-     * 토큰 갱신용 Retrofit
-     */
-    @Provides
-    @Singleton
-    @AuthRetrofit
-    fun provideAuthRetrofit(
-        @AuthRetrofit client: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_BASE_URL)
-            .addConverterFactory(gsonConverterFactory)
-            .client(client)
-            .build()
-    }
-
-    /**
-     * 토큰 갱신용 AuthApiService
-     */
-    @Provides
-    @Singleton
-    @AuthRetrofit
-    fun provideAuthApiService(
-        @AuthRetrofit retrofit: Retrofit
-    ): AuthApiService {
-        return retrofit.create(AuthApiService::class.java)
     }
 
     /**
@@ -152,6 +130,14 @@ object NetworkModule {
             writeTimeout(60, TimeUnit.SECONDS)
             addInterceptor(authInterceptor)
         }.build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGsonConverterFactory(): GsonConverterFactory {
+        return GsonConverterFactory.create(
+            GsonBuilder().create()
+        )
     }
 
 }

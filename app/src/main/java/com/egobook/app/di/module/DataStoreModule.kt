@@ -1,4 +1,4 @@
-package com.egobook.app.di
+package com.egobook.app.di.module
 
 import android.content.Context
 import com.egobook.app.data.local.UserInfoStorage

@@ -1,12 +1,14 @@
 package com.egobook.app.di.module
 
 import com.egobook.app.data.api.AIApiService
+import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.api.CounselingApiService
 import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.api.LetterApiService
 import com.egobook.app.data.api.NotificationApiService
 import com.egobook.app.data.api.QuestionApiService
 import com.egobook.app.di.qualifier.AIApi
+import com.egobook.app.di.qualifier.AuthRetrofit
 import com.egobook.app.di.qualifier.BackendApi
 import dagger.Module
 import dagger.Provides
@@ -48,10 +50,20 @@ object ServiceModule {
         return retrofit.create(LetterApiService::class.java)
     }
 
+    /**
+     * 토큰 갱신용 AuthApiService
+     */
+    @Provides
+    @Singleton
+    fun provideAuthApiService(
+        @AuthRetrofit retrofit: Retrofit
+    ): AuthApiService {
+        return retrofit.create(AuthApiService::class.java)
+    }
+
     @Provides
     @Singleton
     fun provideAIService(@AIApi retrofit: Retrofit): AIApiService {
         return retrofit.create(AIApiService::class.java)
     }
-
 }
