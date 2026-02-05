@@ -1,6 +1,13 @@
 package com.egobook.app.di.module
 
 import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.domain.repository.auth.AuthRepository
+import com.egobook.app.domain.usecase.authusecase.AuthUseCases
+import com.egobook.app.domain.usecase.authusecase.GoogleAutoLogin
+import com.egobook.app.domain.usecase.authusecase.GoogleLogin
+import com.egobook.app.domain.usecase.authusecase.GoogleSignUp
+import com.egobook.app.domain.usecase.authusecase.GuestLogin
+import com.egobook.app.domain.usecase.authusecase.GuestReLogin
 import com.egobook.app.domain.usecase.diaryusecase.AddDiary
 import com.egobook.app.domain.usecase.diaryusecase.DeleteDiary
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
@@ -30,6 +37,18 @@ object UseCaseModule {
             deleteDiary = DeleteDiary(repository)
         )
 
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthUseCases(repository: AuthRepository): AuthUseCases {
+        return AuthUseCases(
+            googleSignUp = GoogleSignUp(repository),
+            googleAutoLogin = GoogleAutoLogin(repository),
+            googleLogin = GoogleLogin(repository),
+            guestLogin = GuestLogin(repository),
+            guestReLogin = GuestReLogin(repository)
+        )
     }
 
 }

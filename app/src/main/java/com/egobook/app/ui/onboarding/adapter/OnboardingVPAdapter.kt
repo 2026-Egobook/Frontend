@@ -1,6 +1,7 @@
 package com.egobook.app.ui.onboarding.adapter
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.egobook.app.ui.onboarding.view.OnboardingFirstFragment
 import com.egobook.app.ui.onboarding.view.OnboardingSecondFragment
@@ -8,7 +9,7 @@ import com.egobook.app.ui.onboarding.view.OnboardingThirdFragment
 import com.egobook.app.ui.onboarding.view.OnboardingFourthFragment
 import com.egobook.app.ui.onboarding.view.OnboardingFifthFragment
 
-class OnboardingVPAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class OnboardingVPAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> OnboardingFirstFragment()

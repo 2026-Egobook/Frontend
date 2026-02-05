@@ -36,6 +36,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.egobook.app.HiltTestRunner"
 
+        val googleClientId = localProperties.getProperty("GOOGLE_WEB_CLIENT_ID")
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleClientId\"")
+
         val backendBaseUrl = localProperties.getProperty("BACKEND_BASE_URL")
         buildConfigField("String", "BACKEND_BASE_URL", "\"$backendBaseUrl\"")
         val aiBaseUrl = localProperties.getProperty("AI_BASE_URL")
@@ -127,9 +130,29 @@ dependencies {
 
     implementation("me.relex:circleindicator:2.1.6")
     implementation("com.github.Dimezis:BlurView:version-3.2.0")
+
+    //Credential Google Sign-In
+    implementation("androidx.credentials:credentials:1.6.0-rc01")
+    implementation("androidx.credentials:credentials-play-services-auth:1.6.0-rc01")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.2.0")
+
+    //Glide
     implementation("com.github.bumptech.glide:glide:5.0.5")
 
+    //Paging
     implementation("androidx.paging:paging-runtime:3.3.6")
+
+    implementation("io.coil-kt:coil:2.7.0")
+
+    //SplashScreen API
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.2.0")
+    implementation("androidx.datastore:datastore-preferences-core:1.2.0")
+
+    //Timber
+    implementation("com.jakewharton.timber:timber:5.0.1")
 }
 
 ksp {

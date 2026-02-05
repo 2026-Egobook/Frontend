@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.login.view.IntroActivity"
+    android:background="@color/splash_color">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="229dp"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/iv_turtle_splash"
+            android:layout_width="136dp"
+            android:layout_height="85.5dp"
+            android:src="@drawable/img_turtle_login"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp"/>
+
+        <ImageView
+            android:id="@+id/iv_title_splash"
+            android:layout_width="200dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_app_title"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
