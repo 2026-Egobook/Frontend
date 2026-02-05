@@ -1,20 +1,25 @@
 package com.egobook.app.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.egobook.app.data.api.AIApiService
 import com.egobook.app.data.api.LetterApiService
-import com.egobook.app.data.model.square.letter.DetectAbusiveContentRequest
 import com.egobook.app.data.model.square.letter.ReplyLetterRequest
 import com.egobook.app.data.model.square.letter.toData
 import com.egobook.app.data.model.square.letter.toDomain
+import com.egobook.app.data.repository.paging.SentLettersPagingSource
 import com.egobook.app.domain.model.square.letter.AbusiveContentAnalysis
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetterItem
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.model.square.letter.LetterStatus
-import com.egobook.app.domain.model.square.letter.SendLetter
-import com.egobook.app.domain.repository.LetterRepository
-import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.domain.model.square.letter.ReplyLetter
+import com.egobook.app.domain.model.square.letter.SendLetter
+import com.egobook.app.domain.model.square.letter.SentLetterItem
+import com.egobook.app.domain.repository.LetterRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LetterRepositoryImpl @Inject constructor(
@@ -73,7 +78,7 @@ class LetterRepositoryImpl @Inject constructor(
         val emptyMockData = ArrivedPendingLetter(
             letter = null
         )
-        Result.success(mockData)
+        Result.success(emptyMockData)
     } catch (e: Exception) {
         Result.failure(e)
     }
@@ -112,5 +117,18 @@ class LetterRepositoryImpl @Inject constructor(
         }
     } catch (e: Exception) {
         Result.failure(e)
+    }
+
+    override fun fetchSentLetters(size: Int): Flow<PagingData<SentLetterItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = size,
+                initialLoadSize = size,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                SentLettersPagingSource(apiService = letterApiService)
+            }
+        ).flow
     }
 }

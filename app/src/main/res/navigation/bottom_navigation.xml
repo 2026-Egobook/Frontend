@@ -71,6 +71,9 @@
         <action
             android:id="@+id/action_menu_square_to_letterReplyFragment"
             app:destination="@id/letterReplyFragment" />
+        <action
+            android:id="@+id/action_menu_square_to_myLetterDetailFragment"
+            app:destination="@id/myLetterDetailFragment" />
     </fragment>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
@@ -197,9 +200,8 @@
         android:label="MyLetterDetailFragment"
         tools:layout="@layout/fragment_my_letter_detail">
         <argument
-            android:name="letterItem"
-            app:argType="com.egobook.app.ui.square.model.friend.LetterModel"
-            app:nullable="false"/>
+            android:name="letterId"
+            app:argType="long" />
     </fragment>
 
     <fragment

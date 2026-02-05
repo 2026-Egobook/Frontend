@@ -6,10 +6,12 @@ import com.egobook.app.data.model.square.letter.ReplyLetterRequest
 import com.egobook.app.data.model.square.letter.ReplyLetterResponse
 import com.egobook.app.data.model.square.letter.SendLetterRequest
 import com.egobook.app.data.model.square.letter.SendLetterResponse
+import com.egobook.app.data.model.square.letter.SentLetterResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface LetterApiService {
     @POST("/plaza/letters")
@@ -33,4 +35,10 @@ interface LetterApiService {
     suspend fun giveUpReplyLetter(
         @Path("letterId") letterId: Long
     ): ApiResponse<Unit>
+
+    @GET("/plaza/letters/sent")
+    suspend fun fetchSentLetters(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): ApiResponse<SentLetterResponse>
 }

@@ -20,6 +20,7 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentSquareBinding
 import com.egobook.app.databinding.LayoutPopupVisibilityTypeBinding
 import com.egobook.app.domain.model.square.question.AnswerVisibility
+import com.egobook.app.ui.square.adapter.MySentLettersAdapter
 import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.question.SubmitStatus
@@ -38,8 +39,15 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
     private var visibilityType = AnswerVisibility.PUBLIC // 오늘의 질문 답변 제출할 때 필요한 변수
 
-    private val adapter by lazy {
+    private val todayQuestionAdapter by lazy {
         TodayQuestionFriendRepliesAdapter()
+    }
+
+    private val sentLetterAdapter by lazy {
+        MySentLettersAdapter { letterId ->
+            val action = SquareFragmentDirections.actionMenuSquareToMyLetterDetailFragment(letterId = letterId)
+            findNavController().navigate(action)
+        }
     }
 
     private var todayQuestionContent: String? = null
@@ -59,10 +67,12 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
         questionViewModel.getTodayQuestion()
         questionViewModel.getTodayFriendsReplies(size = 3)
         letterViewModel.getArrivedPendingLetter()
+        letterViewModel.getSentLetters(size = 4)
     }
 
     private fun initViews() = with(binding) {
-        rvSquareTodayQuestionFriendReply.adapter = adapter
+        rvSquareTodayQuestionFriendReply.adapter = todayQuestionAdapter
+        rvSquareSentLetter.adapter = sentLetterAdapter
     }
 
     private fun initListeners() = with(binding) {
@@ -241,7 +251,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 launch {
                     questionViewModel.todayFriendsReplies.collectLatest { pagingData ->
                         if(pagingData != null) {
-                            adapter.submitData(lifecycle = lifecycle, pagingData = pagingData)
+                            todayQuestionAdapter.submitData(lifecycle = lifecycle, pagingData = pagingData)
                         }
                     }
                 }
@@ -273,6 +283,13 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                     applyScreenBlur(BlurLevel.BASE)
                                 }
                             }
+                        }
+                    }
+                }
+                launch {
+                    letterViewModel.sentLetters.collectLatest { pagingData ->
+                        if(pagingData != null) {
+                            sentLetterAdapter.submitData(lifecycle, pagingData)
                         }
                     }
                 }

@@ -2,10 +2,14 @@ package com.egobook.app.ui.square.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
+import com.egobook.app.domain.usecase.letter.GetSentLettersUseCase
 import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
@@ -15,6 +19,7 @@ import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.letter.ReplyLetterModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
+import com.egobook.app.ui.square.model.letter.SentLetterModel
 import com.egobook.app.ui.square.model.letter.toDomain
 import com.egobook.app.ui.square.model.letter.toPresentation
 import com.egobook.app.util.UiState
@@ -23,6 +28,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +40,8 @@ class LetterViewModel @Inject constructor(
     private val getArrivedPendingLetterUseCase: GetArrivedPendingLetterUseCase,
     private val replyLetterUseCase: ReplyLetterUseCase,
     private val deferReplyLetterUseCase: DeferReplyLetterUseCase,
-    private val giveUpReplyLetterUseCase: GiveUpReplyLetterUseCase
+    private val giveUpReplyLetterUseCase: GiveUpReplyLetterUseCase,
+    private val getSentLettersUseCase: GetSentLettersUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -131,6 +138,17 @@ class LetterViewModel @Inject constructor(
                 _giveUpReplyLetterResult.emit(UiState.Success(Unit))
             }.onFailure { error ->
                 _giveUpReplyLetterResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _sentLetters = MutableStateFlow<PagingData<SentLetterModel>?>(null)
+    val sentLetters = _sentLetters.asStateFlow()
+
+    fun getSentLetters(size: Int) {
+        viewModelScope.launch {
+            getSentLettersUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
+                _sentLetters.value = pagingData.map { it.toPresentation() }
             }
         }
     }

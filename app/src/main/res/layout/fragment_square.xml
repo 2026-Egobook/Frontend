@@ -281,26 +281,17 @@
                 android:src="@drawable/ic_square_view_all" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/ll_square_letter_mine_box"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_square_sent_letter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            tools:itemCount="4"
             android:layout_marginTop="12dp"
-            android:divider="@drawable/divider_height_8dp"
-            android:orientation="vertical"
-            android:showDividers="middle"
             app:layout_constraintEnd_toEndOf="@id/ll_square_letter_mine_header"
             app:layout_constraintStart_toStartOf="@id/ll_square_letter_mine_header"
-            app:layout_constraintTop_toBottomOf="@id/ll_square_letter_mine_header">
-
-            <include layout="@layout/item_square_letter" />
-
-            <include layout="@layout/item_square_letter" />
-
-            <include layout="@layout/item_square_letter" />
-
-            <include layout="@layout/item_square_letter" />
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/ll_square_letter_mine_header"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_square_letter"/>
 
         <LinearLayout
             android:id="@+id/ll_square_today_question_header"
@@ -310,9 +301,9 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingVertical="6.5dp"
-            app:layout_constraintEnd_toEndOf="@id/ll_square_letter_mine_box"
-            app:layout_constraintStart_toStartOf="@id/ll_square_letter_mine_box"
-            app:layout_constraintTop_toBottomOf="@id/ll_square_letter_mine_box">
+            app:layout_constraintEnd_toEndOf="@id/rv_square_sent_letter"
+            app:layout_constraintStart_toStartOf="@id/rv_square_sent_letter"
+            app:layout_constraintTop_toBottomOf="@id/rv_square_sent_letter">
 
             <TextView
                 android:id="@+id/tv_square_today_question_title"
