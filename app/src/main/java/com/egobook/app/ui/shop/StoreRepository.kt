@@ -1,5 +1,6 @@
 package com.egobook.app.ui.shop
 
+import com.egobook.app.di.qualifier.BackendApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
@@ -55,7 +56,7 @@ data class CustomItemGroupDto(
 
 @Singleton
 class NetworkStoreRepository @Inject constructor(
-    private val retrofit: Retrofit
+    @BackendApi private val retrofit: Retrofit
 ) : StoreRepository {
     
     private val storeService by lazy {

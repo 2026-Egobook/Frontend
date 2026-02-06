@@ -20,7 +20,7 @@ import javax.inject.Inject
 class TokenAuthenticator @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val userInfoStorage: UserInfoStorage,
-    @param:AuthRetrofit private val authApiService: AuthApiService
+    private val authApiService: AuthApiService
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
