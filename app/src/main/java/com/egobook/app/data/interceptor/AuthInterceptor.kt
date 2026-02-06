@@ -14,6 +14,8 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         
+        Timber.d("API 요청 시작: ${originalRequest.method} ${originalRequest.url}")
+        
         // DataStore에서 액세스 토큰 가져오기
         val accessToken = runBlocking {
             userInfoStorage.getAccessToken().first()
@@ -21,15 +23,19 @@ class AuthInterceptor @Inject constructor(
         
         // 토큰이 있으면 Authorization 헤더 추가
         val newRequest = if (!accessToken.isNullOrEmpty()) {
-            Timber.d("Authorization 헤더 추가: ${originalRequest.url}")
+            Timber.d("Authorization 헤더 추가")
             originalRequest.newBuilder()
                 .header("Authorization", "Bearer $accessToken")
                 .build()
         } else {
-            Timber.w("액세스 토큰 없음: ${originalRequest.url}")
+            Timber.w("액세스 토큰 없음")
             originalRequest
         }
         
-        return chain.proceed(newRequest)
+        val response = chain.proceed(newRequest)
+        
+        Timber.d("API 응답 수신: 코드=${response.code}")
+        
+        return response
     }
 }
