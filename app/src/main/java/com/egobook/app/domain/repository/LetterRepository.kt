@@ -20,4 +20,5 @@ interface LetterRepository {
     fun fetchSentLetters(size: Int): Flow<PagingData<SentLetterItem>>
     suspend fun fetchSentLetterWithReply(letterId: Long): Result<SentLetterWithReply>
     suspend fun reportRepliedLetter(replyId: Long, reportLetter: ReportLetter): Result<Unit>
+    suspend fun deleteLetterThread(threadId: Long): Result<Unit>
 }

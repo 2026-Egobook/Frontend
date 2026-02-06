@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
+import com.egobook.app.domain.usecase.letter.DeleteLetterThreadUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLetterWithReplyUseCase
@@ -47,7 +48,8 @@ class LetterViewModel @Inject constructor(
     private val giveUpReplyLetterUseCase: GiveUpReplyLetterUseCase,
     private val getSentLettersUseCase: GetSentLettersUseCase,
     private val getSentLetterWithReplyUseCase: GetSentLetterWithReplyUseCase,
-    private val reportRepliedLetterUseCase: ReportRepliedLetterUseCase
+    private val reportRepliedLetterUseCase: ReportRepliedLetterUseCase,
+    private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -183,6 +185,20 @@ class LetterViewModel @Inject constructor(
                 _reportRepliedLetterResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _reportRepliedLetterResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _deleteLetterThreadResult = MutableSharedFlow<UiState<Unit>>()
+    val deleteLetterThreadResult = _deleteLetterThreadResult.asSharedFlow()
+
+    fun deleteLetterThread(threadId: Long) {
+        viewModelScope.launch {
+            _deleteLetterThreadResult.emit(UiState.Loading)
+            deleteLetterThreadUseCase(threadId = threadId).onSuccess {
+                _deleteLetterThreadResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _deleteLetterThreadResult.emit(UiState.Failure(error.message))
             }
         }
     }

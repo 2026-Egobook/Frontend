@@ -32,6 +32,7 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
         args.letterId
     }
     private var replyId: Long? = null
+    private var threadId: Long? = null
     private var isReplyReported: Boolean? = null
     private val viewModel: LetterViewModel by activityViewModels()
 
@@ -77,44 +78,63 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                 applyScreenBlur(BlurLevel.BASE)
             }
         }
+        btnDeleteLetterThread.setOnClickListener {
+            viewModel.deleteLetterThread(threadId = threadId ?: -1L)
+        }
     }
 
     private fun initObservers() = with(binding) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.sentLetterWithReply.collect { state ->
-                    when(state) {
-                        is UiState.Failure -> {}
-                        UiState.Idle -> {}
-                        UiState.Loading -> {}
-                        is UiState.Success<SentLetterWithReplyModel> -> {
-                            val data = state.data
-                            val sentCardBackgroundColor = when(data.backgroundColor) {
-                                LetterBackgroundColor.BEIGE -> R.color.letter_bg_beige
-                                LetterBackgroundColor.PINK -> R.color.letter_bg_pink
-                                LetterBackgroundColor.GREEN -> R.color.letter_bg_green
-                                LetterBackgroundColor.BLUE -> R.color.letter_bg_blue
-                                LetterBackgroundColor.PURPLE -> R.color.letter_bg_purple
-                            }
-                            tvMyLetterDetailSentAt.text = formatDate(createdDateTime = data.createdAt)
-                            tvMyLetterDetailSentContent.text = data.sentContent
-                            cvMyLetterDetailSentContent.backgroundTintList = resources.getColorStateList(sentCardBackgroundColor, null)
-                            if(data.reply != null) {
-                                replyId = data.reply.replyId
-                                isReplyReported = data.reply.isReported
-                                tvMyLetterDetailRepliedContent.text = data.reply.replyContent
-                                if(data.reply.isAIGenerated) {
-                                    tvMyLetterDetailReceiver.text = "To 사용자 닉네임" // TODO: 실제 유저 닉네임으로 변경하기
-                                    tvMyLetterDetailSender.text = "FROM. 당신의 고북"
-                                    tvMyLetterDetailAiGeneratedDescription.isVisible = true
-                                    val params = tvMyLetterDetailSender.layoutParams as ConstraintLayout.LayoutParams
-                                    params.topMargin = (72 * resources.displayMetrics.density).toInt()
-                                } else {
-                                    // TODO: 친구/익명 유무에 따라 보낸이 받는이 이름 변경하기
-                                    tvMyLetterDetailAiGeneratedDescription.isVisible = false
+                launch {
+                    viewModel.sentLetterWithReply.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<SentLetterWithReplyModel> -> {
+                                val data = state.data
+                                threadId = data.threadId
+                                val sentCardBackgroundColor = when(data.backgroundColor) {
+                                    LetterBackgroundColor.BEIGE -> R.color.letter_bg_beige
+                                    LetterBackgroundColor.PINK -> R.color.letter_bg_pink
+                                    LetterBackgroundColor.GREEN -> R.color.letter_bg_green
+                                    LetterBackgroundColor.BLUE -> R.color.letter_bg_blue
+                                    LetterBackgroundColor.PURPLE -> R.color.letter_bg_purple
                                 }
-                            } else {
-                                llMyLetterDetailReplied.isVisible = false
+                                tvMyLetterDetailSentAt.text = formatDate(createdDateTime = data.createdAt)
+                                tvMyLetterDetailSentContent.text = data.sentContent
+                                cvMyLetterDetailSentContent.backgroundTintList = resources.getColorStateList(sentCardBackgroundColor, null)
+                                if(data.reply != null) {
+                                    replyId = data.reply.replyId
+                                    isReplyReported = data.reply.isReported
+                                    tvMyLetterDetailRepliedContent.text = data.reply.replyContent
+                                    if(data.reply.isAIGenerated) {
+                                        tvMyLetterDetailReceiver.text = "To 사용자 닉네임" // TODO: 실제 유저 닉네임으로 변경하기
+                                        tvMyLetterDetailSender.text = "FROM. 당신의 고북"
+                                        tvMyLetterDetailAiGeneratedDescription.isVisible = true
+                                        val params = tvMyLetterDetailSender.layoutParams as ConstraintLayout.LayoutParams
+                                        params.topMargin = (72 * resources.displayMetrics.density).toInt()
+                                    } else {
+                                        // TODO: 친구/익명 유무에 따라 보낸이 받는이 이름 변경하기
+                                        tvMyLetterDetailAiGeneratedDescription.isVisible = false
+                                    }
+                                } else {
+                                    llMyLetterDetailReplied.isVisible = false
+                                }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.deleteLetterThreadResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                Toast.makeText(context, "내가 쓴 편지가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                                findNavController().popBackStack()
                             }
                         }
                     }

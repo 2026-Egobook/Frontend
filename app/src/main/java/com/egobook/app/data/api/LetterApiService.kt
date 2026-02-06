@@ -10,6 +10,7 @@ import com.egobook.app.data.model.square.letter.SendLetterResponse
 import com.egobook.app.data.model.square.letter.SentLetterResponse
 import com.egobook.app.data.model.square.letter.SentLetterWithReplyResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -53,5 +54,10 @@ interface LetterApiService {
     suspend fun reportRepliedLetter(
         @Path("replyId") replyId: Long,
         @Body request: ReportLetterRequest
+    ): ApiResponse<Unit>
+
+    @DELETE("/plaza/letters/threads/{threadId}")
+    suspend fun deleteLetterThread(
+        @Path("threadId") threadId: Long
     ): ApiResponse<Unit>
 }

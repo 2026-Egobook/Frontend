@@ -38,6 +38,7 @@
                 tools:text="2025.12.25" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_letter_thread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="7dp"
