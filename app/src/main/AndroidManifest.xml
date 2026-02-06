@@ -15,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Egobook"
         android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7304061200076771~3057839642"/>
+
         <activity
             android:name=".ui.login.view.IntroActivity"
             android:exported="true"

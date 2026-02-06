@@ -1,6 +1,7 @@
 package com.egobook.app
 
 import android.app.Application
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -13,6 +14,8 @@ class MyApplication : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(AppDebugTree())
         }
+
+        MobileAds.initialize(this)
     }
 
     private class AppDebugTree : Timber.DebugTree() {
