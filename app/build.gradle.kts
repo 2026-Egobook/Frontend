@@ -152,9 +152,6 @@ dependencies {
 
     //Timber
     implementation("com.jakewharton.timber:timber:5.0.1")
-
-    //Device ID
-    implementation("com.google.android.gms:play-services-ads:23.0.0")
 }
 
 ksp {

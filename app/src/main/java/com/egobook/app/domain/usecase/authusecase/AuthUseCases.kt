@@ -26,7 +26,7 @@ class GoogleAutoLogin @Inject constructor(
     private val repository: AuthRepository
 ) {
     suspend operator fun invoke(): Result<Unit> {
-        return repository.refreshAccessToken() //액세스토큰 갱신
+        return repository.refreshAccessToken() // 액세스토큰 갱신
     }
 
 }
@@ -34,7 +34,7 @@ class GoogleLogin @Inject constructor(
     private val repository: AuthRepository
 ){
     suspend operator fun invoke(idToken: String): Result<Unit> {
-        return repository.refreshTokens(idToken) //로그인 시에는 토큰들을 다 갱신!!
+        return repository.refreshTokens(idToken) //로그인 화면에서 직접 로그인 시에는 토큰들을 다 갱신!!
     }
 }
 

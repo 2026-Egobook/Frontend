@@ -52,12 +52,15 @@ class TokenAuthenticator @Inject constructor(
                 }
 
                 // 액세스 토큰 갱신 API 호출
+                Timber.d("토큰 갱신 API 호출 시작")
                 val tokenResponse = authApiService.getAccessToken(
                     AccessTokenRequest(
                         accessToken = accessToken,
                         refreshToken = refreshToken
                     )
                 )
+                
+                Timber.d("토큰 갱신 API 응답: 코드=${tokenResponse.code()}, 성공=${tokenResponse.isSuccessful}")
 
                 if (tokenResponse.isSuccessful && tokenResponse.body() != null) {
                     val newAccessToken = tokenResponse.body()!!.data.accessToken

@@ -17,7 +17,7 @@ data class DiaryUseCases @Inject constructor (
     val deleteDiary: DeleteDiary
 )
 
-//각 유스케이스들 정의
+// 각 유스케이스들 정의
 
 class GetDiaries @Inject constructor(
     private val repository: DiaryRepository
