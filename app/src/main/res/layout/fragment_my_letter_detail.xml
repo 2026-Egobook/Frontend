@@ -106,15 +106,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="@id/cv_my_letter_detail_sent_content"
-            app:layout_constraintStart_toStartOf="@id/cv_my_letter_detail_sent_content"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cv_my_letter_detail_sent_content">
 
             <TextView
                 android:id="@+id/tv_my_letter_detail_received_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:text="받은 답장"/>
 
             <com.google.android.material.card.MaterialCardView

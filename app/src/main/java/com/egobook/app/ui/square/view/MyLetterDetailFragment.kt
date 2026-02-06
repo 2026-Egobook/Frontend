@@ -48,8 +48,21 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
         }
         ivMyLetterDetailSentChevron.setOnClickListener {
             cvMyLetterDetailSentContent.isVisible = !cvMyLetterDetailSentContent.isVisible
-            val chevronImage = if(cvMyLetterDetailSentContent.isVisible) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
-            ivMyLetterDetailSentChevron.setImageResource(chevronImage)
+            if(cvMyLetterDetailSentContent.isVisible) {
+                ivMyLetterDetailSentChevron.setImageResource(R.drawable.ic_chevron_up)
+                val params = llMyLetterDetailReplied.layoutParams as ConstraintLayout.LayoutParams
+                with(params) {
+                    topToBottom = ConstraintLayout.LayoutParams.UNSET
+                    topToBottom = cvMyLetterDetailSentContent.id
+                }
+            } else {
+                ivMyLetterDetailSentChevron.setImageResource(R.drawable.ic_chevron_down)
+                val params = llMyLetterDetailReplied.layoutParams as ConstraintLayout.LayoutParams
+                with(params) {
+                    topToBottom = ConstraintLayout.LayoutParams.UNSET
+                    topToBottom = tvMyLetterDetailSentTitle.id
+                }
+            }
         }
     }
 
