@@ -32,6 +32,7 @@ data class AccessTokenRequest(
 data class TokensRequest(
     @SerialName("idToken")
     val idToken: String,
+    @SerialName("accessToken")
     val accessToken: String? = null //디폴트는 null로
 )
 
