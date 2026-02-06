@@ -7,6 +7,7 @@ import com.egobook.app.data.model.square.letter.ReplyLetterResponse
 import com.egobook.app.data.model.square.letter.SendLetterRequest
 import com.egobook.app.data.model.square.letter.SendLetterResponse
 import com.egobook.app.data.model.square.letter.SentLetterResponse
+import com.egobook.app.data.model.square.letter.SentLetterWithReplyResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -41,4 +42,9 @@ interface LetterApiService {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): ApiResponse<SentLetterResponse>
+
+    @GET("/plaza/letters/{letterId}")
+    suspend fun fetchSentLetterWithReply(
+        @Path("letterId") letterId: Long
+    ): ApiResponse<SentLetterWithReplyResponse>
 }

@@ -18,6 +18,7 @@ import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.domain.model.square.letter.ReplyLetter
 import com.egobook.app.domain.model.square.letter.SendLetter
 import com.egobook.app.domain.model.square.letter.SentLetterItem
+import com.egobook.app.domain.model.square.letter.SentLetterWithReply
 import com.egobook.app.domain.repository.LetterRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -130,5 +131,16 @@ class LetterRepositoryImpl @Inject constructor(
                 SentLettersPagingSource(apiService = letterApiService)
             }
         ).flow
+    }
+
+    override suspend fun fetchSentLetterWithReply(letterId: Long): Result<SentLetterWithReply> = try {
+        val response = letterApiService.fetchSentLetterWithReply(letterId = letterId)
+        if(response.status == 200) {
+            Result.success(response.data.toDomain())
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 }

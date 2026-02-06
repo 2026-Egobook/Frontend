@@ -15,6 +15,7 @@
 
     <color name="grey_img">#FFD9D9D9</color>
     <color name="grey_light">#F4F3F3</color>
+    <color name="grey_medium">#AEAEAE</color>
 
     <color name="brand_grass">#FF95BB2D</color>
     <color name="light_grass">#FFE8EED9</color>
