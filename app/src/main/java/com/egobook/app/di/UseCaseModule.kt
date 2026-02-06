@@ -1,6 +1,6 @@
 package com.egobook.app.di
 
-import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.domain.repository.FakeDiaryRepository
 import com.egobook.app.domain.repository.auth.AuthRepository
 import com.egobook.app.domain.usecase.authusecase.AuthUseCases
 import com.egobook.app.domain.usecase.authusecase.GoogleAutoLogin
@@ -27,7 +27,7 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideDiaryUseCases(repository: DiaryRepository): DiaryUseCases {
+    fun provideDiaryUseCases(repository: FakeDiaryRepository): DiaryUseCases {
 
         return DiaryUseCases(
             getDiaries = GetDiaries(repository),

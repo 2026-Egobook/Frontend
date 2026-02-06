@@ -2,7 +2,7 @@ package com.egobook.app.data.repository
 
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.domain.repository.FakeDiaryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,9 +10,20 @@ import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-class DiaryRepositoryImpl @Inject constructor() : DiaryRepository {
+/**
+ * 테스트 및 개발용 더미 일기 저장소
+ * 
+ * 메모리 내에서 더미 데이터를 관리하며, 실제 API 호출 없이 일기 기능을 테스트할 수 있습니다.
+ * 
+ * 실제 백엔드 API 연동 시:
+ * 1. 새로운 DiaryRepositoryImpl 클래스를 생성하여 ApiService를 사용하여 구현
+ * 2. RepositoryModule.kt에서 FakeDiaryRepositoryImpl -> DiaryRepositoryImpl로 변경
+ * 
+ * @see FakeDiaryRepository
+ */
+class FakeDiaryRepositoryImpl @Inject constructor() : FakeDiaryRepository {
 
-    //더미데이터 삽입
+    // 더미 데이터 삽입
     private val diariesFlow = MutableStateFlow(
         listOf(
             // --- 오늘 날짜 (Today) ---

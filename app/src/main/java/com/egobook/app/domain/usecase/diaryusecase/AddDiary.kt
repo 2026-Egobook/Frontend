@@ -2,12 +2,12 @@ package com.egobook.app.domain.usecase.diaryusecase
 
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.domain.repository.FakeDiaryRepository
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 class AddDiary @Inject constructor(
-    private val repository: DiaryRepository
+    private val repository: FakeDiaryRepository
 ) {
     suspend operator fun invoke(
         content: String,

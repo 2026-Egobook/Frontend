@@ -1,13 +1,13 @@
 package com.egobook.app.di
 
 import com.egobook.app.data.repository.CounselingRepositoryImpl
-import com.egobook.app.data.repository.DiaryRepositoryImpl
+import com.egobook.app.data.repository.FakeDiaryRepositoryImpl
 import com.egobook.app.data.repository.FriendsRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
 import com.egobook.app.data.repository.auth.AuthRepositoryImpl
 import com.egobook.app.data.repository.QuestionRepositoryImpl
-import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.domain.repository.FakeDiaryRepository
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.NotificationRepository
 import com.egobook.app.domain.repository.auth.AuthRepository
@@ -43,9 +43,14 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
+    // TODO: 백엔드 API 연동 시:
+    //  1. DiaryRepository 인터페이스 생성
+    //  2. DiaryRepositoryImpl 구현 (ApiService 사용)
+    //  3. 이 바인딩을 DiaryRepositoryImpl -> DiaryRepository로 변경
+    //  4. 모든 UseCase의 FakeDiaryRepository -> DiaryRepository로 변경
     @Binds
     @Singleton
-    abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository
+    abstract fun bindFakeDiaryRepository(impl: FakeDiaryRepositoryImpl): FakeDiaryRepository
 
     @Binds
     @Singleton

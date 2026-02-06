@@ -2,14 +2,14 @@ package com.egobook.app.domain.usecase.diaryusecase
 
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.domain.repository.FakeDiaryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 class GetDiaries @Inject constructor(
-    private val repository: DiaryRepository
+    private val repository: FakeDiaryRepository
 ) {
     operator fun invoke(
         selectedDate: LocalDateTime = LocalDateTime.now(),
