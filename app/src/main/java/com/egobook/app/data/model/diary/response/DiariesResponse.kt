@@ -1,11 +1,15 @@
-package com.egobook.app.data.model.diary
+package com.egobook.app.data.model.diary.response
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class GetDiariesResponse (
+@Serializable
+data class DiariesResponse (
     val dailyCount: Int,
     val diaries: DiarySliceResponse
 )
 
+@Serializable
 data class DiarySliceResponse(
     val content: List<DiaryItemResponse>,
     val currentSlice: Long,
@@ -13,6 +17,7 @@ data class DiarySliceResponse(
     val hasNext: Boolean
 )
 
+@Serializable
 data class DiaryItemResponse(
     val diaryId: Long,
     val date: String,

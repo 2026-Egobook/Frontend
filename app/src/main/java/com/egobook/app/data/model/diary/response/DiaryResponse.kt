@@ -1,6 +1,6 @@
-package com.egobook.app.data.model.diary
+package com.egobook.app.data.model.diary.response
 
-data class GetDiaryResponse (
+data class DiaryResponse (
     val diaryId: Long,
 
     val date: String,
