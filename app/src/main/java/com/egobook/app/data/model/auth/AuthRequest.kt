@@ -32,6 +32,8 @@ data class AccessTokenRequest(
 data class TokensRequest(
     @SerialName("idToken")
     val idToken: String,
+    @SerialName("accessToken")
+    val accessToken: String? = null //디폴트는 null로
 )
 
 //Guest로그인 상태에서 Tokens 재발급

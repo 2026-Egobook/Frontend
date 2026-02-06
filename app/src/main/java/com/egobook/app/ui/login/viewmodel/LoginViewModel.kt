@@ -66,6 +66,7 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
+
             // 게스트 로그인: 로그인 타입을 확인하여 최초/재로그인 분기
             is LoginEvent.TryGuestLogin -> {
                 viewModelScope.launch{

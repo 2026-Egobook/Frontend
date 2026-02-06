@@ -125,8 +125,14 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun refreshTokens(idToken: String): Result<Unit> {
         return try {
+            // 액세스 토큰 가져오기 (없으면 null)
+            val accessToken = userInfoStorage.getAccessToken().first()
+
             val response = apiService.reGetTokens(
-                TokensRequest(idToken = idToken)
+                TokensRequest(
+                    idToken = idToken,
+                    accessToken = accessToken
+                )
             )
 
             if (response.isSuccessful && response.body() != null) {
