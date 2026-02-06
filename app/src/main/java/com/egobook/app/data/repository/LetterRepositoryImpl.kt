@@ -14,8 +14,10 @@ import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetterItem
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.domain.model.square.letter.LetterMode
+import com.egobook.app.domain.model.square.letter.LetterReply
 import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.domain.model.square.letter.ReplyLetter
+import com.egobook.app.domain.model.square.letter.ReportLetter
 import com.egobook.app.domain.model.square.letter.SendLetter
 import com.egobook.app.domain.model.square.letter.SentLetterItem
 import com.egobook.app.domain.model.square.letter.SentLetterWithReply
@@ -134,9 +136,39 @@ class LetterRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchSentLetterWithReply(letterId: Long): Result<SentLetterWithReply> = try {
-        val response = letterApiService.fetchSentLetterWithReply(letterId = letterId)
+//        val response = letterApiService.fetchSentLetterWithReply(letterId = letterId)
+//        if(response.status == 200) {
+//            Result.success(response.data.toDomain())
+//        } else {
+//            Result.failure(Exception("Error: ${response.status}"))
+//        }
+        val mockSentLetterWithReply = SentLetterWithReply(
+            letterId = letterId,
+            threadId = letterId,
+            status = LetterStatus.ARRIVED, // 답장이 도착함
+            mode = LetterMode.RANDOM,
+            sentContent = "안녕하세요, 고민이 있어 편지를 보냅니다. 요즘 업무량이 너무 많아서 번아웃이 온 것 같아요. 어떻게 극복하면 좋을까요?",
+            backgroundColor = LetterBackgroundColor.BEIGE,
+            createdAt = "2026-02-06T03:42:43.162307Z",
+            arrivedAt = "2026-02-06T03:42:43.162307Z",
+            // 답장 데이터
+            reply = LetterReply(
+                replyId = 101L,
+                replyContent = "보내주신 편지 잘 읽었습니다. 번아웃 때문에 많이 힘드시겠어요. 저도 비슷한 경험이 있었는데, 그럴 땐 완벽하게 해내려는 마음을 조금 내려놓고 하루에 딱 10분이라도 온전히 자신만을 위해 산책을 하는 게 큰 도움이 되더라고요. 당신은 이미 충분히 잘하고 있습니다. 너무 스스로를 몰아세우지 마세요.",
+                isAIGenerated = true,
+                isReported = false,
+                repliedAt = "2026-02-06T03:42:43.162307Z"
+            )
+        )
+        Result.success(mockSentLetterWithReply)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun reportRepliedLetter(replyId: Long, reportLetter: ReportLetter): Result<Unit> = try {
+        val response = letterApiService.reportRepliedLetter(replyId = replyId, request = reportLetter.toData())
         if(response.status == 200) {
-            Result.success(response.data.toDomain())
+            Result.success(Unit)
         } else {
             Result.failure(Exception("Error: ${response.status}"))
         }

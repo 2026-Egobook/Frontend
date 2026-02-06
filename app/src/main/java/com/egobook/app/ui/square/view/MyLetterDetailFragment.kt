@@ -2,6 +2,7 @@ package com.egobook.app.ui.square.view
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,7 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.egobook.app.BlurLevel
 import com.egobook.app.R
+import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentMyLetterDetailBinding
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.ui.square.model.letter.SentLetterWithReplyModel
@@ -28,6 +31,8 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
         val args: MyLetterDetailFragmentArgs by navArgs()
         args.letterId
     }
+    private var replyId: Long? = null
+    private var isReplyReported: Boolean? = null
     private val viewModel: LetterViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,6 +69,14 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                 }
             }
         }
+        ivMyLetterDetailReport.setOnClickListener {
+            if(isReplyReported == true) Toast.makeText(context, "답장이 이미 신고되었습니다.", Toast.LENGTH_SHORT).show()
+            else {
+                val dialog = SquareReportDialog(letterId = letterId, replyId = replyId ?: -1L).apply { isCancelable = false }
+                dialog.show(childFragmentManager, SquareReportDialog.TAG)
+                applyScreenBlur(BlurLevel.BASE)
+            }
+        }
     }
 
     private fun initObservers() = with(binding) {
@@ -86,7 +99,9 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                             tvMyLetterDetailSentAt.text = formatDate(createdDateTime = data.createdAt)
                             tvMyLetterDetailSentContent.text = data.sentContent
                             cvMyLetterDetailSentContent.backgroundTintList = resources.getColorStateList(sentCardBackgroundColor, null)
-                            if(data.reply != null ) {
+                            if(data.reply != null) {
+                                replyId = data.reply.replyId
+                                isReplyReported = data.reply.isReported
                                 tvMyLetterDetailRepliedContent.text = data.reply.replyContent
                                 if(data.reply.isAIGenerated) {
                                     tvMyLetterDetailReceiver.text = "To 사용자 닉네임" // TODO: 실제 유저 닉네임으로 변경하기

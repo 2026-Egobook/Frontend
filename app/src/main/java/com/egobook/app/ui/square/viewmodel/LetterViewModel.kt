@@ -13,12 +13,14 @@ import com.egobook.app.domain.usecase.letter.GetSentLetterWithReplyUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLettersUseCase
 import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
+import com.egobook.app.domain.usecase.letter.ReportRepliedLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.letter.ReplyLetterModel
+import com.egobook.app.ui.square.model.letter.ReportLetterModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
 import com.egobook.app.ui.square.model.letter.SentLetterModel
 import com.egobook.app.ui.square.model.letter.SentLetterWithReplyModel
@@ -44,7 +46,8 @@ class LetterViewModel @Inject constructor(
     private val deferReplyLetterUseCase: DeferReplyLetterUseCase,
     private val giveUpReplyLetterUseCase: GiveUpReplyLetterUseCase,
     private val getSentLettersUseCase: GetSentLettersUseCase,
-    private val getSentLetterWithReplyUseCase: GetSentLetterWithReplyUseCase
+    private val getSentLetterWithReplyUseCase: GetSentLetterWithReplyUseCase,
+    private val reportRepliedLetterUseCase: ReportRepliedLetterUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
@@ -166,6 +169,20 @@ class LetterViewModel @Inject constructor(
                 _sentLetterWithReply.value = UiState.Success(domain.toPresentation())
             }.onFailure { error ->
                 _sentLetterWithReply.value = UiState.Failure(error.message)
+            }
+        }
+    }
+
+    private val _reportRepliedLetterResult = MutableSharedFlow<UiState<Unit>>()
+    val reportRepliedLetterResult = _reportRepliedLetterResult.asSharedFlow()
+
+    fun reportRepliedLetter(replyId: Long, reportLetter: ReportLetterModel) {
+        viewModelScope.launch {
+            _reportRepliedLetterResult.emit(UiState.Loading)
+            reportRepliedLetterUseCase(replyId = replyId, reportLetter = reportLetter.toDomain()).onSuccess {
+                _reportRepliedLetterResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _reportRepliedLetterResult.emit(UiState.Failure(error.message))
             }
         }
     }

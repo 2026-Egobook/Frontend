@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.egobook.app.domain.model.square.letter.AbusiveContentAnalysis
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
 import com.egobook.app.domain.model.square.letter.ReplyLetter
+import com.egobook.app.domain.model.square.letter.ReportLetter
 import com.egobook.app.domain.model.square.letter.SendLetter
 import com.egobook.app.domain.model.square.letter.SentLetterItem
 import com.egobook.app.domain.model.square.letter.SentLetterWithReply
@@ -18,4 +19,5 @@ interface LetterRepository {
     suspend fun giveUpReplyLetter(letterId: Long): Result<Unit>
     fun fetchSentLetters(size: Int): Flow<PagingData<SentLetterItem>>
     suspend fun fetchSentLetterWithReply(letterId: Long): Result<SentLetterWithReply>
+    suspend fun reportRepliedLetter(replyId: Long, reportLetter: ReportLetter): Result<Unit>
 }
