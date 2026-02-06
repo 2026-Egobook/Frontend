@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class DiariesResponse (
     @SerialName("dailyCount")
     val dailyCount: Int,
+
     @SerialName("diaries")
     val diaries: DiarySlice
 )
@@ -14,31 +15,14 @@ data class DiariesResponse (
 @Serializable
 data class DiarySlice(
     @SerialName("content")
-    val content: List<DiaryItem>,
+    val content: List<DiaryEntryResponse>,
+
     @SerialName("page")
-    val page: Long,
+    val page: Int,
+
     @SerialName("size")
-    val size: Long,
+    val size: Int,
+
     @SerialName("hasNext")
     val hasNext: Boolean
-)
-
-@Serializable
-data class DiaryItem(
-    @SerialName("diaryId")
-    val diaryId: Long,
-    @SerialName("date")
-    val date: String,
-    @SerialName("writtenAt")
-    val writtenAt: String,
-    @SerialName("type")
-    val type: List<String>,
-    @SerialName("emotionLevel")
-    val emotionLevel: Int?,
-    @SerialName("content")
-    val content: String,
-    @SerialName("createdAt")
-    val createdAt: String,
-    @SerialName("updatedAt")
-    val updatedAt: String
 )

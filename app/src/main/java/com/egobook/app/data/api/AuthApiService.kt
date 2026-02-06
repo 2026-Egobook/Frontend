@@ -46,5 +46,4 @@ interface AuthApiService {
         @Body request: TokensRequestAgainByGuest
     ): Response<TokenResponseAgainByGuest>
 
-
 }

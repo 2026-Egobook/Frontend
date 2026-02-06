@@ -30,6 +30,6 @@ data class ApiResponseEmpty(
     @SerialName("status")
     val status: Int,
 
-    @SerialName("result")
-    val result: EmptyResponse = EmptyResponse()
+    @SerialName("data")
+    val data: EmptyResponse = EmptyResponse()
 )
