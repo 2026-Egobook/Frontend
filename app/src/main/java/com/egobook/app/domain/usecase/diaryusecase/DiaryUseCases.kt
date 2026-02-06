@@ -2,7 +2,7 @@ package com.egobook.app.domain.usecase.diaryusecase
 
 import com.egobook.app.domain.model.Diary
 import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.domain.repository.FakeDiaryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
@@ -20,7 +20,7 @@ data class DiaryUseCases @Inject constructor (
 // 각 유스케이스들 정의
 
 class GetDiaries @Inject constructor(
-    private val repository: DiaryRepository
+    private val repository: FakeDiaryRepository
 ) {
     operator fun invoke(
         selectedDate: LocalDateTime = LocalDateTime.now(),
@@ -43,7 +43,7 @@ class GetDiaries @Inject constructor(
 }
 
 class GetDiary @Inject constructor(
-    private val repository: DiaryRepository
+    private val repository: FakeDiaryRepository
 ) {
     suspend operator fun invoke(id: Long): Result<Diary?> {
         return repository.getDiaryById(id)
@@ -51,7 +51,7 @@ class GetDiary @Inject constructor(
 }
 
 class AddDiary @Inject constructor(
-    private val repository: DiaryRepository
+    private val repository: FakeDiaryRepository
 ) {
     suspend operator fun invoke(
         content: String,
@@ -69,7 +69,7 @@ class AddDiary @Inject constructor(
 }
 
 class UpdateDiary @Inject constructor(
-    private val repository: DiaryRepository
+    private val repository: FakeDiaryRepository
 ) {
     suspend operator fun invoke(
         id: Long,
@@ -87,7 +87,7 @@ class UpdateDiary @Inject constructor(
 }
 
 class DeleteDiary @Inject constructor(
-    private val repository: DiaryRepository
+    private val repository: FakeDiaryRepository
 ) {
     suspend operator fun invoke(id: Long): Result<Unit> {
         return repository.deleteDiaryById(id)
