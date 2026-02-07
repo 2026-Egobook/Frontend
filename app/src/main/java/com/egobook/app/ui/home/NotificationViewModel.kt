@@ -1,6 +1,12 @@
 package com.egobook.app.ui.home
 
 import androidx.lifecycle.ViewModel
+import com.egobook.app.ui.home.notification.EgoRoomType
+import com.egobook.app.ui.home.notification.Notification
+import com.egobook.app.ui.home.notification.NotificationPublisher
+import com.egobook.app.ui.home.notification.NotificationStatus
+import com.egobook.app.ui.home.notification.NotificationTime
+import com.egobook.app.ui.home.notification.NotificationType
 import java.time.LocalDateTime
 
 class NotificationViewModel: ViewModel() {

@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.egobook.app.databinding.DialogStreakBinding
+import com.egobook.app.R
+import com.egobook.app.databinding.DialogRadarBinding
 import com.egobook.app.removeScreenBlur
+import com.egobook.app.ui.home.ui.RadarView
 
-class StreakDialog: DialogFragment() {
-    private var _binding: DialogStreakBinding? = null
+class RadarDialog() : DialogFragment() {
+
+    private var _binding: DialogRadarBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
 
     override fun onCreateView(
@@ -20,15 +23,22 @@ class StreakDialog: DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        _binding = DialogStreakBinding.inflate(inflater, container, false)
+        _binding = DialogRadarBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.ivClose.setOnClickListener {
+        val radarView: RadarView = view.findViewById(R.id.custom_radar_view)
+        radarView.setRadarData(listOf(4, 5, 2, 1, 3))
+        binding.ivRadarClose.setOnClickListener {
             removeScreenBlur()
             dismiss()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

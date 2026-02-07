@@ -8,7 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.egobook.app.ui.counseling.view.EgoRoomFragment
 import com.egobook.app.ui.diary.view.DiaryFragment
-import com.egobook.app.ui.home.HomeFragment
+import com.egobook.app.ui.home.ui.HomeFragment
 import com.egobook.app.ui.square.view.SquareFragment
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

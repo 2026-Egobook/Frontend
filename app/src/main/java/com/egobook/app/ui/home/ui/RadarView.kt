@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.ui
 
 import android.content.Context
 import android.content.res.Resources

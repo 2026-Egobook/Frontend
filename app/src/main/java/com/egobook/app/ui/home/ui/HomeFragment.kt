@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +15,10 @@ import com.egobook.app.NotificationController
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
+import com.egobook.app.ui.home.HomeViewModel
+import com.egobook.app.ui.home.user.LevelType
+import com.egobook.app.ui.home.ui.RadarDialog
+import com.egobook.app.ui.home.ui.StreakDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

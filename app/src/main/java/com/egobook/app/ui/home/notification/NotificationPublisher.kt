@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.notification
 
 sealed class NotificationPublisher {
     object Admin : NotificationPublisher()

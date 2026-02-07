@@ -1,4 +1,7 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.notification
+
+import com.egobook.app.ui.home.notification.NotificationPublisher
+import com.egobook.app.ui.home.notification.NotificationStatus
 
 data class Notification(
     val content: String,

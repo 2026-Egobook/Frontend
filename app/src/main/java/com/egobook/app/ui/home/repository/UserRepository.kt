@@ -1,5 +1,6 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.repository
 
+import com.egobook.app.ui.home.user.User
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import javax.inject.Inject
@@ -12,25 +13,6 @@ interface UserRepository {
 interface NetworkUserService {
     @GET("/home")
     suspend fun loadResponse(): BaseResponse<UserDto>
-}
-
-data class BaseResponse<T>(
-    val code: String,
-    val message: String,
-    val status: Int,
-    val data: T
-)
-
-data class UserDto(
-    val nickname: String,
-    val level: Int,
-    val ink: Int,
-    val unreadNotifications: Int,
-    val hasUnopenedPsychology: Boolean,
-    val isFirstAttendanceToday: Boolean,
-    val attendanceRewardInk: Int
-) {
-    fun toDomain(): User = User(Level(level), Ink(ink))
 }
 
 @Singleton
