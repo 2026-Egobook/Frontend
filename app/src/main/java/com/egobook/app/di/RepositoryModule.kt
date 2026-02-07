@@ -15,6 +15,8 @@ import com.egobook.app.ui.shop.NetworkStoreRepository
 import com.egobook.app.ui.shop.StoreRepository
 import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
+import com.egobook.app.ui.home.NetworkUserRepository
+import com.egobook.app.ui.home.UserRepository
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -50,4 +52,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindStoreRepository(impl: NetworkStoreRepository): StoreRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(impl: NetworkUserRepository): UserRepository
 }

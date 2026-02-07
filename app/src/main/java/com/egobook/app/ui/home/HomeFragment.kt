@@ -15,8 +15,10 @@ import com.egobook.app.NotificationController
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     override fun onCreateView(
