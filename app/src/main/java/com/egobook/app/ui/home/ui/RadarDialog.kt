@@ -14,6 +14,7 @@ import com.egobook.app.databinding.DialogRadarBinding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.home.repository.UserTendencyRepository
 import com.egobook.app.ui.home.RadarView
+import com.egobook.app.ui.home.user.Tendency
 import com.egobook.app.ui.home.user.TendencyType
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
@@ -49,7 +50,7 @@ class RadarDialog(): DialogFragment() {
                     userTendencyRepository.loadTendencies()
                 }
                 radarView.setRadarData(data.sortedBy { it.type.order() }.map { it.experiencePoint })
-
+                showTendencyLevel(data)
             } catch (e: Exception) {
                 Log.d("error", e.toString())
             }
@@ -65,6 +66,17 @@ class RadarDialog(): DialogFragment() {
         _binding = null
     }
 
+    private fun showTendencyLevel(tendencies: List<Tendency>) {
+        for(tendency in tendencies) {
+            when(tendency.type) {
+                TendencyType.EMPATHY -> binding.tvEmpathyLevel.text = "Lv. ${tendency.level}"
+                TendencyType.SELF_ESTEEM -> binding.tvSelfEsteemLevel.text = "Lv. ${tendency.level}"
+                TendencyType.DILIGENCE -> binding.tvDiligenceLevel.text = "Lv. ${tendency.level}"
+                TendencyType.POSITIVE_THINKING -> binding.tvPositiveThinkingLevel.text = "Lv. ${tendency.level}"
+                TendencyType.EMOTION_REGULATION -> binding.tvEmotionRegulationLevel.text = "Lv. ${tendency.level}"
+            }
+        }
+    }
     private fun TendencyType.order(): Int {
         return when(this) {
             TendencyType.EMPATHY -> return 4
