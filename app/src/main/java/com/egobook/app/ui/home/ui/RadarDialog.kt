@@ -3,19 +3,32 @@ package com.egobook.app.ui.home.ui
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import com.egobook.app.R
 import com.egobook.app.databinding.DialogRadarBinding
 import com.egobook.app.removeScreenBlur
-import com.egobook.app.ui.home.ui.RadarView
+import com.egobook.app.ui.home.repository.UserTendencyRepository
+import com.egobook.app.ui.home.RadarView
+import com.egobook.app.ui.home.user.TendencyType
+import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class RadarDialog() : DialogFragment() {
+@AndroidEntryPoint
+class RadarDialog(): DialogFragment() {
 
     private var _binding: DialogRadarBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
+
+    @Inject
+    lateinit var userTendencyRepository: UserTendencyRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +43,17 @@ class RadarDialog() : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val radarView: RadarView = view.findViewById(R.id.custom_radar_view)
-        radarView.setRadarData(listOf(4, 5, 2, 1, 3))
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val data = withContext(Dispatchers.IO) {
+                    userTendencyRepository.loadTendencies()
+                }
+                radarView.setRadarData(data.sortedBy { it.type.order() }.map { it.experiencePoint })
+
+            } catch (e: Exception) {
+                Log.d("error", e.toString())
+            }
+        }
         binding.ivRadarClose.setOnClickListener {
             removeScreenBlur()
             dismiss()
@@ -40,5 +63,15 @@ class RadarDialog() : DialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun TendencyType.order(): Int {
+        return when(this) {
+            TendencyType.EMPATHY -> return 4
+            TendencyType.SELF_ESTEEM -> return 3
+            TendencyType.DILIGENCE -> 0
+            TendencyType.POSITIVE_THINKING -> 2
+            TendencyType.EMOTION_REGULATION -> 1
+        }
     }
 }

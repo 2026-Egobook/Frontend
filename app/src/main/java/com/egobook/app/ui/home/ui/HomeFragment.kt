@@ -16,14 +16,15 @@ import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
 import com.egobook.app.ui.home.HomeViewModel
+import com.egobook.app.ui.home.repository.UserTendencyRepository
 import com.egobook.app.ui.home.user.LevelType
 import com.egobook.app.ui.home.ui.RadarDialog
 import com.egobook.app.ui.home.ui.StreakDialog
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import kotlinx.coroutines.launch
-
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment(): Fragment() {
     private lateinit var binding: FragmentHomeBinding
     override fun onCreateView(
         inflater: LayoutInflater,
