@@ -18,12 +18,12 @@ import kotlinx.coroutines.delay
 class MyRepliesHistoryPagingSource(private val apiService: QuestionApiService): PagingSource<Int, MyTodayQuestionAnswerItem>() {
 
     override fun getRefreshKey(state: PagingState<Int, MyTodayQuestionAnswerItem>): Int {
-        return 0 // 1
+        return 1 // 1
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MyTodayQuestionAnswerItem> {
         return try {
-            val page = params.key ?: 0 // 2
+            val page = params.key ?: 1 // 2
             val size = params.loadSize
 
             val result = apiService.fetchMyRepliesHistory(page = page, size = size).data
