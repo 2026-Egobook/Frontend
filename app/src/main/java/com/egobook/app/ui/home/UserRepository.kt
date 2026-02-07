@@ -1,9 +1,9 @@
 package com.egobook.app.ui.home
 
-import com.egobook.app.data.interceptor.AuthInterceptor
-import com.egobook.app.di.NetworkModule
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Retrofit
 import retrofit2.http.GET
+import javax.inject.Inject
+import javax.inject.Singleton
 
 interface UserRepository {
     suspend fun load(): User
@@ -33,12 +33,12 @@ data class UserDto(
     fun toDomain(): User = User(Level(level), Ink(ink))
 }
 
-class NetworkUserRepository : UserRepository {
+@Singleton
+class NetworkUserRepository @Inject constructor(
+    private val retrofit: Retrofit
+) : UserRepository {
+    private val userService by lazy { retrofit.create(NetworkUserService::class.java) }
     override suspend fun load(): User {
-        val httpClient = NetworkModule.provideOkHttpClient(AuthInterceptor())
-        val retrofit = NetworkModule.provideRetrofit(httpClient, GsonConverterFactory.create())
-        val userService = retrofit.create(NetworkUserService::class.java)
-
         val userServiceResponse: BaseResponse<UserDto> = userService.loadResponse()
         return userServiceResponse.data.toDomain()
     }
