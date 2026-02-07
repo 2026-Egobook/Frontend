@@ -7,10 +7,16 @@ import android.view.ViewGroup
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.egobook.app.databinding.FragmentStoreCollectionBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kotlin.getValue
 
+@AndroidEntryPoint
 class StoreCollectionFragment(): Fragment() {
     private var _binding: FragmentStoreCollectionBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
@@ -31,10 +37,21 @@ class StoreCollectionFragment(): Fragment() {
             "구현 오류: 올바른 탭을 표시하기 위해 tabItem을 번들을 통해 넘겨야 합니다."
         }
 
+        val itemAdapter = ItemAdapter()
+
         binding.rvItems.apply {
-            adapter = ItemAdapter(viewModel.loadItems(tabItem.type))
+            adapter = itemAdapter
             layoutManager = GridLayoutManager(context, 3)
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.items.collect { newItems ->
+                    itemAdapter.submitList(newItems)
+                }
+            }
+        }
+        viewModel.loadItems(tabItem.type)
     }
 
     override fun onDestroyView() {

@@ -20,7 +20,6 @@ class DiaryDeleteDialogFragment : DialogFragment() {
     interface OnDeleteConfirmListener {
         fun onDeleteConfirmed()
     }
-
     private var deleteConfirmListener: OnDeleteConfirmListener? = null
 
     fun setOnDeleteConfirmListener(listener: OnDeleteConfirmListener) {

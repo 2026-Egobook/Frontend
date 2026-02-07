@@ -60,8 +60,8 @@ fun LocalDateTime.toTimeString(): String =
 /**
  * [LocalDateTime]을 UI에서 사용하기 위한 날짜+시간 문자열로 변환한다.
  *
- * @return yyyy.MM.dd HH:mm 형식의 날짜+시간 문자열
- *
+// * @return yyyy.MM.dd HH:mm 형식의 날짜+시간 문자열
+// *
  * 예) 2025.12.25 17:32
  */
 fun LocalDateTime.toDateTimeString(): String =

@@ -52,4 +52,7 @@
     <!-- stroke -->
     <color name="neutral_stroke">#DBDBDB</color>
 
+    <color name="splash_color">#D2EAA2</color>
+
+
 </resources>

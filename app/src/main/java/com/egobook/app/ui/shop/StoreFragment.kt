@@ -12,7 +12,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentStoreBinding
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class StoreFragment: Fragment() {
     private var _binding: FragmentStoreBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }

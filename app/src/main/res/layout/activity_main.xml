@@ -48,7 +48,6 @@
 
         </eightbitlab.com.blurview.BlurTarget>
 
-
         <eightbitlab.com.blurview.BlurView
             android:id="@+id/blur_view"
             android:layout_width="match_parent"
@@ -59,6 +58,18 @@
             app:layout_constraintTop_toTopOf="parent">
 
         </eightbitlab.com.blurview.BlurView>
+
+        <ProgressBar
+            android:id="@+id/loading_progress"
+            style="@style/LoadingProgressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
