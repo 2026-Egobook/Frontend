@@ -11,6 +11,6 @@ data class DiaryCreateRequest(
     val emotionLevel: Int?,
     @SerialName("content")
     val content: String,
-    @SerialName("dateTime")
-    val dateTime: String //LocalDateTime의 String형식 이어야 함.
+    @SerialName("date")
+    val date: String //LocalDate의 String형식 이어야 함.
 )

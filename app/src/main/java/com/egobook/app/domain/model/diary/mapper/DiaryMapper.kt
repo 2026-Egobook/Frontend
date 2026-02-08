@@ -10,14 +10,17 @@ import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiaryList
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
-
+import java.time.ZoneId
 
 /**
  * Data Layer ↔ Domain Layer 변환 Mapper
  */
 object DiaryMapper {
+    
+    private val KST: ZoneId = ZoneId.of("Asia/Seoul")
 
     // ========== Response → Domain Entity ==========
 
@@ -38,13 +41,26 @@ object DiaryMapper {
         return Diary(
             diaryId = diaryId,
             date = LocalDate.parse(date),
-            writtenAt = LocalDateTime.parse(writtenAt),
+            writtenAt = parseUtcToKst(writtenAt),
             types = type.map { DiaryType.from(it) }.toSet(),
             emotionLevel = emotionLevel,
             content = content,
             createdAt = LocalDateTime.parse(createdAt)
         )
     }
+    
+    /**
+     * UTC 시간 문자열을 KST LocalDateTime으로 변환
+     * @param utcString ISO 8601 UTC 형식 (예: "2026-02-08T16:03:07.148Z")
+     * @return KST LocalDateTime
+     */
+    private fun parseUtcToKst(utcString: String): LocalDateTime {
+        val withZ = if (utcString.endsWith("Z")) utcString else "${utcString}Z"
+        return Instant.parse(withZ)
+            .atZone(KST)
+            .toLocalDateTime()
+    }
+
 
     /**
      * DiarySlice → DiaryList
@@ -88,16 +104,14 @@ object DiaryMapper {
 
     /**
      * Diary → DiaryCreateRequest
-     * writtenAt 시각을 기준으로 생성 요청 변환
      */
 
-    //문제! -> date 종속 날짜는 버려지고, writtenAt 작성 시간만 dateTime으로 전송됨.
     fun Diary.toDiaryCreateRequest(): DiaryCreateRequest {
         return DiaryCreateRequest(
             type = types.map { it.value },
             emotionLevel = emotionLevel,
             content = content,
-            dateTime = writtenAt.toString()
+            date = date.toString()
         )
     }
 

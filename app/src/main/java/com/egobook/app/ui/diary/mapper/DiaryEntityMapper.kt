@@ -89,7 +89,7 @@ object DiaryEntityMapper {
         return Diary(
             diaryId = 0L, // 새 일기는 임시 ID (서버가 생성), 임시 삽입.
             date = date,
-            writtenAt = writtenAt,
+            writtenAt = writtenAt, // 서버가 실제 값으로 대체. 임시 삽입
             types = diaryTypes,
             emotionLevel = finalEmotionLevel,
             content = content,
