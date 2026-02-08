@@ -17,6 +17,7 @@ import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
 import com.egobook.app.ui.home.repository.NetworkTendencyLevelService
 import com.egobook.app.ui.home.repository.NetworkUserRepository
+import com.egobook.app.ui.home.repository.UserActivityRepository
 import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.repository.UserTendencyRepository
 import dagger.Module
@@ -62,4 +63,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserTendencyRepository(impl: NetworkUserRepository): UserTendencyRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindActivityRecordRepository(impl: NetworkUserRepository): UserActivityRepository
 }
