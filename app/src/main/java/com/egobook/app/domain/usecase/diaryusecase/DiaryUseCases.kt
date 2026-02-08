@@ -32,7 +32,7 @@ class GetDiaries @Inject constructor(
 class GetDiary @Inject constructor(
     private val repository: DiaryRepository
 ) {
-    suspend operator fun invoke(id: Long): Result<Diary?> {
+    suspend operator fun invoke(id: Long): Result<Diary> {
         return repository.getDiaryById(id)
     }
 }

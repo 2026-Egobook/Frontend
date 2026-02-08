@@ -27,6 +27,11 @@ object DiaryEntityMapper {
         return diaryType.displayType
     }
 
+    /**
+     * Domain Diary -> DiaryCheckFragment에 표시될 값
+     */
+
+
     // ========== UI -> Domain Entity ==========
     
     /**

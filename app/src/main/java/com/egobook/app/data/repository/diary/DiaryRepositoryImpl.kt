@@ -12,6 +12,7 @@ import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryCreateRequest
+import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryEntity
 import com.egobook.app.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
@@ -34,7 +35,12 @@ class DiaryRepositoryImpl  @Inject constructor(
     }
 
     override suspend fun getDiaryById(diaryId: Long): Result<Diary> {
-        TODO("Not yet implemented")
+        return safeApiCall(
+            apiCall = {
+                apiService.getDiary(diaryId)
+            },
+            transform = {it.toDiaryEntity()}
+        )
     }
 
     override suspend fun addDiary(diary: Diary): Result<Unit> {

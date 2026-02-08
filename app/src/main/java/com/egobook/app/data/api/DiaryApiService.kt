@@ -16,7 +16,7 @@ import retrofit2.http.Query
 
 interface DiaryApiService {
 
-    //일기 목록 불러오기
+    //일기 목록 불러오기 - 완료
     @GET("/diaries")
     suspend fun getDiaries(
         @Query("date") date: String,
@@ -31,7 +31,7 @@ interface DiaryApiService {
         @Path("diaryId") diaryId: Long
     ): ApiResponse<DiaryEntryResponse>
 
-    //일기 추가
+    //일기 추가 - 완료
     @POST("/diaries")
     suspend fun addDiary(
         @Body request: DiaryCreateRequest
