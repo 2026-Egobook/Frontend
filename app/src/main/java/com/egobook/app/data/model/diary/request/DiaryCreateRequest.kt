@@ -12,5 +12,5 @@ data class DiaryCreateRequest(
     @SerialName("content")
     val content: String,
     @SerialName("dateTime")
-    val dateTime: String
+    val dateTime: String //LocalDateTime의 String형식 이어야 함.
 )

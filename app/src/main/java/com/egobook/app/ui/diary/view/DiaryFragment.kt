@@ -55,6 +55,12 @@
             setupClickListener()
             observeViewModel()
         }
+        
+        override fun onResume() {
+            super.onResume()
+            //다른 프래그먼트에서 돌아왔을 때 데이터 새로고침
+            viewModel.onEvent(DiariesEvent.RefreshDiaries)
+        }
 
         private fun setupClickListener() {
             binding.apply {

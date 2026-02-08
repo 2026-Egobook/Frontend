@@ -4,11 +4,14 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.DiaryApiService
+import com.egobook.app.data.model.diary.request.DiaryCreateRequest
 import com.egobook.app.data.repository.diary.paging.DiariesPagingSource
+import com.egobook.app.data.util.safeApiCall
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
+import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryCreateRequest
 import com.egobook.app.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
@@ -34,13 +37,15 @@ class DiaryRepositoryImpl  @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun addDiary(
-        types: Set<DiaryType>,
-        emotionLevel: Int?,
-        content: String,
-        dateTime: LocalDateTime,
-    ): Result<Long> {
-        TODO("Not yet implemented")
+    override suspend fun addDiary(diary: Diary): Result<Unit> {
+        return safeApiCall(
+            apiCall = {
+                apiService.addDiary(
+                    diary.toDiaryCreateRequest()
+                )
+            },
+            transform = { Unit }
+        )
     }
 
     override suspend fun updateDiary(

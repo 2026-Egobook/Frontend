@@ -50,6 +50,10 @@ class DiariesViewModel @Inject constructor(
                     .copy(selectedTabType = null)
                 loadDiaries(date, null) // 날짜 변경 시 "전체" 탭으로 리셋
             }
+            is DiariesEvent.RefreshDiaries -> {
+                // 현재 선택된 날짜와 탭으로 다시 로드
+                loadDiaries(state.value.selectedDate, state.value.selectedTabType)
+            }
         }
     }
 
@@ -77,7 +81,7 @@ class DiariesViewModel @Inject constructor(
 sealed class DiariesEvent {
     data class SwipeTab(val displayTypes: Set<String>?) : DiariesEvent()
     data class ChangeDate(val year: Int, val month: Int, val day: Int) : DiariesEvent()
-
+    data object RefreshDiaries : DiariesEvent()
 }
 
 data class DiariesState(

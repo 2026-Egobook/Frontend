@@ -1,5 +1,6 @@
 package com.egobook.app.domain.model.diary.mapper
 
+import com.egobook.app.data.model.diary.request.DiaryCreateRequest
 import com.egobook.app.data.model.diary.response.DiariesResponse
 import com.egobook.app.data.model.diary.response.DiaryEntryResponse
 import com.egobook.app.data.model.diary.response.DiarySlice
@@ -85,6 +86,17 @@ object DiaryMapper {
         return dateParam to typesParam
     }
 
-
+    /**
+     * Diary → DiaryCreateRequest
+     * writtenAt 시각을 기준으로 생성 요청 변환
+     */
+    fun Diary.toDiaryCreateRequest(): DiaryCreateRequest {
+        return DiaryCreateRequest(
+            type = types.map { it.value },
+            emotionLevel = emotionLevel,
+            content = content,
+            dateTime = writtenAt.toString()
+        )
+    }
 
 }

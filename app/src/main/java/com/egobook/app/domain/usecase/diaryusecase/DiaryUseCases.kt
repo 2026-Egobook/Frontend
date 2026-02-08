@@ -40,13 +40,8 @@ class GetDiary @Inject constructor(
 class AddDiary @Inject constructor(
     private val repository: DiaryRepository
 ) {
-    suspend operator fun invoke(
-        types: Set<DiaryType>,
-        emotionLevel: Int?,
-        content: String,
-        dateTime: LocalDateTime,
-    ): Result<Diary> {
-        return TODO()
+    suspend operator fun invoke(diary: Diary): Result<Unit> {
+        return repository.addDiary(diary)
     }
 }
 

@@ -6,7 +6,6 @@ import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 interface DiaryRepository {
@@ -24,12 +23,7 @@ interface DiaryRepository {
     /**
      * 일기 생성
      */
-    suspend fun addDiary(
-        types: Set<DiaryType>,
-        emotionLevel: Int?,
-        content: String,
-        dateTime: LocalDateTime,
-    ): Result<Long> // diaryId 반환
+    suspend fun addDiary(diary: Diary): Result<Unit>
 
     /**
      * 일기 수정
