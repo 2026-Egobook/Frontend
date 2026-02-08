@@ -1,5 +1,6 @@
 package com.egobook.app.ui.util
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -95,5 +96,14 @@ fun LocalDateTime.toMonthString(): String =
  * 예) 01, 31
  */
 fun LocalDateTime.toDayOfMonthString(): String =
+    this.format(DAY_OF_MONTH_FORMATTER)
+
+fun LocalDate.toYearString(): String =
+    this.format(YEAR_FORMATTER)
+
+fun LocalDate.toMonthString(): String =
+    this.format(MONTH_FORMATTER)
+
+fun LocalDate.toDayOfMonthString(): String =
     this.format(DAY_OF_MONTH_FORMATTER)
 

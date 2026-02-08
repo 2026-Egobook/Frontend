@@ -61,14 +61,15 @@ object DiaryEntityMapper {
      * @param selectedTypes UI displayType Set (예: ["감정", "고민"])
      * @param content 일기 내용
      * @param emotionLevel 감정 레벨 (1~5)
-     * @param dateTime 선택된 날짜+시간
      * @return 새로 생성할 Diary 엔티티 (diaryId와 createdAt는 임시값)
      */
+    //dateTime 하나로 date, writtenAt, createdAt을 모두 설정함 -> 문제점 발생.
     fun createNewDiary(
         selectedTypes: Set<String>,
         content: String,
         emotionLevel: Int?,
-        dateTime: LocalDateTime
+        date: LocalDate, //선택된 날짜
+        writtenAt: LocalDateTime // 실제 작성 시간
     ): Diary {
         // UI displayType을 Domain DiaryType으로 변환
         val diaryTypes = uiDisplayTypesToDomain(selectedTypes)
@@ -82,12 +83,12 @@ object DiaryEntityMapper {
         
         return Diary(
             diaryId = 0L, // 새 일기는 임시 ID (서버가 생성), 임시 삽입.
-            date = dateTime.toLocalDate(),
-            writtenAt = dateTime,
+            date = date,
+            writtenAt = writtenAt,
             types = diaryTypes,
             emotionLevel = finalEmotionLevel,
             content = content,
-            createdAt = dateTime // 서버가 실제 값으로 대체. 임시 삽입
+            createdAt = writtenAt // 서버가 실제 값으로 대체. 임시 삽입
         )
     }
 }

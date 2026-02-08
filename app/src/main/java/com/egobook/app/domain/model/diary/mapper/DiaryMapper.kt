@@ -90,6 +90,8 @@ object DiaryMapper {
      * Diary → DiaryCreateRequest
      * writtenAt 시각을 기준으로 생성 요청 변환
      */
+
+    //문제! -> date 종속 날짜는 버려지고, writtenAt 작성 시간만 dateTime으로 전송됨.
     fun Diary.toDiaryCreateRequest(): DiaryCreateRequest {
         return DiaryCreateRequest(
             type = types.map { it.value },

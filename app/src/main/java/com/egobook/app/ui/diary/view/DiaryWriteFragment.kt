@@ -157,9 +157,9 @@ class DiaryWriteFragment : Fragment() {
     private fun observeSelectedDate() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.selectedDate.collectLatest { date ->
+                viewModel.selectedDate.collectLatest { selectedDate ->
                     // 날짜를 "2025년 12월 25일" 형식으로 표시
-                    binding.tvYear.text = "${date.toYearString()}년 ${date.toMonthString()}월 ${date.toDayOfMonthString()}일"
+                    binding.tvYear.text = "${selectedDate.toYearString()}년 ${selectedDate.toMonthString()}월 ${selectedDate.toDayOfMonthString()}일"
                     
                     // 현재 시간을 "2025.12.25 17:32" 형식으로 표시
                     binding.tvInputTime.text = LocalDateTime.now().toDateTimeString()
