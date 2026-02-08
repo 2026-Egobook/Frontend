@@ -1,12 +1,17 @@
 package com.egobook.app.data.repository.diary
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.DiaryApiService
+import com.egobook.app.data.repository.diary.paging.DiariesPagingSource
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
+import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class DiaryRepositoryImpl  @Inject constructor(
@@ -16,33 +21,38 @@ class DiaryRepositoryImpl  @Inject constructor(
         filter: DiaryFilter,
         size: Int
     ): Flow<PagingData<DiarySummary>> {
-        TODO("Not yet implemented")
+        return Pager(
+            config = PagingConfig(
+                pageSize = size,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { DiariesPagingSource(apiService, filter) }
+        ).flow
     }
 
-    override suspend fun getDiary(diaryId: Long): Result<Diary> {
+    override suspend fun getDiaryById(diaryId: Long): Result<Diary> {
         TODO("Not yet implemented")
     }
 
     override suspend fun addDiary(
-        date: String,
-        types: List<String>,
+        types: Set<DiaryType>,
         emotionLevel: Int?,
-        content: String
+        content: String,
+        dateTime: LocalDateTime,
     ): Result<Long> {
         TODO("Not yet implemented")
     }
 
     override suspend fun updateDiary(
         diaryId: Long,
-        date: String,
-        types: List<String>,
+        types: Set<DiaryType>,
         emotionLevel: Int?,
         content: String
     ): Result<Unit> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteDiary(diaryId: Long): Result<Unit> {
+    override suspend fun deleteDiaryById(diaryId: Long): Result<Unit> {
         TODO("Not yet implemented")
     }
 

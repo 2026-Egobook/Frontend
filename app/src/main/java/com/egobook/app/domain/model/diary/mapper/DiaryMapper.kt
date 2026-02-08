@@ -23,17 +23,17 @@ object DiaryMapper {
     /**
      * DiariesResponse → DayDiaries
      */
-    fun DiariesResponse.toEntity(): DayDiaries {
+    fun DiariesResponse.toDayDiariesEntity(): DayDiaries {
         return DayDiaries(
             dailyCount = dailyCount,
-            diaries = diaries.toEntity()
+            diaries = diaries.toDiaryListEntity()
         )
     }
 
     /**
      * DiaryEntryResponse → Diary
      */
-    fun DiaryEntryResponse.toEntity(): Diary {
+    fun DiaryEntryResponse.toDiaryEntity(): Diary {
         return Diary(
             diaryId = diaryId,
             date = LocalDate.parse(date),
@@ -48,9 +48,9 @@ object DiaryMapper {
     /**
      * DiarySlice → DiaryList
      */
-    fun DiarySlice.toEntity(): DiaryList {
+    fun DiarySlice.toDiaryListEntity(): DiaryList {
         return DiaryList(
-            content = content.map { it.toEntity().toDiarySummary() },
+            content = content.map { it.toDiaryEntity().toDiarySummary() },
             page = page,
             size = size,
             hasNext = hasNext
