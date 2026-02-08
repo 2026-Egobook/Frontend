@@ -1,8 +1,8 @@
 package com.egobook.app
 
-import com.egobook.app.ui.home.Level
-import com.egobook.app.ui.home.Ink
-import com.egobook.app.ui.home.LevelType
+import com.egobook.app.ui.home.user.Level
+import com.egobook.app.ui.home.user.Ink
+import com.egobook.app.ui.home.user.LevelType
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test

@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.user
 
 enum class LevelType(val range: IntRange) {
     ONE(0..99),
