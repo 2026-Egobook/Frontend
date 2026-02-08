@@ -1,13 +1,12 @@
 package com.egobook.app.di
 
 import com.egobook.app.data.repository.CounselingRepositoryImpl
-import com.egobook.app.data.repository.diary.FakeDiaryRepositoryImpl
 import com.egobook.app.data.repository.FriendsRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
 import com.egobook.app.data.repository.auth.AuthRepositoryImpl
 import com.egobook.app.data.repository.QuestionRepositoryImpl
-import com.egobook.app.domain.repository.diary.FakeDiaryRepository
+import com.egobook.app.data.repository.diary.DiaryRepositoryImpl
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.NotificationRepository
 import com.egobook.app.domain.repository.auth.AuthRepository
@@ -15,6 +14,7 @@ import com.egobook.app.ui.shop.NetworkStoreRepository
 import com.egobook.app.ui.shop.StoreRepository
 import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
+import com.egobook.app.domain.repository.diary.DiaryRepository
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -48,9 +48,14 @@ abstract class RepositoryModule {
     //  2. DiaryRepositoryImpl 구현 (ApiService 사용)
     //  3. 이 바인딩을 DiaryRepositoryImpl -> DiaryRepository로 변경
     //  4. 모든 UseCase의 FakeDiaryRepository -> DiaryRepository로 변경
+//    @Binds
+//    @Singleton
+//    abstract fun bindFakeDiaryRepository(impl: FakeDiaryRepositoryImpl): FakeDiaryRepository
+
     @Binds
     @Singleton
-    abstract fun bindFakeDiaryRepository(impl: FakeDiaryRepositoryImpl): FakeDiaryRepository
+    abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository
+
 
     @Binds
     @Singleton

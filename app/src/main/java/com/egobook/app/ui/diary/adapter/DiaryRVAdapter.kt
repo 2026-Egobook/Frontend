@@ -5,20 +5,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.databinding.ItemDiaryBinding
-import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.ui.util.toTimeString
 
 class DiaryRVAdapter :
-    ListAdapter<Diary, DiaryRVAdapter.ViewHolder>(DiaryDiffCallback()) {
+    PagingDataAdapter<DiarySummary, DiaryRVAdapter.ViewHolder>(DiaryDiffCallback()) {
 
     interface MyItemClickListener {
-        fun onItemClick(diary: Diary)
+        fun onItemClick(diary: DiarySummary)
     }
 
     private var myItemClickListener: MyItemClickListener? = null
@@ -37,17 +37,18 @@ class DiaryRVAdapter :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val diary = getItem(position)
-        holder.bind(diary)
-
-        holder.itemView.setOnClickListener {
-            myItemClickListener?.onItemClick(diary)
+        diary?.let {
+            holder.bind(it)
+            holder.itemView.setOnClickListener {
+                myItemClickListener?.onItemClick(diary)
+            }
         }
     }
 
     inner class ViewHolder(private val binding: ItemDiaryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(diary: Diary) {
+        fun bind(diary: DiarySummary) {
             binding.tvDiaryContent.text = diary.content
             binding.tvTime.text = diary.writtenAt.toTimeString()
 
@@ -61,14 +62,14 @@ class DiaryRVAdapter :
             }
 
             // 타입 순서 정의
-            val typeOrder = listOf(DiaryType.EMOTION, DiaryType.WORRY, DiaryType.PRAISE, DiaryType.THANKS)
+            val typeOrder = listOf(DiaryType.EMOTION, DiaryType.CONCERN, DiaryType.PRAISE, DiaryType.GRATITUDE)
 
             // 각 TextView 맵핑
             val typeToTextView = mapOf(
                 DiaryType.EMOTION to binding.tvEmotion,
-                DiaryType.WORRY to binding.tvWorry,
+                DiaryType.CONCERN to binding.tvWorry,
                 DiaryType.PRAISE to binding.tvPraise,
-                DiaryType.THANKS to binding.tvThanks
+                DiaryType.GRATITUDE to binding.tvThanks
             )
 
             // 모든 TextView 숨김
@@ -98,12 +99,12 @@ class DiaryRVAdapter :
         }
     }
 
-    class DiaryDiffCallback : DiffUtil.ItemCallback<Diary>() {
-        override fun areItemsTheSame(oldItem: Diary, newItem: Diary): Boolean {
-            return oldItem.id == newItem.id // ID 기준으로 같은 아이템인지 판단
+    class DiaryDiffCallback : DiffUtil.ItemCallback<DiarySummary>() {
+        override fun areItemsTheSame(oldItem: DiarySummary, newItem: DiarySummary): Boolean {
+            return oldItem.diaryId == newItem.diaryId // ID 기준으로 같은 아이템인지 판단
         }
 
-        override fun areContentsTheSame(oldItem: Diary, newItem: Diary): Boolean {
+        override fun areContentsTheSame(oldItem: DiarySummary, newItem: DiarySummary): Boolean {
             return oldItem == newItem // 내용까지 동일한지 판단
         }
     }

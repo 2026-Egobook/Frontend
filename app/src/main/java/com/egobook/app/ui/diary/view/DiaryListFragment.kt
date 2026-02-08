@@ -5,15 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.FragmentDiaryListBinding
-import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.ui.diary.adapter.DiaryRVAdapter
 import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -62,29 +64,29 @@ class DiaryListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collectLatest { state ->
-
-                    diaryRVAdapter.submitList(state.diaries)
-
-                    val isEmpty = state.diaries.isEmpty()
-
-                    binding.layoutEmpty.visibility =
-                        if (isEmpty) View.VISIBLE else View.GONE
-
-                    binding.rvDiary.visibility =
-                        if (isEmpty) View.GONE else View.VISIBLE
-
+                    state.diaries.collectLatest { pagingData ->
+                        diaryRVAdapter.submitData(pagingData)
+                    }
                 }
             }
         }
+        
+        // LoadState를 관찰하여 빈 상태 처리
+        viewLifecycleOwner.lifecycleScope.launch {
+            diaryRVAdapter.loadStateFlow.collectLatest { loadStates ->
+                val isEmpty = loadStates.refresh is LoadState.NotLoading && diaryRVAdapter.itemCount == 0
+                
+                binding.layoutEmpty.isVisible = isEmpty
+                binding.rvDiary.isVisible = !isEmpty
+            }
+        }
     }
-
-
 
     private fun initRecyclerView() {
         diaryRVAdapter.setMyItemClickListener(object :
             DiaryRVAdapter.MyItemClickListener {
 
-            override fun onItemClick(diary: Diary) {
+            override fun onItemClick(diary: DiarySummary) {
                 // 💡 1. 부모 프래그먼트(DiaryFragment)가 생성한 Directions를 사용합니다.
                 val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
                     diaryId = diary.diaryId

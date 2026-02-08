@@ -69,7 +69,7 @@ class DiaryCheckFragment : Fragment() {
                     val action = DiaryCheckFragmentDirections
                         .actionDiaryCheckFragmentToDiaryWriteFragment(
                             selectedDate = currentDiary.createdAt.toString(),
-                            diaryId = currentDiary.id
+                            diaryId = currentDiary.diaryId
                         )
                     findNavController().navigate(action)
                 } else {
@@ -135,9 +135,9 @@ class DiaryCheckFragment : Fragment() {
     private fun setDiaryTypes(types: Set<DiaryType>) {
         binding.apply {
             cvEmotion.isSelected = DiaryType.EMOTION in types
-            cvThought.isSelected = DiaryType.WORRY in types
+            cvThought.isSelected = DiaryType.CONCERN in types
             cvPraise.isSelected = DiaryType.PRAISE in types
-            cvGratitude.isSelected = DiaryType.THANKS in types
+            cvGratitude.isSelected = DiaryType.GRATITUDE in types
         }
     }
     

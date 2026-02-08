@@ -2,21 +2,20 @@ package com.egobook.app.ui.diary.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.egobook.app.domain.model.diary.entity.Diary
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import java.time.LocalDate
-import java.time.LocalDateTime
+import javax.inject.Inject
 
 @HiltViewModel
 class DiariesViewModel @Inject constructor(
@@ -24,8 +23,6 @@ class DiariesViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(DiariesState())  // 뷰모델 내부 갱신용
     val state = _state.asStateFlow()    // 외부(ui) 읽기 전용
-
-    private var getDiariesJob: Job? = null
 
     init {
         loadDiaries(LocalDate.now(), null)
@@ -59,15 +56,11 @@ class DiariesViewModel @Inject constructor(
     //상태를 보지 말고 뷰모델 내부 state 기반으로만 동작
     private fun loadDiaries(selectedDate: LocalDate, types: Set<DiaryType>?) {
         val filter = DiaryFilter(selectedDate, types)
-        val currentState = state.value
-
-        getDiariesJob?.cancel()
-        getDiariesJob = diaryUseCases
+        val diariesFlow = diaryUseCases
             .getDiaries(filter)
-            .onEach { diaries ->
-                _state.value = currentState.copy(diaries = diaries)
-            }
-            .launchIn(viewModelScope)
+            .cachedIn(viewModelScope)
+        
+        _state.value = state.value.copy(diaries = diariesFlow)
     }
 
     // 날짜가 바뀌면 UI 표시값까지 자동 변경하는 확장함수
@@ -88,14 +81,14 @@ sealed class DiariesEvent {
 }
 
 data class DiariesState(
-    val diaries: List<DiarySummary> = emptyList(),
+    val diaries: Flow<PagingData<DiarySummary>> = emptyFlow(),
     val selectedTabType: Set<DiaryType>? = null,
 
-    // UI 표시용
-    val yearText: String = "",
-    val monthText: String = "",
-    val dayText: String = "",
-
     // 내부 로직용
-    val selectedDate: LocalDate = LocalDate.now()
+    val selectedDate: LocalDate = LocalDate.now(),
+    
+    // UI 표시용
+    val yearText: String = selectedDate.year.toString(),
+    val monthText: String = selectedDate.monthValue.toString(),
+    val dayText: String = selectedDate.dayOfMonth.toString()
 )

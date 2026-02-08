@@ -130,7 +130,7 @@ class DiaryWriteViewModel @Inject constructor(
                 )
             }
             is ContentEvent.SaveDiary -> {
-                saveDiary()
+                //saveDiary()
             }
         }
     }
@@ -138,47 +138,47 @@ class DiaryWriteViewModel @Inject constructor(
     /**
      * 일기 저장 처리 (생성 또는 수정)
      */
-    private fun saveDiary() {
-        viewModelScope.launch {
-            val state = _contentState.value
-            
-            // UI displayType을 Domain DiaryType으로 변환
-            val diaryTypes = DiaryEntityMapper.uiDisplayTypesToDomain(state.selectedTypes)
-            
-            // 감정 타입이 선택되지 않았으면 emotionLevel은 null
-            val emotionLevel = if (state.selectedTypes.contains("감정")) {
-                state.selectedEmotionLevel
-            } else {
-                null
-            }
-            
-            // 수정 모드 vs 생성 모드 분기
-            val result = if (isEditMode) {
-                // 수정 모드: updateDiary 호출
-                diaryUseCases.updateDiary(
-                    id = diaryId,
-                    content = state.content,
-                    types = diaryTypes,
-                    emotionLevel = emotionLevel
-                )
-            } else {
-                // 생성 모드: addDiary 호출
-                diaryUseCases.addDiary(
-                    content = state.content,
-                    types = diaryTypes,
-                    emotionLevel = emotionLevel,
-                    createdAt = _selectedDate.value // savedStateHandle로 받은 선택된 날짜
-                )
-            }
-            
-            // 저장 결과 전달
-            result.onSuccess {
-                _saveSuccess.emit(true) // 저장 성공
-            }.onFailure {
-                _saveSuccess.emit(false) // 저장 실패
-            }
-        }
-    }
+//    private fun saveDiary() {
+//        viewModelScope.launch {
+//            val state = _contentState.value
+//
+//            // UI displayType을 Domain DiaryType으로 변환
+//            val diaryTypes = DiaryEntityMapper.uiDisplayTypesToDomain(state.selectedTypes)
+//
+//            // 감정 타입이 선택되지 않았으면 emotionLevel은 null
+//            val emotionLevel = if (state.selectedTypes.contains("감정")) {
+//                state.selectedEmotionLevel
+//            } else {
+//                null
+//            }
+//
+//            // 수정 모드 vs 생성 모드 분기
+//            val result = if (isEditMode) {
+//                // 수정 모드: updateDiary 호출
+////                diaryUseCases.updateDiary(
+////                    id = diaryId,
+////                    content = state.content,
+////                    types = diaryTypes,
+////                    emotionLevel = emotionLevel
+////                )
+//            } else {
+//                // 생성 모드: addDiary 호출
+////                diaryUseCases.addDiary(
+////                    content = state.content,
+////                    types = diaryTypes,
+////                    emotionLevel = emotionLevel,
+////                    createdAt = _selectedDate.value // savedStateHandle로 받은 선택된 날짜
+////                )
+//            }
+//
+//            // 저장 결과 전달
+//            result.onSuccess {
+//                _saveSuccess.emit(true) // 저장 성공
+//            }.onFailure {
+//                _saveSuccess.emit(false) // 저장 실패
+//            }
+//        }
+//    }
     
     /**
      * 저장 버튼 활성화 조건 체크
