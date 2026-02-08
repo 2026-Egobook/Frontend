@@ -2,6 +2,7 @@ package com.egobook.app.domain.repository.diary
 
 import androidx.paging.PagingData
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import kotlinx.coroutines.flow.Flow
@@ -16,8 +17,7 @@ interface DiaryRepository {
      * @param size 페이지 크기
      */
     fun getDiaries(
-        date: LocalDate,
-        type: DiaryType,
+        filter: DiaryFilter,
         size: Int = 10
     ): Flow<PagingData<DiarySummary>>
 

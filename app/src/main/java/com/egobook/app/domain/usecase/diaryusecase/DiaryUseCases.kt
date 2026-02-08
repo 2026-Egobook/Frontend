@@ -1,6 +1,7 @@
 package com.egobook.app.domain.usecase.diaryusecase
 
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.repository.diary.FakeDiaryRepository
@@ -24,23 +25,8 @@ data class DiaryUseCases @Inject constructor (
 class GetDiaries @Inject constructor(
     private val repository: FakeDiaryRepository
 ) {
-    operator fun invoke(
-        selectedDate: LocalDate = LocalDate.now(),
-        types: Set<DiaryType>? = null // null = 전체 탭
-    ): Flow<List<DiarySummary>> {
-        return repository.getDiaries()
-            .map { diaries ->
-                diaries
-                    .filter { diary ->
-                        val isSameDate = diary.createdAt.year == selectedDate.year &&
-                                diary.createdAt.month == selectedDate.month &&
-                                diary.createdAt.dayOfMonth == selectedDate.dayOfMonth
-                        val isCorrectType = types == null || diary.types.any { it in types }
-
-                        isSameDate && isCorrectType
-                    }
-                    .sortedByDescending { it.writtenAt }
-            }
+    operator fun invoke(filter: DiaryFilter): Flow<List<DiarySummary>> {
+        return repository.getDiaries(filter)
     }
 }
 

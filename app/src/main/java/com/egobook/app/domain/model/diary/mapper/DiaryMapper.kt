@@ -5,6 +5,7 @@ import com.egobook.app.data.model.diary.response.DiaryEntryResponse
 import com.egobook.app.data.model.diary.response.DiarySlice
 import com.egobook.app.domain.model.diary.entity.DayDiaries
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiaryList
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
@@ -72,6 +73,18 @@ object DiaryMapper {
     }
 
     // ========== Domain Entity -> Request ==========
+
+    /**
+     * DiaryFilter → RequestParams
+     */
+
+    fun DiaryFilter.toRequestParams(): Pair<String, String> {
+        val dateParam = date.toString()
+        val typesParam = types?.joinToString(",") { it.name } ?: ""
+
+        return dateParam to typesParam
+    }
+
 
 
 }

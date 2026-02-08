@@ -3,6 +3,7 @@ package com.egobook.app.ui.diary.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
@@ -57,18 +58,19 @@ class DiariesViewModel @Inject constructor(
 
     //상태를 보지 말고 뷰모델 내부 state 기반으로만 동작
     private fun loadDiaries(selectedDate: LocalDate, types: Set<DiaryType>?) {
+        val filter = DiaryFilter(selectedDate, types)
         val currentState = state.value
 
         getDiariesJob?.cancel()
         getDiariesJob = diaryUseCases
-            .getDiaries(currentState.selectedDate, currentState.selectedTabType)
+            .getDiaries(filter)
             .onEach { diaries ->
                 _state.value = currentState.copy(diaries = diaries)
             }
             .launchIn(viewModelScope)
     }
 
-    // 날짜거 바뀌면 UI 표시값까지 자동 변경하는 확장함수
+    // 날짜가 바뀌면 UI 표시값까지 자동 변경하는 확장함수
     private fun DiariesState.withDate(date: LocalDate): DiariesState {
         return copy(
             selectedDate = date,
