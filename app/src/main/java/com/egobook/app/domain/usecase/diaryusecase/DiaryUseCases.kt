@@ -1,14 +1,16 @@
 package com.egobook.app.domain.usecase.diaryusecase
 
-import com.egobook.app.domain.model.Diary
-import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.repository.FakeDiaryRepository
+import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiarySummary
+import com.egobook.app.domain.model.diary.entity.DiaryType
+import com.egobook.app.domain.repository.diary.FakeDiaryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-// 의존성 주입을 쉽게 하기 위한 래퍼 클래스.
+// 의존성 주입을 쉽게 하기 위한 래퍼 클래스
 data class DiaryUseCases @Inject constructor (
     val getDiaries: GetDiaries,
     val getDiary: GetDiary,
@@ -23,9 +25,9 @@ class GetDiaries @Inject constructor(
     private val repository: FakeDiaryRepository
 ) {
     operator fun invoke(
-        selectedDate: LocalDateTime = LocalDateTime.now(),
+        selectedDate: LocalDate = LocalDate.now(),
         types: Set<DiaryType>? = null // null = 전체 탭
-    ): Flow<List<Diary>> {
+    ): Flow<List<DiarySummary>> {
         return repository.getDiaries()
             .map { diaries ->
                 diaries

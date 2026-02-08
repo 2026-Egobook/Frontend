@@ -1,20 +1,21 @@
 package com.egobook.app.ui.diary.mapper
 
-import com.egobook.app.domain.model.DiaryType
+import com.egobook.app.domain.model.diary.entity.DiaryType
+import java.time.LocalDate
 
 /**
  * Domain 모델과 UI 레이어 간의 데이터 변환을 담당하는 매퍼
  * 순수하게 데이터 변환만 담당하며, UI 리소스(이미지, 색상 등)는 UI 레이어에서 처리
  */
-object DiaryMapper {
+object DiaryEntityMapper {
 
-    // ========== DiaryType 변환 ==========
-    
+    // ========== Domain Entity -> UI ==========
+
     /**
-     * UI displayType("감정", "고민", "칭찬", "감사") -> Domain DiaryType
+     * Domain DiaryType Set -> UI displayTypes Set
      */
-    fun uiDisplayTypeToDomain(displayType: String): DiaryType {
-        return DiaryType.fromDisplayType(displayType)
+    fun domainToUiDisplayTypes(types: Set<DiaryType>): Set<String> {
+        return types.map { it.displayType }.toSet()
     }
     
     /**
@@ -23,6 +24,8 @@ object DiaryMapper {
     fun domainToUiDisplayType(diaryType: DiaryType): String {
         return diaryType.displayType
     }
+
+    // ========== UI -> Domain Entity ==========
     
     /**
      * UI displayTypes Set -> Domain DiaryType Set
@@ -36,15 +39,21 @@ object DiaryMapper {
             }
         }.toSet()
     }
-    
+
     /**
-     * Domain DiaryType Set -> UI displayTypes Set
+     * UI displayType("감정", "고민", "칭찬", "감사") -> Domain DiaryType
      */
-    fun domainToUiDisplayTypes(types: Set<DiaryType>): Set<String> {
-        return types.map { it.displayType }.toSet()
+    fun uiDisplayTypeToDomain(displayType: String): DiaryType {
+        return DiaryType.fromDisplayType(displayType)
+    }
+
+    /**
+     * UI 년원일 -> Domain Entity LocalDate
+     */
+    fun uiYearMonthDateToDomain(year: Int, month: Int, date: Int): LocalDate {
+        return LocalDate.of(year, month, date)
     }
     
     // ========== EmotionLevel 변환 ==========
-    // emotionLevel이 Int로 변경되어 별도 변환 불필요
-    // Domain과 UI 모두 Int (1~5)를 사용
+    // Domain과 UI 모두 Int (1~5)를 사용 -> 변환 불필요
 }

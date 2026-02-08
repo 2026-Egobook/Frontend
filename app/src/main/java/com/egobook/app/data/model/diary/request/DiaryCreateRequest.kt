@@ -4,12 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DiaryRequest(
-    @SerialName("diaryId")
-    val diaryId: Long,
-)
-
-@Serializable
 data class DiaryCreateRequest(
     @SerialName("type")
     val type: List<String>,

@@ -1,8 +1,8 @@
-package com.egobook.app.data.repository
+package com.egobook.app.data.repository.diary
 
-import com.egobook.app.domain.model.Diary
-import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.repository.FakeDiaryRepository
+import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryType
+import com.egobook.app.domain.repository.diary.FakeDiaryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,13 +12,13 @@ import javax.inject.Inject
 
 /**
  * 테스트 및 개발용 더미 일기 저장소
- * 
+ *
  * 메모리 내에서 더미 데이터를 관리하며, 실제 API 호출 없이 일기 기능을 테스트할 수 있습니다.
- * 
+ *
  * 실제 백엔드 API 연동 시:
  * 1. 새로운 DiaryRepositoryImpl 클래스를 생성하여 ApiService를 사용하여 구현
  * 2. RepositoryModule.kt에서 FakeDiaryRepositoryImpl -> DiaryRepositoryImpl로 변경
- * 
+ *
  * @see FakeDiaryRepository
  */
 class FakeDiaryRepositoryImpl @Inject constructor() : FakeDiaryRepository {
@@ -170,7 +170,8 @@ class FakeDiaryRepositoryImpl @Inject constructor() : FakeDiaryRepository {
                 content = "어제 내가 해낸 작은 성과에 대해 스스로를 칭찬한다.",
                 types = setOf(DiaryType.PRAISE),
                 createdAt = LocalDateTime.now().minusDays(1).withHour(21).withMinute(0),
-                writtenAt = LocalDateTime.now().minusDays(1).withHour(22).withMinute(30), // 1시간 30분 뒤 수정
+                writtenAt = LocalDateTime.now().minusDays(1).withHour(22)
+                    .withMinute(30), // 1시간 30분 뒤 수정
                 emotionLevel = null
             ),
 
@@ -180,7 +181,8 @@ class FakeDiaryRepositoryImpl @Inject constructor() : FakeDiaryRepository {
                 content = "이틀 전, 진로에 대해 계속 고민만 하다 하루가 갔다.",
                 types = setOf(DiaryType.WORRY),
                 createdAt = LocalDateTime.now().minusDays(2).withHour(22).withMinute(0),
-                writtenAt = LocalDateTime.now().minusDays(2).withHour(22).withMinute(10), // 10분 후 수정
+                writtenAt = LocalDateTime.now().minusDays(2).withHour(22)
+                    .withMinute(10), // 10분 후 수정
                 emotionLevel = null
             ),
 
@@ -216,7 +218,12 @@ class FakeDiaryRepositoryImpl @Inject constructor() : FakeDiaryRepository {
             Diary(
                 id = 23L,
                 content = "모든 타입이 포함된 종합 일기. 정말 많은 일이 있었다.",
-                types = setOf(DiaryType.EMOTION, DiaryType.WORRY, DiaryType.PRAISE, DiaryType.THANKS),
+                types = setOf(
+                    DiaryType.EMOTION,
+                    DiaryType.WORRY,
+                    DiaryType.PRAISE,
+                    DiaryType.THANKS
+                ),
                 createdAt = LocalDateTime.now().minusWeeks(1).withHour(23).withMinute(0),
                 writtenAt = LocalDateTime.now().minusWeeks(1).withHour(23).withMinute(0),
                 emotionLevel = 3 // NORMAL

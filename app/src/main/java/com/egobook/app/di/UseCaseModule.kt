@@ -1,6 +1,6 @@
 package com.egobook.app.di
 
-import com.egobook.app.domain.repository.FakeDiaryRepository
+import com.egobook.app.domain.repository.diary.FakeDiaryRepository
 import com.egobook.app.domain.repository.auth.AuthRepository
 import com.egobook.app.domain.usecase.authusecase.AuthUseCases
 import com.egobook.app.domain.usecase.authusecase.GoogleAutoLogin

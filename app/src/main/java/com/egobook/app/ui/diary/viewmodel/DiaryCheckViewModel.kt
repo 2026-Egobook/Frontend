@@ -3,7 +3,7 @@ package com.egobook.app.ui.diary.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.egobook.app.domain.model.Diary
+import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

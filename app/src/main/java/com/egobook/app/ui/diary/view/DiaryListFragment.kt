@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.launch
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,17 +12,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryListBinding
-import com.egobook.app.domain.model.Diary
-import com.egobook.app.domain.model.DiaryType
+import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.ui.diary.adapter.DiaryRVAdapter
 import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class DiaryListFragment : Fragment() {
@@ -95,7 +87,7 @@ class DiaryListFragment : Fragment() {
             override fun onItemClick(diary: Diary) {
                 // 💡 1. 부모 프래그먼트(DiaryFragment)가 생성한 Directions를 사용합니다.
                 val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryCheckFragment(
-                    diaryId = diary.id
+                    diaryId = diary.diaryId
                 )
                 // 💡 2. 부모 프래그먼트의 NavController로 action을 실행합니다.
                 parentFragment?.findNavController()?.navigate(action)

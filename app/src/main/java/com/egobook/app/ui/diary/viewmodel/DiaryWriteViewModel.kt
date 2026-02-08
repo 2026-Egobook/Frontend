@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
-import com.egobook.app.ui.diary.mapper.DiaryMapper
+import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -143,7 +143,7 @@ class DiaryWriteViewModel @Inject constructor(
             val state = _contentState.value
             
             // UI displayType을 Domain DiaryType으로 변환
-            val diaryTypes = DiaryMapper.uiDisplayTypesToDomain(state.selectedTypes)
+            val diaryTypes = DiaryEntityMapper.uiDisplayTypesToDomain(state.selectedTypes)
             
             // 감정 타입이 선택되지 않았으면 emotionLevel은 null
             val emotionLevel = if (state.selectedTypes.contains("감정")) {

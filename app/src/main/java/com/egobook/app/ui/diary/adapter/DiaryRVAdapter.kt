@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.databinding.ItemDiaryBinding
-import com.egobook.app.domain.model.Diary
-import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.ui.diary.util.toTimeString
+import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryType
+import com.egobook.app.ui.util.toTimeString
 
 class DiaryRVAdapter :
     ListAdapter<Diary, DiaryRVAdapter.ViewHolder>(DiaryDiffCallback()) {

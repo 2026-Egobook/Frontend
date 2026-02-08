@@ -15,11 +15,7 @@
     import com.egobook.app.R
     import com.egobook.app.applyScreenBlur
     import com.egobook.app.databinding.FragmentDiaryBinding
-    import com.egobook.app.domain.model.DiaryType
     import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
-    import com.egobook.app.ui.diary.util.toDayOfMonthString
-    import com.egobook.app.ui.diary.util.toMonthString
-    import com.egobook.app.ui.diary.util.toYearString
     import com.egobook.app.ui.diary.viewmodel.DiariesEvent
     import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
     import com.google.android.material.tabs.TabLayout
@@ -79,12 +75,24 @@
                 }
                 btnPrevDate.setOnClickListener {
                     val prevDate = viewModel.state.value.selectedDate.minusDays(1)
-                    viewModel.onEvent(DiariesEvent.ChangeDate(prevDate))
+                    viewModel.onEvent(
+                        DiariesEvent.ChangeDate(
+                            year = prevDate.year,
+                            month = prevDate.monthValue,
+                            day = prevDate.dayOfMonth
+                        )
+                    )
                     binding.vpDiary.setCurrentItem(0, false) // "전체" 탭으로 이동
                 }
                 btnNextDate.setOnClickListener {
                     val nextDate = viewModel.state.value.selectedDate.plusDays(1)
-                    viewModel.onEvent(DiariesEvent.ChangeDate(nextDate))
+                    viewModel.onEvent(
+                        DiariesEvent.ChangeDate(
+                            year = nextDate.year,
+                            month = nextDate.monthValue,
+                            day = nextDate.dayOfMonth
+                        )
+                    )
                     binding.vpDiary.setCurrentItem(0, false) // "전체" 탭으로 이동
                 }
                 btnGoToTop.setOnClickListener {
@@ -97,10 +105,9 @@
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.state.collectLatest { state ->
-                        binding.tvYear.text = state.selectedDate.toYearString()
-                        binding.tvMonth.text = state.selectedDate.toMonthString()
-                        binding.tvDate.text = state.selectedDate.toDayOfMonthString()
-
+                        binding.tvYear.text = state.yearText
+                        binding.tvMonth.text = state.monthText
+                        binding.tvDate.text = state.dayText
                     }
                 }
             }
@@ -119,8 +126,8 @@
             // 탭 선택 이벤트 처리
             binding.tbType.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab) {
-                    val types = getDiaryTypesByPosition(tab.position)
-                    viewModel.onEvent(DiariesEvent.SwipeTab(types))
+                    val displayTypes = getDisplayTypesByPosition(tab.position)
+                    viewModel.onEvent(DiariesEvent.SwipeTab(displayTypes))
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -153,13 +160,13 @@
             })
         }
 
-        private fun getDiaryTypesByPosition(position: Int): Set<com.egobook.app.domain.model.DiaryType>? {
+        private fun getDisplayTypesByPosition(position: Int): Set<String>? {
             return when(position) {
                 0 -> null // 전체
-                1 -> setOf(DiaryType.EMOTION)
-                2 -> setOf(DiaryType.WORRY)
-                3 -> setOf(DiaryType.PRAISE)
-                4 -> setOf(DiaryType.THANKS)
+                1 -> setOf("감정")
+                2 -> setOf("고민")
+                3 -> setOf("칭찬")
+                4 -> setOf("감사")
                 else -> null
             }
         }

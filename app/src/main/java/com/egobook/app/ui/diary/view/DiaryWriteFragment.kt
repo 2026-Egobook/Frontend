@@ -19,10 +19,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryWriteBinding
-import com.egobook.app.ui.diary.util.toDateTimeString
-import com.egobook.app.ui.diary.util.toDayOfMonthString
-import com.egobook.app.ui.diary.util.toMonthString
-import com.egobook.app.ui.diary.util.toYearString
+import com.egobook.app.ui.util.toDateTimeString
+import com.egobook.app.ui.util.toDayOfMonthString
+import com.egobook.app.ui.util.toMonthString
+import com.egobook.app.ui.util.toYearString
 import com.egobook.app.ui.diary.viewmodel.DiaryWriteViewModel
 import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,13 +1,13 @@
 package com.egobook.app.di
 
 import com.egobook.app.data.repository.CounselingRepositoryImpl
-import com.egobook.app.data.repository.FakeDiaryRepositoryImpl
+import com.egobook.app.data.repository.diary.FakeDiaryRepositoryImpl
 import com.egobook.app.data.repository.FriendsRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
 import com.egobook.app.data.repository.auth.AuthRepositoryImpl
 import com.egobook.app.data.repository.QuestionRepositoryImpl
-import com.egobook.app.domain.repository.FakeDiaryRepository
+import com.egobook.app.domain.repository.diary.FakeDiaryRepository
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.NotificationRepository
 import com.egobook.app.domain.repository.auth.AuthRepository

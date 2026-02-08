@@ -2,9 +2,11 @@ package com.egobook.app.ui.diary.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.egobook.app.domain.model.Diary
-import com.egobook.app.domain.model.DiaryType
+import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiarySummary
+import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
+import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import kotlinx.coroutines.flow.asStateFlow
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @HiltViewModel
@@ -24,41 +27,73 @@ class DiariesViewModel @Inject constructor(
     private var getDiariesJob: Job? = null
 
     init {
-        getDiaries(LocalDateTime.now(), null)
+        loadDiaries(LocalDate.now(), null)
     }
 
     fun onEvent(event: DiariesEvent) {
         when(event) {
             is DiariesEvent.SwipeTab -> {
-                getDiaries(state.value.selectedDate, event.types)
+                val domainTypes = event.displayTypes?.let {
+                    DiaryEntityMapper.uiDisplayTypesToDomain(it)
+                }
+
+                _state.value = state.value.copy(selectedTabType = domainTypes)
+                loadDiaries(state.value.selectedDate, domainTypes)
             }
             is DiariesEvent.ChangeDate -> {
-                getDiaries(event.date, null) // 날짜 변경 시 "전체" 탭으로 리셋
+                // 도메인 엔티티 형식으로 날짜 변환
+                val date = DiaryEntityMapper.uiYearMonthDateToDomain(
+                    event.year,
+                    event.month,
+                    event.day,
+                )
+                _state.value = state.value
+                    .withDate(date)
+                    .copy(selectedTabType = null)
+                loadDiaries(date, null) // 날짜 변경 시 "전체" 탭으로 리셋
             }
         }
     }
 
-    private fun getDiaries(selectedDate: LocalDateTime, types: Set<DiaryType>?) {
+    //상태를 보지 말고 뷰모델 내부 state 기반으로만 동작
+    private fun loadDiaries(selectedDate: LocalDate, types: Set<DiaryType>?) {
+        val currentState = state.value
+
         getDiariesJob?.cancel()
-        getDiariesJob = diaryUseCases.getDiaries(selectedDate, types)
+        getDiariesJob = diaryUseCases
+            .getDiaries(currentState.selectedDate, currentState.selectedTabType)
             .onEach { diaries ->
-                _state.value = state.value.copy(
-                    diaries = diaries,
-                    selectedTabType = types,
-                    selectedDate = selectedDate
-                )
+                _state.value = currentState.copy(diaries = diaries)
             }
             .launchIn(viewModelScope)
+    }
+
+    // 날짜거 바뀌면 UI 표시값까지 자동 변경하는 확장함수
+    private fun DiariesState.withDate(date: LocalDate): DiariesState {
+        return copy(
+            selectedDate = date,
+            yearText = date.year.toString(),
+            monthText = date.monthValue.toString(),
+            dayText = date.dayOfMonth.toString()
+        )
     }
 }
 
 sealed class DiariesEvent {
-    data class SwipeTab(val types: Set<DiaryType>?) : DiariesEvent()
-    data class ChangeDate(val date: LocalDateTime) : DiariesEvent()
+    data class SwipeTab(val displayTypes: Set<String>?) : DiariesEvent()
+    data class ChangeDate(val year: Int, val month: Int, val day: Int) : DiariesEvent()
+
 }
 
 data class DiariesState(
-    val diaries: List<Diary> = emptyList(),
+    val diaries: List<DiarySummary> = emptyList(),
     val selectedTabType: Set<DiaryType>? = null,
-    val selectedDate: LocalDateTime = LocalDateTime.now()
+
+    // UI 표시용
+    val yearText: String = "",
+    val monthText: String = "",
+    val dayText: String = "",
+
+    // 내부 로직용
+    val selectedDate: LocalDate = LocalDate.now()
 )

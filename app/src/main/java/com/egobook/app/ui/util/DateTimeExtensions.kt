@@ -1,6 +1,5 @@
-package com.egobook.app.ui.diary.util
+package com.egobook.app.ui.util
 
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
