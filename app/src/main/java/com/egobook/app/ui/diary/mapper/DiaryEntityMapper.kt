@@ -28,7 +28,7 @@ object DiaryEntityMapper {
     }
 
     /**
-     * Domain Diary -> DiaryCheckFragment에 표시될 값
+     * Domain Diary -> DiaryCheckFragment에 표시될 값..? 필요하면 정의하는 게 좋을 것 같은데..
      */
 
 

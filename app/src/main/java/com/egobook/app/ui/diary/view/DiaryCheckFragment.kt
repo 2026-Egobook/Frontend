@@ -23,6 +23,7 @@ import com.egobook.app.ui.util.toDayOfMonthString
 import com.egobook.app.ui.util.toMonthString
 import com.egobook.app.ui.util.toYearString
 import com.egobook.app.ui.diary.viewmodel.DiaryCheckViewModel
+import com.egobook.app.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -63,18 +64,8 @@ class DiaryCheckFragment : Fragment() {
                 findNavController().popBackStack()
             }
             btnModify.setOnClickListener {
-                // 수정하기 버튼 클릭 시 DiaryWriteFragment로 이동
-                val currentDiary = viewModel.diary.value
-                if (currentDiary != null) {
-                    val action = DiaryCheckFragmentDirections
-                        .actionDiaryCheckFragmentToDiaryWriteFragment(
-                            selectedDate = currentDiary.createdAt.toString(),
-                            diaryId = currentDiary.diaryId
-                        )
-                    findNavController().navigate(action)
-                } else {
-                    Toast.makeText(requireContext(), "일기 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
-                }
+                // TODO: 수정 기능은 나중에 구현
+                Toast.makeText(requireContext(), "수정 기능은 준비 중입니다.", Toast.LENGTH_SHORT).show()
             }
             btnDelete.setOnClickListener {
                 applyScreenBlur(BlurLevel.BASE)
@@ -98,13 +89,28 @@ class DiaryCheckFragment : Fragment() {
     private fun observeDiary() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.diary.collectLatest { diary ->
-                    if (diary != null) {
-                        // diary 객체가 null이 아닐 때 UI를 업데이트합니다.
-                        updateUi(diary)
-                    } else {
-                        // diary가 null이면 (데이터 로딩 실패 등) 사용자에게 알립니다.
-                        Toast.makeText(requireContext(), "일기를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                viewModel.diaryState.collectLatest { state ->
+                    when (state) {
+                        is UiState.Idle -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.ivEmotion.visibility = View.GONE
+                        }
+                        is UiState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.ivEmotion.visibility = View.GONE
+                        }
+                        is UiState.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            updateUi(state.data)
+                        }
+                        is UiState.Failure -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.ivEmotion.visibility = View.GONE
+                            val message = state.message ?: "알 수 없는 오류가 발생했습니다."
+                            Toast.makeText(requireContext(), 
+                                "일기를 불러오는데 실패했습니다: $message", 
+                                Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
@@ -115,14 +121,15 @@ class DiaryCheckFragment : Fragment() {
     private fun updateUi(diary: Diary) {
         binding.tvDiaryContent.text = diary.content
         binding.tvWrittenTime.text = diary.writtenAt.toDateTimeString()
-        binding.tvDate.text = "${diary.createdAt.toYearString()}년 ${diary.createdAt.toMonthString()}월 ${diary.createdAt.toDayOfMonthString()}일"
+        binding.tvDate.text = "${diary.date.toYearString()}년 ${diary.date.toMonthString()}월 ${diary.date.toDayOfMonthString()}일"
         
-        // 감정 레벨이 있으면 이미지 표시, 없으면 null
+        // 감정 레벨이 있으면 이미지 표시, 없으면 숨김
         if (diary.emotionLevel != null) {
+            binding.ivEmotion.visibility = View.VISIBLE
             val emotionImageRes = getEmotionImageRes(diary.emotionLevel)
             binding.ivEmotion.setImageResource(emotionImageRes)
         } else {
-            binding.ivEmotion.setImageDrawable(null) // 기본 이미지
+            binding.ivEmotion.visibility = View.GONE
         }
         
         // 일기 타입 표시 (selector를 통해 선택된 타입만 하이라이트)
