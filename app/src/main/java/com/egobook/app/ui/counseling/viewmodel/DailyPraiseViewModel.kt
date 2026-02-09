@@ -8,6 +8,7 @@ import androidx.paging.map
 import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.domain.usecase.egoroom.GetDailyPraiseByDateUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyPraiseUseCase
+import com.egobook.app.domain.usecase.egoroom.UpdateDailyPraiseNotificationUseCase
 import com.egobook.app.ui.counseling.model.DailyPraiseDetailModel
 import com.egobook.app.ui.counseling.model.PraiseDailyModel
 import com.egobook.app.ui.counseling.model.toPresentation
@@ -29,7 +30,8 @@ import javax.inject.Inject
 class DailyPraiseViewModel @Inject constructor(
     private val getDailyPraiseUseCase: GetDailyPraiseUseCase,
     private val getDailyPraiseByDateUseCase: GetDailyPraiseByDateUseCase,
-    private val notificationDelegate: NotificationDelegate
+    private val notificationDelegate: NotificationDelegate,
+    private val updateDailyPraiseNotificationUseCase: UpdateDailyPraiseNotificationUseCase
 ): ViewModel() {
 
     private val _dailyPraiseList = MutableStateFlow<PagingData<PraiseDailyModel>>(PagingData.empty())
@@ -57,19 +59,17 @@ class DailyPraiseViewModel @Inject constructor(
         }
     }
 
-    val notificationStatus: StateFlow<UiState<NotificationModel>> = notificationDelegate.notificationStatus
+    private val _updateNotificationStatus = MutableSharedFlow<UiState<Boolean>>()
+    val updateNotificationStatus = _updateNotificationStatus.asSharedFlow()
 
-    fun fetchNotificationStatus() {
+    fun updateDailyPraiseNotification(isEnabled: Boolean) {
         viewModelScope.launch {
-            notificationDelegate.fetchNotificationStatus()
-        }
-    }
-
-    val updateNotificationResult: SharedFlow<UiState<Boolean>> = notificationDelegate.updateNotificationResult
-
-    fun updateNotificationStatus(type: NotificationType, isEnabled: Boolean) {
-        viewModelScope.launch {
-            notificationDelegate.updateNotificationStatus(type = type, isEnabled = isEnabled)
+            _updateNotificationStatus.emit(UiState.Loading)
+            updateDailyPraiseNotificationUseCase(isEnabled = isEnabled).onSuccess { isEnabled ->
+                _updateNotificationStatus.emit(UiState.Success(isEnabled))
+            }.onFailure { error ->
+                _updateNotificationStatus.emit(UiState.Failure(error.message))
+            }
         }
     }
 

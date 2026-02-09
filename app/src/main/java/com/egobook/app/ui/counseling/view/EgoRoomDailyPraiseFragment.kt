@@ -62,13 +62,11 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
     private fun initListeners() = with(binding) {
         ivCounselingDailyPraiseNotification.setOnClickListener {
             if (isNotificationEnabled == true) {
-                viewModel.updateNotificationStatus(
-                    type = NotificationType.DAILY_PRAISE,
+                viewModel.updateDailyPraiseNotification(
                     isEnabled = false
                 )
             } else {
-                viewModel.updateNotificationStatus(
-                    type = NotificationType.DAILY_PRAISE,
+                viewModel.updateDailyPraiseNotification(
                     isEnabled = true
                 )
             }
@@ -107,7 +105,7 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
                     }
                 }
                 launch {
-                    viewModel.updateNotificationResult.collect { state ->
+                    viewModel.updateNotificationStatus.collect { state ->
                         when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
@@ -115,8 +113,7 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
                             is UiState.Success<Boolean> -> {
                                 val isEnabled = state.data
                                 updateNotificationUi(isEnabled)
-                                val toastMessage =
-                                    if (isEnabled) R.string.notification_on else R.string.notification_off
+                                val toastMessage = if (isEnabled) R.string.notification_on else R.string.notification_off
                                 Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -140,7 +137,7 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
     }
 
     private fun updateNotificationUi(isEnabled: Boolean) = with(binding) {
-//        this@EgoRoomDailyPraiseFragment.isNotificationEnabled = isEnabled
+        this@EgoRoomDailyPraiseFragment.isNotificationEnabled = isEnabled
         if (isEnabled) {
             tvCounselingDailyPraiseNotification.text =
                 getString(R.string.counseling_daily_praise_notification_on)

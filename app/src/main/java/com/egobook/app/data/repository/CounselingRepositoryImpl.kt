@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.CounselingApiService
+import com.egobook.app.data.model.counseling.CounselingNotificationRequest
 import com.egobook.app.data.model.counseling.toDomain
 import com.egobook.app.data.repository.paging.DailyPraisePagingSource
 import com.egobook.app.domain.model.DailyData
@@ -51,6 +52,17 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
         val response = apiService.fetchDailyAndWeeklyNotification()
         if(response.status == 200) {
             Result.success(response.data.toDomain())
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun updateDailyPraiseNotification(isEnabled: Boolean): Result<Boolean> = try {
+        val response = apiService.updateDailyPraiseNotification(request = CounselingNotificationRequest(enabled = isEnabled))
+        if(response.status == 200) {
+             Result.success(isEnabled)
         } else {
             Result.failure(Exception("Error: ${response.status}"))
         }
