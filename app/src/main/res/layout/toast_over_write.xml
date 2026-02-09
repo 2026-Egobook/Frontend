@@ -31,7 +31,6 @@
             android:fontFamily="@font/arita_semibold"
             android:gravity="center_vertical"/>
 
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

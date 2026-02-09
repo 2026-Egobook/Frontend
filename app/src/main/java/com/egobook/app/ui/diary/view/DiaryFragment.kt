@@ -1,9 +1,12 @@
     package com.egobook.app.ui.diary.view
 
     import android.os.Bundle
+    import android.view.Gravity
     import android.view.LayoutInflater
     import android.view.View
     import android.view.ViewGroup
+    import android.widget.Toast
+    import android.graphics.Color
     import androidx.fragment.app.Fragment
     import androidx.fragment.app.activityViewModels
     import androidx.lifecycle.Lifecycle
@@ -18,12 +21,12 @@
     import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
     import com.egobook.app.ui.diary.viewmodel.DiariesEvent
     import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
+    import com.google.android.material.snackbar.Snackbar
     import com.google.android.material.tabs.TabLayout
     import com.google.android.material.tabs.TabLayoutMediator
     import kotlinx.coroutines.flow.collectLatest
     import kotlinx.coroutines.launch
     import kotlin.getValue
-
     class DiaryFragment : Fragment() {
         private var _binding: FragmentDiaryBinding? = null
         private val binding get() = _binding!!
@@ -65,6 +68,9 @@
         private fun setupClickListener() {
             binding.apply {
                 btnAdd.setOnClickListener {
+                    // 커스텀 토스트 메세지 출력 테스트
+                    showCustomToast()
+
                     // 현재 선택된 날짜를 ISO 형식으로 변환하여 전달
                     val selectedDate = viewModel.state.value.selectedDate.toString()
                     val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryWriteFragment(selectedDate)
@@ -176,6 +182,29 @@
                 else -> null
             }
         }
+
+        private fun showCustomToast() {
+            val snackbar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
+
+            val customView = layoutInflater.inflate(R.layout.toast_over_write, null)
+
+            val layout = snackbar.view as Snackbar.SnackbarLayout
+            layout.setPadding(0, 0, 0, 0)
+            layout.setBackgroundColor(Color.TRANSPARENT)
+
+            layout.addView(customView, 0)
+
+            // BottomNav에 붙이기
+            val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
+            snackbar.anchorView = bottomNav //스낵바의 앵커를 bottomNav로 설정
+
+            // BottomNav로부터 9dp 위로
+            val extra = (9 * resources.displayMetrics.density)
+            snackbar.view.translationY = -extra
+
+            snackbar.show()
+        }
+
 
         override fun onDestroyView() {
             super.onDestroyView()
