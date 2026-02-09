@@ -23,7 +23,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import timber.log.Timber
 
-@Singleton
+@Singleton //dailyCountCache가 계속 살아있게 하기 위해 추가
 class DiaryRepositoryImpl  @Inject constructor(
     private val apiService: DiaryApiService
 ) : DiaryRepository {
@@ -45,10 +45,10 @@ class DiaryRepositoryImpl  @Inject constructor(
                     apiService = apiService,
                     filter = filter,
                     onDailyCountReceived = { count ->
-                    // API 응답 시 dailyCount 캐시 업데이트
-                    Timber.d("[DailyCount] PagingSource 캐시 업데이트: date=${filter.date}, count=$count")
-                    dailyCountCache[filter.date] = count
-                }
+                        // API 응답 시 dailyCount 캐시 업데이트
+                        Timber.d("[DailyCount] PagingSource 캐시 업데이트: date=${filter.date}, count=$count")
+                        dailyCountCache[filter.date] = count
+                    }
                 )
             }
         ).flow
