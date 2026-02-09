@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,17 +19,21 @@ import com.egobook.app.databinding.FragmentEgoRoomWeeklyReportBinding
 import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.ui.counseling.adapter.CounselingWeeklyReportAdapter
+import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
 import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
+import com.egobook.app.ui.counseling.viewmodel.CounselingViewModel
 import com.egobook.app.ui.counseling.viewmodel.WeeklyReportViewModel
 import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 @AndroidEntryPoint
 class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_report) {
     private lateinit var binding: FragmentEgoRoomWeeklyReportBinding
     private val viewModel: WeeklyReportViewModel by viewModels()
+    private val counselingViewModel: CounselingViewModel by activityViewModels()
     private val counselingWeeklyReportAdapter = CounselingWeeklyReportAdapter { item ->
         val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(weeklyReportItem = item)
         findNavController().navigate(action)
@@ -101,14 +106,14 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
                     }
                 }
                 launch {
-                    viewModel.notificationStatus.collect { state ->
+                    counselingViewModel.dailyAndWeeklyNotification.collect { state ->
                         when(state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<NotificationModel> -> {
+                            is UiState.Success<DailyAndWeeklyNotificationModel> -> {
                                 val notificationStatus = state.data
-                                updateNotificationUi(notificationStatus.isWeeklyReportEnabled)
+                                updateNotificationUi(notificationStatus.isWeeklyAnalysisEnabled)
                             }
                         }
                     }
@@ -160,7 +165,7 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
     }
 
     private fun updateNotificationUi(isEnabled: Boolean) = with(binding) {
-        this@EgoRoomWeeklyReportFragment.isNotificationEnabled = isEnabled
+//        this@EgoRoomWeeklyReportFragment.isNotificationEnabled = isEnabled
         if(isEnabled) {
             tvCounselingWeeklyReportNotification.text = getString(R.string.counseling_weekly_report_notification_on)
             ivCounselingWeeklyReportNotification.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_notification_on))
@@ -177,8 +182,8 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
     }
 
     private fun fetchData() {
+        counselingViewModel.getDailyAndWeeklyNotification()
         viewModel.fetchWeeklyReport()
-        viewModel.fetchNotificationStatus()
         viewModel.fetchWeeklyReportStyle()
     }
 }

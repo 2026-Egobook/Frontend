@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +18,9 @@ import com.egobook.app.R
 import com.egobook.app.databinding.FragmentEgoRoomDailyPraiseBinding
 import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.ui.counseling.adapter.CounselingDailyPraiseAdapter
+import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
 import com.egobook.app.ui.counseling.model.DailyPraiseDetailModel
+import com.egobook.app.ui.counseling.viewmodel.CounselingViewModel
 import com.egobook.app.ui.counseling.viewmodel.DailyPraiseViewModel
 import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
@@ -29,6 +32,7 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
 
     private lateinit var binding: FragmentEgoRoomDailyPraiseBinding
     private val viewModel: DailyPraiseViewModel by viewModels()
+    private val counselingViewModel: CounselingViewModel by activityViewModels()
     private val counselingDailyPraiseAdapter = CounselingDailyPraiseAdapter { diaryDate ->
         viewModel.fetchDailyPraiseByData(date = diaryDate)
     }
@@ -90,13 +94,13 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
                     }
                 }
                 launch {
-                    viewModel.notificationStatus.collect { state ->
+                    counselingViewModel.dailyAndWeeklyNotification.collect { state ->
                         when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<NotificationModel> -> {
-                                val notificationStatus: NotificationModel = state.data
+                            is UiState.Success<DailyAndWeeklyNotificationModel> -> {
+                                val notificationStatus: DailyAndWeeklyNotificationModel = state.data
                                 updateNotificationUi(notificationStatus.isDailyPraiseEnabled)
                             }
                         }
@@ -136,7 +140,7 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
     }
 
     private fun updateNotificationUi(isEnabled: Boolean) = with(binding) {
-        this@EgoRoomDailyPraiseFragment.isNotificationEnabled = isEnabled
+//        this@EgoRoomDailyPraiseFragment.isNotificationEnabled = isEnabled
         if (isEnabled) {
             tvCounselingDailyPraiseNotification.text =
                 getString(R.string.counseling_daily_praise_notification_on)
@@ -160,6 +164,6 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
 
     private fun fetchData() {
         viewModel.fetchDailyPraises(size = 10)
-        viewModel.fetchNotificationStatus()
+        counselingViewModel.getDailyAndWeeklyNotification()
     }
 }

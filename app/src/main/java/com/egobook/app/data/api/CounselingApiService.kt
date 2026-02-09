@@ -1,6 +1,7 @@
 package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
+import com.egobook.app.data.model.counseling.DailyAndWeeklyNotificationResponse
 import com.egobook.app.data.model.counseling.DailyPraiseResponse
 import com.egobook.app.data.model.counseling.DailyPraisesResponse
 import com.egobook.app.data.model.counseling.StatisticsResponse
@@ -24,6 +25,9 @@ interface CounselingApiService {
     suspend fun fetchDailyPraiseByDate(
         @Path("date") date: String
     ): Response<DailyPraiseResponse>
+
+    @GET("/ego-room/ai/toggle")
+    suspend fun fetchDailyAndWeeklyNotification(): ApiResponse<DailyAndWeeklyNotificationResponse>
 
     @GET("api/reports/weekly")
     suspend fun fetchWeeklyReports(): Response<List<WeeklyReportResponse>>

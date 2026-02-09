@@ -15,6 +15,7 @@ import com.egobook.app.domain.model.TimeData
 import com.egobook.app.domain.model.WeeklyReport
 import com.egobook.app.domain.model.WeeklyReportContent
 import com.egobook.app.domain.model.WeeklyReportStyle
+import com.egobook.app.domain.model.counseling.DailyAndWeeklyNotification
 import com.egobook.app.domain.model.counseling.DailyPraise
 import com.egobook.app.domain.model.counseling.DailyPraiseDetail
 import com.egobook.app.domain.repository.CounselingRepository
@@ -41,6 +42,17 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
             Result.success(response.body()!!.toDomain())
         } else {
             Result.failure(Exception("Error: ${response.code()}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun getDailyAndWeeklyNotification(): Result<DailyAndWeeklyNotification> = try {
+        val response = apiService.fetchDailyAndWeeklyNotification()
+        if(response.status == 200) {
+            Result.success(response.data.toDomain())
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
         }
     } catch (e: Exception) {
         Result.failure(e)

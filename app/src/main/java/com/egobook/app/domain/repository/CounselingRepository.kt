@@ -5,6 +5,7 @@ import com.egobook.app.domain.model.WeeklyReport
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.model.Statistics
 import com.egobook.app.domain.model.WeeklyReportStyle
+import com.egobook.app.domain.model.counseling.DailyAndWeeklyNotification
 import com.egobook.app.domain.model.counseling.DailyPraise
 import com.egobook.app.domain.model.counseling.DailyPraiseDetail
 import kotlinx.coroutines.flow.Flow
@@ -16,4 +17,5 @@ interface CounselingRepository {
     suspend fun getWeeklyReportStyle(): Result<WeeklyReportStyle>
     suspend fun updateWeeklyReportStyle(reportStyle: ReportStyle): Result<ReportStyle>
     suspend fun getStatistics(): Result<Statistics>
+    suspend fun getDailyAndWeeklyNotification(): Result<DailyAndWeeklyNotification>
 }
