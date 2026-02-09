@@ -71,8 +71,9 @@ class StoreViewModel @Inject constructor(
     }
 
     fun equipItem(item: CustomItem) {
-        _equippedItems.value = _equippedItems.value.filter { it.type != item.type } + item
-        Log.d("jang", "equip: ${_equippedItems.value}")
+        _equippedItems.update { currentList ->
+            currentList.filter { it.type != item.type } + item
+        }
     }
 
     fun resetEquipItems() {
