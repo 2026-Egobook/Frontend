@@ -17,6 +17,7 @@ import com.egobook.app.R
 import com.egobook.app.databinding.FragmentEgoRoomDailyPraiseBinding
 import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.ui.counseling.adapter.CounselingDailyPraiseAdapter
+import com.egobook.app.ui.counseling.model.DailyPraiseDetailModel
 import com.egobook.app.ui.counseling.viewmodel.DailyPraiseViewModel
 import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
@@ -28,7 +29,9 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
 
     private lateinit var binding: FragmentEgoRoomDailyPraiseBinding
     private val viewModel: DailyPraiseViewModel by viewModels()
-    private val counselingDailyPraiseAdapter = CounselingDailyPraiseAdapter()
+    private val counselingDailyPraiseAdapter = CounselingDailyPraiseAdapter { diaryDate ->
+        viewModel.fetchDailyPraiseByData(date = diaryDate)
+    }
     private var isNotificationEnabled: Boolean? = null
 
 
@@ -115,6 +118,19 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
                         }
                     }
                 }
+                launch {
+                    viewModel.dailyPraiseByDate.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<DailyPraiseDetailModel> -> {
+                                val detailInfo = state.data
+                                counselingDailyPraiseAdapter.updateItem(item = detailInfo)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -143,7 +159,7 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
     }
 
     private fun fetchData() {
-        viewModel.fetchDailyPraise(size = 10)
+        viewModel.fetchDailyPraises(size = 10)
         viewModel.fetchNotificationStatus()
     }
 }

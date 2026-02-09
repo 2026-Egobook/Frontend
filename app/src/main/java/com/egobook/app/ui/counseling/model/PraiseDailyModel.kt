@@ -1,6 +1,6 @@
 package com.egobook.app.ui.counseling.model
 
-import com.egobook.app.domain.model.counseling.PraiseDailyItem
+import com.egobook.app.domain.model.counseling.DailyPraise
 
 data class PraiseDailyModel(
     val id: Int,
@@ -8,7 +8,7 @@ data class PraiseDailyModel(
     val isRead: Boolean
 )
 
-fun PraiseDailyItem.toPresentation(): PraiseDailyModel = PraiseDailyModel(
+fun DailyPraise.toPresentation(): PraiseDailyModel = PraiseDailyModel(
     id = id,
     diaryDate = diaryDate,
     isRead = isRead

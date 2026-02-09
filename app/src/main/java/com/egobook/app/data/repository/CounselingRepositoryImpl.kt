@@ -4,25 +4,25 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.CounselingApiService
+import com.egobook.app.data.model.counseling.toDomain
 import com.egobook.app.data.repository.paging.DailyPraisePagingSource
 import com.egobook.app.domain.model.DailyData
 import com.egobook.app.domain.model.EmotionType
 import com.egobook.app.domain.model.MonthData
-import com.egobook.app.domain.model.PraiseMessage
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.model.Statistics
 import com.egobook.app.domain.model.TimeData
 import com.egobook.app.domain.model.WeeklyReport
 import com.egobook.app.domain.model.WeeklyReportContent
 import com.egobook.app.domain.model.WeeklyReportStyle
-import com.egobook.app.domain.model.counseling.PraiseDailyItem
+import com.egobook.app.domain.model.counseling.DailyPraise
+import com.egobook.app.domain.model.counseling.DailyPraiseDetail
 import com.egobook.app.domain.repository.CounselingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingApiService) :
-    CounselingRepository {
-    override fun getDailyPraise(size: Int): Flow<PagingData<PraiseDailyItem>> {
+class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingApiService) : CounselingRepository {
+    override fun getDailyPraise(size: Int): Flow<PagingData<DailyPraise>> {
         return Pager(
             config = PagingConfig(
                 pageSize = size,
@@ -33,6 +33,17 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 DailyPraisePagingSource(apiService = apiService)
             }
         ).flow
+    }
+
+    override suspend fun getDailyPraiseByDate(date: String): Result<DailyPraiseDetail> = try {
+        val response = apiService.fetchDailyPraiseByDate(date = date)
+        if(response.isSuccessful && response.body() != null) {
+            Result.success(response.body()!!.toDomain())
+        } else {
+            Result.failure(Exception("Error: ${response.code()}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     override suspend fun getWeeklyReport(): Result<List<WeeklyReport>> = try {

@@ -1,9 +1,9 @@
 package com.egobook.app.data.model.counseling
 
-import com.egobook.app.domain.model.counseling.PraiseDailyItem
+import com.egobook.app.domain.model.counseling.DailyPraise
 import com.google.gson.annotations.SerializedName
 
-data class PraiseDailyResponse(
+data class DailyPraisesResponse(
     @SerializedName("content")
     val content: List<PraiseDailyItemResponse>,
     @SerializedName("page")
@@ -23,7 +23,7 @@ data class PraiseDailyItemResponse(
     val isRead: Boolean
 )
 
-fun PraiseDailyItemResponse.toDomain(): PraiseDailyItem = PraiseDailyItem(
+fun PraiseDailyItemResponse.toDomain(): DailyPraise = DailyPraise(
     id = id,
     diaryDate = diaryDate,
     isRead = isRead
