@@ -40,7 +40,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
     private val viewModel: LetterViewModel by activityViewModels()
 
     private lateinit var friendList: List<FriendModel>
-    private var letterColor: LetterBackgroundColor = LetterBackgroundColor.BEIGE
+    private var letterColor: LetterBackgroundColor = LetterBackgroundColor.WHITE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -96,7 +96,7 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                                 val data = state.data
                                 threadId = data.threadId
                                 val sentCardBackgroundColor = when(data.backgroundColor) {
-                                    LetterBackgroundColor.BEIGE -> R.color.letter_bg_beige
+                                    LetterBackgroundColor.WHITE -> R.color.letter_bg_beige
                                     LetterBackgroundColor.PINK -> R.color.letter_bg_pink
                                     LetterBackgroundColor.GREEN -> R.color.letter_bg_green
                                     LetterBackgroundColor.BLUE -> R.color.letter_bg_blue

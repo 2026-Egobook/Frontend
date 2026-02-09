@@ -14,7 +14,6 @@ import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetterItem
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.domain.model.square.letter.LetterMode
-import com.egobook.app.domain.model.square.letter.LetterReply
 import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.domain.model.square.letter.ReplyLetter
 import com.egobook.app.domain.model.square.letter.ReportLetter
@@ -75,7 +74,7 @@ class LetterRepositoryImpl @Inject constructor(
                 content = "안녕하세요! 요즘 날씨가 부쩍 추워졌는데 잘 지내고 계신가요? 오늘 우연히 당신의 이야기를 듣고 문득 위로의 말을 전하고 싶어 펜을 들었습니다. 누구나 가끔은 마음이 무겁고 모든 게 버겁게 느껴지는 날이 있잖아요. 그럴 때일수록 스스로를 너무 다그치지 말고, 따뜻한 차 한 잔 마시며 쉬어갔으면 좋겠어요. 당신은 충분히 잘해내고 있고, 존재만으로도 소중한 사람이라는 걸 잊지 마세요. 내일은 오늘보다 조금 더 웃을 수 있는 여유가 생기길 진심으로 응원하겠습니다! 답장 기다릴게요.",
                 arrivedAt = "2026-02-02T10:35:00+09:00",
                 replyDeadlineAt = "2026-02-04T21:40:00+09:00",
-                letterColor = LetterBackgroundColor.BEIGE
+                letterColor = LetterBackgroundColor.WHITE
             )
         )
         val emptyMockData = ArrivedPendingLetter(
@@ -148,7 +147,7 @@ class LetterRepositoryImpl @Inject constructor(
 //            status = LetterStatus.ARRIVED, // 답장이 도착함
 //            mode = LetterMode.RANDOM,
 //            sentContent = "안녕하세요, 고민이 있어 편지를 보냅니다. 요즘 업무량이 너무 많아서 번아웃이 온 것 같아요. 어떻게 극복하면 좋을까요?",
-//            backgroundColor = LetterBackgroundColor.BEIGE,
+//            backgroundColor = LetterBackgroundColor.WHITE,
 //            createdAt = "2026-02-06T03:42:43.162307Z",
 //            arrivedAt = "2026-02-06T03:42:43.162307Z",
 //            // 답장 데이터
