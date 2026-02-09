@@ -1,18 +1,23 @@
 package com.egobook.app.ui.shop
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import coil.load
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentStoreBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StoreFragment: Fragment() {
@@ -44,8 +49,21 @@ class StoreFragment: Fragment() {
             tab.text = ItemTab.of(position).text
         }.attach()
 
+        val viewModel: StoreViewModel by activityViewModels()
+
         binding.ivBack.setOnClickListener {
+            viewModel.resetEquipItems()
             findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
+        }
+
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.equippedItems.collect { equippedList ->
+                equippedList.forEach { equippedItem ->
+                    updateEquipItemUi(equippedItem)
+                }
+            }
         }
 
     }
@@ -54,6 +72,38 @@ class StoreFragment: Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun updateEquipItemUi(item: CustomItem) {
+        Log.d("jang", "$item")
+        when (item.type) {
+            ItemType.BACK -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    binding.ivStoreTurtleBack.load(item.outfitImage.path)
+                }
+            }
+            ItemType.SKIN -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    binding.ivStoreTurtleSkin.load(item.outfitImage.path)
+                }
+            }
+            ItemType.DECO_1 -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    binding.ivStoreTurtleDeco1.load(item.outfitImage.path)
+                }
+            }
+            ItemType.DECO_2 -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    binding.ivStoreTurtleDeco2.load(item.outfitImage.path)
+                }
+            }
+            ItemType.BACKGROUND -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    binding.ivStoreBackground.load(item.outfitImage.path)
+                }
+            }
+        }
+    }
+
 }
 
 

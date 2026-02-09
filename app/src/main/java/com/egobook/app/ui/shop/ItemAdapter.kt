@@ -15,20 +15,23 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.egobook.app.R
 
-class ItemAdapter :
-    ListAdapter<CustomItem, ItemAdapter.ItemViewHolder>(ItemDiffCallback) {
+class ItemAdapter(
+    private val onItemClick: (CustomItem) -> Unit
+) : ListAdapter<CustomItem, ItemAdapter.ItemViewHolder>(ItemDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ItemViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.view_holder_store_item, parent, false)
-
         return ItemViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.binding(getItem(position))
+        holder.root.setOnClickListener {
+            onItemClick(getItem(position))
+        }
     }
 
     class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
