@@ -26,4 +26,7 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <!--  Custom Toast  -->
+    <string name="limit_diary_write">하루에 최대 48번 기록 가능해요</string>
 </resources>
