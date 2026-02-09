@@ -184,7 +184,7 @@ class DiaryWriteFragment : Fragment() {
                     // 일기 타입 카드 선택 상태 업데이트
                     binding.cvEmotion.isSelected = state.selectedTypes.contains("감정")
                     binding.cvWorry.isSelected = state.selectedTypes.contains("고민")
-                    binding.tvPraise.isSelected = state.selectedTypes.contains("칭찬")
+                    binding.cvPraise.isSelected = state.selectedTypes.contains("칭찬")
                     binding.cvThanks.isSelected = state.selectedTypes.contains("감사")
 
                     // "감정" 타입이 선택되었을 때만 레벨 선택 섹션 표시
