@@ -152,12 +152,19 @@ class DiaryWriteViewModel @Inject constructor(
                 } else {
                     null
                 }
+                val now = LocalDateTime.now()
+
+                val updatedDiary = DiaryEntityMapper.createUpdatedDiary(
+                    diaryId = diaryId,
+                    selectedTypes = state.selectedTypes,
+                    content = state.content,
+                    emotionLevel = emotionLevel,
+                    writtenAt = now // 실제 현재 시간으로(임시 삽입)
+                )
                 
                 diaryUseCases.updateDiary(
                     diaryId = diaryId,
-                    types = diaryTypes,
-                    emotionLevel = emotionLevel,
-                    content = state.content
+                    diary = updatedDiary
                 )
             } else {
                 // 생성 모드: UI 상태를 Diary 엔티티로 변환
@@ -168,7 +175,7 @@ class DiaryWriteViewModel @Inject constructor(
                     content = state.content,
                     emotionLevel = state.selectedEmotionLevel,
                     date = _selectedDate.value,  // 선택된 날짜의 일기로
-                    writtenAt = now // 실제 현재 시간으로
+                    writtenAt = now // 실제 현재 시간으로(임시 삽입)
                 )
                 
                 // addDiary 호출
