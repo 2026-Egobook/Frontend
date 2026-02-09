@@ -72,15 +72,9 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
         }
         ivCounselingWeeklyReportNotification.setOnClickListener {
             if (isNotificationEnabled == true) {
-                viewModel.updateNotificationStatus(
-                    type = NotificationType.WEEKLY_REPORT,
-                    isEnabled = false
-                )
+                viewModel.updateWeeklyReportNotification(isEnabled = false)
             } else {
-                viewModel.updateNotificationStatus(
-                    type = NotificationType.WEEKLY_REPORT,
-                    isEnabled = true
-                )
+                viewModel.updateWeeklyReportNotification(isEnabled = true)
             }
         }
     }
@@ -119,7 +113,7 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
                     }
                 }
                 launch {
-                    viewModel.updateNotificationResult.collect { state ->
+                    viewModel.updateNotificationStatus.collect { state ->
                         when(state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
@@ -165,7 +159,7 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
     }
 
     private fun updateNotificationUi(isEnabled: Boolean) = with(binding) {
-//        this@EgoRoomWeeklyReportFragment.isNotificationEnabled = isEnabled
+        this@EgoRoomWeeklyReportFragment.isNotificationEnabled = isEnabled
         if(isEnabled) {
             tvCounselingWeeklyReportNotification.text = getString(R.string.counseling_weekly_report_notification_on)
             ivCounselingWeeklyReportNotification.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_notification_on))

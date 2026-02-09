@@ -37,6 +37,10 @@ interface CounselingApiService {
         @Body request: CounselingNotificationRequest
     ): ApiResponse<Unit>
 
+    @PATCH("/ego-room/counsel/weekly")
+    suspend fun updateWeeklyReportNotification(
+        @Body request: CounselingNotificationRequest
+    ): ApiResponse<Unit>
 
     @GET("api/reports/weekly")
     suspend fun fetchWeeklyReports(): Response<List<WeeklyReportResponse>>

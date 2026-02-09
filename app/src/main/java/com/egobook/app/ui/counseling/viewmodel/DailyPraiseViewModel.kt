@@ -5,21 +5,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.domain.usecase.egoroom.GetDailyPraiseByDateUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyPraiseUseCase
 import com.egobook.app.domain.usecase.egoroom.UpdateDailyPraiseNotificationUseCase
 import com.egobook.app.ui.counseling.model.DailyPraiseDetailModel
 import com.egobook.app.ui.counseling.model.PraiseDailyModel
 import com.egobook.app.ui.counseling.model.toPresentation
-import com.egobook.app.ui.notification.delegate.NotificationDelegate
-import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +25,6 @@ import javax.inject.Inject
 class DailyPraiseViewModel @Inject constructor(
     private val getDailyPraiseUseCase: GetDailyPraiseUseCase,
     private val getDailyPraiseByDateUseCase: GetDailyPraiseByDateUseCase,
-    private val notificationDelegate: NotificationDelegate,
     private val updateDailyPraiseNotificationUseCase: UpdateDailyPraiseNotificationUseCase
 ): ViewModel() {
 

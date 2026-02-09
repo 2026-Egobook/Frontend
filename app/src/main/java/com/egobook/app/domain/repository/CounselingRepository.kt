@@ -19,4 +19,5 @@ interface CounselingRepository {
     suspend fun getStatistics(): Result<Statistics>
     suspend fun getDailyAndWeeklyNotification(): Result<DailyAndWeeklyNotification>
     suspend fun updateDailyPraiseNotification(isEnabled: Boolean): Result<Boolean>
+    suspend fun updateWeeklyReportNotification(isEnabled: Boolean): Result<Boolean>
 }

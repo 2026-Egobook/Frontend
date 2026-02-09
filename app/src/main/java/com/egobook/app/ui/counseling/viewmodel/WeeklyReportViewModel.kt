@@ -2,22 +2,18 @@ package com.egobook.app.ui.counseling.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.usecase.GetWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.GetWeeklyReportUseCase
 import com.egobook.app.domain.usecase.UpdateWeeklyReportStyleUseCase
+import com.egobook.app.domain.usecase.egoroom.UpdateWeeklyReportNotificationUseCase
 import com.egobook.app.ui.counseling.model.WeeklyReportModel
 import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
 import com.egobook.app.ui.counseling.model.toPresentation
-import com.egobook.app.ui.notification.delegate.NotificationDelegate
-import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -28,7 +24,7 @@ class WeeklyReportViewModel @Inject constructor(
     private val getWeeklyReportUseCase: GetWeeklyReportUseCase,
     private val getWeeklyReportStyleUseCase: GetWeeklyReportStyleUseCase,
     private val updateWeeklyReportStyleUseCase: UpdateWeeklyReportStyleUseCase,
-    private val notificationDelegate: NotificationDelegate
+    private val updateWeeklyReportNotificationUseCase: UpdateWeeklyReportNotificationUseCase
 ): ViewModel() {
 
     private val _weeklyReportList = MutableStateFlow<UiState<List<WeeklyReportModel>>>(UiState.Idle)
@@ -41,6 +37,19 @@ class WeeklyReportViewModel @Inject constructor(
                 _weeklyReportList.value = UiState.Success(domainList.map { it.toPresentation() })
             }.onFailure { error ->
                 _weeklyReportList.value = UiState.Failure(error.message)
+            }
+        }
+    }
+
+    private val _updateNotificationStatus = MutableSharedFlow<UiState<Boolean>>()
+    val updateNotificationStatus = _updateNotificationStatus.asSharedFlow()
+
+    fun updateWeeklyReportNotification(isEnabled: Boolean) {
+        viewModelScope.launch {
+            updateWeeklyReportNotificationUseCase(isEnabled = isEnabled).onSuccess { isEnabled ->
+                _updateNotificationStatus.emit(UiState.Success(isEnabled))
+            }.onFailure { error ->
+                _updateNotificationStatus.emit(UiState.Failure(error.message))
             }
         }
     }
@@ -69,23 +78,6 @@ class WeeklyReportViewModel @Inject constructor(
             }.onFailure { error ->
                 _updateReportStyleResult.emit( UiState.Failure(error.message))
             }
-        }
-    }
-
-
-    val notificationStatus: StateFlow<UiState<NotificationModel>> = notificationDelegate.notificationStatus
-
-    fun fetchNotificationStatus() {
-        viewModelScope.launch {
-            notificationDelegate.fetchNotificationStatus()
-        }
-    }
-
-    val updateNotificationResult: SharedFlow<UiState<Boolean>> = notificationDelegate.updateNotificationResult
-
-    fun updateNotificationStatus(type: NotificationType, isEnabled: Boolean) {
-        viewModelScope.launch {
-            notificationDelegate.updateNotificationStatus(type = type, isEnabled = isEnabled)
         }
     }
 }
