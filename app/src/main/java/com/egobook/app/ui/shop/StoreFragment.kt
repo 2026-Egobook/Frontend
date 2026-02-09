@@ -13,8 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
+import com.egobook.app.BlurLevel
 import com.egobook.app.R
+import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentStoreBinding
+import com.egobook.app.ui.home.ui.AdDialog
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -52,8 +55,12 @@ class StoreFragment: Fragment() {
         val viewModel: StoreViewModel by activityViewModels()
         viewModel.loadEquippedItems()
         binding.ivBack.setOnClickListener {
-            viewModel.resetEquipItems()
-            findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = StoreLeavingDialog()
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "StoreLeavingDialog")
+//            viewModel.resetEquipItems()
+//            findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
         }
 
 
