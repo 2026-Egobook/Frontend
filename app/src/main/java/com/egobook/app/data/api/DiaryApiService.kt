@@ -2,6 +2,7 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.diary.request.DiaryCreateRequest
+import com.egobook.app.data.model.diary.request.DiaryUpdateRequest
 import com.egobook.app.data.model.diary.response.DiariesResponse
 import com.egobook.app.data.model.diary.response.DiaryCreateResponse
 import com.egobook.app.data.model.diary.response.DiaryDeleteResponse
@@ -16,7 +17,7 @@ import retrofit2.http.Query
 
 interface DiaryApiService {
 
-    //일기 목록 불러오기 - 완료
+    //일기 목록 불러오기
     @GET("/diaries")
     suspend fun getDiaries(
         @Query("date") date: String,
@@ -31,7 +32,7 @@ interface DiaryApiService {
         @Path("diaryId") diaryId: Long
     ): ApiResponse<DiaryEntryResponse>
 
-    //일기 추가 - 완료
+    //일기 추가
     @POST("/diaries")
     suspend fun addDiary(
         @Body request: DiaryCreateRequest
@@ -47,9 +48,7 @@ interface DiaryApiService {
     @PATCH("/diaries/{diaryId}")
     suspend fun updateDiary(
         @Path("diaryId") diaryId: Long,
-        @Body request: DiaryCreateRequest
-    ): ApiResponse<DiaryCreateResponse>
-
-
+        @Body request: DiaryUpdateRequest
+    ): ApiResponse<DiaryEntryResponse>
 
 }

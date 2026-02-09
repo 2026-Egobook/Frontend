@@ -96,4 +96,34 @@ object DiaryEntityMapper {
             createdAt = writtenAt // 서버가 실제 값으로 대체. 임시 삽입
         )
     }
+
+    fun createUpdatedDiary(
+        diaryId: Long,
+        selectedTypes: Set<String>,
+        content: String,
+        emotionLevel: Int?,
+        writtenAt: LocalDateTime
+    ): Diary {
+        // UI displayType을 Domain DiaryType으로 변환
+        val diaryTypes = uiDisplayTypesToDomain(selectedTypes)
+
+        // 감정 타입이 선택되지 않았으면 emotionLevel은 null
+        val finalEmotionLevel = if (selectedTypes.contains("감정")) {
+            emotionLevel
+        } else {
+            null
+        }
+
+        return Diary(
+            diaryId = diaryId,
+            types = diaryTypes,
+            emotionLevel = finalEmotionLevel,
+            content = content,
+
+            //어차피 DiaryMapper에서 걸러지는 값들. 그냥 임시 삽입
+            createdAt = writtenAt,
+            date = writtenAt.toLocalDate(),
+            writtenAt = writtenAt
+        )
+    }
 }

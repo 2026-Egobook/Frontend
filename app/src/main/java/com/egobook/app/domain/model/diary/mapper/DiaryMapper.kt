@@ -1,6 +1,7 @@
 package com.egobook.app.domain.model.diary.mapper
 
 import com.egobook.app.data.model.diary.request.DiaryCreateRequest
+import com.egobook.app.data.model.diary.request.DiaryUpdateRequest
 import com.egobook.app.data.model.diary.response.DiariesResponse
 import com.egobook.app.data.model.diary.response.DiaryEntryResponse
 import com.egobook.app.data.model.diary.response.DiarySlice
@@ -112,6 +113,17 @@ object DiaryMapper {
             emotionLevel = emotionLevel,
             content = content,
             date = date.toString()
+        )
+    }
+
+    /**
+     * Diary → DiaryUpdateRequest
+     */
+    fun Diary.toDiaryUpdateRequest(): DiaryUpdateRequest {
+        return DiaryUpdateRequest(
+            type = types.map { it.value },
+            emotionLevel = emotionLevel,
+            content = content
         )
     }
 
