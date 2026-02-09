@@ -54,7 +54,6 @@ class StoreCollectionFragment(): Fragment() {
                 }
             }
         }
-        Log.d("jang", "$tabItem")
         viewModel.loadItems(tabItem.type)
     }
 
