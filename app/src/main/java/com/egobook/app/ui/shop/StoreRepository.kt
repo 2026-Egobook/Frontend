@@ -23,14 +23,16 @@ interface NetworkStoreService {
     @GET("/shop/items")
     suspend fun loadItemsResponse(
         @Query("category") category: String,
-        @Query("slice") slice: Int,
+        @Query("page") slice: Int,
         @Query("size") size: Int
     ): BaseResponse<CustomItemGroupDto>
 }
 
 data class CustomItemDto(
     val itemId: Int,
-    val imageUrl: String,
+    val itemCategory: String?,
+    val shopImageUrl: String,
+    val myImageUrl: String,
     val price: Int,
     val isPurchased: Boolean,
     val isEquipped: Boolean
@@ -80,7 +82,7 @@ class NetworkStoreRepository @Inject constructor(
                                 itemType,
                                 Price(dto.price),
                                 if (dto.isPurchased) ItemStatus.PURCHASED else ItemStatus.PURCHASABLE,
-                                ItemImage.Url(dto.imageUrl)
+                                ItemImage.Url(dto.shopImageUrl)
                             )
                         )
                     }
