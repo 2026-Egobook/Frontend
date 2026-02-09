@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.egobook.app.domain.usecase.egoroom.GetDailyAndWeeklyNotificationUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyPraiseByDateUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyPraiseUseCase
 import com.egobook.app.domain.usecase.egoroom.UpdateDailyPraiseNotificationUseCase
+import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
 import com.egobook.app.ui.counseling.model.DailyPraiseDetailModel
 import com.egobook.app.ui.counseling.model.PraiseDailyModel
 import com.egobook.app.ui.counseling.model.toPresentation
@@ -25,6 +27,7 @@ import javax.inject.Inject
 class DailyPraiseViewModel @Inject constructor(
     private val getDailyPraiseUseCase: GetDailyPraiseUseCase,
     private val getDailyPraiseByDateUseCase: GetDailyPraiseByDateUseCase,
+    private val getDailyAndWeeklyNotificationUseCase: GetDailyAndWeeklyNotificationUseCase,
     private val updateDailyPraiseNotificationUseCase: UpdateDailyPraiseNotificationUseCase
 ): ViewModel() {
 
@@ -49,6 +52,20 @@ class DailyPraiseViewModel @Inject constructor(
                 _dailyPraiseByDate.emit(UiState.Success(domain.toPresentation()))
             }.onFailure { error ->
                 _dailyPraiseByDate.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _dailyAndWeeklyNotification = MutableStateFlow<UiState<DailyAndWeeklyNotificationModel>>(UiState.Idle)
+    val dailyAndWeeklyNotification = _dailyAndWeeklyNotification.asStateFlow()
+
+    fun getDailyAndWeeklyNotification() {
+        viewModelScope.launch {
+            _dailyAndWeeklyNotification.value = UiState.Loading
+            getDailyAndWeeklyNotificationUseCase().onSuccess { domain ->
+                _dailyAndWeeklyNotification.value = UiState.Success(domain.toPresentation())
+            }.onFailure { error ->
+                _dailyAndWeeklyNotification.value = UiState.Failure(error.message)
             }
         }
     }

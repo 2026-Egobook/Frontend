@@ -20,7 +20,6 @@ import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.ui.counseling.adapter.CounselingDailyPraiseAdapter
 import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
 import com.egobook.app.ui.counseling.model.DailyPraiseDetailModel
-import com.egobook.app.ui.counseling.viewmodel.CounselingViewModel
 import com.egobook.app.ui.counseling.viewmodel.DailyPraiseViewModel
 import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
@@ -32,7 +31,6 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
 
     private lateinit var binding: FragmentEgoRoomDailyPraiseBinding
     private val viewModel: DailyPraiseViewModel by viewModels()
-    private val counselingViewModel: CounselingViewModel by activityViewModels()
     private val counselingDailyPraiseAdapter = CounselingDailyPraiseAdapter { diaryDate ->
         viewModel.fetchDailyPraiseByData(date = diaryDate)
     }
@@ -92,7 +90,7 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
                     }
                 }
                 launch {
-                    counselingViewModel.dailyAndWeeklyNotification.collect { state ->
+                    viewModel.dailyAndWeeklyNotification.collect { state ->
                         when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
@@ -161,6 +159,6 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
 
     private fun fetchData() {
         viewModel.fetchDailyPraises(size = 10)
-        counselingViewModel.getDailyAndWeeklyNotification()
+        viewModel.getDailyAndWeeklyNotification()
     }
 }

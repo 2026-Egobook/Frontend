@@ -21,7 +21,6 @@ import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.ui.counseling.adapter.CounselingWeeklyReportAdapter
 import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
 import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
-import com.egobook.app.ui.counseling.viewmodel.CounselingViewModel
 import com.egobook.app.ui.counseling.viewmodel.WeeklyReportViewModel
 import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
@@ -33,7 +32,6 @@ import kotlin.getValue
 class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_report) {
     private lateinit var binding: FragmentEgoRoomWeeklyReportBinding
     private val viewModel: WeeklyReportViewModel by viewModels()
-    private val counselingViewModel: CounselingViewModel by activityViewModels()
     private val counselingWeeklyReportAdapter = CounselingWeeklyReportAdapter { item ->
         val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(weeklyReportItem = item)
         findNavController().navigate(action)
@@ -100,7 +98,7 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
                     }
                 }
                 launch {
-                    counselingViewModel.dailyAndWeeklyNotification.collect { state ->
+                    viewModel.dailyAndWeeklyNotification.collect { state ->
                         when(state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
@@ -176,7 +174,7 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
     }
 
     private fun fetchData() {
-        counselingViewModel.getDailyAndWeeklyNotification()
+        viewModel.getDailyAndWeeklyNotification()
         viewModel.fetchWeeklyReport()
         viewModel.fetchWeeklyReportStyle()
     }

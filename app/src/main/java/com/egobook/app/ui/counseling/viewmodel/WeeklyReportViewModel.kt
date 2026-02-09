@@ -6,7 +6,9 @@ import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.usecase.GetWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.GetWeeklyReportUseCase
 import com.egobook.app.domain.usecase.UpdateWeeklyReportStyleUseCase
+import com.egobook.app.domain.usecase.egoroom.GetDailyAndWeeklyNotificationUseCase
 import com.egobook.app.domain.usecase.egoroom.UpdateWeeklyReportNotificationUseCase
+import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
 import com.egobook.app.ui.counseling.model.WeeklyReportModel
 import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
 import com.egobook.app.ui.counseling.model.toPresentation
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class WeeklyReportViewModel @Inject constructor(
     private val getWeeklyReportUseCase: GetWeeklyReportUseCase,
     private val getWeeklyReportStyleUseCase: GetWeeklyReportStyleUseCase,
+    private val getDailyAndWeeklyNotificationUseCase: GetDailyAndWeeklyNotificationUseCase,
     private val updateWeeklyReportStyleUseCase: UpdateWeeklyReportStyleUseCase,
     private val updateWeeklyReportNotificationUseCase: UpdateWeeklyReportNotificationUseCase
 ): ViewModel() {
@@ -37,6 +40,20 @@ class WeeklyReportViewModel @Inject constructor(
                 _weeklyReportList.value = UiState.Success(domainList.map { it.toPresentation() })
             }.onFailure { error ->
                 _weeklyReportList.value = UiState.Failure(error.message)
+            }
+        }
+    }
+
+    private val _dailyAndWeeklyNotification = MutableStateFlow<UiState<DailyAndWeeklyNotificationModel>>(UiState.Idle)
+    val dailyAndWeeklyNotification = _dailyAndWeeklyNotification.asStateFlow()
+
+    fun getDailyAndWeeklyNotification() {
+        viewModelScope.launch {
+            _dailyAndWeeklyNotification.value = UiState.Loading
+            getDailyAndWeeklyNotificationUseCase().onSuccess { domain ->
+                _dailyAndWeeklyNotification.value = UiState.Success(domain.toPresentation())
+            }.onFailure { error ->
+                _dailyAndWeeklyNotification.value = UiState.Failure(error.message)
             }
         }
     }
