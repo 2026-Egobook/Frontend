@@ -1,5 +1,6 @@
 package com.egobook.app.ui.home.repository
 
+import com.egobook.app.di.qualifier.BackendApi
 import com.egobook.app.ui.home.user.Tendency
 import com.egobook.app.ui.home.user.User
 import retrofit2.Retrofit
@@ -27,7 +28,7 @@ interface NetworkTendencyLevelService {
 
 @Singleton
 class NetworkUserRepository @Inject constructor(
-    private val retrofit: Retrofit
+    @BackendApi private val retrofit: Retrofit
 ) : UserRepository, UserTendencyRepository {
     private val userService by lazy { retrofit.create(NetworkUserService::class.java) }
     private val tendencyLevelService by lazy { retrofit.create(NetworkTendencyLevelService::class.java) }

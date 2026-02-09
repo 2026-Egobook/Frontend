@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 
 class FriendRepliesPagingSource(private val apiService: QuestionApiService) :
     PagingSource<Int, UserTodayQuestionAnswerItem>() {
-    override fun getRefreshKey(state: PagingState<Int, UserTodayQuestionAnswerItem>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, UserTodayQuestionAnswerItem>): Int {
         return 1
     }
 
