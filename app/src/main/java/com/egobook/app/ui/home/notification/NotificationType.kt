@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.notification
 
 enum class EgoRoomType {
     WEAKLY_REPORT, DAILY_PRAISE

@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         setContentView(binding.root)
         val navHostFragment = binding.fragmentContainer.getFragment<NavHostFragment>()
         binding.bottomNavigation.setupWithNavController(navHostFragment.navController)
-
         // navController변수 선언
         val navController = navHostFragment.navController
 

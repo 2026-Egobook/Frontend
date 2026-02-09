@@ -1,0 +1,17 @@
+package com.egobook.app.ui.home.repository
+
+import com.egobook.app.ui.home.user.Ink
+import com.egobook.app.ui.home.user.Level
+import com.egobook.app.ui.home.user.User
+
+data class UserDto(
+    val nickname: String,
+    val level: Int,
+    val ink: Int,
+    val unreadNotifications: Int,
+    val hasUnopenedPsychology: Boolean,
+    val isFirstAttendanceToday: Boolean,
+    val attendanceRewardInk: Int
+) {
+    fun toDomain(): User = User(Level(level), Ink(ink))
+}

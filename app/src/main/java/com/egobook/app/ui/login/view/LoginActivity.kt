@@ -28,7 +28,6 @@ import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginState as LoginStat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.exceptions.GetCredentialException
@@ -36,6 +35,7 @@ import com.egobook.app.BuildConfig
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
+import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -100,12 +100,10 @@ class LoginActivity : AppCompatActivity() {
                             )
                             handleSignIn(result, isLogin = true)
                         } catch (e: GetCredentialException) {
-                            Log.d(TAG, "로그인 실패")
+                            Timber.d("로그인 실패: ${e.message}")
                         }
-
                     }
                 }
-
             })
             loginBottomSheet.show(supportFragmentManager, LoginBottomSheetFragment.TAG)
         }
@@ -127,7 +125,7 @@ class LoginActivity : AppCompatActivity() {
                     )
                     handleSignIn(result, isLogin = false)
                 } catch (e: GetCredentialException) {
-                    Log.d(TAG, "회원가입 실패")
+                    Timber.d("회원가입 실패: ${e.message}")
                 }
 
             }
@@ -137,9 +135,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun getGoogleRequest(): GetCredentialRequest {
         val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(true)
+            .setFilterByAuthorizedAccounts(false)  // 모든 구글 계정 표시
             .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
-            .setAutoSelectEnabled(true)
+            .setAutoSelectEnabled(false)  // 사용자가 직접 선택
             .build()
 
         return GetCredentialRequest.Builder()
@@ -157,7 +155,7 @@ class LoginActivity : AppCompatActivity() {
                 val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                 val idToken = googleIdTokenCredential.idToken
 
-                Log.d(TAG, "Google ID Token 받음")
+                Timber.d("Google ID Token 받음")
 
                 // 회원가입 vs 로그인 분기
                 if (isLogin) {
@@ -167,11 +165,11 @@ class LoginActivity : AppCompatActivity() {
                 }
 
             } catch (e: GetCredentialException) {
-                Log.e(TAG, "구글 토큰 파싱 실패", e)
+                Timber.e(e, "구글 토큰 파싱 실패")
             }
 
         } else {
-            Log.e(TAG, "구글 로그인 credential 아님")
+            Timber.e("구글 로그인 credential 아님")
         }
     }
     private fun observeLoginState() {
@@ -202,6 +200,7 @@ class LoginActivity : AppCompatActivity() {
     private fun observeFirstSignUp() {
         lifecycleScope.launch {
             viewModel.isFirstSignUp.collect {
+                Toast.makeText(this@LoginActivity, "에고북에 오신 걸 환영합니다!", Toast.LENGTH_SHORT).show()
                 navigateToOnboarding() //온보딩 화면 이동
             }
         }
@@ -210,6 +209,7 @@ class LoginActivity : AppCompatActivity() {
     private fun observeGuestSignUp() {
         lifecycleScope.launch {
             viewModel.isGuestSignUp.collect {
+                Toast.makeText(this@LoginActivity, "에고북에 오신 걸 환영합니다!", Toast.LENGTH_SHORT).show()
                 navigateToOnboarding() //온보딩 화면 이동
             }
         }
@@ -282,12 +282,5 @@ class LoginActivity : AppCompatActivity() {
             paint.typeface = typeface
         }
 
-    }
-
-//=======================================================================================================================
-
-
-    companion object {
-        private const val TAG = "LoginActivity"
     }
 }

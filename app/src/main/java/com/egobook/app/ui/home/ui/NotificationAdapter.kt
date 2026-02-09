@@ -1,14 +1,19 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.ui
 
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
+import com.egobook.app.ui.home.notification.EgoRoomType
+import com.egobook.app.ui.home.notification.Notification
+import com.egobook.app.ui.home.notification.NotificationPublisher
+import com.egobook.app.ui.home.notification.NotificationStatus
+import com.egobook.app.ui.home.notification.NotificationTime
+import com.egobook.app.ui.home.notification.NotificationType
 import java.time.LocalDateTime
 
 class NotificationAdapter(private val notifications: List<Notification>) :
@@ -56,7 +61,7 @@ class NotificationAdapter(private val notifications: List<Notification>) :
 
                 is NotificationType.EgoRoom -> {
                     icon.setImageResource(R.drawable.ic_unread_ego_notification)
-                    content.visibility = GONE
+                    content.visibility = View.GONE
                     when (notification.type.type) {
                         EgoRoomType.DAILY_PRAISE -> {
                             title.text = "$publishMonth.$publishDate 일간 칭찬서가 도착했어요!"
