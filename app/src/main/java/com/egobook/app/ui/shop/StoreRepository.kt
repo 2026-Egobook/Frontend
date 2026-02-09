@@ -19,7 +19,7 @@ data class BaseResponse<T>(
     val data: T
 )
 
-interface NetworkStoreService {
+interface NetworkStoreItemService {
     @GET("/shop/items")
     suspend fun loadItemsResponse(
         @Query("category") category: String,
@@ -61,7 +61,7 @@ class NetworkStoreRepository @Inject constructor(
 ) : StoreRepository {
     
     private val storeService by lazy {
-        retrofit.create(NetworkStoreService::class.java)
+        retrofit.create(NetworkStoreItemService::class.java)
     }
     
     override fun loadStoreItems(itemType: ItemType): Flow<CustomItem> {
@@ -82,7 +82,8 @@ class NetworkStoreRepository @Inject constructor(
                                 itemType,
                                 Price(dto.price),
                                 if (dto.isPurchased) ItemStatus.PURCHASED else ItemStatus.PURCHASABLE,
-                                ItemImage.Url(dto.shopImageUrl)
+                                ItemImage.Url(dto.shopImageUrl),
+                                ItemImage.Url(dto.myImageUrl)
                             )
                         )
                     }
