@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.user
 
 data class Ink(val value: Int) {
     init {

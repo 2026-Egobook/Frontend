@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egobook.app.databinding.FragmentNotificationBinding
+import com.egobook.app.ui.home.NotificationViewModel
 
 class NotificationFragment: Fragment() {
     private var _binding: FragmentNotificationBinding? = null

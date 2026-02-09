@@ -207,6 +207,7 @@
                     android:textSize="12dp" />
 
                 <TextView
+                    android:id="@+id/tv_empathy_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -248,6 +249,7 @@
                     android:textSize="12dp" />
 
                 <TextView
+                    android:id="@+id/tv_self_esteem_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -295,6 +297,7 @@
                     android:textSize="12dp" />
 
                 <TextView
+                    android:id="@+id/tv_diligence_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -335,6 +338,7 @@
                     android:textSize="12dp" />
 
                 <TextView
+                    android:id="@+id/tv_positive_thinking_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -381,6 +385,7 @@
                     android:textSize="12dp" />
 
                 <TextView
+                    android:id="@+id/tv_emotion_regulation_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

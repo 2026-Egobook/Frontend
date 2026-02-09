@@ -1,4 +1,4 @@
-package com.egobook.app.ui.home
+package com.egobook.app.ui.home.notification
 
 import java.time.Duration
 import java.time.LocalDateTime
