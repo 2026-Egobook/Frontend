@@ -7,6 +7,7 @@ import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -16,7 +17,8 @@ data class DiaryUseCases @Inject constructor (
     val getDiary: GetDiary,
     val addDiary: AddDiary,
     val updateDiary: UpdateDiary,
-    val deleteDiary: DeleteDiary
+    val deleteDiary: DeleteDiary,
+    val getDailyCount: GetDailyCount
 )
 
 // 각 유스케이스들 정의
@@ -64,6 +66,10 @@ class DeleteDiary @Inject constructor(
     }
 }
 
-
-
-
+class GetDailyCount @Inject constructor(
+    private val repository: DiaryRepository
+) {
+    suspend operator fun invoke(date: LocalDate): Result<Int> {
+        return repository.getDailyCount(date)
+    }
+}

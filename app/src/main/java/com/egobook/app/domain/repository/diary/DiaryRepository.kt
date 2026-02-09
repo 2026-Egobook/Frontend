@@ -6,6 +6,7 @@ import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 interface DiaryRepository {
@@ -37,4 +38,11 @@ interface DiaryRepository {
      * 일기 삭제
      */
     suspend fun deleteDiaryById(diaryId: Long): Result<Unit>
+
+    /**
+     * 데일리 카운트 가져오기
+     */
+    suspend fun getDailyCount(date: LocalDate): Result<Int>
+
+
 }

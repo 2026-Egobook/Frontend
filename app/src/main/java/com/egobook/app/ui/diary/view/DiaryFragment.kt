@@ -68,13 +68,20 @@
         private fun setupClickListener() {
             binding.apply {
                 btnAdd.setOnClickListener {
-                    // 커스텀 토스트 메세지 출력 테스트
-                    showCustomToast()
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        // 캐시 기반 dailyCount 조회 (캐시 없으면 API 호출)
+                        val dailyCount = viewModel.getDailyCountWithCache()
 
-                    // 현재 선택된 날짜를 ISO 형식으로 변환하여 전달
-                    val selectedDate = viewModel.state.value.selectedDate.toString()
-                    val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryWriteFragment(selectedDate)
-                    findNavController().navigate(action)
+                        if (dailyCount >= 48) {
+                            showCustomToast()
+                            return@launch
+                        }
+
+                        // 48 미만일 때만 일기 작성 화면으로 이동
+                        val selectedDate = viewModel.state.value.selectedDate.toString()
+                        val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryWriteFragment(selectedDate)
+                        findNavController().navigate(action)
+                    }
                 }
                 btnCalender.setOnClickListener {
                     findNavController().navigate(R.id.action_diaryFragment_to_calenderFragment)
@@ -184,11 +191,11 @@
         }
 
         private fun showCustomToast() {
-            val snackbar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
+            val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
 
             val customView = layoutInflater.inflate(R.layout.toast_over_write, null)
 
-            val layout = snackbar.view as Snackbar.SnackbarLayout
+            val layout = snackBar.view as Snackbar.SnackbarLayout
             layout.setPadding(0, 0, 0, 0)
             layout.setBackgroundColor(Color.TRANSPARENT)
 
@@ -196,13 +203,13 @@
 
             // BottomNav에 붙이기
             val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
-            snackbar.anchorView = bottomNav //스낵바의 앵커를 bottomNav로 설정
+            snackBar.anchorView = bottomNav //스낵바의 앵커를 bottomNav로 설정
 
             // BottomNav로부터 9dp 위로
             val extra = (9 * resources.displayMetrics.density)
-            snackbar.view.translationY = -extra
+            snackBar.view.translationY = -extra
 
-            snackbar.show()
+            snackBar.show()
         }
 
 

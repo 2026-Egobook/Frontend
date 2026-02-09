@@ -12,6 +12,7 @@ import com.egobook.app.domain.usecase.authusecase.GuestReLogin
 import com.egobook.app.domain.usecase.diaryusecase.AddDiary
 import com.egobook.app.domain.usecase.diaryusecase.DeleteDiary
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
+import com.egobook.app.domain.usecase.diaryusecase.GetDailyCount
 import com.egobook.app.domain.usecase.diaryusecase.GetDiaries
 import com.egobook.app.domain.usecase.diaryusecase.GetDiary
 import com.egobook.app.domain.usecase.diaryusecase.UpdateDiary
@@ -35,7 +36,8 @@ object UseCaseModule {
             getDiary = GetDiary(repository),
             addDiary = AddDiary(repository),
             updateDiary = UpdateDiary(repository),
-            deleteDiary = DeleteDiary(repository)
+            deleteDiary = DeleteDiary(repository),
+            getDailyCount = GetDailyCount(repository)
         )
 
     }

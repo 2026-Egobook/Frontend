@@ -12,7 +12,8 @@ import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiarySummary
 
 class DiariesPagingSource(
     private val apiService: DiaryApiService,
-    private val filter: DiaryFilter
+    private val filter: DiaryFilter,
+    private val onDailyCountReceived: (Int) -> Unit = {}
 ): PagingSource<Int, DiarySummary>() {
 
     override fun getRefreshKey(state: PagingState<Int, DiarySummary>): Int {
@@ -32,6 +33,9 @@ class DiariesPagingSource(
             page = page,
             size = size
         )
+
+        // dailyCount 캐시 업데이트 콜백 호출
+        onDailyCountReceived(response.data.dailyCount)
 
         val diarySlice = response.data.diaries
 

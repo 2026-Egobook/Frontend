@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -63,8 +64,21 @@ class DiariesViewModel @Inject constructor(
         val diariesFlow = diaryUseCases
             .getDiaries(filter)
             .cachedIn(viewModelScope)
-        
+
         _state.value = state.value.copy(diaries = diariesFlow)
+
+        // dailyCount도 함께 로드
+        //loadDailyCount(selectedDate)
+    }
+
+    /**
+     * 캐시 기반 dailyCount 조회 (캐시 없으면 API 호출)
+     * btnAdd 클릭 시 48 체크용으로 사용
+     */
+    suspend fun getDailyCountWithCache(): Int {
+        val currentDate = state.value.selectedDate
+        return diaryUseCases.getDailyCount(currentDate)
+            .getOrDefault(state.value.dailyCount)
     }
 
     // 날짜가 바뀌면 UI 표시값까지 자동 변경하는 확장함수
@@ -90,7 +104,8 @@ data class DiariesState(
 
     // 내부 로직용
     val selectedDate: LocalDate = LocalDate.now(),
-    
+    val dailyCount: Int = 0,  // 해당 날짜의 일기 개수
+
     // UI 표시용
     val yearText: String = selectedDate.year.toString(),
     val monthText: String = selectedDate.monthValue.toString(),

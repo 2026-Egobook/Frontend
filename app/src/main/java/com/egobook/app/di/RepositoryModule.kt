@@ -43,15 +43,6 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
-    // TODO: 백엔드 API 연동 시:
-    //  1. DiaryRepository 인터페이스 생성
-    //  2. DiaryRepositoryImpl 구현 (ApiService 사용)
-    //  3. 이 바인딩을 DiaryRepositoryImpl -> DiaryRepository로 변경
-    //  4. 모든 UseCase의 FakeDiaryRepository -> DiaryRepository로 변경
-//    @Binds
-//    @Singleton
-//    abstract fun bindFakeDiaryRepository(impl: FakeDiaryRepositoryImpl): FakeDiaryRepository
-
     @Binds
     @Singleton
     abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository

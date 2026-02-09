@@ -14,14 +14,23 @@ import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryCreateRequest
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryEntity
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryUpdateRequest
+import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toRequestParams
 import com.egobook.app.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
+import javax.inject.Singleton
+import timber.log.Timber
 
+@Singleton
 class DiaryRepositoryImpl  @Inject constructor(
     private val apiService: DiaryApiService
 ) : DiaryRepository {
+
+    // 날짜별 dailyCount 캐시
+    private val dailyCountCache = mutableMapOf<LocalDate, Int>()
+
     override fun getDiaries(
         filter: DiaryFilter,
         size: Int
@@ -31,7 +40,17 @@ class DiaryRepositoryImpl  @Inject constructor(
                 pageSize = size,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { DiariesPagingSource(apiService, filter) }
+            pagingSourceFactory = {
+                DiariesPagingSource(
+                    apiService = apiService,
+                    filter = filter,
+                    onDailyCountReceived = { count ->
+                    // API 응답 시 dailyCount 캐시 업데이트
+                    Timber.d("[DailyCount] PagingSource 캐시 업데이트: date=${filter.date}, count=$count")
+                    dailyCountCache[filter.date] = count
+                }
+                )
+            }
         ).flow
     }
 
@@ -76,6 +95,37 @@ class DiaryRepositoryImpl  @Inject constructor(
                 apiService.deleteDiary(diaryId)
             },
             transform = { Unit }
+        )
+    }
+
+    override suspend fun getDailyCount(date: LocalDate): Result<Int> {
+        // 1. 캐시 먼저 확인
+        dailyCountCache[date]?.let {
+            Timber.d("[DailyCount] 캐시 히트: date=$date, count=$it")
+            return Result.success(it)
+        }
+
+        Timber.d("[DailyCount] 캐시 미스: date=$date, API 호출 시작")
+
+        // 2. 캐시 miss면 API 호출
+        val filter = DiaryFilter(date, null)
+        val (dateParam, typesParam) = filter.toRequestParams()
+
+        return safeApiCall(
+            apiCall = {
+                apiService.getDiaries(
+                    date = dateParam,
+                    type = typesParam,
+                    page = 1,
+                    size = 1  // dailyCount만 필요하므로 최소 크기로 요청
+                )
+            },
+            transform = { response ->
+                // API 응답 시 캐시 저장
+                dailyCountCache[date] = response.dailyCount
+                Timber.d("[DailyCount] API 응답 캐시 저장: date=$date, count=${response.dailyCount}")
+                response.dailyCount
+            }
         )
     }
 
