@@ -30,9 +30,7 @@ interface DiaryRepository {
      */
     suspend fun updateDiary(
         diaryId: Long,
-        types: Set<DiaryType>,
-        emotionLevel: Int?,
-        content: String
+        diary: Diary
     ): Result<Unit>
 
     /**

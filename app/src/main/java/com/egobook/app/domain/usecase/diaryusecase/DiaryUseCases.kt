@@ -50,11 +50,9 @@ class UpdateDiary @Inject constructor(
 ) {
     suspend operator fun invoke(
         diaryId: Long,
-        types: Set<DiaryType>,
-        emotionLevel: Int?,
-        content: String
-    ): Result<Diary> {
-        return TODO()
+        diary: Diary
+    ): Result<Unit> {
+        return repository.updateDiary(diaryId, diary)
     }
 }
 

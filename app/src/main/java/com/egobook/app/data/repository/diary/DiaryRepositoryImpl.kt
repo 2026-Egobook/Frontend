@@ -13,6 +13,7 @@ import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryCreateRequest
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryEntity
+import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryUpdateRequest
 import com.egobook.app.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
@@ -56,11 +57,17 @@ class DiaryRepositoryImpl  @Inject constructor(
 
     override suspend fun updateDiary(
         diaryId: Long,
-        types: Set<DiaryType>,
-        emotionLevel: Int?,
-        content: String
+        diary: Diary
     ): Result<Unit> {
-        TODO("Not yet implemented")
+        return safeApiCall(
+            apiCall = {
+                apiService.updateDiary(
+                    diaryId = diaryId,
+                    request = diary.toDiaryUpdateRequest()
+                )
+            },
+            transform = { Unit }
+        )
     }
 
     override suspend fun deleteDiaryById(diaryId: Long): Result<Unit> {
