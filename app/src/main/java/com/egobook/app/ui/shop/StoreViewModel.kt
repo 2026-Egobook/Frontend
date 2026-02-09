@@ -15,11 +15,6 @@ import javax.inject.Inject
 class StoreViewModel @Inject constructor(
     private val storeRepository: StoreRepository
 ) : ViewModel() {
-
-    init {
-        loadEquippedItems()
-    }
-
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
     val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
     private val _items = MutableStateFlow<Map<ItemType, List<CustomItem>>>(mutableMapOf())

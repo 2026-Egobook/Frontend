@@ -50,7 +50,7 @@ class StoreFragment: Fragment() {
         }.attach()
 
         val viewModel: StoreViewModel by activityViewModels()
-
+        viewModel.loadEquippedItems()
         binding.ivBack.setOnClickListener {
             viewModel.resetEquipItems()
             findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
@@ -74,7 +74,7 @@ class StoreFragment: Fragment() {
     }
 
     private fun updateEquipItemUi(item: CustomItem) {
-        Log.d("jang", "$item")
+        binding.ivStoreTurtle.visibility = View.INVISIBLE
         when (item.type) {
             ItemType.BACK -> {
                 if (item.outfitImage is ItemImage.Url) {
