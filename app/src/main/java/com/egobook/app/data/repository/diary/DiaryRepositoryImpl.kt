@@ -64,7 +64,12 @@ class DiaryRepositoryImpl  @Inject constructor(
     }
 
     override suspend fun deleteDiaryById(diaryId: Long): Result<Unit> {
-        TODO("Not yet implemented")
+        return safeApiCall (
+            apiCall = {
+                apiService.deleteDiary(diaryId)
+            },
+            transform = { Unit }
+        )
     }
 
 }
