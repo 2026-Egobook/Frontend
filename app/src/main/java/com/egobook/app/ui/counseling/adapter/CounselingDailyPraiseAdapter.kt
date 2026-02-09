@@ -3,20 +3,21 @@ package com.egobook.app.ui.counseling.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.databinding.ItemCounselingDailyPraiseBinding
+import com.egobook.app.ui.counseling.model.PraiseDailyModel
 import com.egobook.app.ui.counseling.model.PraiseMessageModel
 
-class CounselingDailyPraiseAdapter: ListAdapter<PraiseMessageModel, CounselingDailyPraiseAdapter.PraiseViewHolder>(diffUtil) {
+class CounselingDailyPraiseAdapter: PagingDataAdapter<PraiseDailyModel, CounselingDailyPraiseAdapter.PraiseViewHolder>(diffUtil) {
 
     inner class PraiseViewHolder(private val binding: ItemCounselingDailyPraiseBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PraiseMessageModel) = with(binding) {
-            tvCounselingDailyPraiseDatetime.text = item.formattedDate
-            tvCounselingDailyPraiseContent.text = item.messageText
+        fun bind(item: PraiseDailyModel) = with(binding) {
+            tvCounselingDailyPraiseDatetime.text = item.diaryDate
             root.setOnClickListener {
                 cvCounselingDailyPraiseContent.isVisible = !cvCounselingDailyPraiseContent.isVisible
                 ivCounselingDailyPraiseToggle.setImageResource(if(cvCounselingDailyPraiseContent.isVisible) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down)
@@ -35,16 +36,19 @@ class CounselingDailyPraiseAdapter: ListAdapter<PraiseMessageModel, CounselingDa
     }
 
     override fun onBindViewHolder(holder: PraiseViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        if (item != null) {
+            holder.bind(item)
+        }
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<PraiseMessageModel>() {
-            override fun areItemsTheSame(oldItem: PraiseMessageModel, newItem: PraiseMessageModel): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<PraiseDailyModel>() {
+            override fun areItemsTheSame(oldItem: PraiseDailyModel, newItem: PraiseDailyModel): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: PraiseMessageModel, newItem: PraiseMessageModel): Boolean {
+            override fun areContentsTheSame(oldItem: PraiseDailyModel, newItem: PraiseDailyModel): Boolean {
                 return oldItem == newItem
             }
         }

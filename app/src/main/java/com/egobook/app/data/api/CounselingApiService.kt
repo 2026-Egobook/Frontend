@@ -1,6 +1,7 @@
 package com.egobook.app.data.api
 
-import com.egobook.app.data.model.counseling.PraiseMessageResponse
+import com.egobook.app.data.model.ApiResponse
+import com.egobook.app.data.model.counseling.PraiseDailyResponse
 import com.egobook.app.data.model.counseling.StatisticsResponse
 import com.egobook.app.data.model.counseling.WeeklyReportResponse
 import com.egobook.app.data.model.counseling.WeeklyReportStyleResponse
@@ -11,8 +12,11 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface CounselingApiService {
-    @GET("api/praise/daily")
-    suspend fun fetchDailyPraise(): Response<List<PraiseMessageResponse>>
+    @GET("/ego-room/praise/daily")
+    suspend fun fetchDailyPraise(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): ApiResponse<PraiseDailyResponse>
 
     @GET("api/reports/weekly")
     suspend fun fetchWeeklyReports(): Response<List<WeeklyReportResponse>>

@@ -1,6 +1,10 @@
 package com.egobook.app.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.egobook.app.data.api.CounselingApiService
+import com.egobook.app.data.repository.paging.DailyPraisePagingSource
 import com.egobook.app.domain.model.DailyData
 import com.egobook.app.domain.model.EmotionType
 import com.egobook.app.domain.model.MonthData
@@ -11,49 +15,24 @@ import com.egobook.app.domain.model.TimeData
 import com.egobook.app.domain.model.WeeklyReport
 import com.egobook.app.domain.model.WeeklyReportContent
 import com.egobook.app.domain.model.WeeklyReportStyle
+import com.egobook.app.domain.model.counseling.PraiseDailyItem
 import com.egobook.app.domain.repository.CounselingRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingApiService) :
     CounselingRepository {
-    override suspend fun getDailyPraise(): Result<List<PraiseMessage>> = try {
-//        val response = apiService.fetchDailyPraise()
-//        if(response.isSuccessful && response.body() != null) {
-//            val domainList = response.body()!!.map { it.toDomain() }
-//            Result.success(domainList)
-//        } else {
-//            Result.failure(Exception("Error: ${response.code()}"))
-//        }
-        val dummyData = listOf(
-            PraiseMessage(
-                1,
-                "어제보다 오늘 더 성장한 당신을 정말 칭찬해요! 칭찬서의 내용이 적히는 자리입니다. 이 영역은 긴 문장이 들어왔을 때 UI가 어떻게 반응하는지 확인하기 위해 작성되었습니다. 당신의 성장은 눈에 보이지 않아도 분명히 진행되고 있어요.",
-                "2025.12.30"
+    override fun getDailyPraise(size: Int): Flow<PagingData<PraiseDailyItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = size,
+                initialLoadSize = size,
+                enablePlaceholders = false
             ),
-            PraiseMessage(
-                2,
-                "꾸준히 노력하는 모습이 정말 아름답습니다. 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리",
-                "2025.12.31"
-            ),
-            PraiseMessage(
-                3,
-                "작은 일에도 최선을 다하는 당신이 자랑스러워요. 때로는 쉬어가는 것도 용기라는 것을 잊지 마세요. 칭찬서의 내용이 적히는 자리입니다. 충분히 잘하고 있고, 앞으로도 당신의 걸음을 응원하겠습니다.",
-                "2026.01.01"
-            ),
-            PraiseMessage(
-                4,
-                "실패를 두려워하지 않는 용기가 멋집니다. 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리",
-                "2026.01.02"
-            ),
-            PraiseMessage(
-                5,
-                "오늘 하루도 정말 고생 많으셨습니다. 푹 쉬세요! 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리 칭찬서의 내용이 적히는 자리",
-                "2026.01.03"
-            )
-        )
-        Result.success(dummyData)
-    } catch (e: Exception) {
-        Result.failure(e)
+            pagingSourceFactory = {
+                DailyPraisePagingSource(apiService = apiService)
+            }
+        ).flow
     }
 
     override suspend fun getWeeklyReport(): Result<List<WeeklyReport>> = try {
