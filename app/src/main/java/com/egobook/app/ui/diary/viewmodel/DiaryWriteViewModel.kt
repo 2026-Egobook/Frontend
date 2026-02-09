@@ -39,7 +39,7 @@ class DiaryWriteViewModel @Inject constructor(
     init {
         setupDate()
         if (isEditMode) {
-            //loadDiaryForEdit()
+            loadDiaryForEdit()
         }
     }
 
@@ -59,31 +59,31 @@ class DiaryWriteViewModel @Inject constructor(
     /**
      * 수정 모드: 기존 일기 데이터 로드
      */
-//    private fun loadDiaryForEdit() {
-//        viewModelScope.launch {
-//            diaryUseCases.getDiary(diaryId)
-//                .onSuccess { diary ->
-//                    if (diary != null) {
-//                        // 기존 일기 데이터로 UI 상태 업데이트
-//                        _selectedDate.value = diary.createdAt
-//
-//                        // Domain DiaryType을 UI displayType으로 변환
-//                        val displayTypes = diary.types.map { it.displayType }.toSet()
-//
-//                        _contentState.value = _contentState.value.copy(
-//                            content = diary.content,
-//                            selectedTypes = displayTypes,
-//                            selectedEmotionLevel = diary.emotionLevel ?: 3,
-//                            charCount = diary.content.length,
-//                            isSaveButtonEnabled = true
-//                        )
-//                    }
-//                }
-//                .onFailure {
-//                    // 로드 실패 시 에러 처리 (필요시 Toast 등으로 알림)
-//                }
-//        }
-//    }
+    private fun loadDiaryForEdit() {
+        viewModelScope.launch {
+            diaryUseCases.getDiary(diaryId)
+                .onSuccess { diary ->
+                    if (diary != null) {
+                        // 기존 일기 데이터로 UI 상태 업데이트
+                        _selectedDate.value = diary.date
+
+                        // Domain DiaryType을 UI displayType으로 변환
+                        val displayTypes = diary.types.map { it.displayType }.toSet()
+
+                        _contentState.value = _contentState.value.copy(
+                            content = diary.content,
+                            selectedTypes = displayTypes,
+                            selectedEmotionLevel = diary.emotionLevel ?: 3,
+                            charCount = diary.content.length,
+                            isSaveButtonEnabled = true
+                        )
+                    }
+                }
+                .onFailure {
+                    // 로드 실패 시 에러 처리 (필요시 Toast 등으로 알림)
+                }
+        }
+    }
 
     fun onEvent(event: ContentEvent) {
         when (event) {

@@ -62,7 +62,7 @@ object DiaryEntityMapper {
     }
 
     /**
-     * UI 상태를 Domain Diary 엔티티로 변환 (새 일기 생성용)
+     * UI 상태를 Domain Diary 엔티티로 변환 (새 일기 생성용, 일기 수정에도 사용가능)
      * @param selectedTypes UI displayType Set (예: ["감정", "고민"])
      * @param content 일기 내용
      * @param emotionLevel 감정 레벨 (1~5)

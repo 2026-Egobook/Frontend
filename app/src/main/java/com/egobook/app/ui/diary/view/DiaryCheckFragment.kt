@@ -64,8 +64,18 @@ class DiaryCheckFragment : Fragment() {
                 findNavController().popBackStack()
             }
             btnModify.setOnClickListener {
-                // TODO: 수정 기능은 나중에 구현
-                Toast.makeText(requireContext(), "수정 기능은 준비 중입니다.", Toast.LENGTH_SHORT).show()
+                val diarystate = viewModel.diaryState.value
+                if(diarystate is UiState.Success) {
+                    val action = DiaryCheckFragmentDirections
+                        .actionDiaryCheckFragmentToDiaryWriteFragment(
+                            selectedDate = currentDiary.date.toString(),
+                            diaryId = currentDiary.diaryId
+                        )
+                    findNavController().navigate(action)
+                } else {
+                    Toast.makeText(requireContext(), "일기 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+                //Toast.makeText(requireContext(), "수정 기능은 준비 중입니다.", Toast.LENGTH_SHORT).show()
             }
             btnDelete.setOnClickListener {
                 applyScreenBlur(BlurLevel.BASE)
