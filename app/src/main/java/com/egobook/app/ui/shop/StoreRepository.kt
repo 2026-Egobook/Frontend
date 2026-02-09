@@ -51,14 +51,8 @@ data class EquippedItemDto(
     val isPurchased: Boolean,
     val isEquipped: Boolean
 ) {
-    fun toDomain(): CustomItem? {
+    fun toDomain(): CustomItem {
         val itemType = itemCategory.toItemType()
-        if(itemType == ItemType.DECO_1 && itemId == 17) {
-            return null
-        }
-        if(itemType == ItemType.DECO_2 && itemId == 25) {
-            return null
-        }
         return CustomItem(
             id = itemId.toString(),
             type = itemType,
@@ -153,7 +147,7 @@ class NetworkStoreRepository @Inject constructor(
     override suspend fun loadEquippedItems(): List<CustomItem> {
         val equippedItemsResponse: BaseResponse<List<EquippedItemDto>> =
             equippedItemService.loadEquippedItemsResponse()
-        return equippedItemsResponse.data.mapNotNull { it.toDomain() }
+        return equippedItemsResponse.data.map { it.toDomain() }
     }
 }
 

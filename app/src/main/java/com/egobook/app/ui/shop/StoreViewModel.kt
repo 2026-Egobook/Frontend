@@ -1,5 +1,6 @@
 package com.egobook.app.ui.shop
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -64,11 +65,14 @@ class StoreViewModel @Inject constructor(
     fun loadEquippedItems() {
         viewModelScope.launch {
             _equippedItems.value = storeRepository.loadEquippedItems()
+            Log.d("jang", "load: ${_equippedItems.value}")
         }
+
     }
 
     fun equipItem(item: CustomItem) {
         _equippedItems.value = _equippedItems.value.filter { it.type != item.type } + item
+        Log.d("jang", "equip: ${_equippedItems.value}")
     }
 
     fun resetEquipItems() {

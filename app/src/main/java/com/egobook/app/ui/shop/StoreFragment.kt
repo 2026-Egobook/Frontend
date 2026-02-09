@@ -44,7 +44,7 @@ class StoreFragment: Fragment() {
             v.setPadding(0, 0, 0, systemBars.bottom)
             insets
         }
-
+        val viewModel: StoreViewModel by activityViewModels()
         viewPager = binding.vp2StoreCollectionContainer
         viewPager.adapter = StoreCollectionAdapter(this)
         val tabLayout = binding.tlTabs
@@ -52,7 +52,14 @@ class StoreFragment: Fragment() {
             tab.text = ItemTab.of(position).text
         }.attach()
 
-        val viewModel: StoreViewModel by activityViewModels()
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                viewModel.loadEquippedItems()
+                Log.d("jang", "페이지 변경 감지됨: $position") // 이 로그가 뜨는지 확인!
+            }
+        })
+
         viewModel.loadEquippedItems()
         binding.ivBack.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
@@ -93,11 +100,19 @@ class StoreFragment: Fragment() {
             }
             ItemType.DECO_1 -> {
                 if (item.outfitImage is ItemImage.Url) {
+                    if(item.outfitImage.path.contains("Default")) {
+                        binding.ivStoreTurtleDeco1.load(null)
+                        return
+                    }
                     binding.ivStoreTurtleDeco1.load(item.outfitImage.path)
                 }
             }
             ItemType.DECO_2 -> {
                 if (item.outfitImage is ItemImage.Url) {
+                    if(item.outfitImage.path.contains("Default")) {
+                        binding.ivStoreTurtleDeco2.load(null)
+                        return
+                    }
                     binding.ivStoreTurtleDeco2.load(item.outfitImage.path)
                 }
             }
