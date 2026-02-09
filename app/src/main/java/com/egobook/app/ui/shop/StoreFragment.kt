@@ -59,8 +59,6 @@ class StoreFragment: Fragment() {
             val dialog = StoreLeavingDialog()
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "StoreLeavingDialog")
-//            viewModel.resetEquipItems()
-//            findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
         }
 
 
