@@ -84,6 +84,10 @@ class StoreFragment: Fragment() {
             }
         }
 
+        binding.ivReset.setOnClickListener {
+            viewModel.loadEquippedItems()
+        }
+
 
 
         viewLifecycleOwner.lifecycleScope.launch {
