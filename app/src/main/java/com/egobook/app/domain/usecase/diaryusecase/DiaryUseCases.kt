@@ -1,20 +1,24 @@
 package com.egobook.app.domain.usecase.diaryusecase
 
-import com.egobook.app.domain.model.Diary
-import com.egobook.app.domain.model.DiaryType
-import com.egobook.app.domain.repository.DiaryRepository
+import androidx.paging.PagingData
+import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryFilter
+import com.egobook.app.domain.model.diary.entity.DiarySummary
+import com.egobook.app.domain.model.diary.entity.DiaryType
+import com.egobook.app.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-// 의존성 주입을 쉽게 하기 위한 래퍼 클래스.
+// 의존성 주입을 쉽게 하기 위한 래퍼 클래스
 data class DiaryUseCases @Inject constructor (
     val getDiaries: GetDiaries,
     val getDiary: GetDiary,
     val addDiary: AddDiary,
     val updateDiary: UpdateDiary,
-    val deleteDiary: DeleteDiary
+    val deleteDiary: DeleteDiary,
+    val getDailyCount: GetDailyCount
 )
 
 // 각 유스케이스들 정의
@@ -22,30 +26,15 @@ data class DiaryUseCases @Inject constructor (
 class GetDiaries @Inject constructor(
     private val repository: DiaryRepository
 ) {
-    operator fun invoke(
-        selectedDate: LocalDateTime = LocalDateTime.now(),
-        types: Set<DiaryType>? = null // null = 전체 탭
-    ): Flow<List<Diary>> {
-        return repository.getDiaries()
-            .map { diaries ->
-                diaries
-                    .filter { diary ->
-                        val isSameDate = diary.createdAt.year == selectedDate.year &&
-                                diary.createdAt.month == selectedDate.month &&
-                                diary.createdAt.dayOfMonth == selectedDate.dayOfMonth
-                        val isCorrectType = types == null || diary.types.any { it in types }
-
-                        isSameDate && isCorrectType
-                    }
-                    .sortedByDescending { it.writtenAt }
-            }
+    operator fun invoke(filter: DiaryFilter): Flow<PagingData<DiarySummary>> {
+        return repository.getDiaries(filter)
     }
 }
 
 class GetDiary @Inject constructor(
     private val repository: DiaryRepository
 ) {
-    suspend operator fun invoke(id: Long): Result<Diary?> {
+    suspend operator fun invoke(id: Long): Result<Diary> {
         return repository.getDiaryById(id)
     }
 }
@@ -53,18 +42,8 @@ class GetDiary @Inject constructor(
 class AddDiary @Inject constructor(
     private val repository: DiaryRepository
 ) {
-    suspend operator fun invoke(
-        content: String,
-        types: Set<DiaryType>,
-        emotionLevel: Int?, // 1~5 사이의 감정 레벨
-        createdAt: LocalDateTime // 일기가 귀속될 날짜
-    ): Result<Diary> {
-        return repository.addDiary(
-            content = content,
-            types = types,
-            emotionLevel = emotionLevel,
-            createdAt = createdAt
-        )
+    suspend operator fun invoke(diary: Diary): Result<Unit> {
+        return repository.addDiary(diary)
     }
 }
 
@@ -72,17 +51,10 @@ class UpdateDiary @Inject constructor(
     private val repository: DiaryRepository
 ) {
     suspend operator fun invoke(
-        id: Long,
-        content: String,
-        types: Set<DiaryType>,
-        emotionLevel: Int?
-    ): Result<Diary> {
-        return repository.updateDiary(
-            id = id,
-            content = content,
-            types = types,
-            emotionLevel = emotionLevel
-        )
+        diaryId: Long,
+        diary: Diary
+    ): Result<Unit> {
+        return repository.updateDiary(diaryId, diary)
     }
 }
 
@@ -94,6 +66,10 @@ class DeleteDiary @Inject constructor(
     }
 }
 
-
-
-
+class GetDailyCount @Inject constructor(
+    private val repository: DiaryRepository
+) {
+    suspend operator fun invoke(date: LocalDate): Result<Int> {
+        return repository.getDailyCount(date)
+    }
+}

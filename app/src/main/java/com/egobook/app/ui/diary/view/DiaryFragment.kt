@@ -1,9 +1,12 @@
     package com.egobook.app.ui.diary.view
 
     import android.os.Bundle
+    import android.view.Gravity
     import android.view.LayoutInflater
     import android.view.View
     import android.view.ViewGroup
+    import android.widget.Toast
+    import android.graphics.Color
     import androidx.fragment.app.Fragment
     import androidx.fragment.app.activityViewModels
     import androidx.lifecycle.Lifecycle
@@ -15,19 +18,15 @@
     import com.egobook.app.R
     import com.egobook.app.applyScreenBlur
     import com.egobook.app.databinding.FragmentDiaryBinding
-    import com.egobook.app.domain.model.DiaryType
     import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
-    import com.egobook.app.ui.diary.util.toDayOfMonthString
-    import com.egobook.app.ui.diary.util.toMonthString
-    import com.egobook.app.ui.diary.util.toYearString
     import com.egobook.app.ui.diary.viewmodel.DiariesEvent
     import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
+    import com.google.android.material.snackbar.Snackbar
     import com.google.android.material.tabs.TabLayout
     import com.google.android.material.tabs.TabLayoutMediator
     import kotlinx.coroutines.flow.collectLatest
     import kotlinx.coroutines.launch
     import kotlin.getValue
-
     class DiaryFragment : Fragment() {
         private var _binding: FragmentDiaryBinding? = null
         private val binding get() = _binding!!
@@ -59,14 +58,30 @@
             setupClickListener()
             observeViewModel()
         }
+        
+        override fun onResume() {
+            super.onResume()
+            //다른 프래그먼트에서 돌아왔을 때 데이터 새로고침
+            viewModel.onEvent(DiariesEvent.RefreshDiaries)
+        }
 
         private fun setupClickListener() {
             binding.apply {
                 btnAdd.setOnClickListener {
-                    // 현재 선택된 날짜를 ISO 형식으로 변환하여 전달
-                    val selectedDate = viewModel.state.value.selectedDate.toString()
-                    val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryWriteFragment(selectedDate)
-                    findNavController().navigate(action)
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        // 캐시 기반 dailyCount 조회 (캐시 없으면 API 호출)
+                        val dailyCount = viewModel.getDailyCountWithCache()
+
+                        if (dailyCount >= 48) {
+                            showCustomToast()
+                            return@launch
+                        }
+
+                        // 48 미만일 때만 일기 작성 화면으로 이동
+                        val selectedDate = viewModel.state.value.selectedDate.toString()
+                        val action = DiaryFragmentDirections.actionDiaryFragmentToDiaryWriteFragment(selectedDate)
+                        findNavController().navigate(action)
+                    }
                 }
                 btnCalender.setOnClickListener {
                     findNavController().navigate(R.id.action_diaryFragment_to_calenderFragment)
@@ -79,12 +94,24 @@
                 }
                 btnPrevDate.setOnClickListener {
                     val prevDate = viewModel.state.value.selectedDate.minusDays(1)
-                    viewModel.onEvent(DiariesEvent.ChangeDate(prevDate))
+                    viewModel.onEvent(
+                        DiariesEvent.ChangeDate(
+                            year = prevDate.year,
+                            month = prevDate.monthValue,
+                            day = prevDate.dayOfMonth
+                        )
+                    )
                     binding.vpDiary.setCurrentItem(0, false) // "전체" 탭으로 이동
                 }
                 btnNextDate.setOnClickListener {
                     val nextDate = viewModel.state.value.selectedDate.plusDays(1)
-                    viewModel.onEvent(DiariesEvent.ChangeDate(nextDate))
+                    viewModel.onEvent(
+                        DiariesEvent.ChangeDate(
+                            year = nextDate.year,
+                            month = nextDate.monthValue,
+                            day = nextDate.dayOfMonth
+                        )
+                    )
                     binding.vpDiary.setCurrentItem(0, false) // "전체" 탭으로 이동
                 }
                 btnGoToTop.setOnClickListener {
@@ -97,10 +124,9 @@
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.state.collectLatest { state ->
-                        binding.tvYear.text = state.selectedDate.toYearString()
-                        binding.tvMonth.text = state.selectedDate.toMonthString()
-                        binding.tvDate.text = state.selectedDate.toDayOfMonthString()
-
+                        binding.tvYear.text = state.yearText
+                        binding.tvMonth.text = "${state.monthText}월"
+                        binding.tvDate.text = state.dayText
                     }
                 }
             }
@@ -119,8 +145,8 @@
             // 탭 선택 이벤트 처리
             binding.tbType.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab) {
-                    val types = getDiaryTypesByPosition(tab.position)
-                    viewModel.onEvent(DiariesEvent.SwipeTab(types))
+                    val displayTypes = getDisplayTypesByPosition(tab.position)
+                    viewModel.onEvent(DiariesEvent.SwipeTab(displayTypes))
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -153,16 +179,42 @@
             })
         }
 
-        private fun getDiaryTypesByPosition(position: Int): Set<com.egobook.app.domain.model.DiaryType>? {
+        private fun getDisplayTypesByPosition(position: Int): Set<String>? {
             return when(position) {
                 0 -> null // 전체
-                1 -> setOf(DiaryType.EMOTION)
-                2 -> setOf(DiaryType.WORRY)
-                3 -> setOf(DiaryType.PRAISE)
-                4 -> setOf(DiaryType.THANKS)
+                1 -> setOf("감정")
+                2 -> setOf("고민")
+                3 -> setOf("칭찬")
+                4 -> setOf("감사")
                 else -> null
             }
         }
+
+        private fun showCustomToast() {
+            val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
+
+            val customView = layoutInflater.inflate(R.layout.toast_over_write, null)
+
+            val layout = snackBar.view as ViewGroup
+            layout.setPadding(0, 0, 0, 0)
+            layout.setBackgroundColor(Color.TRANSPARENT)
+
+            layout.addView(customView, 0)
+
+            // BottomNav에 붙이기
+            val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
+            snackBar.anchorView = bottomNav
+
+            // translationY 대신 margin으로 띄우기
+            val extra = (9 * resources.displayMetrics.density).toInt()
+            val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
+            params.bottomMargin += extra
+            snackBar.view.layoutParams = params
+
+            snackBar.show()
+        }
+
+
 
         override fun onDestroyView() {
             super.onDestroyView()
