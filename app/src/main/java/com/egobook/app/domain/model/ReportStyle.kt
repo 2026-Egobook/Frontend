@@ -1,5 +1,7 @@
 package com.egobook.app.domain.model
 
-enum class ReportStyle {
-    SHARP, SOFT, OBJECTIVE
+enum class ReportStyle(val value: String) {
+    SHARP("SHARP"),
+    SOFT("SOFT"),
+    OBJECTIVE("OBJECTIVE")
 }

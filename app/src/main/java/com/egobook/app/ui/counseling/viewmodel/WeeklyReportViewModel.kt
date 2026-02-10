@@ -8,7 +8,7 @@ import androidx.paging.map
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.usecase.GetWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.GetWeeklyReportsUseCase
-import com.egobook.app.domain.usecase.UpdateWeeklyReportStyleUseCase
+import com.egobook.app.domain.usecase.egoroom.UpdateWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyAndWeeklyNotificationUseCase
  import com.egobook.app.domain.usecase.egoroom.GetWeeklyReportByDateUseCase
 import com.egobook.app.domain.usecase.egoroom.UpdateWeeklyReportNotificationUseCase

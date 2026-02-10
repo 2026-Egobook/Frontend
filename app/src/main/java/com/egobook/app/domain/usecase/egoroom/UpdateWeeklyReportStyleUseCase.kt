@@ -1,4 +1,4 @@
-package com.egobook.app.domain.usecase
+package com.egobook.app.domain.usecase.egoroom
 
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.repository.CounselingRepository

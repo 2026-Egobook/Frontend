@@ -5,6 +5,7 @@ import com.egobook.app.data.model.counseling.CounselingNotificationRequest
 import com.egobook.app.data.model.counseling.DailyAndWeeklyNotificationResponse
 import com.egobook.app.data.model.counseling.DailyPraiseResponse
 import com.egobook.app.data.model.counseling.DailyPraisesResponse
+import com.egobook.app.data.model.counseling.ReportStyleRequest
 import com.egobook.app.data.model.counseling.StatisticsResponse
 import com.egobook.app.data.model.counseling.WeeklyReportResponse
 import com.egobook.app.data.model.counseling.WeeklyReportsResponse
@@ -54,11 +55,13 @@ interface CounselingApiService {
         @Path("startDate") startDate: String
     ): Response<WeeklyReportResponse>
 
+    @PATCH("/ego-room/counsel/weekly/next-tone")
+    suspend fun updateWeeklyReportStyle(
+        @Body request: ReportStyleRequest
+    ): Response<Unit>
+
     @GET("api/reports/weekly/style")
     suspend fun fetchWeeklyReportStyle(): Response<WeeklyReportStyleResponse>
-
-    @POST("api/reports/weekly/style")
-    suspend fun updateWeeklyReportStyle(@Query("style") reportStyle: ReportStyle): Response<Unit>
 
     @GET("api/statistics")
     suspend fun fetchStatistics(): Response<StatisticsResponse>

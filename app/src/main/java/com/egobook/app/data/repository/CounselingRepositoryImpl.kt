@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.CounselingApiService
 import com.egobook.app.data.model.counseling.CounselingNotificationRequest
+import com.egobook.app.data.model.counseling.ReportStyleRequest
 import com.egobook.app.data.model.counseling.toDomain
 import com.egobook.app.data.repository.paging.DailyPraisePagingSource
 import com.egobook.app.data.repository.paging.WeeklyReportsPagingSource
@@ -24,7 +25,8 @@ import com.egobook.app.domain.repository.CounselingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingApiService) : CounselingRepository {
+class CounselingRepositoryImpl @Inject constructor(private val apiService: CounselingApiService) :
+    CounselingRepository {
     override fun getDailyPraise(size: Int): Flow<PagingData<DailyPraise>> {
         return Pager(
             config = PagingConfig(
@@ -40,7 +42,7 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
 
     override suspend fun getDailyPraiseByDate(date: String): Result<DailyPraiseDetail> = try {
         val response = apiService.fetchDailyPraiseByDate(date = date)
-        if(response.isSuccessful && response.body() != null) {
+        if (response.isSuccessful && response.body() != null) {
             Result.success(response.body()!!.toDomain())
         } else {
             Result.failure(Exception("Error: ${response.code()}"))
@@ -51,7 +53,7 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
 
     override suspend fun getDailyAndWeeklyNotification(): Result<DailyAndWeeklyNotification> = try {
         val response = apiService.fetchDailyAndWeeklyNotification()
-        if(response.status == 200) {
+        if (response.status == 200) {
             Result.success(response.data.toDomain())
         } else {
             Result.failure(Exception("Error: ${response.status}"))
@@ -61,9 +63,11 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
     }
 
     override suspend fun updateDailyPraiseNotification(isEnabled: Boolean): Result<Boolean> = try {
-        val response = apiService.updateDailyPraiseNotification(request = CounselingNotificationRequest(isEnabled = isEnabled))
-        if(response.status == 200) {
-             Result.success(isEnabled)
+        val response = apiService.updateDailyPraiseNotification(
+            request = CounselingNotificationRequest(isEnabled = isEnabled)
+        )
+        if (response.status == 200) {
+            Result.success(isEnabled)
         } else {
             Result.failure(Exception("Error: ${response.status}"))
         }
@@ -72,8 +76,10 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
     }
 
     override suspend fun updateWeeklyReportNotification(isEnabled: Boolean): Result<Boolean> = try {
-        val response = apiService.updateWeeklyReportNotification(request = CounselingNotificationRequest(isEnabled = isEnabled))
-        if(response.status == 200) {
+        val response = apiService.updateWeeklyReportNotification(
+            request = CounselingNotificationRequest(isEnabled = isEnabled)
+        )
+        if (response.status == 200) {
             Result.success(isEnabled)
         } else {
             Result.failure(Exception("Error: ${response.status}"))
@@ -95,16 +101,17 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
         ).flow
     }
 
-    override suspend fun getWeeklyReportByDate(startDate: String): Result<WeeklyReportDetail> = try {
-        val response = apiService.fetchWeeklyReportByDate(startDate = startDate)
-        if(response.isSuccessful && response.body() != null) {
-            Result.success(response.body()!!.toDomain())
-        } else {
-            Result.failure(Exception("Error: ${response.code()}"))
+    override suspend fun getWeeklyReportByDate(startDate: String): Result<WeeklyReportDetail> =
+        try {
+            val response = apiService.fetchWeeklyReportByDate(startDate = startDate)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!.toDomain())
+            } else {
+                Result.failure(Exception("Error: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
 
     override suspend fun getWeeklyReportStyle(): Result<WeeklyReportStyle> = try {
 //        val response = apiService.fetchWeeklyReportStyle()
@@ -121,13 +128,12 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
 
     override suspend fun updateWeeklyReportStyle(reportStyle: ReportStyle): Result<ReportStyle> =
         try {
-//        val response = apiService.updateWeeklyReportStyle(reportStyle = reportStyle)
-//        if(response.isSuccessful) {
-//            Result.success(reportStyle)
-//        } else {
-//            Result.failure(Exception("Error: ${response.code()}"))
-//        }
-            Result.success(reportStyle)
+            val response = apiService.updateWeeklyReportStyle(request = ReportStyleRequest(toneStyle = reportStyle))
+            if (response.isSuccessful) {
+                Result.success(reportStyle)
+            } else {
+                Result.failure(Exception("Error: ${response.code()}"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
