@@ -16,7 +16,7 @@ interface CounselingRepository {
     fun getDailyPraise(size: Int): Flow<PagingData<DailyPraise>>
     suspend fun getDailyPraiseByDate(date: String): Result<DailyPraiseDetail>
     fun getWeeklyReports(size: Int): Flow<PagingData<WeeklyReport>>
-    suspend fun getWeeklyReportStyle(): Result<WeeklyReportStyle>
+    suspend fun getWeeklyReportStyle(): Result<ReportStyle>
     suspend fun updateWeeklyReportStyle(reportStyle: ReportStyle): Result<ReportStyle>
     suspend fun getStatistics(): Result<Statistics>
     suspend fun getDailyAndWeeklyNotification(): Result<DailyAndWeeklyNotification>

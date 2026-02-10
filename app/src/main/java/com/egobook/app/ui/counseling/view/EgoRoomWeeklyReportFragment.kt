@@ -134,8 +134,8 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<WeeklyReportStyleModel> -> {
-                                val reportStyle = state.data.type
+                            is UiState.Success<ReportStyle> -> {
+                                val reportStyle = state.data
                                 updateReportStyleUi(reportStyle = reportStyle)
                             }
                         }

@@ -114,14 +114,13 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
             Result.failure(e)
         }
 
-    override suspend fun getWeeklyReportStyle(): Result<WeeklyReportStyle> = try {
-//        val response = apiService.fetchWeeklyReportStyle()
-//        if(response.isSuccessful && response.body() != null) {
-//            Result.success(response.body()!!.toDomain())
-//        } else {
-//            Result.failure(Exception("Error: ${response.code()}"))
-//        }
-        Result.success(WeeklyReportStyle(type = ReportStyle.SOFT))
+    override suspend fun getWeeklyReportStyle(): Result<ReportStyle> = try {
+        val response = apiService.fetchWeeklyReportStyle()
+        if(response.status == 200) {
+            Result.success(response.data)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
     } catch (e: Exception) {
         Result.failure(e)
     }

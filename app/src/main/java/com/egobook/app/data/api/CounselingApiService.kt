@@ -68,8 +68,8 @@ interface CounselingApiService {
     ): ApiResponse<Unit>
 
 
-    @GET("api/reports/weekly/style")
-    suspend fun fetchWeeklyReportStyle(): Response<WeeklyReportStyleResponse>
+    @GET("/ego-room/counseling-tone")
+    suspend fun fetchWeeklyReportStyle(): ApiResponse<ReportStyle>
 
     @GET("api/statistics")
     suspend fun fetchStatistics(): Response<StatisticsResponse>
