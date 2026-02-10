@@ -26,8 +26,6 @@ class AccountBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +36,14 @@ class AccountBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setClickListener()
+    }
+
+    private fun setClickListener() {
+        binding.btnBottomGoogleLogin.setOnClickListener {
+            linkConfirmListener?.onLinkConfirmed()
+            dismiss()
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
