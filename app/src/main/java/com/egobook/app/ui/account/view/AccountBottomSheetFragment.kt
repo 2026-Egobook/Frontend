@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.egobook.app.databinding.FragmentAccountBottomSheetBinding
-import com.egobook.app.ui.account.view.AccountFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class AccountBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentAccountBottomSheetBinding? = null
     private val binding get() = _binding!!
+
+    var isLinked: Boolean = false  // 연동 여부 상태
 
     //연동 확인 콜백 인터페이스
     interface OnLinkConfirmListener {
@@ -40,9 +41,17 @@ class AccountBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun setClickListener() {
-        binding.btnBottomGoogleLogin.setOnClickListener {
-            linkConfirmListener?.onLinkConfirmed()
-            dismiss()
+        binding.btnBottomGoogleLogin.apply {
+            if (isLinked) {
+                text = "Google계정으로 연동되었습니다"
+                isEnabled = false
+            }
+
+            setOnClickListener {
+                if (!isLinked) {
+                    linkConfirmListener?.onLinkConfirmed()
+                }
+            }
         }
     }
 

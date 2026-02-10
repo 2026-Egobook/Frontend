@@ -27,16 +27,15 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import android.util.Base64
+import org.json.JSONObject
 
 @AndroidEntryPoint
 class AccountFragment : Fragment() {
-
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AccountViewModel by viewModels()
-
     private lateinit var request: GetCredentialRequest
-
     private val credentialManager by lazy {
         CredentialManager.create(requireContext())
     }
@@ -84,6 +83,9 @@ class AccountFragment : Fragment() {
         }
     }
 
+    private val Int.dp: Int
+        get() = (this * resources.displayMetrics.density).toInt()
+
     private fun observeLinkState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -96,11 +98,15 @@ class AccountFragment : Fragment() {
                         }
                         is UiState.Success -> {
                             binding.btnIntegrate.apply {
+                                layoutParams = layoutParams.apply {
+                                    width = 111.dp   // 111dp
+                                    height = 34.dp   // 34dp
+                                }
+
                                 icon = ContextCompat.getDrawable(context, R.drawable.ic_google_logo)
-                                text = "연동 완료"
-                                isEnabled = false
+                                text = "연동완료"
+                                //isEnabled = false
                             }
-                            Toast.makeText(requireContext(), "GOOGLE 계정 연동이 완료되었습니다!", Toast.LENGTH_SHORT).show()
                         }
                         is UiState.Failure -> {
 
@@ -119,7 +125,12 @@ class AccountFragment : Fragment() {
 
             btnIntegrate.setOnClickListener {
                 binding.blurView.visibility = View.VISIBLE
+
                 val accountBottomSheetFragment = AccountBottomSheetFragment()
+
+                // 현재 연동 상태 전달
+                accountBottomSheetFragment.isLinked = viewModel.linkState.value is UiState.Success
+
                 accountBottomSheetFragment.setOnLinkConfirmListener(object: AccountBottomSheetFragment.OnLinkConfirmListener {
                     override fun onLinkConfirmed() {
                         request = getGoogleRequest()
@@ -167,6 +178,7 @@ class AccountFragment : Fragment() {
 
                 //뷰모델의 linkToGoogle 메서드 호출
                 viewModel.linkToGoogle(idToken)
+                Toast.makeText(requireContext(), "GOOGLE 계정 연동이 완료되었습니다!", Toast.LENGTH_SHORT).show()
             } catch (e: GetCredentialException) {
                 Timber.e(e, "구글 토큰 파싱 실패")
             }
@@ -175,12 +187,21 @@ class AccountFragment : Fragment() {
         }
     }
 
+    fun parseEmailFromIdToken(idToken: String): String? {
+        // ID 토큰은 "header.payload.signature" 형태
+        val parts = idToken.split(".")
+        if (parts.size != 3) return null
+
+        val payload = parts[1]
+        val decodedBytes = Base64.decode(payload, Base64.URL_SAFE)
+        val payloadJson = JSONObject(String(decodedBytes))
+        return payloadJson.optString("email")
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
     //=============다이알로그 출력용 블러뷰 세팅====================
 

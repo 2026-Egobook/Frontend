@@ -1,18 +1,23 @@
 package com.egobook.app.ui.account.viewmodel
 
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.domain.repository.account.AccountRepository
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val userInfoStorage: UserInfoStorage
 ) : ViewModel() {
     private val _userIdState = MutableStateFlow<UiState<String>>(UiState.Idle)
     val userIdState = _userIdState.asStateFlow()
@@ -22,6 +27,14 @@ class AccountViewModel @Inject constructor(
 
 
     init {
+        //로그인 타입을 확인하여 연동 가능 여부를 판단
+        viewModelScope.launch {
+            val loginType = userInfoStorage.getLoginType().firstOrNull()
+            if (loginType == UserInfoStorage.LoginType.GOOGLE) {
+                _linkState.value = UiState.Success(Unit)
+            }
+        }
+
         getUserId()
     }
     fun getUserId() {
