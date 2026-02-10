@@ -5,7 +5,7 @@ interface AccountRepository {
     /**
      * 유저 id 조회
      */
-    suspend fun getUserId(): Result<String>
+    suspend fun getUserId(forceRefresh: Boolean = false): Result<String>
 
     /**
      * 구글 계정 연동

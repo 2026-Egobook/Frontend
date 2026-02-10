@@ -14,13 +14,13 @@ class AccountRepositoryImpl @Inject constructor(
     private val userInfoStorage: UserInfoStorage
 ) : AccountRepository {
 
-    override suspend fun getUserId(): Result<String> {
+    override suspend fun getUserId(forceRefresh: Boolean): Result<String> {
 
         //datastore에 데이터가 있는지 먼저 체크
         val localUserId = userInfoStorage.getUserId().firstOrNull()
 
-        //있다면 바로 리턴
-        if (!localUserId.isNullOrBlank()) {
+        //datastore에 데이터가 있고 갱신을 강제하지 않는다면 바로 리턴
+        if (!localUserId.isNullOrBlank() && !forceRefresh) {
             return Result.success(localUserId)
         }
 
@@ -60,9 +60,8 @@ class AccountRepositoryImpl @Inject constructor(
                     recoverToken = null
                 )
                 
-                // 4. 로그인 타입을 GOOGLE로 변경
+                // 로그인 타입을 GOOGLE로 변경
                 userInfoStorage.saveLoginType(UserInfoStorage.LoginType.GOOGLE)
-                
                 Unit
             }
         )

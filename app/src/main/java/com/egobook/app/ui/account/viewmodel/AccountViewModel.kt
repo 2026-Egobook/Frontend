@@ -46,6 +46,16 @@ class AccountViewModel @Inject constructor(
             accountRepository.linkToGoogle(idToken)
                 .onSuccess {
                     _linkState.value = UiState.Success(Unit)
+
+                    // 연동 성공 후 userId 갱신
+                    accountRepository.getUserId(forceRefresh = true)
+                        .onSuccess { id ->
+                            _userIdState.value = UiState.Success(id)
+                        }
+                        .onFailure { e ->
+                            _userIdState.value =
+                                UiState.Failure(e.message ?: "사용자 ID를 새로 불러오지 못했습니다")
+                        }
                 }
                 .onFailure { e ->
                     _linkState.value =
@@ -54,6 +64,5 @@ class AccountViewModel @Inject constructor(
         }
 
     }
-
 
 }
