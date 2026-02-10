@@ -5,11 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
@@ -27,6 +30,7 @@ class StoreFragment: Fragment() {
     private var _binding: FragmentStoreBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
     private lateinit var viewPager: ViewPager2
+    private val viewModel: StoreViewModel by activityViewModels()
 
     private var lastSelected = -1
 
@@ -71,6 +75,15 @@ class StoreFragment: Fragment() {
             dialog.show(parentFragmentManager, "StoreLeavingDialog")
         }
 
+        binding.tvPurchase.setOnClickListener {
+            if(viewModel.loadPurchaseItem() != null) {
+                applyScreenBlur(BlurLevel.BASE)
+                val dialog = StorePurchasingItemDialog()
+                dialog.isCancelable = false
+                dialog.show(parentFragmentManager, "StorePurchasingItemDialog")
+            }
+        }
+
 
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -80,6 +93,8 @@ class StoreFragment: Fragment() {
                 }
             }
         }
+
+        observeViewModel()
 
     }
 
@@ -127,6 +142,15 @@ class StoreFragment: Fragment() {
         }
     }
 
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.toastEvent.collect { message ->
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 }
 
 
