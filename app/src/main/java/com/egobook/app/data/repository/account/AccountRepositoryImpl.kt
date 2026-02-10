@@ -16,6 +16,8 @@ class AccountRepositoryImpl @Inject constructor(
 
         //datastore에 데이터가 있는지 먼저 체크
         val localUserId = userInfoStorage.getUserId().firstOrNull()
+
+        //있다면 바로 리턴
         if (!localUserId.isNullOrBlank()) {
             return Result.success(localUserId)
         }
@@ -26,7 +28,7 @@ class AccountRepositoryImpl @Inject constructor(
             transform = { it.accountCode }
         )
 
-        //응답 값을 userId 저장
+        //응답 값을 캐싱
         result.onSuccess { userId ->
             userInfoStorage.saveUserId(userId)
         }

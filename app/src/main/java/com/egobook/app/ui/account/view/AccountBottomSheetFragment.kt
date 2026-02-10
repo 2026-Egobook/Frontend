@@ -1,4 +1,4 @@
-package com.egobook.app.ui.account
+package com.egobook.app.ui.account.view
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.egobook.app.databinding.FragmentAccountBottomSheetBinding
+import com.egobook.app.ui.account.view.AccountFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class AccountBottomSheetFragment : BottomSheetDialogFragment() {
