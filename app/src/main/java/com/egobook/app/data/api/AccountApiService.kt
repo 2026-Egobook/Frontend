@@ -2,8 +2,11 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.account.AccountResponse
+import com.egobook.app.data.model.account.LinkRequest
+import com.egobook.app.data.model.account.LinkResponse
 import retrofit2.http.GET
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AccountApiService {
@@ -13,7 +16,7 @@ interface AccountApiService {
 
     @POST("/users/link/google")
     suspend fun linkToGoogle(
-
-    ): ApiResponse<T>
+        @Body request: LinkRequest
+    ): ApiResponse<LinkResponse>
 
 }
