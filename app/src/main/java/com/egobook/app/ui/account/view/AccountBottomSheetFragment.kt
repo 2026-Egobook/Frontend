@@ -14,6 +14,20 @@ class AccountBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentAccountBottomSheetBinding? = null
     private val binding get() = _binding!!
 
+    //연동 확인 콜백 인터페이스
+    interface OnLinkConfirmListener {
+        fun onLinkConfirmed()
+    }
+
+    private var linkConfirmListener: OnLinkConfirmListener? = null
+
+    fun setOnLinkConfirmListener(listener: OnLinkConfirmListener) {
+        linkConfirmListener = listener
+    }
+
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

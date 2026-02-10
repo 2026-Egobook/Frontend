@@ -66,7 +66,6 @@ class AccountFragment : Fragment() {
         }
     }
 
-
     private fun setClickListeners() {
         binding.apply {
             btnBack.setOnClickListener {
