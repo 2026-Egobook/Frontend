@@ -42,7 +42,7 @@ object DiaryMapper {
         return Diary(
             diaryId = diaryId,
             date = LocalDate.parse(date),
-            writtenAt = parseUtcToKst(writtenAt),
+            writtenAt = LocalDateTime.parse(writtenAt),
             types = type.map { DiaryType.from(it) }.toSet(),
             emotionLevel = emotionLevel,
             content = content,
