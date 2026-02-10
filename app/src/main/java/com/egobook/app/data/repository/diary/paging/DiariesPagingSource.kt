@@ -8,6 +8,7 @@ import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryEntity
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toRequestParams
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiarySummary
+import timber.log.Timber
 
 
 class DiariesPagingSource(
@@ -35,7 +36,12 @@ class DiariesPagingSource(
         )
 
         // dailyCount 캐시 업데이트 콜백 호출
-        onDailyCountReceived(response.data.dailyCount)
+        val actualContentSize = response.data.diaries.content.size
+        val serverDailyCount = response.data.dailyCount
+        
+        Timber.d("[DailyCount 디버그] date=$dateParam, 서버 dailyCount=$serverDailyCount, 실제 content 개수=$actualContentSize")
+        
+        onDailyCountReceived(serverDailyCount)
 
         val diarySlice = response.data.diaries
 

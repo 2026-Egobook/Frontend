@@ -125,7 +125,7 @@
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.state.collectLatest { state ->
                         binding.tvYear.text = state.yearText
-                        binding.tvMonth.text = state.monthText
+                        binding.tvMonth.text = "${state.monthText}월"
                         binding.tvDate.text = state.dayText
                     }
                 }
@@ -195,7 +195,8 @@
 
             val customView = layoutInflater.inflate(R.layout.toast_over_write, null)
 
-            val layout = snackBar.view as Snackbar.SnackbarLayout
+            // ❌ SnackbarLayout 쓰지 말 것
+            val layout = snackBar.view as ViewGroup
             layout.setPadding(0, 0, 0, 0)
             layout.setBackgroundColor(Color.TRANSPARENT)
 
@@ -203,14 +204,17 @@
 
             // BottomNav에 붙이기
             val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
-            snackBar.anchorView = bottomNav //스낵바의 앵커를 bottomNav로 설정
+            snackBar.anchorView = bottomNav
 
-            // BottomNav로부터 9dp 위로
-            val extra = (9 * resources.displayMetrics.density)
-            snackBar.view.translationY = -extra
+            // ⭐ translationY 대신 margin으로 띄우기
+            val extra = (9 * resources.displayMetrics.density).toInt()
+            val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
+            params.bottomMargin += extra
+            snackBar.view.layoutParams = params
 
             snackBar.show()
         }
+
 
 
         override fun onDestroyView() {
