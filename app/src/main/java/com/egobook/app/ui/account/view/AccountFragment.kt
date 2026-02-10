@@ -174,6 +174,8 @@ class AccountFragment : Fragment() {
             try {
                 val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                 val idToken = googleIdTokenCredential.idToken
+                val email = parseEmailFromIdToken(idToken)
+                Timber.d("Google 이메일: $email")
                 Timber.d("Google ID Token 받음")
 
                 //뷰모델의 linkToGoogle 메서드 호출
