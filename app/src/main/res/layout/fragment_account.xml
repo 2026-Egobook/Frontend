@@ -81,7 +81,7 @@
 
         </LinearLayout>
 
-        <!--계정id-->
+        <!-- 계정id -->
         <LinearLayout
             android:id="@+id/ly_account_id"
             android:layout_width="0dp"

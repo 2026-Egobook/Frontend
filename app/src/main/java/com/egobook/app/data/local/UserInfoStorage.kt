@@ -49,6 +49,25 @@ class UserInfoStorage @Inject constructor(
     }
 
     /**
+     * USER ID 저장
+     */
+    suspend fun saveUserId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[USER_ID] = id
+        }
+    }
+
+    /**
+     * USER ID 읽기
+     */
+
+    fun getUserId(): Flow<String?> {
+        return dataStore.data.map { preferences ->
+            preferences[USER_ID]
+        }
+    }
+
+    /**
      * Access Token 저장
      */
     suspend fun saveAccessToken(token: String) {
@@ -153,6 +172,8 @@ class UserInfoStorage @Inject constructor(
     companion object {
 
         private val LOGIN_TYPE = stringPreferencesKey("login_type")
+
+        private val USER_ID = stringPreferencesKey("user_id")
         private val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KEY_RECOVER_TOKEN = stringPreferencesKey("recover_token")
