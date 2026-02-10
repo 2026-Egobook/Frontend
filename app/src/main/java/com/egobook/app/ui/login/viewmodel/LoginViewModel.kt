@@ -55,14 +55,27 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
-            //구글 로그인 시도 -> 토큰 재발급
+            //구글 로그인 시도 -> 토큰 재발급 & 로그인 타입 저장
             is LoginEvent.TryLoginByGoogle -> {
                 viewModelScope.launch {
                     _loginState.value = LoginState.Loading
+
                     val result = authUseCases.googleLogin(event.idToken)
+
                     result.fold(
-                        onSuccess = { _loginState.value = LoginState.Success },
-                        onFailure = { error -> _loginState.value = LoginState.Error(error.message ?: "알 수 없는 오류") }
+                        onSuccess = {
+                            _loginState.value = LoginState.Success
+
+                            //구글 로그인 성공 시에도 로그인 타입 저장
+                            val loginType = UserInfoStorage.LoginType.GOOGLE
+                            userInfoStorage.saveLoginType(loginType)
+
+                            Timber.d("구글 로그인 성공, loginType=$loginType")
+                        },
+                        onFailure = { error ->
+                            _loginState.value =
+                                LoginState.Error(error.message ?: "알 수 없는 오류")
+                        }
                     )
                 }
             }
