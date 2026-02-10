@@ -174,8 +174,6 @@ class AccountFragment : Fragment() {
             try {
                 val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                 val idToken = googleIdTokenCredential.idToken
-                val email = parseEmailFromIdToken(idToken)
-                Timber.d("Google 이메일: $email")
                 Timber.d("Google ID Token 받음")
 
                 //뷰모델의 linkToGoogle 메서드 호출
@@ -187,17 +185,6 @@ class AccountFragment : Fragment() {
         } else {
             Timber.e("구글 로그인 credential 아님")
         }
-    }
-
-    fun parseEmailFromIdToken(idToken: String): String? {
-        // ID 토큰은 "header.payload.signature" 형태
-        val parts = idToken.split(".")
-        if (parts.size != 3) return null
-
-        val payload = parts[1]
-        val decodedBytes = Base64.decode(payload, Base64.URL_SAFE)
-        val payloadJson = JSONObject(String(decodedBytes))
-        return payloadJson.optString("email")
     }
 
     override fun onDestroyView() {
