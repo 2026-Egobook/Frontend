@@ -33,6 +33,8 @@
     <color name="neutral">#191818</color>
     <color name="green_secondary">#E8EED9</color>
     <color name="cardview_background">#F4F7EE</color>
+    <color name="critical">#E14444</color>
+
 
     <!-- statistics -->
     <color name="emotion_very_happy">#E69090</color>
