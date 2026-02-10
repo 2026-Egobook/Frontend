@@ -1,6 +1,6 @@
 package com.egobook.app.data.model.counseling
 
-import com.egobook.app.domain.model.counseling.WeeklyReportItem
+import com.egobook.app.domain.model.counseling.WeeklyReport
 import com.google.gson.annotations.SerializedName
 
 data class WeeklyReportsResponse(
@@ -27,7 +27,7 @@ data class WeeklyReportsContentResponse(
     val isLocked: Boolean
 )
 
-fun WeeklyReportsContentResponse.toDomain(): WeeklyReportItem = WeeklyReportItem(
+fun WeeklyReportsContentResponse.toDomain(): WeeklyReport = WeeklyReport(
     id = id,
     startDate = startDate,
     endDate = endDate,

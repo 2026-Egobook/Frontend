@@ -62,7 +62,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:strokeWidth="0dp">
                 <TextView
-                    android:id="@+id/tv_counseling_weekly_report_detail_analysis"
+                    android:id="@+id/tv_counseling_weekly_report_detail_summary"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주

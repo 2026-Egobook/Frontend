@@ -6,6 +6,7 @@ import com.egobook.app.data.model.counseling.DailyAndWeeklyNotificationResponse
 import com.egobook.app.data.model.counseling.DailyPraiseResponse
 import com.egobook.app.data.model.counseling.DailyPraisesResponse
 import com.egobook.app.data.model.counseling.StatisticsResponse
+import com.egobook.app.data.model.counseling.WeeklyReportResponse
 import com.egobook.app.data.model.counseling.WeeklyReportsResponse
 import com.egobook.app.data.model.counseling.WeeklyReportStyleResponse
 import com.egobook.app.domain.model.ReportStyle
@@ -47,6 +48,11 @@ interface CounselingApiService {
         @Path("page") page: Int,
         @Path("size") size: Int
     ): ApiResponse<WeeklyReportsResponse>
+
+    @GET("/ego-room/counsel/weekly/{startDate}")
+    suspend fun fetchWeeklyReportByDate(
+        @Path("startDate") startDate: String
+    ): Response<WeeklyReportResponse>
 
     @GET("api/reports/weekly/style")
     suspend fun fetchWeeklyReportStyle(): Response<WeeklyReportStyleResponse>

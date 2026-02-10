@@ -139,9 +139,8 @@
         android:name="com.egobook.app.ui.counseling.view.EgoRoomWeeklyReportDetailFragment"
         android:label="CounselingWeeklyReportDetailFragment"
         tools:layout="@layout/fragment_ego_room_weekly_report_detail">
-        <argument app:argType="com.egobook.app.ui.counseling.model.WeeklyReportModel"
-            android:name="weeklyReportItem"
-            app:nullable="false"/>
+        <argument app:argType="string"
+            android:name="startDate" />
     </fragment>
 
     <fragment

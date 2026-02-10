@@ -39,7 +39,7 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
             val dialog = WeeklyReportUnlockDialog()
             dialog.show(childFragmentManager, WeeklyReportUnlockDialog.TAG)
         } else {
-            val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(weeklyReportItem = item)
+            val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(startDate = item.startDate)
             findNavController().navigate(action)
         }
     }

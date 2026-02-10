@@ -10,8 +10,10 @@ import com.egobook.app.domain.usecase.GetWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.GetWeeklyReportsUseCase
 import com.egobook.app.domain.usecase.UpdateWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyAndWeeklyNotificationUseCase
+ import com.egobook.app.domain.usecase.egoroom.GetWeeklyReportByDateUseCase
 import com.egobook.app.domain.usecase.egoroom.UpdateWeeklyReportNotificationUseCase
 import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
+import com.egobook.app.ui.counseling.model.WeeklyReportDetailModel
 import com.egobook.app.ui.counseling.model.WeeklyReportModel
 import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
 import com.egobook.app.ui.counseling.model.toPresentation
@@ -31,7 +33,8 @@ class WeeklyReportViewModel @Inject constructor(
     private val getWeeklyReportStyleUseCase: GetWeeklyReportStyleUseCase,
     private val getDailyAndWeeklyNotificationUseCase: GetDailyAndWeeklyNotificationUseCase,
     private val updateWeeklyReportStyleUseCase: UpdateWeeklyReportStyleUseCase,
-    private val updateWeeklyReportNotificationUseCase: UpdateWeeklyReportNotificationUseCase
+    private val updateWeeklyReportNotificationUseCase: UpdateWeeklyReportNotificationUseCase,
+    private val getWeeklyReportByDateUseCase: GetWeeklyReportByDateUseCase
 ): ViewModel() {
 
     private val _weeklyReportList = MutableStateFlow<PagingData<WeeklyReportModel>>(PagingData.empty())
@@ -68,6 +71,20 @@ class WeeklyReportViewModel @Inject constructor(
                 _updateNotificationStatus.emit(UiState.Success(isEnabled))
             }.onFailure { error ->
                 _updateNotificationStatus.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _weeklyReportByDate = MutableStateFlow<UiState<WeeklyReportDetailModel>>(UiState.Idle)
+    val weeklyReportByDate = _weeklyReportByDate.asStateFlow()
+
+    fun getWeeklyReportByDate(startDate: String) {
+        viewModelScope.launch {
+            _weeklyReportByDate.value = UiState.Loading
+            getWeeklyReportByDateUseCase(startDate = startDate).onSuccess { domain ->
+                _weeklyReportByDate.value = UiState.Success(domain.toPresentation())
+            }.onFailure { error ->
+                _weeklyReportByDate.value = UiState.Failure(error.message)
             }
         }
     }

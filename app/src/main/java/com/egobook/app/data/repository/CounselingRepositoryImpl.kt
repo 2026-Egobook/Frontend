@@ -18,7 +18,8 @@ import com.egobook.app.domain.model.WeeklyReportStyle
 import com.egobook.app.domain.model.counseling.DailyAndWeeklyNotification
 import com.egobook.app.domain.model.counseling.DailyPraise
 import com.egobook.app.domain.model.counseling.DailyPraiseDetail
-import com.egobook.app.domain.model.counseling.WeeklyReportItem
+import com.egobook.app.domain.model.counseling.WeeklyReport
+import com.egobook.app.domain.model.counseling.WeeklyReportDetail
 import com.egobook.app.domain.repository.CounselingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -81,7 +82,7 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
         Result.failure(e)
     }
 
-    override fun getWeeklyReports(size: Int): Flow<PagingData<WeeklyReportItem>> {
+    override fun getWeeklyReports(size: Int): Flow<PagingData<WeeklyReport>> {
         return Pager(
             config = PagingConfig(
                 pageSize = size,
@@ -92,6 +93,17 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 WeeklyReportsPagingSource(apiService = apiService)
             }
         ).flow
+    }
+
+    override suspend fun getWeeklyReportByDate(startDate: String): Result<WeeklyReportDetail> = try {
+        val response = apiService.fetchWeeklyReportByDate(startDate = startDate)
+        if(response.isSuccessful && response.body() != null) {
+            Result.success(response.body()!!.toDomain())
+        } else {
+            Result.failure(Exception("Error: ${response.code()}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     override suspend fun getWeeklyReportStyle(): Result<WeeklyReportStyle> = try {

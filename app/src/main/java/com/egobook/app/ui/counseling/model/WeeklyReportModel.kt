@@ -1,7 +1,7 @@
 package com.egobook.app.ui.counseling.model
 
 import android.os.Parcelable
-import com.egobook.app.domain.model.counseling.WeeklyReportItem
+import com.egobook.app.domain.model.counseling.WeeklyReport
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -13,7 +13,7 @@ data class WeeklyReportModel(
     val isLocked: Boolean // 사용 완료
 ): Parcelable
 
-fun WeeklyReportItem.toPresentation(): WeeklyReportModel = WeeklyReportModel(
+fun WeeklyReport.toPresentation(): WeeklyReportModel = WeeklyReportModel(
     id = id,
     startDate = startDate,
     endDate = endDate,
