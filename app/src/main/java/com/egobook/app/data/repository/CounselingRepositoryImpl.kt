@@ -21,6 +21,7 @@ import com.egobook.app.domain.model.counseling.DailyPraise
 import com.egobook.app.domain.model.counseling.DailyPraiseDetail
 import com.egobook.app.domain.model.counseling.WeeklyReport
 import com.egobook.app.domain.model.counseling.WeeklyReportDetail
+import com.egobook.app.domain.model.counseling.WeeklyReportUnlockType
 import com.egobook.app.domain.repository.CounselingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -137,6 +138,20 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
         } catch (e: Exception) {
             Result.failure(e)
         }
+
+    override suspend fun unlockWeeklyReport(
+        startDate: String,
+        unlockType: WeeklyReportUnlockType
+    ): Result<Unit> = try {
+        val response = apiService.unlockWeeklyReport(startDate = startDate, unlockType = unlockType)
+        if(response.status == 200) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 
     override suspend fun getStatistics(): Result<Statistics> = try {
         //        val response = apiService.fetchStatistics()

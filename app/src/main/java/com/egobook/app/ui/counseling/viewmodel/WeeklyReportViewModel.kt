@@ -6,17 +6,21 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.egobook.app.domain.model.ReportStyle
+import com.egobook.app.domain.model.counseling.WeeklyReportUnlockType
+import com.egobook.app.domain.usecase.GetUserInfoUseCase
 import com.egobook.app.domain.usecase.GetWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.GetWeeklyReportsUseCase
 import com.egobook.app.domain.usecase.egoroom.UpdateWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyAndWeeklyNotificationUseCase
  import com.egobook.app.domain.usecase.egoroom.GetWeeklyReportByDateUseCase
+import com.egobook.app.domain.usecase.egoroom.UnlockWeeklyReportUseCase
 import com.egobook.app.domain.usecase.egoroom.UpdateWeeklyReportNotificationUseCase
 import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
 import com.egobook.app.ui.counseling.model.WeeklyReportDetailModel
 import com.egobook.app.ui.counseling.model.WeeklyReportModel
 import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
 import com.egobook.app.ui.counseling.model.toPresentation
+import com.egobook.app.ui.home.user.User
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -34,7 +38,9 @@ class WeeklyReportViewModel @Inject constructor(
     private val getDailyAndWeeklyNotificationUseCase: GetDailyAndWeeklyNotificationUseCase,
     private val updateWeeklyReportStyleUseCase: UpdateWeeklyReportStyleUseCase,
     private val updateWeeklyReportNotificationUseCase: UpdateWeeklyReportNotificationUseCase,
-    private val getWeeklyReportByDateUseCase: GetWeeklyReportByDateUseCase
+    private val getWeeklyReportByDateUseCase: GetWeeklyReportByDateUseCase,
+    private val unlockWeeklyReportUseCase: UnlockWeeklyReportUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ): ViewModel() {
 
     private val _weeklyReportList = MutableStateFlow<PagingData<WeeklyReportModel>>(PagingData.empty())
@@ -112,6 +118,34 @@ class WeeklyReportViewModel @Inject constructor(
                 _updateReportStyleResult.emit( UiState.Success(reportStyle))
             }.onFailure { error ->
                 _updateReportStyleResult.emit( UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _unlockWeeklyReportResult = MutableSharedFlow<UiState<Unit>>()
+    val unlockWeeklyReportResult = _unlockWeeklyReportResult.asSharedFlow()
+
+    fun unlockWeeklyReport(startDate: String, unlockType: WeeklyReportUnlockType) {
+        viewModelScope.launch {
+            _unlockWeeklyReportResult.emit(UiState.Loading)
+            unlockWeeklyReportUseCase(startDate = startDate, unlockType = unlockType).onSuccess {
+                _unlockWeeklyReportResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _unlockWeeklyReportResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _userInfo = MutableStateFlow<UiState<User>>(UiState.Idle)
+    val userInfo = _userInfo.asStateFlow()
+
+    fun getUserInfo() {
+        viewModelScope.launch {
+            _userInfo.value = UiState.Loading
+            getUserInfoUseCase().onSuccess { domain ->
+                _userInfo.value = UiState.Success(domain)
+            }.onFailure { error ->
+                _userInfo.value = UiState.Failure(error.message)
             }
         }
     }

@@ -11,6 +11,7 @@ import com.egobook.app.data.model.counseling.WeeklyReportResponse
 import com.egobook.app.data.model.counseling.WeeklyReportsResponse
 import com.egobook.app.data.model.counseling.WeeklyReportStyleResponse
 import com.egobook.app.domain.model.ReportStyle
+import com.egobook.app.domain.model.counseling.WeeklyReportUnlockType
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -59,6 +60,13 @@ interface CounselingApiService {
     suspend fun updateWeeklyReportStyle(
         @Body request: ReportStyleRequest
     ): Response<Unit>
+
+    @POST("/ego-room/counsel/weekly/{startDate}/unlock")
+    suspend fun unlockWeeklyReport(
+        @Path("startDate") startDate: String,
+        @Path("unlockType") unlockType: WeeklyReportUnlockType
+    ): ApiResponse<Unit>
+
 
     @GET("api/reports/weekly/style")
     suspend fun fetchWeeklyReportStyle(): Response<WeeklyReportStyleResponse>

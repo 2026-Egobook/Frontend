@@ -9,6 +9,7 @@ import com.egobook.app.domain.model.counseling.DailyAndWeeklyNotification
 import com.egobook.app.domain.model.counseling.DailyPraise
 import com.egobook.app.domain.model.counseling.DailyPraiseDetail
 import com.egobook.app.domain.model.counseling.WeeklyReportDetail
+import com.egobook.app.domain.model.counseling.WeeklyReportUnlockType
 import kotlinx.coroutines.flow.Flow
 
 interface CounselingRepository {
@@ -22,4 +23,5 @@ interface CounselingRepository {
     suspend fun updateDailyPraiseNotification(isEnabled: Boolean): Result<Boolean>
     suspend fun updateWeeklyReportNotification(isEnabled: Boolean): Result<Boolean>
     suspend fun getWeeklyReportByDate(startDate: String): Result<WeeklyReportDetail>
+    suspend fun unlockWeeklyReport(startDate: String, unlockType: WeeklyReportUnlockType): Result<Unit>
 }

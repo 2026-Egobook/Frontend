@@ -36,7 +36,7 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
     private val viewModel: WeeklyReportViewModel by viewModels()
     private val counselingWeeklyReportAdapter = CounselingWeeklyReportAdapter { item ->
         if(item.isLocked) {
-            val dialog = WeeklyReportUnlockDialog()
+            val dialog = WeeklyReportUnlockDialog(startDate = item.startDate)
             dialog.show(childFragmentManager, WeeklyReportUnlockDialog.TAG)
         } else {
             val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(startDate = item.startDate)
