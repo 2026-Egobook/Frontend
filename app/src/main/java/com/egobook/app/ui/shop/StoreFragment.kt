@@ -28,6 +28,8 @@ class StoreFragment: Fragment() {
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
     private lateinit var viewPager: ViewPager2
 
+    private var lastSelected = -1
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,12 +57,13 @@ class StoreFragment: Fragment() {
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                if (position == lastSelected) return
+                lastSelected = position
                 viewModel.loadEquippedItems()
-                Log.d("jang", "페이지 변경 감지됨: $position") // 이 로그가 뜨는지 확인!
+                Log.d("jang", "페이지 변경 감지됨: $position")
             }
         })
 
-        viewModel.loadEquippedItems()
         binding.ivBack.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
             val dialog = StoreLeavingDialog()
