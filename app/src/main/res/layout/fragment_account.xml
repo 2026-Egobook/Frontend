@@ -76,7 +76,11 @@
                 android:layout_height="34dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
+                app:iconTint="@null"
+                app:iconPadding="4dp"
+                app:iconGravity="textStart"
                 android:text="연동하기"
+                android:gravity="center"
                 android:layout_marginEnd="16dp"/>
 
         </LinearLayout>
