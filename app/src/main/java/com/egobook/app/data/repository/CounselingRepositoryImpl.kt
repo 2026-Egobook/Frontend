@@ -7,18 +7,18 @@ import com.egobook.app.data.api.CounselingApiService
 import com.egobook.app.data.model.counseling.CounselingNotificationRequest
 import com.egobook.app.data.model.counseling.toDomain
 import com.egobook.app.data.repository.paging.DailyPraisePagingSource
+import com.egobook.app.data.repository.paging.WeeklyReportsPagingSource
 import com.egobook.app.domain.model.DailyData
 import com.egobook.app.domain.model.EmotionType
 import com.egobook.app.domain.model.MonthData
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.model.Statistics
 import com.egobook.app.domain.model.TimeData
-import com.egobook.app.domain.model.WeeklyReport
-import com.egobook.app.domain.model.WeeklyReportContent
 import com.egobook.app.domain.model.WeeklyReportStyle
 import com.egobook.app.domain.model.counseling.DailyAndWeeklyNotification
 import com.egobook.app.domain.model.counseling.DailyPraise
 import com.egobook.app.domain.model.counseling.DailyPraiseDetail
+import com.egobook.app.domain.model.counseling.WeeklyReportItem
 import com.egobook.app.domain.repository.CounselingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -81,44 +81,17 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
         Result.failure(e)
     }
 
-    override suspend fun getWeeklyReport(): Result<List<WeeklyReport>> = try {
-//        val response = apiService.fetchWeeklyReports()
-//        if(response.isSuccessful && response.body() != null) {
-//            Result.success(response.body()!!.map { it.toDomain() })
-//        } else {
-//            Result.failure(Exception("Error: ${response.code()}"))
-//        }
-        val longDummyText =
-            "이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리"
-
-        val dummyWeeklyReports = listOf(
-            WeeklyReport(
-                id = 1L,
-                date = "2025.12.22",
-                content = WeeklyReportContent(
-                    analysis = "이번 주 분석: $longDummyText",
-                    praisePoint = "칭찬 포인트: $longDummyText",
-                    improvement = "개선할 점: $longDummyText",
-                    management = "관리 및 조언: $longDummyText",
-                    encouragement = "응원 및 격려: $longDummyText"
-                )
+    override fun getWeeklyReports(size: Int): Flow<PagingData<WeeklyReportItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = size,
+                initialLoadSize = size,
+                enablePlaceholders = false
             ),
-            WeeklyReport(
-                id = 2L,
-                date = "2025.12.29",
-                content = WeeklyReportContent(
-                    analysis = "지난 주 분석: $longDummyText",
-                    praisePoint = "지난 주 칭찬: $longDummyText",
-                    improvement = "지난 주 개선: $longDummyText",
-                    management = "지난 주 조언: $longDummyText",
-                    encouragement = "지난 주 격려: $longDummyText"
-                )
-            )
-        )
-
-        Result.success(dummyWeeklyReports)
-    } catch (e: Exception) {
-        Result.failure(e)
+            pagingSourceFactory = {
+                WeeklyReportsPagingSource(apiService = apiService)
+            }
+        ).flow
     }
 
     override suspend fun getWeeklyReportStyle(): Result<WeeklyReportStyle> = try {

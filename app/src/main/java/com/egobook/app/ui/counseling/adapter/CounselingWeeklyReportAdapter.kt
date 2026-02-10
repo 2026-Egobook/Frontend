@@ -2,18 +2,22 @@ package com.egobook.app.ui.counseling.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.egobook.app.R
 import com.egobook.app.databinding.ItemCounselingWeeklyReportBinding
 import com.egobook.app.ui.counseling.model.WeeklyReportModel
 
-class CounselingWeeklyReportAdapter(private val onItemClick: (WeeklyReportModel) -> Unit) : ListAdapter<WeeklyReportModel, CounselingWeeklyReportAdapter.WeeklyReportViewHolder>(diffUtil) {
+class CounselingWeeklyReportAdapter(private val onItemClick: (WeeklyReportModel) -> Unit) : PagingDataAdapter <WeeklyReportModel, CounselingWeeklyReportAdapter.WeeklyReportViewHolder>(diffUtil) {
 
     inner class WeeklyReportViewHolder(private val binding: ItemCounselingWeeklyReportBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: WeeklyReportModel) = with(binding) {
-            tvCounselingWeeklyReportDatetime.text = item.date
+            tvCounselingWeeklyReportDatetime.text = "${item.startDate} ~ ${item.endDate}"
+            val showMoreIcon = if(item.isLocked) R.drawable.ic_lock_key else R.drawable.ic_chevron_right
+            ivCounselingWeeklyReportViewMore.setImageResource(showMoreIcon)
             root.setOnClickListener {
                 onItemClick(item)
             }
@@ -31,7 +35,8 @@ class CounselingWeeklyReportAdapter(private val onItemClick: (WeeklyReportModel)
     }
 
     override fun onBindViewHolder(holder: WeeklyReportViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        if(item != null) (holder.bind(item))
     }
 
     companion object {

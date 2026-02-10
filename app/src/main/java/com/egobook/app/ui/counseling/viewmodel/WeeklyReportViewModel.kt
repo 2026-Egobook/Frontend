@@ -2,9 +2,12 @@ package com.egobook.app.ui.counseling.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.usecase.GetWeeklyReportStyleUseCase
-import com.egobook.app.domain.usecase.GetWeeklyReportUseCase
+import com.egobook.app.domain.usecase.GetWeeklyReportsUseCase
 import com.egobook.app.domain.usecase.UpdateWeeklyReportStyleUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyAndWeeklyNotificationUseCase
 import com.egobook.app.domain.usecase.egoroom.UpdateWeeklyReportNotificationUseCase
@@ -18,28 +21,26 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WeeklyReportViewModel @Inject constructor(
-    private val getWeeklyReportUseCase: GetWeeklyReportUseCase,
+    private val getWeeklyReportsUseCase: GetWeeklyReportsUseCase,
     private val getWeeklyReportStyleUseCase: GetWeeklyReportStyleUseCase,
     private val getDailyAndWeeklyNotificationUseCase: GetDailyAndWeeklyNotificationUseCase,
     private val updateWeeklyReportStyleUseCase: UpdateWeeklyReportStyleUseCase,
     private val updateWeeklyReportNotificationUseCase: UpdateWeeklyReportNotificationUseCase
 ): ViewModel() {
 
-    private val _weeklyReportList = MutableStateFlow<UiState<List<WeeklyReportModel>>>(UiState.Idle)
+    private val _weeklyReportList = MutableStateFlow<PagingData<WeeklyReportModel>>(PagingData.empty())
     val weeklyReportList = _weeklyReportList.asStateFlow()
 
-    fun fetchWeeklyReport() {
+    fun fetchWeeklyReport(size: Int) {
         viewModelScope.launch {
-            _weeklyReportList.value = UiState.Loading
-            getWeeklyReportUseCase().onSuccess { domainList ->
-                _weeklyReportList.value = UiState.Success(domainList.map { it.toPresentation() })
-            }.onFailure { error ->
-                _weeklyReportList.value = UiState.Failure(error.message)
+            getWeeklyReportsUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
+                _weeklyReportList.value = pagingData.map { it.toPresentation() }
             }
         }
     }
