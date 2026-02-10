@@ -18,85 +18,89 @@
         android:background="@drawable/topbar_background"
         android:paddingBottom="12dp">
 
-        <!-- 년/월/일 그룹-->
+        <!-- 년, 월 -->
         <LinearLayout
+            android:id="@+id/year_month_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toTopOf="@id/date_layout"
+            app:layout_constraintStart_toStartOf="@id/date_layout"
+            app:layout_constraintEnd_toEndOf="@id/date_layout"
             android:layout_marginTop="12dp">
 
-            <!-- 1. 년, 월 -->
-            <LinearLayout
-                android:id="@+id/year_month_layout"
+            <TextView
+                android:id="@+id/tv_year"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="21dp"
+                android:text="2025"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_semibold"
+                android:gravity="center"/>
 
-                <TextView
-                    android:id="@+id/tv_year"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2025"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/arita_semibold"/>
+            <Space
+                android:layout_width="14dp"
+                android:layout_height="wrap_content" />
 
-                <Space
-                    android:layout_width="14dp"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/tv_month"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12월"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/arita_semibold"/>
-            </LinearLayout>
-
-            <!-- 날짜(일) 및 아이콘 -->
-            <LinearLayout
-                android:id="@+id/date_layout"
+            <TextView
+                android:id="@+id/tv_month"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="21dp"
+                android:text="12월"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_semibold"
+                android:gravity="center"/>
+        </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_prev_date"
-                    style="@style/Widget.Material3.Button.IconButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    app:icon="@drawable/ic_left"
-                    app:iconTint="@color/cos_black"
-                    app:iconSize="24dp"
-                    android:contentDescription="이전 날짜로"/>
+        <!-- 날짜(일) 및 아이콘 -->
+        <LinearLayout
+            android:id="@+id/date_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/year_month_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="4dp">
 
-                <TextView
-                    android:id="@+id/tv_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="10"
-                    android:textSize="24sp"
-                    android:fontFamily="@font/arita_semibold"
-                    android:layout_marginHorizontal="6dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_prev_date"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:icon="@drawable/ic_left"
+                app:iconTint="@color/cos_black"
+                app:iconSize="24dp"
+                android:contentDescription="이전 날짜로"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_next_date"
-                    style="@style/Widget.Material3.Button.IconButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    app:icon="@drawable/ic_right"
-                    app:iconTint="@color/cos_black"
-                    app:iconSize="24dp"
-                    android:contentDescription="다음 날짜로"/>
-            </LinearLayout>
+            <Space
+                android:layout_width="6dp"
+                android:layout_height="match_parent"/>
 
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="28dp"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:text="10"
+                android:textSize="24sp"
+                android:fontFamily="@font/arita_semibold"/>
+
+            <Space
+                android:layout_width="6dp"
+                android:layout_height="match_parent"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_next_date"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:icon="@drawable/ic_right"
+                app:iconTint="@color/cos_black"
+                app:iconSize="24dp"
+                android:contentDescription="다음 날짜로"/>
         </LinearLayout>
 
         <!--내보내기 및 달력 버튼-->

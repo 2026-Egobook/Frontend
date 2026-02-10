@@ -5,13 +5,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
-import com.egobook.app.ui.diary.mapper.DiaryMapper
+import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class DiaryWriteViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     
-    private val _selectedDate = MutableStateFlow<LocalDateTime>(LocalDateTime.now())
+    private val _selectedDate = MutableStateFlow<LocalDate>(LocalDate.now())
     val selectedDate = _selectedDate.asStateFlow()
 
     private val _contentState = MutableStateFlow(ContentState())
@@ -43,14 +44,14 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     fun setupDate() {
-        // Navigation argument에서 날짜 받기
+        // Navigation argument에서 날짜 받기(DiaryFragment에서 넘어옴)
         val dateString: String? = savedStateHandle.get<String>("selectedDate")
         if (dateString != null) {
             try {
-                _selectedDate.value = LocalDateTime.parse(dateString)
+                _selectedDate.value = LocalDate.parse(dateString)
             } catch (e: Exception) {
                 // 파싱 실패 시 현재 날짜 사용
-                _selectedDate.value = LocalDateTime.now()
+                _selectedDate.value = LocalDate.now()
             }
         }
     }
@@ -64,11 +65,11 @@ class DiaryWriteViewModel @Inject constructor(
                 .onSuccess { diary ->
                     if (diary != null) {
                         // 기존 일기 데이터로 UI 상태 업데이트
-                        _selectedDate.value = diary.createdAt
-                        
+                        _selectedDate.value = diary.date
+
                         // Domain DiaryType을 UI displayType으로 변환
                         val displayTypes = diary.types.map { it.displayType }.toSet()
-                        
+
                         _contentState.value = _contentState.value.copy(
                             content = diary.content,
                             selectedTypes = displayTypes,
@@ -136,41 +137,51 @@ class DiaryWriteViewModel @Inject constructor(
     }
     
     /**
-     * 일기 저장 처리 (생성 또는 수정)
+     * 일기 저장 처리
      */
     private fun saveDiary() {
         viewModelScope.launch {
             val state = _contentState.value
-            
-            // UI displayType을 Domain DiaryType으로 변환
-            val diaryTypes = DiaryMapper.uiDisplayTypesToDomain(state.selectedTypes)
-            
-            // 감정 타입이 선택되지 않았으면 emotionLevel은 null
-            val emotionLevel = if (state.selectedTypes.contains("감정")) {
-                state.selectedEmotionLevel
-            } else {
-                null
-            }
-            
+
             // 수정 모드 vs 생성 모드 분기
             val result = if (isEditMode) {
                 // 수정 모드: updateDiary 호출
-                diaryUseCases.updateDiary(
-                    id = diaryId,
+                val diaryTypes = DiaryEntityMapper.uiDisplayTypesToDomain(state.selectedTypes)
+                val emotionLevel = if (state.selectedTypes.contains("감정")) {
+                    state.selectedEmotionLevel
+                } else {
+                    null
+                }
+                val now = LocalDateTime.now()
+
+                val updatedDiary = DiaryEntityMapper.createUpdatedDiary(
+                    diaryId = diaryId,
+                    selectedTypes = state.selectedTypes,
                     content = state.content,
-                    types = diaryTypes,
-                    emotionLevel = emotionLevel
+                    emotionLevel = emotionLevel,
+                    writtenAt = now // 실제 현재 시간으로(임시 삽입)
+                )
+                
+                diaryUseCases.updateDiary(
+                    diaryId = diaryId,
+                    diary = updatedDiary
                 )
             } else {
-                // 생성 모드: addDiary 호출
-                diaryUseCases.addDiary(
+                // 생성 모드: UI 상태를 Diary 엔티티로 변환
+                val now = LocalDateTime.now()
+
+                val newDiary = DiaryEntityMapper.createNewDiary(
+                    selectedTypes = state.selectedTypes,
                     content = state.content,
-                    types = diaryTypes,
-                    emotionLevel = emotionLevel,
-                    createdAt = _selectedDate.value // savedStateHandle로 받은 선택된 날짜
+                    emotionLevel = state.selectedEmotionLevel,
+                    date = _selectedDate.value,  // 선택된 날짜의 일기로
+                    writtenAt = now // 실제 현재 시간으로(임시 삽입)
                 )
+                
+                // addDiary 호출
+                diaryUseCases.addDiary(newDiary)
             }
-            
+
             // 저장 결과 전달
             result.onSuccess {
                 _saveSuccess.emit(true) // 저장 성공

@@ -19,10 +19,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryWriteBinding
-import com.egobook.app.ui.diary.util.toDateTimeString
-import com.egobook.app.ui.diary.util.toDayOfMonthString
-import com.egobook.app.ui.diary.util.toMonthString
-import com.egobook.app.ui.diary.util.toYearString
+import com.egobook.app.ui.util.toDateTimeString
+import com.egobook.app.ui.util.toDayOfMonthString
+import com.egobook.app.ui.util.toMonthString
+import com.egobook.app.ui.util.toYearString
 import com.egobook.app.ui.diary.viewmodel.DiaryWriteViewModel
 import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -157,9 +157,9 @@ class DiaryWriteFragment : Fragment() {
     private fun observeSelectedDate() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.selectedDate.collectLatest { date ->
+                viewModel.selectedDate.collectLatest { selectedDate ->
                     // 날짜를 "2025년 12월 25일" 형식으로 표시
-                    binding.tvYear.text = "${date.toYearString()}년 ${date.toMonthString()}월 ${date.toDayOfMonthString()}일"
+                    binding.tvYear.text = "${selectedDate.toYearString()}년 ${selectedDate.toMonthString()}월 ${selectedDate.toDayOfMonthString()}일"
                     
                     // 현재 시간을 "2025.12.25 17:32" 형식으로 표시
                     binding.tvInputTime.text = LocalDateTime.now().toDateTimeString()
@@ -183,14 +183,10 @@ class DiaryWriteFragment : Fragment() {
                     
                     // 일기 타입 카드 선택 상태 업데이트
                     binding.cvEmotion.isSelected = state.selectedTypes.contains("감정")
-                    binding.tvEmotion.isSelected = state.selectedTypes.contains("감정")
                     binding.cvWorry.isSelected = state.selectedTypes.contains("고민")
-                    binding.tvWorry.isSelected = state.selectedTypes.contains("고민")
                     binding.cvPraise.isSelected = state.selectedTypes.contains("칭찬")
-                    binding.tvPraise.isSelected = state.selectedTypes.contains("칭찬")
                     binding.cvThanks.isSelected = state.selectedTypes.contains("감사")
-                    binding.tvThanks.isSelected = state.selectedTypes.contains("감사")
-                    
+
                     // "감정" 타입이 선택되었을 때만 레벨 선택 섹션 표시
                     val isEmotionSelected = state.selectedTypes.contains("감정")
                     val visibility = if (isEmotionSelected) View.VISIBLE else View.GONE
