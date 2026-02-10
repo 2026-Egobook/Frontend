@@ -195,7 +195,6 @@
 
             val customView = layoutInflater.inflate(R.layout.toast_over_write, null)
 
-            // ❌ SnackbarLayout 쓰지 말 것
             val layout = snackBar.view as ViewGroup
             layout.setPadding(0, 0, 0, 0)
             layout.setBackgroundColor(Color.TRANSPARENT)
@@ -206,7 +205,7 @@
             val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
             snackBar.anchorView = bottomNav
 
-            // ⭐ translationY 대신 margin으로 띄우기
+            // translationY 대신 margin으로 띄우기
             val extra = (9 * resources.displayMetrics.density).toInt()
             val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
             params.bottomMargin += extra
