@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.ui.home.notification.EgoRoomType
@@ -16,8 +18,7 @@ import com.egobook.app.ui.home.notification.NotificationTime
 import com.egobook.app.ui.home.notification.NotificationType
 import java.time.LocalDateTime
 
-class NotificationAdapter(private val notifications: List<Notification>) :
-    RecyclerView.Adapter<NotificationAdapter.NotificationViewHodler>() {
+class NotificationAdapter: ListAdapter<Notification, NotificationAdapter.NotificationViewHodler>(DiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -31,10 +32,8 @@ class NotificationAdapter(private val notifications: List<Notification>) :
         holder: NotificationViewHodler,
         position: Int
     ) {
-        holder.bind(notifications[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = notifications.size
 
     class NotificationViewHodler(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.tv_notification_title)
@@ -98,8 +97,18 @@ class NotificationAdapter(private val notifications: List<Notification>) :
                     time.setTextColor(neutralColor)
                 }
             }
+        }
+    }
 
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<Notification>() {
+            override fun areItemsTheSame(oldItem: Notification, newItem: Notification): Boolean {
+                return oldItem.content == newItem.content && oldItem.publishedDate == newItem.publishedDate
+            }
 
+            override fun areContentsTheSame(oldItem: Notification, newItem: Notification): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 
