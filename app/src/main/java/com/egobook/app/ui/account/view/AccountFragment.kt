@@ -1,5 +1,7 @@
 package com.egobook.app.ui.account.view
 
+import android.content.Intent
+import androidx.core.net.toUri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,13 +29,17 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import android.util.Base64
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.egobook.app.BlurLevel
 import com.egobook.app.applyScreenBlur
-import kotlinx.coroutines.flow.MutableSharedFlow
-import org.json.JSONObject
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.graphics.Color
+
 
 @AndroidEntryPoint
 class AccountFragment : Fragment() {
@@ -178,6 +184,9 @@ class AccountFragment : Fragment() {
                 accountDeleteDialog1Fragment.isCancelable = false
                 accountDeleteDialog1Fragment.show(childFragmentManager, "AccountDeleteDialog1Fragment")
             }
+
+            setupPromiseText()
+
         }
 
     }
@@ -217,6 +226,53 @@ class AccountFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupPromiseText() {
+        val fullText = "이용약관 및 개인정보처리"
+        val spannable = SpannableString(fullText)
+
+        // ===== 이용약관 =====
+        val termsText = "이용약관"
+        val termsStart = fullText.indexOf(termsText)
+        val termsEnd = termsStart + termsText.length
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://bevel-beetle-a49.notion.site/2f638a539ac5801aa872e99ec4282f28".toUri()   // ← 약관 URL
+                )
+                startActivity(intent)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                ds.isUnderlineText = false
+            }
+        }, termsStart, termsEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        // ===== 개인정보처리 =====
+        val privacyText = "개인정보처리"
+        val privacyStart = fullText.indexOf(privacyText)
+        val privacyEnd = privacyStart + privacyText.length
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://bevel-beetle-a49.notion.site/2f638a539ac58059b9a1c883ad7d7164".toUri()  // ← 개인정보 URL
+                )
+                startActivity(intent)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                ds.isUnderlineText = false
+            }
+        }, privacyStart, privacyEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        binding.tvPromise.text = spannable
+        binding.tvPromise.movementMethod = LinkMovementMethod.getInstance()
+        binding.tvPromise.highlightColor = Color.TRANSPARENT
     }
 
     //=============다이알로그 출력용 블러뷰 세팅====================
