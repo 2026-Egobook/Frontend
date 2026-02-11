@@ -27,7 +27,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="9dp"
                 android:layout_weight="1"
-                android:text="광장" />
+                android:text="광장"
+                android:textColor="@color/neutral"
+                android:textSize="20sp"
+                android:fontFamily="@font/arita_semibold"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_square_navigate_to_friends"
@@ -39,9 +42,11 @@
                 android:insetBottom="0dp"
                 android:minHeight="0dp"
                 android:paddingHorizontal="24dp"
-                android:paddingVertical="8dp"
+                android:paddingVertical="12dp"
                 android:text="친구"
-                android:textColor="@color/black"
+                android:textColor="@color/neutral"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 app:cornerRadius="4dp"
                 app:strokeColor="@color/neutral_stroke"
                 app:strokeWidth="1dp" />
@@ -54,6 +59,9 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="24dp"
             android:text="편지"
+            android:textColor="@color/neutral"
+            android:textSize="16sp"
+            android:fontFamily="@font/arita_semibold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ll_square_header" />
 
@@ -99,12 +107,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
-                            android:text="편지쓰기" />
+                            android:text="편지쓰기"
+                            android:textColor="@color/neutral"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/arita_semibold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1/1" />
+                            android:text="1/1"
+                            android:textColor="@color/neutral"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/arita_medium"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -132,13 +146,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
-                            android:text="짱구" />
+                            android:text="짱구"
+                            android:textColor="@color/neutral"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/arita_semibold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3시간 남음"
-                            android:textColor="@color/neutral_subtle" />
+                            android:textColor="@color/neutral_subtle"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/arita_medium"
+                            android:letterSpacing="-0.01"
+                            android:layout_marginTop="2dp"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -166,13 +187,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
-                            android:text="흰둥이" />
+                            android:text="흰둥이"
+                            android:textColor="@color/neutral"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/arita_semibold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="5시간 남음"
-                            android:textColor="@color/neutral_subtle" />
+                            android:textColor="@color/neutral_subtle"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/arita_medium"
+                            android:letterSpacing="-0.01"
+                            android:layout_marginTop="2dp"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -200,13 +228,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
-                            android:text="짱아" />
+                            android:text="짱아"
+                            android:textColor="@color/neutral"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/arita_semibold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="6시간 남음"
-                            android:textColor="@color/neutral_subtle" />
+                            android:textColor="@color/neutral_subtle"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/arita_medium"
+                            android:letterSpacing="-0.01"
+                            android:layout_marginTop="2dp"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -264,7 +299,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="내가 쓴 편지" />
+                android:text="내가 쓴 편지"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"/>
 
             <TextView
                 android:id="@+id/tv_square_my_letters_view_all"
@@ -272,7 +310,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:text="전체 보기"
-                android:textColor="@color/neutral_subtle" />
+                android:textColor="@color/neutral_subtle"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:letterSpacing="-0.02"/>
 
             <ImageView
                 android:id="@+id/iv_square_letter_mine_view_all"
@@ -310,7 +351,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="오늘의 질문" />
+                android:text="오늘의 질문"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"/>
 
             <TextView
                 android:id="@+id/tv_square_today_question_my_replies_view_all"
@@ -318,7 +362,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:text="나의 답변 기록"
-                android:textColor="@color/neutral_subtle" />
+                android:textColor="@color/neutral_subtle"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:letterSpacing="-0.02"/>
 
             <ImageView
                 android:id="@+id/iv_square_today_question_view_all"
@@ -378,7 +425,11 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Q. 다시 태어난다면 어느 나라에서 태어나고 싶으신가요?" />
+                        tools:text="Q. 다시 태어난다면 어느 나라에서 태어나고 싶으신가요?"
+                        android:textColor="@color/neutral"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/arita_semibold"
+                        android:lineHeight="21sp"/>
 
                     <TextView
                         android:id="@+id/tv_square_today_question_description_unanswered"
@@ -386,6 +437,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="아직 오늘의 질문에\n답을 하지 않았어요"
+                        android:textColor="@color/neutral"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/arita_medium"
+                        android:lineHeight="21sp"
+                        android:letterSpacing="-0.02"
                         android:textAlignment="center"
                         app:layout_constraintEnd_toEndOf="@id/tv_square_today_question_content_unanswered"
                         app:layout_constraintStart_toStartOf="@id/tv_square_today_question_content_unanswered"
@@ -399,7 +455,9 @@
                         android:layout_marginBottom="24dp"
                         android:backgroundTint="@color/neutral"
                         android:text="작성하기"
-                        android:textColor="@color/white"
+                        android:textColor="@color/layer_white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/arita_semibold"
                         app:cornerRadius="4dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@id/tv_square_today_question_description_unanswered"
@@ -451,7 +509,11 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Q. 다시 태어난다면 어느 나라에서 태어나고 싶으신가요?" />
+                        tools:text="Q. 다시 태어난다면 어느 나라에서 태어나고 싶으신가요?"
+                        android:textColor="@color/neutral"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/arita_semibold"
+                        android:lineHeight="21sp"/>
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cv_square_today_question_description_answered"
@@ -474,7 +536,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:textAlignment="center"
-                            tools:text="사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답" />
+                            tools:text="사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답 사용자가 작성한 답"
+                            android:textColor="@color/neutral"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/arita_medium"
+                            android:lineHeight="21sp"
+                            android:letterSpacing="-0.02"/>
                     </com.google.android.material.card.MaterialCardView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -522,7 +589,11 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Q. 다시 태어난다면 어느 나라에서 태어나고 싶으신가요?" />
+                        tools:text="Q. 다시 태어난다면 어느 나라에서 태어나고 싶으신가요?"
+                        android:textColor="@color/neutral"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/arita_semibold"
+                        android:lineHeight="21sp"/>
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cv_square_today_question_input"
@@ -550,6 +621,11 @@
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="@android:color/transparent"
                                 android:hint="답을 작성해 보세요"
+                                android:textColor="@color/neutral"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/arita_medium"
+                                android:lineHeight="21sp"
+                                android:letterSpacing="-0.02"
                                 android:maxLength="250"
                                 android:paddingVertical="0dp"
                                 android:textColorHint="@color/neutral_subtle" />
@@ -561,7 +637,9 @@
                                 android:layout_marginTop="4dp"
                                 android:gravity="end"
                                 android:text="0/250"
-                                android:textColor="@color/neutral_subtle" />
+                                android:textColor="@color/neutral_subtle"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/arita_semibold"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -582,7 +660,11 @@
                             android:id="@+id/tv_square_today_question_input_visibility_type"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="전체 공개" />
+                            android:text="전체 공개"
+                            android:textColor="@color/neutral"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/arita_semibold"
+                            android:lineHeight="21sp"/>
 
                         <ImageView
                             android:id="@+id/iv_square_today_question_input_visibility_type_toggle"
@@ -602,6 +684,8 @@
                         android:insetBottom="0dp"
                         android:text="저장하기"
                         android:textColor="@color/selector_square_button_text"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/arita_semibold"
                         app:backgroundTint="@color/selector_square_button_bg"
                         android:enabled="false"
                         app:cornerRadius="4dp"
@@ -629,7 +713,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="친구의 답변" />
+                android:text="친구의 답변"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"/>
 
             <TextView
                 android:id="@+id/tv_square_all_users_replies_view_all"
@@ -637,7 +724,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:text="전체 유저 답변"
-                android:textColor="@color/neutral_subtle" />
+                android:textColor="@color/neutral_subtle"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:letterSpacing="-0.02"/>
 
             <ImageView
                 android:id="@+id/iv_square_friends_answer_view_all"
