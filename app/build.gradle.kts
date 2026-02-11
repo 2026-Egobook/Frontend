@@ -88,6 +88,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     ksp("com.google.dagger:hilt-compiler:2.54")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
