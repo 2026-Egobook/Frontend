@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.egobook.app.MainActivity
 import com.egobook.app.databinding.DialogAdBinding
 import com.egobook.app.removeScreenBlur
 
@@ -28,6 +29,12 @@ class AdDialog() : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnBack.setOnClickListener {
+            removeScreenBlur()
+            dismiss()
+        }
+
+        binding.btnWatch.setOnClickListener {
+            (activity as MainActivity).showAd("temp")
             removeScreenBlur()
             dismiss()
         }
