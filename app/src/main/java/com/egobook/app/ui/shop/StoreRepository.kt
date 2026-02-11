@@ -5,12 +5,13 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private fun String.toItemType(): ItemType = when(this) {
+private fun String.toItemType(): ItemType = when (this) {
     "BACK" -> ItemType.BACK
     "SKIN" -> ItemType.SKIN
     "DECOR_ONE" -> ItemType.DECO_1
@@ -23,6 +24,7 @@ interface StoreRepository {
     fun loadStoreItems(itemType: ItemType): Flow<CustomItem>
     suspend fun purchaseItems(item: CustomItem): PurchaseState
     suspend fun loadEquippedItems(): List<CustomItem>
+    suspend fun permanentEquipItem(item: CustomItem): EquipState
 }
 
 data class BaseResponse<T>(
@@ -37,6 +39,15 @@ data class PurchaseRequest(
 )
 
 data class PurchaseState(
+    val isSuccess: Boolean
+)
+
+data class PermanentEquipRequest(
+    val itemId: Int,
+    val isEquipped: Boolean
+)
+
+data class EquipState(
     val isSuccess: Boolean
 )
 
@@ -57,6 +68,11 @@ interface NetworkPurchaseItemService {
 interface NetworkEquippedItemService {
     @GET("/shop/items/equipped")
     suspend fun loadEquippedItemsResponse(): BaseResponse<List<EquippedItemDto>>
+}
+
+interface NetworkPermanentEquipService {
+    @PATCH("/shop/equip")
+    suspend fun loadPermanentEquipResponse(@Body request: PermanentEquipRequest): BaseResponse<EquippedItemDto>
 }
 
 data class EquippedItemDto(
@@ -124,6 +140,11 @@ class NetworkStoreRepository @Inject constructor(
         retrofit.create(NetworkPurchaseItemService::class.java)
     }
 
+    private val permanentEquipService by lazy {
+        retrofit.create(NetworkPermanentEquipService::class.java)
+    }
+
+
     override fun loadStoreItems(itemType: ItemType): Flow<CustomItem> {
         return flow {
             var currentPage = 1
@@ -166,9 +187,10 @@ class NetworkStoreRepository @Inject constructor(
 
     override suspend fun purchaseItems(item: CustomItem): PurchaseState {
         try {
-            val response = purchaseItemService.loadPurchaseItemsResponse(PurchaseRequest(item.id.toInt()))
+            val response =
+                purchaseItemService.loadPurchaseItemsResponse(PurchaseRequest(item.id.toInt()))
             return PurchaseState(isSuccess = true)
-        } catch(err: Exception) {
+        } catch (err: Exception) {
             return PurchaseState(isSuccess = false)
         }
     }
@@ -177,6 +199,17 @@ class NetworkStoreRepository @Inject constructor(
         val equippedItemsResponse: BaseResponse<List<EquippedItemDto>> =
             equippedItemService.loadEquippedItemsResponse()
         return equippedItemsResponse.data.map { it.toDomain() }
+    }
+
+    override suspend fun permanentEquipItem(item: CustomItem): EquipState {
+        try {
+            permanentEquipService.loadPermanentEquipResponse(
+                PermanentEquipRequest(itemId = item.id.toInt(), isEquipped = true)
+            )
+            return EquipState(isSuccess = true)
+        } catch (err: Exception) {
+            return EquipState(isSuccess = false)
+        }
     }
 }
 

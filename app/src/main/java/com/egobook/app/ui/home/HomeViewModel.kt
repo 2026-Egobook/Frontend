@@ -7,6 +7,8 @@ import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.user.Ink
 import com.egobook.app.ui.home.user.Level
 import com.egobook.app.ui.home.user.User
+import com.egobook.app.ui.shop.CustomItem
+import com.egobook.app.ui.shop.StoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,16 +18,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val storeRepository: StoreRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(User(Level(1), Ink(0)))
     val uiState: StateFlow<User> = _uiState.asStateFlow()
 
+    private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
+    val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
+
     init {
         fetchUser()
+        fetchEquipItems()
     }
 
-    private fun fetchUser() {
+    fun fetchEquipItems() {
+        viewModelScope.launch {
+            _equippedItems.value = storeRepository.loadEquippedItems()
+        }
+    }
+
+    fun fetchUser() {
         viewModelScope.launch {
             try {
                 val user = userRepository.load()
@@ -33,7 +46,6 @@ class HomeViewModel @Inject constructor(
             } catch(error: Exception) {
                 Log.e("HomeViewModel", "Failed to fetch user", error)
             }
-
         }
     }
 }

@@ -92,6 +92,24 @@ class StoreViewModel @Inject constructor(
         _equippedItems.update { currentList ->
             currentList.filter { it.type != item.type } + item
         }
+
+        if (item.itemStatus != ItemStatus.PURCHASABLE) {
+            viewModelScope.launch {
+                try {
+                    val result = storeRepository.permanentEquipItem(item)
+                    if (result.isSuccess) {
+                        Log.d("StoreViewModel", "서버 착용 성공: ${item.id}")
+                        loadEquippedItems()
+                    } else {
+                        _toastEvent.emit("아이템(${item.id}) 착용에 실패했습니다.")
+                    }
+                } catch (e: Exception) {
+                    Log.e("StoreViewModel", "서버 통신 에러", e)
+                }
+            }
+        } else {
+            Log.d("StoreViewModel", "미구매 아이템 - 프리뷰 모드")
+        }
     }
 
     fun loadPurchaseItem(): CustomItem? {
@@ -114,6 +132,8 @@ class StoreViewModel @Inject constructor(
             if (purchaseState.isSuccess) {
                 loadItems(item.type, true)
                 loadInk()
+                val purchasedItem = item.copy(itemStatus = ItemStatus.PURCHASED)
+                equipItem(purchasedItem)
                 _toastEvent.emit("구매가 완료되었어요")
             } else {
                 _toastEvent.emit("잉크가 부족해요")
@@ -123,6 +143,6 @@ class StoreViewModel @Inject constructor(
 
 
     fun resetEquipItems() {
-        _equippedItems.value = emptyList()
+        loadEquippedItems()
     }
 }
