@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.egobook.app.BlurLevel
 import com.egobook.app.NotificationController
 import com.egobook.app.R
@@ -20,6 +21,9 @@ import com.egobook.app.ui.home.repository.UserTendencyRepository
 import com.egobook.app.ui.home.user.LevelType
 import com.egobook.app.ui.home.ui.RadarDialog
 import com.egobook.app.ui.home.ui.StreakDialog
+import com.egobook.app.ui.shop.CustomItem
+import com.egobook.app.ui.shop.ItemImage
+import com.egobook.app.ui.shop.ItemType
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
 import kotlinx.coroutines.launch
@@ -47,6 +51,15 @@ class HomeFragment(): Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.equippedItems.collect { equippedList ->
+                equippedList.forEach { equippedItem ->
+                    updateEquipItemUi(equippedItem)
+                }
+            }
+        }
+
         binding.ivStore.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_storeFragment)
         }
@@ -80,6 +93,44 @@ class HomeFragment(): Fragment() {
             val dialog = StreakDialog()
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "SteakDialog")
+        }
+    }
+
+    private fun updateEquipItemUi(item: CustomItem) {
+        when (item.type) {
+            ItemType.BACK -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    binding.ivHomeTurtleBack.load(item.outfitImage.path)
+                }
+            }
+            ItemType.SKIN -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    binding.ivHomeTurtleSkin.load(item.outfitImage.path)
+                }
+            }
+            ItemType.DECO_1 -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    if(item.outfitImage.path.contains("Default")) {
+                        binding.ivHomeTurtleDeco1.load(null)
+                        return
+                    }
+                    binding.ivHomeTurtleDeco1.load(item.outfitImage.path)
+                }
+            }
+            ItemType.DECO_2 -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    if(item.outfitImage.path.contains("Default")) {
+                        binding.ivHomeTurtleDeco2.load(null)
+                        return
+                    }
+                    binding.ivHomeTurtleDeco2.load(item.outfitImage.path)
+                }
+            }
+            ItemType.BACKGROUND -> {
+                if (item.outfitImage is ItemImage.Url) {
+                    binding.ivHomeBackground.load(item.outfitImage.path)
+                }
+            }
         }
     }
 
