@@ -95,17 +95,20 @@ class TokenAuthenticator @Inject constructor(
     }
 
     /**
-     * 로그아웃 처리: 로그인 화면으로 이동
+     * 로그아웃 처리: 토큰 클리어 후 로그인 화면으로 이동
      */
     private fun handleLogout() {
         Timber.d("로그아웃 처리 시작")
-        
-        // 로그인 화면으로 이동
+
+        runBlocking {
+            userInfoStorage.clearAll()   // 토큰, id, 이메일 등등 싹다 삭제
+        }
+
         val intent = Intent(context, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         context.startActivity(intent)
-        
+
         Timber.d("로그인 화면으로 이동")
     }
 
