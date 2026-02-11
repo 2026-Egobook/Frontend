@@ -17,13 +17,30 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
+        android:id="@+id/tv_friends_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="친구 3/10명"
+        android:text="친구"
+        android:textColor="@color/neutral"
+        android:textSize="16sp"
+        android:fontFamily="@font/arita_semibold"
         android:layout_marginStart="4dp"
         app:layout_constraintStart_toEndOf="@id/iv_friends_list"
         app:layout_constraintTop_toTopOf="@id/iv_friends_list"
         app:layout_constraintBottom_toBottomOf="@id/iv_friends_list"/>
+
+    <TextView
+        android:id="@+id/tv_friends_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3/10명"
+        android:textColor="@color/neutral_subtle"
+        android:textSize="14sp"
+        android:fontFamily="@font/arita_semibold"
+        android:layout_marginStart="4dp"
+        app:layout_constraintStart_toEndOf="@id/tv_friends_title"
+        app:layout_constraintTop_toTopOf="@id/tv_friends_title"
+        app:layout_constraintBottom_toBottomOf="@id/tv_friends_title"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_friends_list"
