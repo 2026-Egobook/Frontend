@@ -1,5 +1,6 @@
 package com.egobook.app.ui.home.repository
 
+import com.egobook.app.di.qualifier.BackendApi
 import com.egobook.app.ui.home.user.Tendency
 import com.egobook.app.ui.home.user.User
 import retrofit2.Retrofit
