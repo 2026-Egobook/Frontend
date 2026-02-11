@@ -28,6 +28,9 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="8dp"
                 android:text="전체 감정 기록 횟수"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -58,6 +61,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="999회"
+                android:textColor="@color/neutral"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_very_happy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/hbc_counseling_statistics_total_count_very_happy"
@@ -89,6 +95,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="999회"
+                android:textColor="@color/neutral"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_happy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/hbc_counseling_statistics_total_count_happy"
@@ -120,6 +129,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="999회"
+                android:textColor="@color/neutral"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_neutral"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/hbc_counseling_statistics_total_count_neutral"
@@ -151,6 +163,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="999회"
+                android:textColor="@color/neutral"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_sad"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/hbc_counseling_statistics_total_count_sad"
@@ -182,6 +197,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="999회"
+                android:textColor="@color/neutral"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_very_sad"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/hbc_counseling_statistics_total_count_very_sad"
@@ -203,6 +221,9 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="8dp"
                 android:text="요일별 감정 기록"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -236,14 +257,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="주로 기분이 좋았던 때" />
+                    android:text="주로 기분이 좋았던 때"
+                    android:textColor="@color/neutral"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:letterSpacing="-0.01"/>
 
                 <TextView
                     android:id="@+id/tv_counseling_statistics_daily_record_peak_positive_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    tools:text="금 17시" />
+                    tools:text="금 17시"
+                    android:textColor="@color/neutral"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/arita_semibold"/>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -265,14 +293,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="주로 기분이 나빴던 때" />
+                    android:text="주로 기분이 나빴던 때"
+                    android:textColor="@color/neutral"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:letterSpacing="-0.01"/>
 
                 <TextView
                     android:id="@+id/tv_counseling_statistics_daily_record_peak_negative_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    tools:text="금 17시" />
+                    tools:text="금 17시"
+                    android:textColor="@color/neutral"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/arita_semibold"/>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -290,6 +325,9 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="8dp"
                 android:text="6개월간 평균 감정 점수"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -370,14 +408,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    tools:text="10월 평균 점수" />
+                    tools:text="10월 평균 점수"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:letterSpacing="-0.02"/>
 
                 <TextView
                     android:id="@+id/tv_counseling_statistics_average_last_month_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:text="3.2" />
+                    tools:text="3.2"
+                    android:textColor="@color/neutral"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/arita_semibold"/>
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_counseling_statistics_average_current_month"
@@ -399,14 +444,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    tools:text="11월 평균 점수" />
+                    tools:text="11월 평균 점수"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:letterSpacing="-0.02"/>
 
                 <TextView
                     android:id="@+id/tv_counseling_statistics_average_current_month_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    tools:text="4.3" />
+                    tools:text="4.3"
+                    android:textColor="@color/neutral"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/arita_semibold"/>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -430,7 +482,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    tools:text="지난달 보다 1.1 상승했어요" />
+                    tools:text="지난달 보다 1.1 상승했어요"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:letterSpacing="-0.02"/>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -450,6 +506,9 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="8dp"
                 android:text="자주 쓴 단어"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
