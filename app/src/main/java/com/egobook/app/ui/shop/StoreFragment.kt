@@ -88,6 +88,13 @@ class StoreFragment: Fragment() {
             viewModel.loadEquippedItems()
         }
 
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.ink.collect { ink ->
+                    binding.tvInk.text = ink.value.toString()
+                }
+            }
+        }
 
 
         viewLifecycleOwner.lifecycleScope.launch {

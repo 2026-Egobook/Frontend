@@ -56,12 +56,12 @@
             android:src="@drawable/ink_icon" />
 
         <TextView
+            android:id="@+id/tv_ink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="16dp"
-            android:text="9999"
             android:textColor="@color/neutral"
             android:textSize="12dp" />
     </LinearLayout>
