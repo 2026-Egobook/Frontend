@@ -28,7 +28,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="나의 답변 기록" />
+            android:text="나의 답변 기록"
+            android:textColor="@color/neutral"
+            android:textSize="20sp"
+            android:fontFamily="@font/arita_semibold"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

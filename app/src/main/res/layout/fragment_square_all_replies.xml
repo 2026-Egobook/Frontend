@@ -28,7 +28,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="전체 유저의 답변" />
+            android:text="전체 유저의 답변"
+            android:textColor="@color/neutral"
+            android:textSize="20sp"
+            android:fontFamily="@font/arita_semibold"/>
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
@@ -49,6 +52,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 tools:text="Q.\n다시 태어난다면\n어느 나라에서 태어나고 싶으신가요?"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
+                android:lineHeight="21sp"
                 android:translationZ="10dp"
                 android:layout_marginHorizontal="12dp"
                 android:layout_marginVertical="24dp"
