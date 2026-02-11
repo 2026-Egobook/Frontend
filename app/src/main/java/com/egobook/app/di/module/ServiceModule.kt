@@ -1,8 +1,10 @@
 package com.egobook.app.di.module
 
 import com.egobook.app.data.api.AIApiService
+import com.egobook.app.data.api.AccountApiService
 import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.api.CounselingApiService
+import com.egobook.app.data.api.DiaryApiService
 import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.api.LetterApiService
 import com.egobook.app.data.api.NotificationApiService
@@ -50,20 +52,25 @@ object ServiceModule {
         return retrofit.create(LetterApiService::class.java)
     }
 
-    /**
-     * 토큰 갱신용 AuthApiService
-     */
-    @Provides
-    @Singleton
-    fun provideAuthApiService(
-        @AuthRetrofit retrofit: Retrofit
-    ): AuthApiService {
-        return retrofit.create(AuthApiService::class.java)
-    }
-
     @Provides
     @Singleton
     fun provideAIService(@AIApi retrofit: Retrofit): AIApiService {
         return retrofit.create(AIApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(@AuthRetrofit retrofit: Retrofit): AuthApiService =
+        retrofit.create(AuthApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideAccountService(@BackendApi retrofit: Retrofit): AccountApiService =
+        retrofit.create(AccountApiService::class.java)
+
+
+    @Provides
+    @Singleton
+    fun provideDiaryService(@BackendApi retrofit: Retrofit): DiaryApiService =
+        retrofit.create(DiaryApiService::class.java)
 }
