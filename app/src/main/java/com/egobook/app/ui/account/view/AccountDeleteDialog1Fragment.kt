@@ -40,7 +40,6 @@ class AccountDeleteDialog1Fragment : DialogFragment() {
             accountDeleteDialog2Fragment.isCancelable = true
             accountDeleteDialog2Fragment.show(parentFragmentManager, "AccountDeleteDialog2Fragment")
 
-            removeScreenBlur()
             dismiss()
         }
     }

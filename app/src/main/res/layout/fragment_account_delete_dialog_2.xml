@@ -19,7 +19,6 @@
         android:paddingEnd="16dp"
         android:orientation="vertical" >
         <TextView
-            android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="그동안 이용해 주셔서\n감사합니다"
