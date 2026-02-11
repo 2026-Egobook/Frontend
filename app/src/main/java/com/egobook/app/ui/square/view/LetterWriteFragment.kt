@@ -193,6 +193,6 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
     }
 
     companion object {
-        private const val MAX_LENGTH = 360
+        private const val MAX_LENGTH = 350
     }
 }

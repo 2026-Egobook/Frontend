@@ -33,7 +33,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="답장 하기" />
+                android:text="답장 하기"
+                android:textColor="@color/neutral"
+                android:textSize="20sp"
+                android:fontFamily="@font/arita_semibold"/>
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,6 +55,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="받은 편지"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -70,6 +76,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 tools:text="편지원문이 보이는자리 편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리"
+                android:textColor="@color/neutral"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:lineHeight="21sp"
+                android:letterSpacing="-0.02"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_letter_reply_letter_received_title" />
@@ -94,6 +105,9 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="8dp"
                 android:text="나의 답장"
+                android:textColor="@color/neutral"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -225,6 +239,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="To 낯선 고북이"
+                        android:textColor="@color/neutral"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/arita_semibold"
                         app:layout_constraintBottom_toBottomOf="@id/iv_letter_reply_tooltip"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/iv_letter_reply_tooltip" />
@@ -246,7 +263,12 @@
                         android:backgroundTint="@android:color/transparent"
                         android:hint="편지를 작성해 보세요"
                         android:gravity="start"
-                        android:maxLength="360"
+                        android:maxLength="350"
+                        android:textColor="@color/neutral"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/arita_medium"
+                        android:lineHeight="21sp"
+                        android:letterSpacing="-0.02"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/iv_letter_reply_tooltip"
@@ -257,8 +279,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="12dp"
-                        android:text="0/360"
+                        android:text="0/350"
                         android:textColor="@color/neutral_subtle"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/arita_semibold"
                         app:layout_constraintTop_toBottomOf="@id/et_letter_reply_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/tv_letter_reply_sender" />
@@ -269,6 +293,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="From 또다른 고북이"
+                        android:textColor="@color/neutral"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/arita_semibold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -282,6 +309,8 @@
             android:layout_height="wrap_content"
             android:text="답장 보내기"
             android:textColor="@color/selector_square_button_text"
+            android:textSize="12sp"
+            android:fontFamily="@font/arita_semibold"
             android:backgroundTint="@color/selector_square_button_bg"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="30dp"

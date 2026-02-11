@@ -39,6 +39,8 @@
                 android:layout_height="wrap_content"
                 tools:text="2025.12.27"
                 android:textColor="@color/neutral_subtle"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toBottomOf="@id/iv_arrived_pending_letter_report"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/iv_arrived_pending_letter_report" />
@@ -60,6 +62,11 @@
                 tools:text="편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편
 지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의
  내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용편지 답장의 내용내용내용"
+                android:textColor="@color/neutral"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:lineHeight="21sp"
+                android:letterSpacing="-0.02"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_arrived_pending_letter_report" />
@@ -71,6 +78,8 @@
                 android:layout_marginTop="24dp"
                 tools:text="From 이름"
                 android:textColor="@color/neutral"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_arrived_pending_letter_content" />
 
@@ -87,6 +96,8 @@
         android:backgroundTint="@color/grey_light"
         android:text="포기하다"
         android:textColor="@color/neutral"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="4dp"
@@ -101,6 +112,8 @@
         android:backgroundTint="@color/neutral"
         android:text="답장하기"
         android:textColor="@color/layer_white"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="4dp"

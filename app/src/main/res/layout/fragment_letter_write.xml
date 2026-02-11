@@ -29,7 +29,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="편지 쓰기" />
+            android:text="편지 쓰기"
+            android:textColor="@color/neutral"
+            android:textSize="20sp"
+            android:fontFamily="@font/arita_semibold"/>
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
@@ -160,6 +163,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To 낯선 고북이"
+                android:textColor="@color/neutral"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toBottomOf="@id/iv_letter_tooltip"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/iv_letter_tooltip" />
@@ -180,7 +186,12 @@
                 android:layout_marginTop="12dp"
                 android:backgroundTint="@android:color/transparent"
                 android:hint="편지를 작성해 보세요"
-                android:maxLength="360"
+                android:textColor="@color/neutral"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:lineHeight="21sp"
+                android:letterSpacing="-0.02"
+                android:maxLength="350"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_letter_tooltip"/>
@@ -190,8 +201,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="0/360"
+                android:text="0/350"
                 android:textColor="@color/neutral_subtle"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_letter_write_content" />
 
@@ -201,6 +214,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="From 또다른 고북이"
+                android:textColor="@color/neutral"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_letter_write_content_length" />
@@ -214,6 +230,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="친구에게 보내기"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
         android:layout_marginStart="16dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
@@ -230,6 +248,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="누군가에게 보내기"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="12dp"
         android:insetTop="0dp"

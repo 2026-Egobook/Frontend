@@ -15,5 +15,9 @@
         android:layout_height="match_parent"
         android:text="익명으로 상대에게 전달돼요\n비하나 과도한 비판 대신,\n공감부터 시작하는\n따뜻한 말을 보내주세요!"
         android:textColor="@color/layer_white"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_medium"
+        android:lineHeight="21sp"
+        android:letterSpacing="-0.01"
         android:textAlignment="center"/>
 </com.google.android.material.card.MaterialCardView>

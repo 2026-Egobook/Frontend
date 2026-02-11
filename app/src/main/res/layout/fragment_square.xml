@@ -733,7 +733,7 @@
                 android:id="@+id/iv_square_friends_answer_view_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_square_view_all" />
+                android:src="@drawable/ic_square_view_all" />3
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -216,6 +216,6 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
     }
 
     companion object {
-        private const val MAX_LENGTH = 360
+         private const val MAX_LENGTH = 350
     }
 }
