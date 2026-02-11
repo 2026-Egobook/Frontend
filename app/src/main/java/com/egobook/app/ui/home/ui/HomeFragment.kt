@@ -60,6 +60,14 @@ class HomeFragment(): Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.dailyPhycologyReadState.collect { phycologyReadState ->
+                if(phycologyReadState) {
+                    binding.ivDailyBottle.visibility = View.VISIBLE
+                }
+            }
+        }
+
         binding.ivStore.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_storeFragment)
         }
