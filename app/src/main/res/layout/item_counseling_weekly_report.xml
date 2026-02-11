@@ -16,7 +16,8 @@
         android:textSize="14sp"
         android:fontFamily="@font/arita_medium"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageView
         android:id="@+id/iv_counseling_weekly_report_view_more"

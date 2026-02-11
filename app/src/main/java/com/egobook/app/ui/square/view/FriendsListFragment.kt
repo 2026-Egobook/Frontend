@@ -59,6 +59,7 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
                             is UiState.Success<List<FriendModel>> -> {
                                 val friendList = state.data
                                 adapter.submitList(friendList)
+                                tvFriendsValue.text = "${friendList.size}/${MAX_FRIEND_COUNT}명"
                             }
                         }
                     }
@@ -76,11 +77,16 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
                                 val deleteId = state.data
                                 val updateList = adapter.currentList.filter { it.id != deleteId }
                                 adapter.submitList(updateList.toList())
+                                tvFriendsValue.text = "${updateList.size}/${MAX_FRIEND_COUNT}명"
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    companion object {
+        const val MAX_FRIEND_COUNT = 10
     }
 }

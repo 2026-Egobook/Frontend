@@ -33,7 +33,7 @@
         android:id="@+id/tv_friends_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="3/10명"
+        tools:text="3/10명"
         android:textColor="@color/neutral_subtle"
         android:textSize="14sp"
         android:fontFamily="@font/arita_semibold"
