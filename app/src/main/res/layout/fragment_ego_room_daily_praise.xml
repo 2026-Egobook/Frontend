@@ -24,7 +24,10 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            tools:text="일기를 작성하면 자정에 칭찬서가 도착해요"/>
+            tools:text="일기를 작성하면 자정에 칭찬서가 도착해요"
+            android:textColor="@color/neutral_subtle"
+            android:textSize="12sp"
+            android:fontFamily="@font/arita_medium"/>
         <ImageView
             android:id="@+id/iv_counseling_daily_praise_notification"
             android:layout_width="wrap_content"
@@ -61,11 +64,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="도착한 칭찬서가 없어요" />
+            android:text="도착한 칭찬서가 없어요"
+            android:textColor="@color/neutral"
+            android:textSize="20sp"
+            android:fontFamily="@font/arita_semibold"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="오늘의 일기를 작성하고\n일간 칭찬서를 받아보세요"
+            android:textAlignment="center"
+            android:textColor="@color/neutral"
+            android:textSize="14sp"
+            android:fontFamily="@font/arita_medium"
+            android:lineHeight="21sp"
+            android:letterSpacing="-0.02"
+            android:layout_marginTop="12dp"
             android:gravity="center_horizontal"/>
     </LinearLayout>
 

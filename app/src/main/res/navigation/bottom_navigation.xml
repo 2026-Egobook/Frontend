@@ -65,6 +65,15 @@
         <action
             android:id="@+id/action_menu_square_to_myLettersFragment"
             app:destination="@id/myLettersFragment" />
+        <action
+            android:id="@+id/action_menu_square_to_letterWriteFragment"
+            app:destination="@id/letterWriteFragment" />
+        <action
+            android:id="@+id/action_menu_square_to_letterReplyFragment"
+            app:destination="@id/letterReplyFragment" />
+        <action
+            android:id="@+id/action_menu_square_to_myLetterDetailFragment"
+            app:destination="@id/myLetterDetailFragment" />
     </fragment>
 
     <!-- diaryWriteFragment로의 목적지 정의 -->
@@ -130,9 +139,8 @@
         android:name="com.egobook.app.ui.counseling.view.EgoRoomWeeklyReportDetailFragment"
         android:label="CounselingWeeklyReportDetailFragment"
         tools:layout="@layout/fragment_ego_room_weekly_report_detail">
-        <argument app:argType="com.egobook.app.ui.counseling.model.WeeklyReportModel"
-            android:name="weeklyReportItem"
-            app:nullable="false"/>
+        <argument app:argType="string"
+            android:name="startDate" />
     </fragment>
 
     <fragment
@@ -148,12 +156,17 @@
         android:id="@+id/letterReplyFragment"
         android:name="com.egobook.app.ui.square.view.LetterReplyFragment"
         android:label="fragment_letter_reply"
-        tools:layout="@layout/fragment_letter_reply" />
+        tools:layout="@layout/fragment_letter_reply">
+        <argument
+            android:name="letterItem"
+            app:argType="com.egobook.app.ui.square.model.letter.ArrivedPendingLetterItemModel"
+            app:nullable="false"/>
+    </fragment>
     <fragment
-        android:id="@+id/letterFragment"
-        android:name="com.egobook.app.ui.square.view.LetterFragment"
+        android:id="@+id/letterWriteFragment"
+        android:name="com.egobook.app.ui.square.view.LetterWriteFragment"
         android:label="fragment_letter"
-        tools:layout="@layout/fragment_letter" />
+        tools:layout="@layout/fragment_letter_write" />
     <fragment
         android:id="@+id/squareAllRepliesFragment"
         android:name="com.egobook.app.ui.square.view.SquareAllRepliesFragment"
@@ -186,9 +199,8 @@
         android:label="MyLetterDetailFragment"
         tools:layout="@layout/fragment_my_letter_detail">
         <argument
-            android:name="letterItem"
-            app:argType="com.egobook.app.ui.square.model.friend.LetterModel"
-            app:nullable="false"/>
+            android:name="letterId"
+            app:argType="long" />
     </fragment>
 
     <fragment

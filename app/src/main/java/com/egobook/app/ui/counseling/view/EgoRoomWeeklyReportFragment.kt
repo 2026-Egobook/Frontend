@@ -6,11 +6,13 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egobook.app.R
@@ -18,20 +20,28 @@ import com.egobook.app.databinding.FragmentEgoRoomWeeklyReportBinding
 import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.ui.counseling.adapter.CounselingWeeklyReportAdapter
+import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
 import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
 import com.egobook.app.ui.counseling.viewmodel.WeeklyReportViewModel
 import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 @AndroidEntryPoint
 class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_report) {
     private lateinit var binding: FragmentEgoRoomWeeklyReportBinding
     private val viewModel: WeeklyReportViewModel by viewModels()
     private val counselingWeeklyReportAdapter = CounselingWeeklyReportAdapter { item ->
-        val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(weeklyReportItem = item)
-        findNavController().navigate(action)
+        if(item.isLocked) {
+            val dialog = WeeklyReportUnlockDialog(startDate = item.startDate)
+            dialog.show(childFragmentManager, WeeklyReportUnlockDialog.TAG)
+        } else {
+            val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(startDate = item.startDate)
+            findNavController().navigate(action)
+        }
     }
     private var isNotificationEnabled: Boolean? = null
 
@@ -67,15 +77,9 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
         }
         ivCounselingWeeklyReportNotification.setOnClickListener {
             if (isNotificationEnabled == true) {
-                viewModel.updateNotificationStatus(
-                    type = NotificationType.WEEKLY_REPORT,
-                    isEnabled = false
-                )
+                viewModel.updateWeeklyReportNotification(isEnabled = false)
             } else {
-                viewModel.updateNotificationStatus(
-                    type = NotificationType.WEEKLY_REPORT,
-                    isEnabled = true
-                )
+                viewModel.updateWeeklyReportNotification(isEnabled = true)
             }
         }
     }
@@ -84,45 +88,41 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.weeklyReportList.collect { state ->
-                        when(state) {
-                            UiState.Loading -> {}
-                            is UiState.Success -> {
-                                val weeklyReportList = state.data
-                                counselingWeeklyReportAdapter.submitList(weeklyReportList)
-                                recyclerviewCounselingWeeklyReport.isVisible = !weeklyReportList.isEmpty()
-                                llCounselingWeeklyReportPlaceholder.isVisible = weeklyReportList.isEmpty()
-                            }
-                            is UiState.Failure -> {
-                                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-                            }
-                            else -> {}
-                        }
+                    viewModel.weeklyReportList.collectLatest { pagingData ->
+                        counselingWeeklyReportAdapter.submitData(lifecycle, pagingData)
                     }
                 }
                 launch {
-                    viewModel.notificationStatus.collect { state ->
-                        when(state) {
+                    counselingWeeklyReportAdapter.loadStateFlow.collect { loadStates ->
+                        val isListEmpty = loadStates.source.refresh is LoadState.NotLoading && loadStates.append.endOfPaginationReached && counselingWeeklyReportAdapter.itemCount == 0
+                        recyclerviewCounselingWeeklyReport.isVisible = !isListEmpty
+                        llCounselingWeeklyReportPlaceholder.isVisible = isListEmpty
+                    }
+                }
+                launch {
+                    viewModel.dailyAndWeeklyNotification.collect { state ->
+                        when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<NotificationModel> -> {
+                            is UiState.Success<DailyAndWeeklyNotificationModel> -> {
                                 val notificationStatus = state.data
-                                updateNotificationUi(notificationStatus.isWeeklyReportEnabled)
+                                updateNotificationUi(notificationStatus.isWeeklyAnalysisEnabled)
                             }
                         }
                     }
                 }
                 launch {
-                    viewModel.updateNotificationResult.collect { state ->
-                        when(state) {
+                    viewModel.updateNotificationStatus.collect { state ->
+                        when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Boolean> -> {
                                 val isEnabled = state.data
                                 updateNotificationUi(isEnabled)
-                                val toastMessage = if(isEnabled) R.string.notification_on else R.string.notification_off
+                                val toastMessage =
+                                    if (isEnabled) R.string.notification_on else R.string.notification_off
                                 Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -130,12 +130,12 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
                 }
                 launch {
                     viewModel.weeklyReportStyle.collect { state ->
-                        when(state) {
+                        when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<WeeklyReportStyleModel> -> {
-                                val reportStyle = state.data.type
+                            is UiState.Success<ReportStyle> -> {
+                                val reportStyle = state.data
                                 updateReportStyleUi(reportStyle = reportStyle)
                             }
                         }
@@ -143,7 +143,7 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
                 }
                 launch {
                     viewModel.updateReportStyleResult.collect { state ->
-                        when(state) {
+                        when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
@@ -161,12 +161,24 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
 
     private fun updateNotificationUi(isEnabled: Boolean) = with(binding) {
         this@EgoRoomWeeklyReportFragment.isNotificationEnabled = isEnabled
-        if(isEnabled) {
-            tvCounselingWeeklyReportNotification.text = getString(R.string.counseling_weekly_report_notification_on)
-            ivCounselingWeeklyReportNotification.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_notification_on))
+        if (isEnabled) {
+            tvCounselingWeeklyReportNotification.text =
+                getString(R.string.counseling_weekly_report_notification_on)
+            ivCounselingWeeklyReportNotification.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_notification_on
+                )
+            )
         } else {
-            tvCounselingWeeklyReportNotification.text = getString(R.string.counseling_weekly_report_notification_off)
-            ivCounselingWeeklyReportNotification.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_notification_off))
+            tvCounselingWeeklyReportNotification.text =
+                getString(R.string.counseling_weekly_report_notification_off)
+            ivCounselingWeeklyReportNotification.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_notification_off
+                )
+            )
         }
     }
 
@@ -177,8 +189,8 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
     }
 
     private fun fetchData() {
-        viewModel.fetchWeeklyReport()
-        viewModel.fetchNotificationStatus()
+        viewModel.getDailyAndWeeklyNotification()
+        viewModel.fetchWeeklyReport(size = 10)
         viewModel.fetchWeeklyReportStyle()
     }
 }

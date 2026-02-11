@@ -1,33 +1,22 @@
 package com.egobook.app.ui.counseling.model
 
 import android.os.Parcelable
-import com.egobook.app.domain.model.WeeklyReport
+import com.egobook.app.domain.model.counseling.WeeklyReport
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class WeeklyReportModel(
     val id: Long,
-    val date: String,
-    val content: WeeklyReportContentModel
-): Parcelable
-
-@Parcelize
-data class WeeklyReportContentModel(
-    val analysis: String,
-    val praisePoint: String,
-    val improvement: String,
-    val management: String,
-    val encouragement: String
+    val startDate: String, // 사용 완료
+    val endDate: String, // 사용 완료
+    val isRead: Boolean,
+    val isLocked: Boolean // 사용 완료
 ): Parcelable
 
 fun WeeklyReport.toPresentation(): WeeklyReportModel = WeeklyReportModel(
     id = id,
-    date = date,
-    content = WeeklyReportContentModel(
-        analysis = content.analysis,
-        praisePoint = content.praisePoint,
-        improvement = content.improvement,
-        management = content.management,
-        encouragement = content.encouragement
-    )
+    startDate = startDate,
+    endDate = endDate,
+    isRead = isRead,
+    isLocked = isLocked
 )

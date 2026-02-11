@@ -22,10 +22,7 @@ class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) 
     private lateinit var binding: FragmentSquareAllRepliesBinding
     private val adapter by lazy {
         SquareAllRepliesAdapter {
-            val dialog = SquareReportDialog()
-            dialog.isCancelable = false
-            dialog.show(childFragmentManager, SquareReportDialog.TAG)
-            applyScreenBlur(BlurLevel.BASE)
+
         }
     }
     private val viewModel: QuestionViewModel by activityViewModels()

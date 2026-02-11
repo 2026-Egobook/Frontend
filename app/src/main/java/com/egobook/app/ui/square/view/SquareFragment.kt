@@ -14,15 +14,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.egobook.app.BlurLevel
 import com.egobook.app.R
+import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentSquareBinding
 import com.egobook.app.databinding.LayoutPopupVisibilityTypeBinding
 import com.egobook.app.domain.model.square.question.AnswerVisibility
-import com.egobook.app.domain.model.square.question.TodayAnswer
+import com.egobook.app.ui.square.adapter.MySentLettersAdapter
 import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
+import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.question.SubmitStatus
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
+import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.flow.collectLatest
@@ -31,11 +35,19 @@ import kotlinx.coroutines.launch
 class SquareFragment : Fragment(R.layout.fragment_square) {
     private lateinit var binding: FragmentSquareBinding
     private val questionViewModel: QuestionViewModel by activityViewModels()
+    private val letterViewModel: LetterViewModel by activityViewModels()
 
     private var visibilityType = AnswerVisibility.PUBLIC // 오늘의 질문 답변 제출할 때 필요한 변수
 
-    private val adapter by lazy {
+    private val todayQuestionAdapter by lazy {
         TodayQuestionFriendRepliesAdapter()
+    }
+
+    private val sentLetterAdapter by lazy {
+        MySentLettersAdapter { letterId ->
+            val action = SquareFragmentDirections.actionMenuSquareToMyLetterDetailFragment(letterId = letterId)
+            findNavController().navigate(action)
+        }
     }
 
     private var todayQuestionContent: String? = null
@@ -54,10 +66,13 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private fun fetchData() {
         questionViewModel.getTodayQuestion()
         questionViewModel.getTodayFriendsReplies(size = 3)
+        letterViewModel.getArrivedPendingLetter()
+        letterViewModel.getSentLetters(size = 4)
     }
 
     private fun initViews() = with(binding) {
-        rvSquareTodayQuestionFriendReply.adapter = adapter
+        rvSquareTodayQuestionFriendReply.adapter = todayQuestionAdapter
+        rvSquareSentLetter.adapter = sentLetterAdapter
     }
 
     private fun initListeners() = with(binding) {
@@ -120,12 +135,17 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
             cvSquareTodayQuestionAnswered.isVisible = false
             cvSquareTodayQuestionWriting.isVisible = true
         }
+        cvSquareWriteLetter.setOnClickListener {
+            findNavController().navigate(R.id.action_menu_square_to_letterWriteFragment)
+        }
     }
 
     /**
      * 1. PopupWindow 생성자
      * 두번째, 세번째 인자: 팝업창의 너비와 높이
-     * 네번째 인자: true로 설정하면 팝업이 포커스를 가진다. 팝업이 포커스를 가지게 되면 팝업 바깥 영역을 터치했을 때 팝업이 자동으로 닫힌다.
+     * 네번째 인자: true로 설정하면 팝업이 포커스를 가진다.
+     * 팝업이 포커스를 가지게 되면 팝업 바깥 영역을 터치했을 때 팝업이 자동으로 닫힌다.
+     * 그리고 버튼을 다시 클릭해도 팝업창이 그대로 열린게 유지되는게 아니라 닫힌다.
      * 2. 뷰가 화면에 실제로 그려지기 전에 높이가 얼마인 지 미리 계산하는 함수이다.
      * 뷰의 크기는 화면에 그려진 후에야 알 수 있다. 하지만 팝업을 띄우기 전에 팝업의 높이를 알아야 적절한 위치에 띄울 수 있기 때문에, 먼저 계산해야 한다.
      * UNSPECIFIED 는 부모 뷰의 제약 없이 뷰가 원하는 만큼의 크기를 계산하라는 모드이다.
@@ -231,7 +251,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 launch {
                     questionViewModel.todayFriendsReplies.collectLatest { pagingData ->
                         if(pagingData != null) {
-                            adapter.submitData(lifecycle = lifecycle, pagingData = pagingData)
+                            todayQuestionAdapter.submitData(lifecycle = lifecycle, pagingData = pagingData)
                         }
                     }
                 }
@@ -246,6 +266,30 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                 cvSquareTodayQuestionWriting.isVisible = false
                                 questionViewModel.getTodayQuestion()
                             }
+                        }
+                    }
+                }
+                launch {
+                    letterViewModel.arrivedPendingLetterResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<ArrivedPendingLetterModel> -> {
+                                val arrivedPendingLetter = state.data.letter
+                                if(arrivedPendingLetter != null) {
+                                    val dialog = ArrivedPendingLetterPopupDialog(letterInfo = arrivedPendingLetter).apply { isCancelable = false }
+                                    dialog.show(childFragmentManager, ArrivedPendingLetterPopupDialog.TAG)
+                                    applyScreenBlur(BlurLevel.BASE)
+                                }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    letterViewModel.sentLetters.collectLatest { pagingData ->
+                        if(pagingData != null) {
+                            sentLetterAdapter.submitData(lifecycle, pagingData)
                         }
                     }
                 }

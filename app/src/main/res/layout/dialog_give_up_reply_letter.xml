@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingVertical="24dp"
+    android:paddingHorizontal="16dp"
+    android:background="@drawable/bg_white_and_radius">
+
+    <TextView
+        android:id="@+id/tv_give_up_reply_letter_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="정말 포기하시겠어요?"
+        android:textColor="@color/neutral"
+        android:textSize="16sp"
+        android:fontFamily="@font/arita_semibold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_give_up_reply_letter_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="편지를 포기하면 4시간 후에\n새로운 편지를 받을 수 있어요"
+        android:textColor="@color/neutral"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_medium"
+        android:lineHeight="21sp"
+        android:letterSpacing="-0.01"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/tv_give_up_reply_letter_title"
+        app:layout_constraintStart_toStartOf="@+id/tv_give_up_reply_letter_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_give_up_reply_letter_title" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_give_up_reply_letter_defer"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/grey_light"
+        android:text="나중에 쓰기"
+        android:textColor="@color/neutral"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:cornerRadius="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_give_up_reply_letter_description"
+        app:layout_constraintEnd_toStartOf="@id/btn_give_up_reply_letter"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_give_up_reply_letter"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:backgroundTint="@color/cos_red_dark"
+        android:text="포기하기"
+        android:textColor="@color/layer_white"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_give_up_reply_letter_defer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_give_up_reply_letter_defer"
+        app:layout_constraintTop_toTopOf="@+id/btn_give_up_reply_letter_defer" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

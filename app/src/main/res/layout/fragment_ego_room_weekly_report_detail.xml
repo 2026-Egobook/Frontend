@@ -34,7 +34,10 @@
                 android:id="@+id/tv_counseling_weekly_report_detail_datetime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="2025.12.25" />
+                tools:text="2025.12.25 ~ 2025.12.31"
+                android:textColor="@color/neutral"
+                android:textSize="20sp"
+                android:fontFamily="@font/arita_semibold"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,11 +65,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:strokeWidth="0dp">
                 <TextView
-                    android:id="@+id/tv_counseling_weekly_report_detail_analysis"
+                    android:id="@+id/tv_counseling_weekly_report_detail_summary"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
-분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:lineHeight="21sp"
+                    android:letterSpacing="-0.02"/>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -75,9 +83,11 @@
                 android:layout_marginStart="16dp"
                 android:background="@drawable/bg_counseling_weekly_report_detail_component"
                 android:paddingHorizontal="16dp"
-                android:paddingVertical="4dp"
+                android:paddingVertical="8dp"
                 android:text="이번 주 분석"
-                android:textColor="@color/white"
+                android:textColor="@color/layer_white"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_analysis"
                 app:layout_constraintStart_toStartOf="@id/cv_counseling_weekly_report_detail_analysis" />
 
@@ -121,7 +131,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
-분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:lineHeight="21sp"
+                    android:letterSpacing="-0.02"/>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -130,9 +145,11 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/bg_counseling_weekly_report_detail_component"
                 android:paddingHorizontal="16dp"
-                android:paddingVertical="4dp"
+                android:paddingVertical="8dp"
                 android:text="칭찬 포인트"
-                android:textColor="@color/white"
+                android:textColor="@color/layer_white"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_praise_point"
                 app:layout_constraintEnd_toEndOf="@id/cv_counseling_weekly_report_detail_praise_point" />
 
@@ -175,7 +192,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
-분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:lineHeight="21sp"
+                    android:letterSpacing="-0.02"/>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -184,9 +206,11 @@
                 android:layout_marginStart="16dp"
                 android:background="@drawable/bg_counseling_weekly_report_detail_component"
                 android:paddingHorizontal="16dp"
-                android:paddingVertical="4dp"
+                android:paddingVertical="8dp"
                 android:text="개선할 점"
-                android:textColor="@color/white"
+                android:textColor="@color/layer_white"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_improvement"
                 app:layout_constraintStart_toStartOf="@id/cv_counseling_weekly_report_detail_improvement" />
 
@@ -230,7 +254,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
-분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:lineHeight="21sp"
+                    android:letterSpacing="-0.02"/>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -239,9 +268,11 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/bg_counseling_weekly_report_detail_component"
                 android:paddingHorizontal="16dp"
-                android:paddingVertical="4dp"
+                android:paddingVertical="8dp"
                 android:text="관리 및 조언"
-                android:textColor="@color/white"
+                android:textColor="@color/layer_white"
+                android:textSize="16sp"
+                android:fontFamily="@font/arita_semibold"
                 app:layout_constraintBottom_toTopOf="@id/cv_counseling_weekly_report_detail_management"
                 app:layout_constraintEnd_toEndOf="@id/cv_counseling_weekly_report_detail_management" />
 
@@ -281,6 +312,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="응원 및 격려"
+                android:textColor="@color/brand"
+                android:textSize="20sp"
+                android:fontFamily="@font/arita_semibold"
                 android:layout_marginHorizontal="10dp"
                 app:layout_constraintEnd_toStartOf="@id/iv_counseling_weekly_report_detail_encouragement_right"
                 app:layout_constraintStart_toEndOf="@id/iv_counseling_weekly_report_detail_encouragement_left"
@@ -318,7 +352,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:text="이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주
-분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리" />
+분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리 이번 주 분석에 대한 글이 들어가는 자리"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:lineHeight="21sp"
+                    android:letterSpacing="-0.02"/>
             </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -327,6 +366,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="본 리포트는 사용자의 기록을 기반으로 한 조언이며,\n심리적 문제 발생 시 반드시 전문가의 도움을 받으시길 바랍니다."
+            android:textColor="@color/neutral_subtle"
+            android:textSize="12sp"
+            android:fontFamily="@font/arita_medium"
+            android:lineHeight="21sp"
+            android:letterSpacing="-0.01"
             android:textAlignment="center"
             android:layout_marginTop="52.61dp"
             android:layout_marginBottom="49.47dp"

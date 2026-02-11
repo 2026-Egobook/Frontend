@@ -1,4 +1,4 @@
-import org.gradle.kotlin.dsl.testRuntimeOnly
+ import org.gradle.kotlin.dsl.testRuntimeOnly
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -36,12 +36,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.egobook.app.HiltTestRunner"
 
-        val baseUrl = localProperties.getProperty("BACKEND_BASE_URL")
-        buildConfigField("String", "BACKEND_BASE_URL", "\"$baseUrl\"")
-
         val googleClientId = localProperties.getProperty("GOOGLE_WEB_CLIENT_ID")
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleClientId\"")
 
+        val backendBaseUrl = localProperties.getProperty("BACKEND_BASE_URL")
+        buildConfigField("String", "BACKEND_BASE_URL", "\"$backendBaseUrl\"")
+        val aiBaseUrl = localProperties.getProperty("AI_BASE_URL")
+        buildConfigField("String", "AI_BASE_URL", "\"$aiBaseUrl\"")
     }
 
     buildTypes {

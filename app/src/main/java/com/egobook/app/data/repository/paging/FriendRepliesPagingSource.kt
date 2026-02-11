@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 
 class FriendRepliesPagingSource(private val apiService: QuestionApiService) :
     PagingSource<Int, UserTodayQuestionAnswerItem>() {
-    override fun getRefreshKey(state: PagingState<Int, UserTodayQuestionAnswerItem>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, UserTodayQuestionAnswerItem>): Int {
         return 1
     }
 
@@ -35,7 +35,7 @@ class FriendRepliesPagingSource(private val apiService: QuestionApiService) :
                 )
             }
 
-            val hasNext = page < 5
+            val hasNext = page < 2
             LoadResult.Page(
                 data = mockContent,
                 prevKey = if (page == 1) null else page - 1,

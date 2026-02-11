@@ -20,10 +20,17 @@ class FriendsRepositoryImpl @Inject constructor(private val apiService: FriendsA
 //            Result.failure(Exception("Error: ${response.status}"))
 //        }
         val dummyData = listOf(
-            FriendResponse(id = 1, name = "친구1"),
-            FriendResponse(id = 2, name = "친구2"),
-            FriendResponse(id = 3, name = "친구3")
+            FriendResponse(id = 1, name = "소프트웨어마법사"),
+            FriendResponse(id = 2, name = "야근하는다람쥐"),
+            FriendResponse(id = 3, name = "커피중독자"),
+            FriendResponse(id = 4, name = "안드로이드마스터"),
+            FriendResponse(id = 5, name = "코딩하는고양이"),
+            FriendResponse(id = 6, name = "말랑카우"),
+            FriendResponse(id = 7, name = "개발하는진돗개"),
+            FriendResponse(id = 8, name = "배고픈거북이"),
+            FriendResponse(id = 9, name = "잠자는사자")
         )
+        val emptyDummyData = listOf<FriendResponse>()
         Result.success(dummyData.map { it.toDomain()})
     } catch (e: Exception) {
         Result.failure(e)

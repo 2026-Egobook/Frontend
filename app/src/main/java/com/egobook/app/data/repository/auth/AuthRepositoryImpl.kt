@@ -3,16 +3,16 @@ package com.egobook.app.data.repository.auth
 import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.auth.AccessTokenRequest
-import com.egobook.app.data.model.auth.TokensRequest
 import com.egobook.app.data.model.auth.TokenRequestByGoogle
 import com.egobook.app.data.model.auth.TokenRequestByGuest
+import com.egobook.app.data.model.auth.TokensRequest
 import com.egobook.app.data.model.auth.TokensRequestAgainByGuest
 import com.egobook.app.data.util.safeApiCallWithSuspendTransform
 import com.egobook.app.domain.repository.auth.AuthRepository
-import timber.log.Timber
-import javax.inject.Inject
 import kotlinx.coroutines.flow.first
+import timber.log.Timber
 import java.util.UUID
+import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val apiService: AuthApiService,

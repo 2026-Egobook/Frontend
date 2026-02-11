@@ -6,16 +6,20 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentEgoRoomDailyPraiseBinding
 import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.ui.counseling.adapter.CounselingDailyPraiseAdapter
+import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
+import com.egobook.app.ui.counseling.model.DailyPraiseDetailModel
 import com.egobook.app.ui.counseling.viewmodel.DailyPraiseViewModel
 import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
@@ -27,7 +31,9 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
 
     private lateinit var binding: FragmentEgoRoomDailyPraiseBinding
     private val viewModel: DailyPraiseViewModel by viewModels()
-    private val counselingDailyPraiseAdapter = CounselingDailyPraiseAdapter()
+    private val counselingDailyPraiseAdapter = CounselingDailyPraiseAdapter { diaryDate ->
+        viewModel.fetchDailyPraiseByData(date = diaryDate)
+    }
     private var isNotificationEnabled: Boolean? = null
 
 
@@ -53,10 +59,14 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
 
     private fun initListeners() = with(binding) {
         ivCounselingDailyPraiseNotification.setOnClickListener {
-            if(isNotificationEnabled == true) {
-                viewModel.updateNotificationStatus(type = NotificationType.DAILY_PRAISE, isEnabled = false)
+            if (isNotificationEnabled == true) {
+                viewModel.updateDailyPraiseNotification(
+                    isEnabled = false
+                )
             } else {
-                viewModel.updateNotificationStatus(type = NotificationType.DAILY_PRAISE, isEnabled = true)
+                viewModel.updateDailyPraiseNotification(
+                    isEnabled = true
+                )
             }
         }
     }
@@ -65,46 +75,57 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.dailyPraise.collect { state ->
-                        when(state) {
-                            UiState.Loading -> { /* 프로그래스바 표시 */ }
-                            is UiState.Success -> {
-                                val messageList = state.data
-                                counselingDailyPraiseAdapter.submitList(messageList)
-                                recyclerviewCounselingDailyPraise.isVisible = !messageList.isEmpty()
-                                llCounselingDailyPraisePlaceholder.isVisible = messageList.isEmpty()
-                            }
-                            is UiState.Failure -> {
-                                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-                            }
-                            else -> {}
-                        }
+                    viewModel.dailyPraiseList.collect { pagingData ->
+                        counselingDailyPraiseAdapter.submitData(lifecycle, pagingData)
+                    }
+                }
+                /**
+                 * isListEmpty 변수에 대한 설명 추가하기
+                 */
+                launch {
+                    counselingDailyPraiseAdapter.loadStateFlow.collect { loadStates ->
+                        val isListEmpty = loadStates.source.refresh is LoadState.NotLoading && loadStates.append.endOfPaginationReached && counselingDailyPraiseAdapter.itemCount == 0
+                        recyclerviewCounselingDailyPraise.isVisible = !isListEmpty
+                        llCounselingDailyPraisePlaceholder.isVisible = isListEmpty
                     }
                 }
                 launch {
-                    viewModel.notificationStatus.collect { state ->
-                        when(state) {
+                    viewModel.dailyAndWeeklyNotification.collect { state ->
+                        when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<NotificationModel> -> {
-                                val notificationStatus: NotificationModel = state.data
+                            is UiState.Success<DailyAndWeeklyNotificationModel> -> {
+                                val notificationStatus: DailyAndWeeklyNotificationModel = state.data
                                 updateNotificationUi(notificationStatus.isDailyPraiseEnabled)
                             }
                         }
                     }
                 }
                 launch {
-                    viewModel.updateNotificationResult.collect { state ->
-                        when(state) {
+                    viewModel.updateNotificationStatus.collect { state ->
+                        when (state) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Boolean> -> {
                                 val isEnabled = state.data
                                 updateNotificationUi(isEnabled)
-                                val toastMessage = if(isEnabled) R.string.notification_on else R.string.notification_off
+                                val toastMessage = if (isEnabled) R.string.notification_on else R.string.notification_off
                                 Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.dailyPraiseByDate.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<DailyPraiseDetailModel> -> {
+                                val detailInfo = state.data
+                                counselingDailyPraiseAdapter.updateItem(item = detailInfo)
                             }
                         }
                     }
@@ -115,17 +136,29 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
 
     private fun updateNotificationUi(isEnabled: Boolean) = with(binding) {
         this@EgoRoomDailyPraiseFragment.isNotificationEnabled = isEnabled
-        if(isEnabled) {
-            tvCounselingDailyPraiseNotification.text = getString(R.string.counseling_daily_praise_notification_on)
-            ivCounselingDailyPraiseNotification.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_notification_on))
+        if (isEnabled) {
+            tvCounselingDailyPraiseNotification.text =
+                getString(R.string.counseling_daily_praise_notification_on)
+            ivCounselingDailyPraiseNotification.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_notification_on
+                )
+            )
         } else {
-            tvCounselingDailyPraiseNotification.text = getString(R.string.counseling_daily_praise_notification_off)
-            ivCounselingDailyPraiseNotification.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_notification_off))
+            tvCounselingDailyPraiseNotification.text =
+                getString(R.string.counseling_daily_praise_notification_off)
+            ivCounselingDailyPraiseNotification.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_notification_off
+                )
+            )
         }
     }
 
     private fun fetchData() {
-        viewModel.fetchDailyPraise()
-        viewModel.fetchNotificationStatus()
+        viewModel.fetchDailyPraises(size = 10)
+        viewModel.getDailyAndWeeklyNotification()
     }
 }

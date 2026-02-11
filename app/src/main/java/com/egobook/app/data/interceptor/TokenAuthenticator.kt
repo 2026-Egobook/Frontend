@@ -5,7 +5,7 @@ import android.content.Intent
 import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.auth.AccessTokenRequest
-import com.egobook.app.di.AuthRetrofit
+import com.egobook.app.di.qualifier.AuthRetrofit
 import com.egobook.app.ui.login.view.LoginActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class TokenAuthenticator @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val userInfoStorage: UserInfoStorage,
-    @param:AuthRetrofit private val authApiService: AuthApiService
+    private val authApiService: AuthApiService
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {

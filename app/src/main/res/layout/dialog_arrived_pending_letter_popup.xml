@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:minWidth="260dp"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="24dp"
+    android:background="@drawable/bg_white_and_radius"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tv_arrived_pending_letter_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="낯선 고북이의\n편지가 도착했어요"
+        android:textColor="@color/neutral"
+        android:textSize="16sp"
+        android:fontFamily="@font/arita_semibold"
+        android:lineHeight="21sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_arrived_pending_letter"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@color/brand"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_arrived_pending_letter_title"
+        app:layout_constraintStart_toStartOf="@id/tv_arrived_pending_letter_title"
+        app:layout_constraintEnd_toEndOf="@id/tv_arrived_pending_letter_title"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_letter"
+        app:layout_constraintTop_toTopOf="@id/civ_arrived_pending_letter"
+        app:layout_constraintStart_toStartOf="@id/civ_arrived_pending_letter"
+        app:layout_constraintEnd_toEndOf="@id/civ_arrived_pending_letter"
+        app:layout_constraintBottom_toBottomOf="@id/civ_arrived_pending_letter"/>
+
+    <TextView
+        android:id="@+id/tv_arrived_pending_letter_reply_deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="24시간 남음"
+        android:textColor="@color/neutral"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_medium"
+        android:letterSpacing="-0.01"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/civ_arrived_pending_letter"
+        app:layout_constraintStart_toStartOf="@id/civ_arrived_pending_letter"
+        app:layout_constraintEnd_toEndOf="@id/civ_arrived_pending_letter"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_arrived_pending_letter_reply_later"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="나중에"
+        android:textColor="@color/neutral"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
+        android:backgroundTint="@color/grey_light"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="16dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="4dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_arrived_pending_letter_reply_deadline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_arrived_pending_letter_confirm"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_arrived_pending_letter_confirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="확인하기"
+        android:textColor="@color/layer_white"
+        android:textSize="12sp"
+        android:fontFamily="@font/arita_semibold"
+        android:backgroundTint="@color/neutral"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="4dp"
+        app:layout_constraintTop_toTopOf="@id/btn_arrived_pending_letter_reply_later"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_arrived_pending_letter_reply_later"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

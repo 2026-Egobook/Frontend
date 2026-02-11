@@ -1,31 +1,34 @@
 package com.egobook.app.data.model.counseling
 
-import com.egobook.app.domain.model.WeeklyReport
-import com.egobook.app.domain.model.WeeklyReportContent
+import com.egobook.app.domain.model.counseling.WeeklyReportDetail
+import com.google.gson.annotations.SerializedName
 
 data class WeeklyReportResponse(
-    val id: Long,
-    val date: String,
-    val content: WeeklyReportContentResponse
+    @SerializedName("startDate")
+    val startDate: String,
+    @SerializedName("endDate")
+    val endDate: String,
+    @SerializedName("summary")
+    val summary: String,
+    @SerializedName("praisePoints")
+    val praisePoints: String,
+    @SerializedName("improvementPoints")
+    val improvementPoints: String,
+    @SerializedName("managementAdvice")
+    val managementAdvice: String,
+    @SerializedName("supportMessage")
+    val supportMessage: String,
+    @SerializedName("isRead")
+    val isRead: Boolean
 )
 
-data class WeeklyReportContentResponse(
-    val analysis: String,
-    val praisePoint: String,
-    val improvement: String,
-    val management: String,
-    val encouragement: String
+fun WeeklyReportResponse.toDomain() = WeeklyReportDetail(
+    startDate = startDate,
+    endDate = endDate,
+    summary = summary,
+    praisePoints = praisePoints,
+    improvementPoints = improvementPoints,
+    managementAdvice = managementAdvice,
+    supportMessage = supportMessage,
+    isRead = isRead
 )
-
-fun WeeklyReportResponse.toDomain(): WeeklyReport = WeeklyReport(
-    id = id,
-    date = date,
-    content = WeeklyReportContent(
-        analysis = content.analysis,
-        praisePoint = content.praisePoint,
-        improvement = content.improvement,
-        management = content.management,
-        encouragement = content.encouragement
-    )
-)
-

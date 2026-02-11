@@ -28,11 +28,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="내가 쓴 편지" />
+            android:text="내가 쓴 편지"
+            android:textColor="@color/neutral"
+            android:textSize="20sp"
+            android:fontFamily="@font/arita_semibold"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_my_letters"
+        android:id="@+id/rv_my_sent_letters"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="16dp"
