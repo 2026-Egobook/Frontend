@@ -33,7 +33,10 @@ class AuthRepositoryImpl @Inject constructor(
                 )
                 val loginType = UserInfoStorage.LoginType.GOOGLE
                 userInfoStorage.saveLoginType(loginType)
-                Timber.d("구글 회원가입 성공, loginType=$loginType")
+
+                //유저 이메일 저장
+                userInfoStorage.saveUserEmail(tokenData.email)
+                Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
                 Unit
             }
         )
@@ -109,6 +112,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    //구글 로그인 시 사용
     override suspend fun refreshTokens(idToken: String): Result<Unit> {
         // 액세스 토큰 가져오기 (없으면 null)
         val accessToken = userInfoStorage.getAccessToken().first()
@@ -127,6 +131,12 @@ class AuthRepositoryImpl @Inject constructor(
                     accessToken = tokenData.accessToken,
                     refreshToken = tokenData.refreshToken
                 )
+                //로그인 타입 저장
+                val loginType = UserInfoStorage.LoginType.GOOGLE
+                userInfoStorage.saveLoginType(loginType)
+                //유저 이메일 저장
+                userInfoStorage.saveUserEmail(tokenData.email)
+                Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
                 Unit
             }
         )

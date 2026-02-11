@@ -22,7 +22,6 @@ class UserInfoStorage @Inject constructor(
 ) {
     private val dataStore = context.dataStore
 
-
     /**
      * LoginType 저장
      */
@@ -63,6 +62,24 @@ class UserInfoStorage @Inject constructor(
     fun getUserId(): Flow<String?> {
         return dataStore.data.map { preferences ->
             preferences[USER_ID]
+        }
+    }
+
+    /**
+     * USER EMAIL 저장
+     */
+    suspend fun saveUserEmail(email: String) {
+        dataStore.edit { preferences ->
+            preferences[USER_EMAIL] = email
+        }
+    }
+
+    /**
+     * USER EMAIL 읽기
+     */
+    fun getUserEmail(): Flow<String?> {
+        return dataStore.data.map { preferences ->
+            preferences[USER_EMAIL]
         }
     }
 
@@ -172,6 +189,8 @@ class UserInfoStorage @Inject constructor(
 
         private val LOGIN_TYPE = stringPreferencesKey("login_type")
         private val USER_ID = stringPreferencesKey("user_id")
+
+        private val USER_EMAIL = stringPreferencesKey("email")
         private val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KEY_RECOVER_TOKEN = stringPreferencesKey("recover_token")

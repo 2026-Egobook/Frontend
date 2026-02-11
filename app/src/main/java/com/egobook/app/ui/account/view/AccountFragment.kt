@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import android.util.Base64
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.json.JSONObject
 
 @AndroidEntryPoint
@@ -56,6 +57,7 @@ class AccountFragment : Fragment() {
         setupBlur()
         observeUserIdState()
         observeLinkState()
+        observeLinkToastEvent()
     }
 
     private fun observeUserIdState() {
@@ -117,6 +119,16 @@ class AccountFragment : Fragment() {
         }
     }
 
+    private fun observeLinkToastEvent() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.linkToastEvent.collect { message ->
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     private fun setClickListeners() {
         binding.apply {
             btnBack.setOnClickListener {
@@ -127,9 +139,6 @@ class AccountFragment : Fragment() {
                 binding.blurView.visibility = View.VISIBLE
 
                 val accountBottomSheetFragment = AccountBottomSheetFragment()
-
-                // 현재 연동 상태 전달
-                accountBottomSheetFragment.isLinked = viewModel.linkState.value is UiState.Success
 
                 accountBottomSheetFragment.setOnLinkConfirmListener(object: AccountBottomSheetFragment.OnLinkConfirmListener {
                     override fun onLinkConfirmed() {
@@ -178,7 +187,6 @@ class AccountFragment : Fragment() {
 
                 //뷰모델의 linkToGoogle 메서드 호출
                 viewModel.linkToGoogle(idToken)
-                Toast.makeText(requireContext(), "GOOGLE 계정 연동이 완료되었습니다!", Toast.LENGTH_SHORT).show()
             } catch (e: GetCredentialException) {
                 Timber.e(e, "구글 토큰 파싱 실패")
             }

@@ -5,15 +5,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.egobook.app.databinding.FragmentAccountBottomSheetBinding
+import com.egobook.app.ui.account.viewmodel.AccountViewModel
+import com.egobook.app.util.UiState
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 
 class AccountBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentAccountBottomSheetBinding? = null
     private val binding get() = _binding!!
 
-    var isLinked: Boolean = false  // 연동 여부 상태
+    //부모 프래그먼트의 뷰모델 공유
+    private val viewModel: AccountViewModel by viewModels({ requireParentFragment() })
+
 
     //연동 확인 콜백 인터페이스
     interface OnLinkConfirmListener {
@@ -38,19 +48,39 @@ class AccountBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setClickListener()
+        observeLinkState()
+    }
+
+    private fun observeLinkState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                // 연동 상태 및 이메일 관찰
+                launch {
+                    viewModel.linkState.collect { state ->
+                        val isLinked = state is UiState.Success
+                        if (isLinked) {
+                            binding.tvAccountEmail.apply {
+                                visibility = View.VISIBLE
+                                text = viewModel.userEmail.firstOrNull() ?: ""
+                            }
+                            binding.btnBottomGoogleLogin.apply {
+                                // 이메일이 있으면 표시, 없으면 기본 메시지
+                                text = "Google계정으로 연동되었습니다"
+                                isEnabled = false
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun setClickListener() {
-        binding.btnBottomGoogleLogin.apply {
-            if (isLinked) {
-                text = "Google계정으로 연동되었습니다"
-                isEnabled = false
-            }
-
-            setOnClickListener {
-                if (!isLinked) {
-                    linkConfirmListener?.onLinkConfirmed()
-                }
+        binding.btnBottomGoogleLogin.setOnClickListener {
+            // linkState가 Success가 아닐 때만 클릭 가능
+            if (viewModel.linkState.value !is UiState.Success) {
+                linkConfirmListener?.onLinkConfirmed()
             }
         }
     }

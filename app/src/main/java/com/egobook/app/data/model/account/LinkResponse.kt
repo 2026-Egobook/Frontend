@@ -8,4 +8,7 @@ data class LinkResponse(
 
     @SerialName("refreshToken")
     val refreshToken: String,
+
+    @SerialName("email")
+    val email: String,
 )

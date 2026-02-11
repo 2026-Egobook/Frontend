@@ -13,7 +13,10 @@ data class TokenData(
     val accessToken: String,
     
     @SerialName("refreshToken")
-    val refreshToken: String
+    val refreshToken: String,
+
+    @SerialName("email")
+    val email: String,
 )
 
 /**

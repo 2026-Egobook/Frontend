@@ -8,6 +8,7 @@ import com.egobook.app.data.util.safeApiCallWithSuspendTransform
 import com.egobook.app.domain.repository.account.AccountRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
+import timber.log.Timber
 
 class AccountRepositoryImpl @Inject constructor(
     private val apiService: AccountApiService,
@@ -61,7 +62,13 @@ class AccountRepositoryImpl @Inject constructor(
                 )
                 
                 // 로그인 타입을 GOOGLE로 변경
-                userInfoStorage.saveLoginType(UserInfoStorage.LoginType.GOOGLE)
+                val loginType = UserInfoStorage.LoginType.GOOGLE
+                userInfoStorage.saveLoginType(loginType)
+
+                // 이메일 저장
+                userInfoStorage.saveUserEmail(tokenData.email)
+                Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
+
                 Unit
             }
         )

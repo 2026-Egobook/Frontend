@@ -66,11 +66,6 @@ class LoginViewModel @Inject constructor(
                         onSuccess = {
                             _loginState.value = LoginState.Success
 
-                            //구글 로그인 성공 시에도 로그인 타입 저장
-                            val loginType = UserInfoStorage.LoginType.GOOGLE
-                            userInfoStorage.saveLoginType(loginType)
-
-                            Timber.d("구글 로그인 성공, loginType=$loginType")
                         },
                         onFailure = { error ->
                             _loginState.value =
