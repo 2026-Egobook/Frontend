@@ -3,6 +3,8 @@ package com.egobook.app.ui.shop
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.ui.home.repository.UserRepository
+import com.egobook.app.ui.home.user.Ink
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,9 +24,15 @@ data class CustomItemState(
 )
 @HiltViewModel
 class StoreViewModel @Inject constructor(
-    private val storeRepository: StoreRepository
+    private val storeRepository: StoreRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
+    init {
+        loadInk()
+    }
+    private val _ink = MutableStateFlow(Ink(0))
+    val ink: StateFlow<Ink> = _ink.asStateFlow()
     private val _toastEvent = MutableSharedFlow<String>()
     val toastEvent = _toastEvent.asSharedFlow()
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
@@ -63,6 +71,13 @@ class StoreViewModel @Inject constructor(
             } catch (err: Exception) {
                 Log.e("jang", "$err")
             }
+        }
+    }
+
+    fun loadInk() {
+        viewModelScope.launch {
+            val user = userRepository.load()
+            _ink.update { user.ink }
         }
     }
 
