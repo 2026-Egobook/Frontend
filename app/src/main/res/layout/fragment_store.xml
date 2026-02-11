@@ -6,6 +6,7 @@
     android:background="@color/layer_white">
     
     <ImageView
+        android:id="@+id/iv_store_default_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -14,7 +15,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/default_background"
         app:layout_constraintBottom_toBottomOf="@id/vp2_store_collection_container" />
-    
+
+    <ImageView
+        android:id="@+id/iv_store_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/default_background"
+        app:layout_constraintBottom_toBottomOf="@id/vp2_store_collection_container" />
+
+
     <ImageView
         android:id="@+id/iv_back"
         android:layout_width="24dp"
@@ -43,24 +56,66 @@
             android:src="@drawable/ink_icon" />
 
         <TextView
+            android:id="@+id/tv_ink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="16dp"
-            android:text="9999"
             android:textColor="@color/neutral"
             android:textSize="12dp" />
     </LinearLayout>
-    
+
     <ImageView
+        android:id="@+id/iv_store_turtle"
         android:layout_width="283dp"
         android:layout_height="203dp"
-        android:src="@drawable/default_turtle"
-        app:layout_constraintTop_toBottomOf="@id/ink_layout"
         android:layout_marginTop="67dp"
+        android:src="@drawable/default_turtle"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ink_layout" />
+
+    <ImageView
+        android:id="@+id/iv_store_turtle_back"
+        android:layout_width="265dp"
+        android:layout_height="203dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="17dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_store_turtle"
+        app:layout_constraintEnd_toEndOf="@+id/iv_store_turtle"
+        app:layout_constraintStart_toStartOf="@+id/iv_store_turtle" />
+
+    <ImageView
+        android:id="@+id/iv_store_turtle_skin"
+        android:layout_width="265dp"
+        android:layout_height="203dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="17dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_store_turtle"
+        app:layout_constraintEnd_toEndOf="@+id/iv_store_turtle"
+        app:layout_constraintStart_toStartOf="@+id/iv_store_turtle" />
+
+    <ImageView
+        android:id="@+id/iv_store_turtle_deco1"
+        android:layout_width="265dp"
+        android:layout_height="203dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="17dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_store_turtle"
+        app:layout_constraintEnd_toEndOf="@+id/iv_store_turtle"
+        app:layout_constraintStart_toStartOf="@+id/iv_store_turtle" />
+
+    <ImageView
+        android:id="@+id/iv_store_turtle_deco2"
+        android:layout_width="265dp"
+        android:layout_height="203dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="17dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_store_turtle"
+        app:layout_constraintEnd_toEndOf="@+id/iv_store_turtle"
+        app:layout_constraintStart_toStartOf="@+id/iv_store_turtle" />
+
 
     <ImageView
         android:id="@+id/iv_tab_layout_background"

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.account.AccountFragment">
+    tools:context=".ui.account.view.AccountFragment">
 
     <eightbitlab.com.blurview.BlurTarget
         android:id="@+id/blurTarget"
@@ -15,8 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fillViewport="true"
-            android:background="#F4F7EE"
-            android:paddingBottom="21dp">
+            android:background="#F4F7EE">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/frameLayout"
@@ -76,12 +75,16 @@
                 android:layout_height="34dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
+                app:iconTint="@null"
+                app:iconPadding="4dp"
+                app:iconGravity="textStart"
                 android:text="연동하기"
+                android:gravity="center"
                 android:layout_marginEnd="16dp"/>
 
         </LinearLayout>
 
-        <!--계정id-->
+        <!-- 계정id -->
         <LinearLayout
             android:id="@+id/ly_account_id"
             android:layout_width="0dp"
@@ -415,6 +418,7 @@
                 android:fontFamily="@font/arita_semibold"/>
 
             <TextView
+                android:id="@+id/tv_delete_account"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:padding="10dp"
@@ -433,7 +437,10 @@
                 android:textSize="14sp"
                 android:textColor="@color/neutral"
                 android:fontFamily="@font/arita_semibold"/>
-
+            
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="21dp"/>
 
         </LinearLayout>
 

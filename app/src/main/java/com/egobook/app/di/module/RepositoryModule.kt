@@ -1,14 +1,14 @@
-package com.egobook.app.di.module
+package com.egobook.app.di
 
 import com.egobook.app.data.repository.CounselingRepositoryImpl
-import com.egobook.app.data.repository.DiaryRepositoryImpl
 import com.egobook.app.data.repository.FriendsRepositoryImpl
 import com.egobook.app.data.repository.LetterRepositoryImpl
 import com.egobook.app.data.repository.NotificationRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
 import com.egobook.app.data.repository.auth.AuthRepositoryImpl
 import com.egobook.app.data.repository.QuestionRepositoryImpl
-import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.data.repository.account.AccountRepositoryImpl
+import com.egobook.app.data.repository.diary.DiaryRepositoryImpl
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.LetterRepository
 import com.egobook.app.domain.repository.NotificationRepository
@@ -17,8 +17,11 @@ import com.egobook.app.ui.shop.NetworkStoreRepository
 import com.egobook.app.ui.shop.StoreRepository
 import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
+import com.egobook.app.domain.repository.account.AccountRepository
+import com.egobook.app.domain.repository.diary.DiaryRepository
 import com.egobook.app.ui.home.repository.NetworkTendencyLevelService
 import com.egobook.app.ui.home.repository.NetworkUserRepository
+import com.egobook.app.ui.home.repository.UserActivityRepository
 import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.repository.UserTendencyRepository
 import dagger.Module
@@ -51,6 +54,10 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindAccountRepository(impl: AccountRepositoryImpl): AccountRepository
+
+    @Binds
+    @Singleton
     abstract fun bindDiaryRepository(impl: DiaryRepositoryImpl): DiaryRepository
 
     @Binds
@@ -68,4 +75,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserTendencyRepository(impl: NetworkUserRepository): UserTendencyRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindActivityRecordRepository(impl: NetworkUserRepository): UserActivityRepository
 }

@@ -1,7 +1,8 @@
 package com.egobook.app.di.module
 
-import com.egobook.app.domain.repository.DiaryRepository
+import com.egobook.app.domain.repository.diary.FakeDiaryRepository
 import com.egobook.app.domain.repository.auth.AuthRepository
+import com.egobook.app.domain.repository.diary.DiaryRepository
 import com.egobook.app.domain.usecase.authusecase.AuthUseCases
 import com.egobook.app.domain.usecase.authusecase.GoogleAutoLogin
 import com.egobook.app.domain.usecase.authusecase.GoogleLogin
@@ -11,6 +12,7 @@ import com.egobook.app.domain.usecase.authusecase.GuestReLogin
 import com.egobook.app.domain.usecase.diaryusecase.AddDiary
 import com.egobook.app.domain.usecase.diaryusecase.DeleteDiary
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
+import com.egobook.app.domain.usecase.diaryusecase.GetDailyCount
 import com.egobook.app.domain.usecase.diaryusecase.GetDiaries
 import com.egobook.app.domain.usecase.diaryusecase.GetDiary
 import com.egobook.app.domain.usecase.diaryusecase.UpdateDiary
@@ -34,7 +36,8 @@ object UseCaseModule {
             getDiary = GetDiary(repository),
             addDiary = AddDiary(repository),
             updateDiary = UpdateDiary(repository),
-            deleteDiary = DeleteDiary(repository)
+            deleteDiary = DeleteDiary(repository),
+            getDailyCount = GetDailyCount(repository)
         )
 
     }

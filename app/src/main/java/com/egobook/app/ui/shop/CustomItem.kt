@@ -5,7 +5,8 @@ data class CustomItem(
     val type: ItemType,
     val price: Price,
     val itemStatus: ItemStatus,
-    val image: ItemImage? = null
+    val image: ItemImage? = null,
+    val outfitImage: ItemImage? = null
 )
 
 sealed class ItemImage {

@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.egobook.app.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -22,7 +21,6 @@ class UserInfoStorage @Inject constructor(
     private val context: Context
 ) {
     private val dataStore = context.dataStore
-
 
     /**
      * LoginType 저장
@@ -45,6 +43,43 @@ class UserInfoStorage @Inject constructor(
                     null
                 }
             }
+        }
+    }
+
+    /**
+     * USER ID 저장
+     */
+    suspend fun saveUserId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[USER_ID] = id
+        }
+    }
+
+    /**
+     * USER ID 읽기
+     */
+
+    fun getUserId(): Flow<String?> {
+        return dataStore.data.map { preferences ->
+            preferences[USER_ID]
+        }
+    }
+
+    /**
+     * USER EMAIL 저장
+     */
+    suspend fun saveUserEmail(email: String) {
+        dataStore.edit { preferences ->
+            preferences[USER_EMAIL] = email
+        }
+    }
+
+    /**
+     * USER EMAIL 읽기
+     */
+    fun getUserEmail(): Flow<String?> {
+        return dataStore.data.map { preferences ->
+            preferences[USER_EMAIL]
         }
     }
 
@@ -126,7 +161,6 @@ class UserInfoStorage @Inject constructor(
     suspend fun saveAllTokens(
         accessToken: String,
         refreshToken: String,
-        idToken: String? = null,
         recoverToken: String? = null,
     ) {
         dataStore.edit { preferences ->
@@ -137,7 +171,7 @@ class UserInfoStorage @Inject constructor(
     }
 
     /**
-     * 모든 데이터 삭제 (로그아웃 시 사용)
+     * 모든 데이터 삭제 (로그아웃 및 회원탈퇴 시 사용)
      */
     suspend fun clearAll() {
         dataStore.edit { preferences ->
@@ -145,6 +179,7 @@ class UserInfoStorage @Inject constructor(
         }
     }
 
+    // 로그인 타입 정의
     enum class LoginType {
         GOOGLE, GUEST
     }
@@ -153,11 +188,13 @@ class UserInfoStorage @Inject constructor(
     companion object {
 
         private val LOGIN_TYPE = stringPreferencesKey("login_type")
+        private val USER_ID = stringPreferencesKey("user_id")
+
+        private val USER_EMAIL = stringPreferencesKey("email")
         private val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val KEY_RECOVER_TOKEN = stringPreferencesKey("recover_token")
         private val KEY_DEVICE_UID = stringPreferencesKey("device_uid")
-
 
     }
 }

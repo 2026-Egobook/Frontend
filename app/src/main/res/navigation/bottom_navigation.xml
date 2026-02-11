@@ -205,7 +205,7 @@
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.egobook.app.ui.account.AccountFragment">
+        android:name="com.egobook.app.ui.account.view.AccountFragment">
 
         <action
             android:id="@+id/action_accountFragment_to_homeFragment"

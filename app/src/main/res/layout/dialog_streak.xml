@@ -39,6 +39,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="4dp"/>
 
+    <ImageView
+        android:id="@+id/iv_monday_check"
+        android:layout_width="44dp"
+        android:paddingHorizontal="16dp"
+        android:layout_height="24dp"
+        android:visibility="invisible"
+        android:background="@drawable/bg_streak_dialog_day_of_week_unchecked"
+        android:src="@drawable/ic_streak_unchecked"
+        app:layout_constraintTop_toTopOf="@id/tv_monday"
+        app:layout_constraintBottom_toBottomOf="@id/tv_monday"
+        app:layout_constraintStart_toStartOf="@id/tv_monday"
+        app:layout_constraintEnd_toEndOf="@id/tv_monday"/>
+
 
     <TextView
         android:id="@+id/tv_tuesday"
@@ -55,6 +68,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="4dp"/>
 
+    <ImageView
+        android:id="@+id/iv_tuesday_check"
+        android:layout_width="44dp"
+        android:paddingHorizontal="16dp"
+        android:layout_height="24dp"
+        android:visibility="invisible"
+        android:background="@drawable/bg_streak_dialog_day_of_week_unchecked"
+        android:src="@drawable/ic_streak_unchecked"
+        app:layout_constraintTop_toTopOf="@id/tv_tuesday"
+        app:layout_constraintBottom_toBottomOf="@id/tv_tuesday"
+        app:layout_constraintStart_toStartOf="@id/tv_tuesday"
+        app:layout_constraintEnd_toEndOf="@id/tv_tuesday"/>
+
     <TextView
         android:id="@+id/tv_wednesday"
         android:layout_width="44dp"
@@ -69,6 +95,19 @@
         app:layout_constraintEnd_toStartOf="@id/tv_thursday"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="4dp"/>
+
+    <ImageView
+        android:id="@+id/iv_wednesday_check"
+        android:layout_width="44dp"
+        android:paddingHorizontal="16dp"
+        android:layout_height="24dp"
+        android:visibility="invisible"
+        android:background="@drawable/bg_streak_dialog_day_of_week_unchecked"
+        android:src="@drawable/ic_streak_unchecked"
+        app:layout_constraintTop_toTopOf="@id/tv_wednesday"
+        app:layout_constraintBottom_toBottomOf="@id/tv_wednesday"
+        app:layout_constraintStart_toStartOf="@id/tv_wednesday"
+        app:layout_constraintEnd_toEndOf="@id/tv_wednesday"/>
 
     <TextView
         android:id="@+id/tv_thursday"
@@ -85,6 +124,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"/>
 
+    <ImageView
+        android:id="@+id/iv_thursday_check"
+        android:layout_width="44dp"
+        android:paddingHorizontal="16dp"
+        android:layout_height="24dp"
+        android:visibility="invisible"
+        android:background="@drawable/bg_streak_dialog_day_of_week_unchecked"
+        android:src="@drawable/ic_streak_unchecked"
+        app:layout_constraintTop_toTopOf="@id/tv_thursday"
+        app:layout_constraintBottom_toBottomOf="@id/tv_thursday"
+        app:layout_constraintStart_toStartOf="@id/tv_thursday"
+        app:layout_constraintEnd_toEndOf="@id/tv_thursday"/>
+
     <TextView
         android:id="@+id/tv_friday"
         android:layout_width="44dp"
@@ -99,6 +151,19 @@
         app:layout_constraintEnd_toStartOf="@id/tv_saturday"
         android:layout_marginEnd="4dp" />
 
+    <ImageView
+        android:id="@+id/iv_friday_check"
+        android:layout_width="44dp"
+        android:paddingHorizontal="16dp"
+        android:layout_height="24dp"
+        android:visibility="invisible"
+        android:background="@drawable/bg_streak_dialog_day_of_week_unchecked"
+        android:src="@drawable/ic_streak_unchecked"
+        app:layout_constraintTop_toTopOf="@id/tv_friday"
+        app:layout_constraintBottom_toBottomOf="@id/tv_friday"
+        app:layout_constraintStart_toStartOf="@id/tv_friday"
+        app:layout_constraintEnd_toEndOf="@id/tv_friday"/>
+
     <TextView
         android:id="@+id/tv_saturday"
         android:layout_width="44dp"
@@ -112,6 +177,19 @@
         app:layout_constraintTop_toTopOf="@id/tv_sunday"
         app:layout_constraintEnd_toStartOf="@id/tv_sunday"
         android:layout_marginEnd="4dp" />
+
+    <ImageView
+        android:id="@+id/iv_saturday_check"
+        android:layout_width="44dp"
+        android:paddingHorizontal="16dp"
+        android:layout_height="24dp"
+        android:visibility="invisible"
+        android:background="@drawable/bg_streak_dialog_day_of_week_unchecked"
+        android:src="@drawable/ic_streak_unchecked"
+        app:layout_constraintTop_toTopOf="@id/tv_saturday"
+        app:layout_constraintBottom_toBottomOf="@id/tv_saturday"
+        app:layout_constraintStart_toStartOf="@id/tv_saturday"
+        app:layout_constraintEnd_toEndOf="@id/tv_saturday"/>
 
     <TextView
         android:id="@+id/tv_sunday"
@@ -128,6 +206,19 @@
         android:layout_marginTop="8dp" />
 
     <ImageView
+        android:id="@+id/iv_sunday_check"
+        android:layout_width="44dp"
+        android:paddingHorizontal="16dp"
+        android:layout_height="24dp"
+        android:visibility="invisible"
+        android:background="@drawable/bg_streak_dialog_day_of_week_unchecked"
+        android:src="@drawable/ic_streak_unchecked"
+        app:layout_constraintTop_toTopOf="@id/tv_sunday"
+        app:layout_constraintBottom_toBottomOf="@id/tv_sunday"
+        app:layout_constraintStart_toStartOf="@id/tv_sunday"
+        app:layout_constraintEnd_toEndOf="@id/tv_sunday"/>
+
+    <ImageView
         android:id="@+id/iv_stamp_diary_background"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -141,6 +232,7 @@
         android:id="@+id/iv_stamp_diary"
         android:layout_width="52dp"
         android:layout_height="52dp"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@id/iv_stamp_diary_background"
         app:layout_constraintEnd_toEndOf="@id/iv_stamp_diary_background"
         app:layout_constraintBottom_toBottomOf="@id/iv_stamp_diary_background"

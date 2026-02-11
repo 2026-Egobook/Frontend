@@ -7,6 +7,7 @@ import com.egobook.app.data.model.auth.TokenRequestByGoogle
 import com.egobook.app.data.model.auth.TokenRequestByGuest
 import com.egobook.app.data.model.auth.TokensRequest
 import com.egobook.app.data.model.auth.TokensRequestAgainByGuest
+import com.egobook.app.data.util.safeApiCallWithSuspendTransform
 import com.egobook.app.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
@@ -19,46 +20,41 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun googleSignUp(idToken: String): Result<Unit> {
-        return try {
-            val response = apiService.googleSignUp(
-                TokenRequestByGoogle(idToken = idToken)
-            )
-
-            if (response.isSuccessful && response.body() != null) {
-                val tokenData = response.body()!!.data
-
+        return safeApiCallWithSuspendTransform(
+            apiCall = {
+                apiService.googleSignUp(
+                    TokenRequestByGoogle(idToken = idToken)
+                )
+            },
+            transform = { tokenData ->
                 userInfoStorage.saveAllTokens(
                     accessToken = tokenData.accessToken,
                     refreshToken = tokenData.refreshToken
                 )
                 val loginType = UserInfoStorage.LoginType.GOOGLE
                 userInfoStorage.saveLoginType(loginType)
-                Timber.d("구글 회원가입 성공, loginType=$loginType")
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception("회원가입 요청 실패: ${response.code()}"))
-            }
 
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+                //유저 이메일 저장
+                userInfoStorage.saveUserEmail(tokenData.email)
+                Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
+                Unit
+            }
+        )
     }
 
     override suspend fun guestLogin(): Result<Unit> {
-        return try {
-            // 앱 설치 인스턴스 고유 UUID
-            val deviceUid = UUID.randomUUID().toString()
-            
-            Timber.d("게스트 로그인 시도: deviceUid=$deviceUid")
-            
-            // Guest 로그인 API 요청
-            val response = apiService.guestLogin(
-                TokenRequestByGuest(deviceUid = deviceUid)
-            )
-            
-            if (response.isSuccessful && response.body() != null) {
-                val tokenData = response.body()!!.data
-                
+        // 앱 설치 인스턴스 고유 UUID
+        val deviceUid = UUID.randomUUID().toString()
+        
+        Timber.d("게스트 로그인 시도: deviceUid=$deviceUid")
+        
+        return safeApiCallWithSuspendTransform(
+            apiCall = {
+                apiService.guestLogin(
+                    TokenRequestByGuest(deviceUid = deviceUid)
+                )
+            },
+            transform = { tokenData ->
                 // UUID 저장
                 userInfoStorage.saveDeviceUid(deviceUid)
                 
@@ -73,127 +69,115 @@ class AuthRepositoryImpl @Inject constructor(
                 val loginType = UserInfoStorage.LoginType.GUEST
                 userInfoStorage.saveLoginType(loginType)
                 Timber.d("게스트 로그인 성공, loginType=$loginType")
-                Result.success(Unit)
-            } else {
-                Timber.e("게스트 로그인 실패: ${response.code()}")
-                Result.failure(Exception("게스트 로그인 실패: ${response.code()}"))
+                Unit
             }
-        } catch (e: Exception) {
-            Timber.e(e, "게스트 로그인 중 오류")
-            Result.failure(e)
+        ).also { result ->
+            if (result.isFailure) {
+                Timber.e(result.exceptionOrNull(), "게스트 로그인 중 오류")
+            }
         }
     }
 
     override suspend fun refreshAccessToken(): Result<Unit> {
-        return try {
-            // Access, Refresh Token 읽기
-            val accessToken = userInfoStorage.getAccessToken().first()
-                ?: return Result.failure(Exception("액세스 토큰을 찾을 수 없습니다."))
+        // Access, Refresh Token 읽기
+        val accessToken = userInfoStorage.getAccessToken().first()
+            ?: return Result.failure(Exception("액세스 토큰을 찾을 수 없습니다."))
 
-            val refreshToken = userInfoStorage.getRefreshToken().first()
-                ?: return Result.failure(Exception("리프레시 토큰을 찾을 수 없습니다."))
+        val refreshToken = userInfoStorage.getRefreshToken().first()
+            ?: return Result.failure(Exception("리프레시 토큰을 찾을 수 없습니다."))
 
-            Timber.d("액세스 토큰 재발급 시도 시작")
+        Timber.d("액세스 토큰 재발급 시도 시작")
 
-            // API 요청
-            val response = apiService.getAccessToken(
-                AccessTokenRequest(
-                    accessToken = accessToken,
-                    refreshToken = refreshToken
+        return safeApiCallWithSuspendTransform(
+            apiCall = {
+                apiService.getAccessToken(
+                    AccessTokenRequest(
+                        accessToken = accessToken,
+                        refreshToken = refreshToken
+                    )
                 )
-            )
-
-            Timber.d("응답 코드: ${response.code()}")
-            Timber.d("응답 성공 여부: ${response.isSuccessful}")
-
-            // 응답 성공시
-            if (response.isSuccessful && response.body() != null) {
-                val tokenData = response.body()!!.data
+            },
+            transform = { tokenData ->
                 userInfoStorage.saveAllTokens(
                     accessToken = tokenData.accessToken,
                     refreshToken = tokenData.refreshToken
                 )
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception("액세스 토큰 재발급 실패: ${response.code()}"))
+                Timber.d("액세스 토큰 재발급 성공")
+                Unit
             }
-        } catch (e: Exception) {
-            Timber.e(e, "액세스 토큰 재발급 중 오류")
-            Result.failure(e)
+        ).also { result ->
+            if (result.isFailure) {
+                Timber.e(result.exceptionOrNull(), "액세스 토큰 재발급 중 오류")
+            }
         }
     }
 
+    //구글 로그인 시 사용
     override suspend fun refreshTokens(idToken: String): Result<Unit> {
-        return try {
-            // 액세스 토큰 가져오기 (없으면 null)
-            val accessToken = userInfoStorage.getAccessToken().first()
+        // 액세스 토큰 가져오기 (없으면 null)
+        val accessToken = userInfoStorage.getAccessToken().first()
 
-            val response = apiService.reGetTokens(
-                TokensRequest(
-                    idToken = idToken,
-                    accessToken = accessToken
+        return safeApiCallWithSuspendTransform(
+            apiCall = {
+                apiService.reGetTokens(
+                    TokensRequest(
+                        idToken = idToken,
+                        accessToken = accessToken
+                    )
                 )
-            )
-
-            if (response.isSuccessful && response.body() != null) {
-                val tokenData = response.body()!!.data
-
+            },
+            transform = { tokenData ->
                 userInfoStorage.saveAllTokens(
-                    accessToken =   tokenData.accessToken,
+                    accessToken = tokenData.accessToken,
                     refreshToken = tokenData.refreshToken
                 )
-
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception("토큰 갱신 요청 실패: ${response.code()}"))
+                //로그인 타입 저장
+                val loginType = UserInfoStorage.LoginType.GOOGLE
+                userInfoStorage.saveLoginType(loginType)
+                //유저 이메일 저장
+                userInfoStorage.saveUserEmail(tokenData.email)
+                Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
+                Unit
             }
-
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        )
     }
 
     override suspend fun refreshGuestTokens(): Result<Unit> {
-        return try {
-            // Device UID 및 Access Token, Recover Token 읽기
-            val deviceUid = userInfoStorage.getDeviceUid().first()
-                ?: return Result.failure(Exception("디바이스 UID를 찾을 수 없습니다."))
+        // Device UID 및 Access Token, Recover Token 읽기
+        val deviceUid = userInfoStorage.getDeviceUid().first()
+            ?: return Result.failure(Exception("디바이스 UID를 찾을 수 없습니다."))
 
-            val accessToken = userInfoStorage.getAccessToken().first()
-                ?: return Result.failure(Exception("accessToken을 찾을 수 없습니다."))
+        val accessToken = userInfoStorage.getAccessToken().first()
+            ?: return Result.failure(Exception("accessToken을 찾을 수 없습니다."))
 
-            val recoverToken = userInfoStorage.getRecoverToken().first()
-                ?: return Result.failure(Exception("recoverToken을 찾을 수 없습니다."))
+        val recoverToken = userInfoStorage.getRecoverToken().first()
+            ?: return Result.failure(Exception("recoverToken을 찾을 수 없습니다."))
 
-            Timber.d("게스트 토큰 재발급 시도")
+        Timber.d("게스트 토큰 재발급 시도")
 
-            // API 요청
-            val response = apiService.reGetTokensByGuest(
-                TokensRequestAgainByGuest(
-                    deviceUid = deviceUid,
-                    accessToken = accessToken,
-                    recoverToken = recoverToken
+        return safeApiCallWithSuspendTransform(
+            apiCall = {
+                apiService.reGetTokensByGuest(
+                    TokensRequestAgainByGuest(
+                        deviceUid = deviceUid,
+                        accessToken = accessToken,
+                        recoverToken = recoverToken
+                    )
                 )
-            )
-
-            Timber.d("응답 코드: ${response.code()}")
-            Timber.d("응답 성공 여부: ${response.isSuccessful}")
-
-            // 응답 성공시
-            if (response.isSuccessful && response.body() != null) {
-                val tokenData = response.body()!!.data
+            },
+            transform = { tokenData ->
                 userInfoStorage.saveAllTokens(
                     accessToken = tokenData.accessToken,
                     refreshToken = tokenData.refreshToken,
                     recoverToken = tokenData.recoverToken
                 )
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception("게스트 토큰 재발급 실패: ${response.code()}"))
+                Timber.d("게스트 토큰 재발급 성공")
+                Unit
             }
-        } catch (e: Exception) {
-            Timber.e(e, "게스트 토큰 재발급 중 오류")
-            Result.failure(e)
+        ).also { result ->
+            if (result.isFailure) {
+                Timber.e(result.exceptionOrNull(), "게스트 토큰 재발급 중 오류")
+            }
         }
     }
 

@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:text="2025년 12월 25일"
+            android:text=""
             android:textSize="20sp"
             android:fontFamily="@font/arita_semibold"
             android:gravity="center_vertical"/>
@@ -58,7 +58,9 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/img_emotion_neutral"/>
+            android:visibility="gone"
+            tools:src="@drawable/img_emotion_neutral"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 
@@ -178,7 +180,7 @@
             android:id="@+id/tv_diary_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기 일기일기일기"
+            android:text=""
             android:textColor="@color/cos_black"
             android:textSize="14sp"
             android:fontFamily="@font/arita_medium"
@@ -191,7 +193,7 @@
             android:id="@+id/tv_written_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2025.12.25 17:32"
+            android:text=""
             android:textColor="@color/grey"
             android:textSize="12sp"
             android:fontFamily="@font/arita_semibold"
@@ -229,5 +231,17 @@
         app:layout_constraintStart_toStartOf="@id/gd_left"
         app:layout_constraintEnd_toEndOf="@id/gd_right"
         android:layout_marginBottom="16dp"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:indeterminateTint="@color/cos_black"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

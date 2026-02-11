@@ -3,8 +3,9 @@ package com.egobook.app.ui.diary.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.egobook.app.domain.model.Diary
+import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
+import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,11 +15,11 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryCheckViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases,
-    private val savedStateHandle: SavedStateHandle //다
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _diary = MutableStateFlow<Diary?>(null)
-    val diary = _diary.asStateFlow()
+    private val _diaryState = MutableStateFlow<UiState<Diary>>(UiState.Loading)
+    val diaryState = _diaryState.asStateFlow()
 
     private val _deleteSuccess = MutableStateFlow<Boolean?>(null)
     val deleteSuccess = _deleteSuccess.asStateFlow()
@@ -28,19 +29,21 @@ class DiaryCheckViewModel @Inject constructor(
     init {
         if (diaryId != -1L) {
             getDiary(diaryId)
+        } else {
+            _diaryState.value = UiState.Failure("잘못된 일기 ID입니다.")
         }
     }
 
     private fun getDiary(id: Long) {
         viewModelScope.launch {
+            _diaryState.value = UiState.Loading
+            
             diaryUseCases.getDiary(id)
                 .onSuccess { fetchedDiary ->
-                    // _diary StateFlow의 값을 직접 업데이트.
-                    _diary.value = fetchedDiary
+                    _diaryState.value = UiState.Success(fetchedDiary)
                 }
-                .onFailure {
-                    // 실패 시, 크래시를 방지하고 상태를 null로 유지.
-                    _diary.value = null
+                .onFailure { exception ->
+                    _diaryState.value = UiState.Failure(exception.message)
                 }
         }
     }
