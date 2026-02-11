@@ -39,6 +39,9 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.graphics.Color
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 
 
 @AndroidEntryPoint
@@ -185,7 +188,13 @@ class AccountFragment : Fragment() {
                 accountDeleteDialog1Fragment.show(childFragmentManager, "AccountDeleteDialog1Fragment")
             }
 
+            // ✅ 고객지원 클릭
+            tvSupport.setOnClickListener {
+                copySupportEmailToClipboard()
+            }
+
             setupPromiseText()
+
 
         }
 
@@ -226,6 +235,16 @@ class AccountFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun copySupportEmailToClipboard() {
+        val email = "egobook.official@gmail.com"   // ← 여기 너네 고객지원 이메일로 바꿔
+
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Support Email", email)
+        clipboard.setPrimaryClip(clip)
+
+        Toast.makeText(requireContext(), "고객지원 이메일이 복사되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
     private fun setupPromiseText() {
