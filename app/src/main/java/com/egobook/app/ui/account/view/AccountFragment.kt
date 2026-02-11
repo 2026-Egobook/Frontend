@@ -28,6 +28,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import android.util.Base64
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.egobook.app.BlurLevel
 import com.egobook.app.applyScreenBlur
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -55,6 +57,13 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom)
+            insets
+        }
+
         setClickListeners()
         setupBlur()
         observeUserIdState()
