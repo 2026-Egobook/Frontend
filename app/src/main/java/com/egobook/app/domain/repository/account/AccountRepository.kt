@@ -12,5 +12,14 @@ interface AccountRepository {
      */
     suspend fun linkToGoogle(idToken: String): Result<Unit>
 
+    /**
+     * 로컬에서 게스트타입과 GOOGLE이면 email을 읽어오는 로직
+     */
+    suspend fun getLinkedAccountInfo(): Result<LinkedAccountInfo>
 
 }
+
+data class LinkedAccountInfo(
+    val email: String?,
+    val isGoogleLinked: Boolean  // loginType == GOOGLE
+)

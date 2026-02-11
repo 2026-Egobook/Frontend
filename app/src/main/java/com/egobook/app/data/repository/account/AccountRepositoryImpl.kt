@@ -6,6 +6,7 @@ import com.egobook.app.data.model.account.LinkRequest
 import com.egobook.app.data.util.safeApiCall
 import com.egobook.app.data.util.safeApiCallWithSuspendTransform
 import com.egobook.app.domain.repository.account.AccountRepository
+import com.egobook.app.domain.repository.account.LinkedAccountInfo
 import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import timber.log.Timber
@@ -73,5 +74,19 @@ class AccountRepositoryImpl @Inject constructor(
             }
         )
     }
+
+    override suspend fun getLinkedAccountInfo(): Result<LinkedAccountInfo> {
+        val loginType = userInfoStorage.getLoginType().firstOrNull()
+        val isGoogleLinked = loginType == UserInfoStorage.LoginType.GOOGLE
+        val email = userInfoStorage.getUserEmail().firstOrNull()
+
+        return Result.success(
+            LinkedAccountInfo(
+                email = email,
+                isGoogleLinked = isGoogleLinked
+            )
+        )
+    }
+
 
 }

@@ -1,10 +1,7 @@
 package com.egobook.app.ui.account.viewmodel
 
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.domain.repository.account.AccountRepository
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,14 +9,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val accountRepository: AccountRepository,
-    private val userInfoStorage: UserInfoStorage
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
     private val _userIdState = MutableStateFlow<UiState<String>>(UiState.Idle)
     val userIdState = _userIdState.asStateFlow()
@@ -30,19 +25,24 @@ class AccountViewModel @Inject constructor(
     private val _linkToastEvent = MutableSharedFlow<String>(replay = 1)
     val linkToastEvent = _linkToastEvent.asSharedFlow()
 
-    // UserInfoStorage에서 직접 이메일을 읽어옴
-    val userEmail = userInfoStorage.getUserEmail()
+    private val _userEmail = MutableStateFlow<String?>(null)
+    val userEmail = _userEmail.asStateFlow()
 
     init {
-        //로그인 타입을 확인하여 연동 상태 초기화
-        viewModelScope.launch {
-            val loginType = userInfoStorage.getLoginType().firstOrNull()
-            if (loginType == UserInfoStorage.LoginType.GOOGLE) {
-                _linkState.value = UiState.Success(Unit)
-            }
-        }
-
+        loadLinkedAccountInfo()
         getUserId()
+    }
+
+    private fun loadLinkedAccountInfo() {
+        viewModelScope.launch {
+            accountRepository.getLinkedAccountInfo()
+                .onSuccess { info ->
+                    if (info.isGoogleLinked) {
+                        _userEmail.value = info.email
+                        _linkState.value = UiState.Success(Unit)
+                    }
+                }
+        }
     }
     fun getUserId() {
         viewModelScope.launch {
