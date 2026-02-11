@@ -99,6 +99,7 @@ class StoreViewModel @Inject constructor(
                     val result = storeRepository.permanentEquipItem(item)
                     if (result.isSuccess) {
                         Log.d("StoreViewModel", "서버 착용 성공: ${item.id}")
+                        loadEquippedItems()
                     } else {
                         _toastEvent.emit("아이템(${item.id}) 착용에 실패했습니다.")
                     }
@@ -131,6 +132,8 @@ class StoreViewModel @Inject constructor(
             if (purchaseState.isSuccess) {
                 loadItems(item.type, true)
                 loadInk()
+                val purchasedItem = item.copy(itemStatus = ItemStatus.PURCHASED)
+                equipItem(purchasedItem)
                 _toastEvent.emit("구매가 완료되었어요")
             } else {
                 _toastEvent.emit("잉크가 부족해요")
