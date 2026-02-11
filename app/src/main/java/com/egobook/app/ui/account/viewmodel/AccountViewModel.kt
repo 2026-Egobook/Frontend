@@ -28,6 +28,10 @@ class AccountViewModel @Inject constructor(
     private val _userEmail = MutableStateFlow<String?>(null)
     val userEmail = _userEmail.asStateFlow()
 
+    private val _deleteAccountState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
+    val deleteAccountState = _deleteAccountState.asStateFlow()
+
+
     init {
         loadLinkedAccountInfo()
         getUserId()
@@ -85,7 +89,21 @@ class AccountViewModel @Inject constructor(
                     _linkToastEvent.emit("구글 계정 연동에 실패했습니다.")
                 }
         }
+    }
 
+    fun deleteAccount() {
+        viewModelScope.launch {
+            _deleteAccountState.value = UiState.Loading
+
+            accountRepository.deleteAccount()
+                .onSuccess {
+                    _deleteAccountState.value = UiState.Success(Unit)
+                }
+                .onFailure { e ->
+                    _deleteAccountState.value =
+                        UiState.Failure(e.message ?: "회원 탈퇴에 실패했습니다")
+                }
+        }
     }
 
 }

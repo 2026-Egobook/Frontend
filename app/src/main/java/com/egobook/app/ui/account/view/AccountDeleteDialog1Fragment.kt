@@ -8,10 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.egobook.app.databinding.FragmentAccountDeleteDialog1Binding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.account.viewmodel.AccountViewModel
-import kotlin.getValue
+import com.egobook.app.util.UiState
+import kotlinx.coroutines.launch
 
 class AccountDeleteDialog1Fragment : DialogFragment() {
 
@@ -34,6 +38,7 @@ class AccountDeleteDialog1Fragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setClickListener()
+        observeDeleteAccountState()
     }
 
     private fun setClickListener() {
@@ -42,12 +47,33 @@ class AccountDeleteDialog1Fragment : DialogFragment() {
             dismiss()
         }
         binding.btnRealDelete.setOnClickListener {
-            val accountDeleteDialog2Fragment = AccountDeleteDialog2Fragment()
-            accountDeleteDialog2Fragment.isCancelable = true
-            accountDeleteDialog2Fragment.show(parentFragmentManager, "AccountDeleteDialog2Fragment")
-
-            dismiss()
+            viewModel.deleteAccount()
         }
+    }
+
+    private fun observeDeleteAccountState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deleteAccountState.collect { state ->
+                    when (state) {
+                        is UiState.Success -> {
+                            navigateToDeleteDialog2()
+                        }
+                        is UiState.Failure -> {
+                            // TODO: 실패 처리 (토스트 메시지 등)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun navigateToDeleteDialog2() {
+        val accountDeleteDialog2Fragment = AccountDeleteDialog2Fragment()
+        accountDeleteDialog2Fragment.isCancelable = true
+        accountDeleteDialog2Fragment.show(parentFragmentManager, "AccountDeleteDialog2Fragment")
+        dismiss()
     }
 
     override fun onDestroyView() {
