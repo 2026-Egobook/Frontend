@@ -25,7 +25,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            tools:text="매일 월요일 자정 에고북이 작성한 리포트가 도착해요" />
+            tools:text="매일 월요일 자정 에고북이 작성한 리포트가 도착해요"
+            android:textColor="@color/neutral_subtle"
+            android:textSize="12sp"
+            android:fontFamily="@font/arita_medium"/>
 
         <ImageView
             android:id="@+id/iv_counseling_weekly_report_notification"
@@ -49,6 +52,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="다음주 리포트 스타일"
+            android:textColor="@color/neutral_subtle"
+            android:textSize="12sp"
+            android:fontFamily="@font/arita_medium"
             android:layout_marginEnd="8dp"/>
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_counseling_weekly_report_style_sharp"
@@ -59,13 +65,15 @@
             app:cardBackgroundColor="@color/selector_weekly_report_style_bg"
             app:strokeColor="@color/selector_weekly_report_style_stroke"
             app:strokeWidth="1dp"
-            app:contentPaddingTop="2dp"
-            app:contentPaddingBottom="2dp">
+            app:contentPaddingTop="6dp"
+            app:contentPaddingBottom="6dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="날카로움"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 android:textColor="@color/selector_weekly_report_style_text"/>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView
@@ -77,13 +85,15 @@
             app:cardBackgroundColor="@color/selector_weekly_report_style_bg"
             app:strokeColor="@color/selector_weekly_report_style_stroke"
             app:strokeWidth="1dp"
-            app:contentPaddingTop="2dp"
-            app:contentPaddingBottom="2dp">
+            app:contentPaddingTop="6dp"
+            app:contentPaddingBottom="6dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="부드러움"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 android:textColor="@color/selector_weekly_report_style_text"/>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView
@@ -94,13 +104,15 @@
             app:cardBackgroundColor="@color/selector_weekly_report_style_bg"
             app:strokeColor="@color/selector_weekly_report_style_stroke"
             app:strokeWidth="1dp"
-            app:contentPaddingTop="2dp"
-            app:contentPaddingBottom="2dp">
+            app:contentPaddingTop="6dp"
+            app:contentPaddingBottom="6dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="객관적"
+                android:textSize="12sp"
+                android:fontFamily="@font/arita_semibold"
                 android:textColor="@color/selector_weekly_report_style_text"/>
         </com.google.android.material.card.MaterialCardView>
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -135,13 +147,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="도착한 리포트가 없어요" />
+            android:text="도착한 리포트가 없어요"
+            android:textColor="@color/neutral"
+            android:textSize="20sp"
+            android:fontFamily="@font/arita_semibold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="알림을 설정하면 매주 월요일 리포트를\n받아볼 수 있어요"/>
+            android:text="알림을 설정하면 매주 월요일 리포트를\n받아볼 수 있어요"
+            android:textColor="@color/neutral"
+            android:textSize="14sp"
+            android:fontFamily="@font/arita_medium"
+            android:lineHeight="21sp"
+            android:letterSpacing="-0.02"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

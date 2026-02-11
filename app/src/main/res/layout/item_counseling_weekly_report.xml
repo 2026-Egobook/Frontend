@@ -12,6 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="2025.12.12"
+        android:textColor="@color/neutral"
+        android:textSize="14sp"
+        android:fontFamily="@font/arita_medium"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
