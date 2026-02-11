@@ -113,6 +113,7 @@ class StoreViewModel @Inject constructor(
             val purchaseState = storeRepository.purchaseItems(item)
             if (purchaseState.isSuccess) {
                 loadItems(item.type, true)
+                loadInk()
                 _toastEvent.emit("구매가 완료되었어요")
             } else {
                 _toastEvent.emit("잉크가 부족해요")
