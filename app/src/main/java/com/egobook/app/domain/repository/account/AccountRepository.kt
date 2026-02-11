@@ -17,6 +17,11 @@ interface AccountRepository {
      */
     suspend fun getLinkedAccountInfo(): Result<LinkedAccountInfo>
 
+    /**
+     * 계정 탈퇴
+     */
+    suspend fun deleteAccount(): Result<Unit>
+
 }
 
 data class LinkedAccountInfo(

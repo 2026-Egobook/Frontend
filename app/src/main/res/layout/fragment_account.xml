@@ -419,6 +419,7 @@
                 android:fontFamily="@font/arita_semibold"/>
 
             <TextView
+                android:id="@+id/tv_delete_account"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:padding="10dp"

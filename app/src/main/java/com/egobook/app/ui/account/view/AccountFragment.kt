@@ -28,6 +28,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import android.util.Base64
+import com.egobook.app.BlurLevel
+import com.egobook.app.applyScreenBlur
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.json.JSONObject
 
@@ -158,6 +160,14 @@ class AccountFragment : Fragment() {
                     }
                 })
                 accountBottomSheetFragment.show(childFragmentManager, AccountBottomSheetFragment.TAG)
+            }
+
+            tvDeleteAccount.setOnClickListener {
+                applyScreenBlur(BlurLevel.BASE)
+
+                val accountDeleteDialog1Fragment = AccountDeleteDialog1Fragment()
+                accountDeleteDialog1Fragment.isCancelable = false
+                accountDeleteDialog1Fragment.show(childFragmentManager, "AccountDeleteDialog1Fragment")
             }
         }
 

@@ -88,5 +88,29 @@ class AccountRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun deleteAccount(): Result<Unit> {
+        return try {
+            val result = safeApiCall(
+                apiCall = { apiService.deleteAccount() },
+                transform = { Unit }
+            )
+
+            result.onSuccess {
+                try {
+                    //datastore의 모든 데이터 삭제
+                    userInfoStorage.clearAll()
+                    Timber.d("회원 탈퇴 성공: UserInfoStorage 초기화 완료")
+                } catch (e: Exception) {
+                    Timber.e(e, "회원 탈퇴 후 UserInfoStorage 초기화 실패")
+                }
+            }
+
+            result
+        } catch (e: Exception) {
+            Timber.e(e, "회원 탈퇴 처리 중 예외 발생")
+            Result.failure(e)
+        }
+    }
+
 
 }
