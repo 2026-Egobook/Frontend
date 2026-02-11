@@ -60,13 +60,17 @@ class TokenAuthenticator @Inject constructor(
                     )
                 )
                 
-                Timber.d("토큰 갱신 API 응답: 코드=${tokenResponse.code()}, 성공=${tokenResponse.isSuccessful}")
+                Timber.d("토큰 갱신 API 응답: 코드=${tokenResponse.code}, 메시지=${tokenResponse.message}")
 
-                if (tokenResponse.isSuccessful && tokenResponse.body() != null) {
-                    val newAccessToken = tokenResponse.body()!!.data.accessToken
+                if (tokenResponse.code == "SUCCESS") {
+                    val newAccessToken = tokenResponse.data.accessToken
+                    val newRefreshToken = tokenResponse.data.refreshToken
                     
-                    // 새 액세스 토큰을 DataStore에 저장
-                    userInfoStorage.saveAccessToken(newAccessToken)
+                    // 새 토큰들을 DataStore에 저장
+                    userInfoStorage.saveAllTokens(
+                        accessToken = newAccessToken,
+                        refreshToken = newRefreshToken
+                    )
                     
                     Timber.d("액세스 토큰 갱신 성공")
                     
@@ -78,7 +82,7 @@ class TokenAuthenticator @Inject constructor(
 
                 } else {
                     // 리프레시 토큰 갱신 실패 -> 리프레시 토큰 만료로 판단
-                    Timber.e("리프레시 토큰 갱신 실패: ${tokenResponse.code()}, 로그아웃 처리")
+                    Timber.e("리프레시 토큰 갱신 실패: ${tokenResponse.code}, 로그아웃 처리")
                     handleLogout()
                     null
                 }
@@ -91,17 +95,20 @@ class TokenAuthenticator @Inject constructor(
     }
 
     /**
-     * 로그아웃 처리: 로그인 화면으로 이동
+     * 로그아웃 처리: 토큰 클리어 후 로그인 화면으로 이동
      */
     private fun handleLogout() {
         Timber.d("로그아웃 처리 시작")
-        
-        // 로그인 화면으로 이동
+
+        runBlocking {
+            userInfoStorage.clearAll()   // 토큰, id, 이메일 등등 싹다 삭제
+        }
+
         val intent = Intent(context, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         context.startActivity(intent)
-        
+
         Timber.d("로그인 화면으로 이동")
     }
 

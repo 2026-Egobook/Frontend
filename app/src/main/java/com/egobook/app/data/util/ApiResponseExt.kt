@@ -57,6 +57,26 @@ suspend inline fun <T, R> safeApiCall(
 }
 
 /**
+ * API 호출을 안전하게 실행하고 변환하는 헬퍼 함수 (suspend transform 지원)
+ * transform 내부에서 suspend 함수를 호출할 수 있도록 지원
+ */
+suspend inline fun <T, R> safeApiCallWithSuspendTransform(
+    crossinline apiCall: suspend () -> ApiResponse<T>,
+    crossinline transform: suspend (T) -> R
+): Result<R> {
+    return try {
+        val response = apiCall()
+        if (response.code == "SUCCESS") {
+            Result.success(transform(response.data))
+        } else {
+            Result.failure(Exception(response.message))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+}
+
+/**
  * 의미있는 데이터를 반환하지 않는 API 응답을 처리하는 전용 확장 함수
  */
 

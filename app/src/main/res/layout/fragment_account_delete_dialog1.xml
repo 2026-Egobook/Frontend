@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.account.view.AccountDeleteDialog1Fragment"
+    android:background="@color/transparent"
+    android:gravity="center">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        android:gravity="center"
+        android:minWidth="233dp"
+        android:minHeight="188dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:orientation="vertical" >
+        <TextView
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="정말 에고북을\n탈퇴하시겠어요?"
+            android:textSize="16dp"
+            android:textColor="@color/neutral"
+            android:fontFamily="@font/arita_semibold"
+            android:lineHeight="24dp"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arita_medium"
+            android:textColor="@color/neutral"
+            android:textSize="12dp"
+            android:lineHeight="18sp"
+            android:text="탈퇴 후 7일 안에 다시 로그인하면 계정을\n복구할 수 있습니다."
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arita_medium"
+            android:textColor="@color/cos_red"
+            android:textSize="12dp"
+            android:lineHeight="18sp"
+            android:text="7일 이후 계정과 모든 기록이 삭제됩니다.\n삭제된 계정은 복구할 수 없습니다."
+            android:gravity="center"/>
+
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_back"
+                style="@style/DeleteButtonStyle"
+                android:layout_width="94.5dp"
+                android:layout_height="42dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:layout_marginEnd="12dp"
+                android:text="돌아가기" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_real_delete"
+                style="@style/RedButtonStyle"
+                android:layout_width="94.5dp"
+                android:layout_height="42dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textSize="12dp"
+                android:text="탈퇴하기" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.account.view.AccountDeleteDialog2Fragment"
+    android:background="@color/transparent"
+    android:gravity="center">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        android:gravity="center"
+        android:minWidth="233dp"
+        android:minHeight="188dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:orientation="vertical" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="그동안 이용해 주셔서\n감사합니다"
+            android:textSize="16dp"
+            android:textColor="@color/neutral"
+            android:fontFamily="@font/arita_semibold"
+            android:lineHeight="24dp"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arita_medium"
+            android:textColor="@color/neutral"
+            android:textSize="12dp"
+            android:lineHeight="18sp"
+            android:text="다시 만날 날을 고대하겠습니다\n항상 행복하세요!"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>

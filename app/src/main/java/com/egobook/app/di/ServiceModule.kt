@@ -1,5 +1,6 @@
 package com.egobook.app.di
 
+import com.egobook.app.data.api.AccountApiService
 import com.egobook.app.data.api.AuthApiService
 import com.egobook.app.data.api.CounselingApiService
 import com.egobook.app.data.api.DiaryApiService
@@ -44,6 +45,12 @@ object ServiceModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthApiService =
         retrofit.create(AuthApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideAccountService(retrofit: Retrofit): AccountApiService =
+        retrofit.create(AccountApiService::class.java)
+
 
     @Provides
     @Singleton

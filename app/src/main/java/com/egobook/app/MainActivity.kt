@@ -33,9 +33,10 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         // 목적지 변경 리스너 추가: 특정 프래그먼트에서 바텀바 숨기기
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.diaryWriteFragment,        // 일기 작성 화면
+                R.id.diaryWriteFragment, // 일기 작성 화면
                 R.id.calenderFragment, // 달력 화면
                 R.id.storeFragment,
+                R.id.accountFragment //계정 화면
                     -> {
                     binding.bottomNavigation.visibility = View.GONE
                 }
