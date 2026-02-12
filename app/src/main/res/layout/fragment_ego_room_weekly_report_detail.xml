@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_counseling_weekly_report_detail"
+        android:background="@color/cardview_background"
         tools:context=".ui.counseling.view.EgoRoomWeeklyReportDetailFragment">
 
         <androidx.appcompat.widget.LinearLayoutCompat
