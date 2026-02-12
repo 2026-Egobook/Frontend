@@ -4,7 +4,9 @@ import com.egobook.app.di.qualifier.BackendApi
 import com.egobook.app.ui.home.user.Tendency
 import com.egobook.app.ui.home.user.User
 import retrofit2.Retrofit
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,6 +16,8 @@ interface UserRepository {
 
 interface UserAdRepository {
     suspend fun loadAdInfo(): AdInfoDto
+
+    suspend fun watchAd(): String
 }
 
 interface UserTendencyRepository {
@@ -30,9 +34,26 @@ interface NetworkTendencyLevelService {
     suspend fun loadTendencyLevels(): BaseResponse<TendencyLevels>
 }
 
+data class AdRequestDto(
+    val rewardType: String,
+    val targetId: Int?,
+    val adUnitId: String = "ca-app-pub-test/12345"
+)
+
+data class AdResponseDto(
+    val code: String,
+    val message: String,
+    val status: Int
+)
+
 interface NetworkAdService {
     @GET("/ads/info")
     suspend fun loadAdInfo(): BaseResponse<AdInfoDto>
+
+    @POST("/ads/testReward")
+    suspend fun watchAd(
+        @Body adRequest: AdRequestDto
+    ): AdResponseDto
 }
 
 data class AdInfoDto(
@@ -74,5 +95,14 @@ class NetworkUserRepository @Inject constructor(
     override suspend fun loadAdInfo(): AdInfoDto {
         val adInfoResponse: BaseResponse<AdInfoDto> = networkAdService.loadAdInfo()
         return adInfoResponse.data
+    }
+
+    override suspend fun watchAd(): String {
+        val watchingAdResponse = networkAdService.watchAd(
+            AdRequestDto(
+                "INK", null
+            )
+        )
+        return watchingAdResponse.message
     }
 }

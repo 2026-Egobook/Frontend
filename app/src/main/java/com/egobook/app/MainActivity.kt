@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         })
     }
 
-    fun showAd(userId: String) {
+    fun showAd(userId: String, onAdClosed: () -> Unit) {
         if (rewardedAd != null) {
 
             val ssvOptions = ServerSideVerificationOptions.Builder()
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
                 val rewardType = rewardItem.type
                 Log.d("jang", "보상 지급! (서버로 콜백 날아감), $rewardType, rewardAmout: $rewardAmount")
             }
-
+            onAdClosed()
             rewardedAd = null
             loadAd()
         } else {

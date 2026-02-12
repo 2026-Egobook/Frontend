@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.egobook.app.MainActivity
 import com.egobook.app.databinding.DialogAdBinding
 import com.egobook.app.removeScreenBlur
@@ -19,7 +23,7 @@ class AdDialog() : DialogFragment() {
 
     private var _binding: DialogAdBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
-
+    private val viewModel: HomeViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +38,6 @@ class AdDialog() : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val userId = arguments?.getString(ARG_USER_ID) ?: "사용자가 없습니다"
 
-        val viewModel: HomeViewModel by activityViewModels()
         viewModel.loadCurrentAdInfo()
 
 
@@ -56,7 +59,9 @@ class AdDialog() : DialogFragment() {
         }
 
         binding.btnWatch.setOnClickListener {
-            (activity as MainActivity).showAd(userId)
+            (activity as MainActivity).showAd(userId) {
+                viewModel.watchAd()
+            }
             removeScreenBlur()
             dismiss()
         }
