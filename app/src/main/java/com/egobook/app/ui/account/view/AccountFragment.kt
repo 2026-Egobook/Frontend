@@ -184,7 +184,7 @@ class AccountFragment : Fragment() {
                 applyScreenBlur(BlurLevel.BASE)
 
                 val accountDeleteDialog1Fragment = AccountDeleteDialog1Fragment()
-                accountDeleteDialog1Fragment.isCancelable = false
+                accountDeleteDialog1Fragment.isCancelable = true
                 accountDeleteDialog1Fragment.show(childFragmentManager, "AccountDeleteDialog1Fragment")
             }
 
