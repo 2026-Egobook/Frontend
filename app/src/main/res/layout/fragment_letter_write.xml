@@ -171,6 +171,7 @@
                 app:layout_constraintTop_toTopOf="@id/iv_letter_tooltip" />
 
             <ImageView
+                android:visibility="invisible"
                 android:id="@+id/iv_letter_tooltip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
