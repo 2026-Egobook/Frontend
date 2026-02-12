@@ -21,6 +21,7 @@
             android:id="@+id/iv_level_type"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginTop="5dp"
             android:layout_marginStart="22dp"
             android:background="@drawable/layer_white_circle"
             android:src="@drawable/level_type_1"
