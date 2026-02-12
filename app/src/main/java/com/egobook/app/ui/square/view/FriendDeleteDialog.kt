@@ -5,9 +5,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.graphics.drawable.toDrawable
-import com.egobook.app.R
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import com.egobook.app.R
 import com.egobook.app.databinding.DialogDeleteFriendBinding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.friend.FriendModel

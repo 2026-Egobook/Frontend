@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemFriendPopupListBinding
+import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.model.friend.FriendModel
 
 class FriendPopupListAdapter(private val onClicked: (FriendModel) -> Unit): ListAdapter<FriendModel, FriendPopupListAdapter.FriendPopupListViewHolder>(diffUtil) {

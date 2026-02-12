@@ -16,7 +16,7 @@ import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReportRepliedLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
-import com.egobook.app.ui.square.model.friend.FriendModel
+import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
@@ -52,14 +52,14 @@ class LetterViewModel @Inject constructor(
     private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase
 ): ViewModel() {
 
-    private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
+    private val _friendList = MutableStateFlow<UiState<FriendListModel>>(UiState.Idle)
     val friendList = _friendList.asStateFlow()
 
     fun getFriendList() {
         viewModelScope.launch {
             _friendList.value = UiState.Loading
             getFriendListUseCase().onSuccess { domainList ->
-                _friendList.value = UiState.Success(domainList.map { it.toPresentation() })
+                _friendList.value = UiState.Success(domainList.toPresentation())
             }.onFailure { error ->
                 _friendList.value = UiState.Failure(error.message)
             }

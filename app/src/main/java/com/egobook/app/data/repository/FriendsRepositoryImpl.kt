@@ -3,17 +3,17 @@ package com.egobook.app.data.repository
 import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.model.square.friend.FriendshipRequest
 import com.egobook.app.data.model.square.friend.toDomain
-import com.egobook.app.domain.model.Friend
+import com.egobook.app.domain.model.FriendList
 import com.egobook.app.domain.model.FriendRequest
 import com.egobook.app.domain.model.SearchUser
 import com.egobook.app.domain.repository.FriendsRepository
 import javax.inject.Inject
 
 class FriendsRepositoryImpl @Inject constructor(private val apiService: FriendsApiService): FriendsRepository {
-    override suspend fun fetchFriendList(): Result<List<Friend>> = try {
+    override suspend fun fetchFriendList(): Result<FriendList> = try {
         val response = apiService.fetchFriendList()
         if(response.status == 200) {
-            Result.success(response.data.map { it.toDomain() })
+            Result.success(response.data.toDomain())
         } else {
             Result.failure(Exception("Error: ${response.status}"))
         }

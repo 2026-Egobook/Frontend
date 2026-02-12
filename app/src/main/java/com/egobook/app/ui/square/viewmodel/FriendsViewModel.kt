@@ -11,7 +11,7 @@ import com.egobook.app.domain.usecase.GetOutgoingFriendRequestsUseCase
 import com.egobook.app.domain.usecase.RejectFriendRequestUseCase
 import com.egobook.app.domain.usecase.RequestFriendshipUseCase
 import com.egobook.app.domain.usecase.SearchUserUseCase
-import com.egobook.app.ui.square.model.friend.FriendModel
+import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.model.friend.FriendRequestModel
 import com.egobook.app.ui.square.model.friend.SearchUserModel
 import com.egobook.app.ui.square.model.friend.toPresentation
@@ -37,13 +37,13 @@ class FriendsViewModel @Inject constructor(
     private val cancelFriendRequestUseCase: CancelFriendRequestUseCase
 ): ViewModel() {
 
-    private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
+    private val _friendList = MutableStateFlow<UiState<FriendListModel>>(UiState.Idle)
     val friendList = _friendList.asStateFlow()
 
     fun fetchFriendList() {
         viewModelScope.launch {
             getFriendListUseCase().onSuccess { domainList ->
-                _friendList.value = UiState.Success(domainList.map { it.toPresentation() })
+                _friendList.value = UiState.Success(domainList.toPresentation())
             }.onFailure { error ->
                 _friendList.value = UiState.Failure(error.message)
             }
