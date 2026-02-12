@@ -44,6 +44,7 @@ class HomeFragment(): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: HomeViewModel by activityViewModels()
+        viewModel.fetchUser()
         lifecycleScope.launch {
             viewModel.uiState.collect { userState ->
                 binding.tvLevel.text = "Lv ${userState.level.number}"
