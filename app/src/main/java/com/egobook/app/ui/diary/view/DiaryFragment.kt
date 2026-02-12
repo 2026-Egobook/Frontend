@@ -1,32 +1,30 @@
     package com.egobook.app.ui.diary.view
 
     import android.os.Bundle
-    import android.view.Gravity
-    import android.view.LayoutInflater
-    import android.view.View
-    import android.view.ViewGroup
-    import android.widget.Toast
-    import android.graphics.Color
-    import androidx.fragment.app.Fragment
-    import androidx.fragment.app.activityViewModels
-    import androidx.lifecycle.Lifecycle
-    import androidx.lifecycle.lifecycleScope
-    import androidx.lifecycle.repeatOnLifecycle
-    import androidx.navigation.fragment.findNavController
-    import androidx.viewpager2.widget.ViewPager2
-    import com.egobook.app.BlurLevel
-    import com.egobook.app.R
-    import com.egobook.app.applyScreenBlur
-    import com.egobook.app.databinding.FragmentDiaryBinding
-    import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
-    import com.egobook.app.ui.diary.viewmodel.DiariesEvent
-    import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
-    import com.google.android.material.snackbar.Snackbar
-    import com.google.android.material.tabs.TabLayout
-    import com.google.android.material.tabs.TabLayoutMediator
-    import kotlinx.coroutines.flow.collectLatest
-    import kotlinx.coroutines.launch
-    import kotlin.getValue
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.graphics.Color
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
+import com.egobook.app.BlurLevel
+import com.egobook.app.R
+import com.egobook.app.applyScreenBlur
+import com.egobook.app.databinding.FragmentDiaryBinding
+import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
+import com.egobook.app.ui.diary.viewmodel.DiariesEvent
+import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlin.getValue
     class DiaryFragment : Fragment() {
         private var _binding: FragmentDiaryBinding? = null
         private val binding get() = _binding!!
@@ -54,14 +52,45 @@
             // 초기에는 GoToTop 버튼 숨김
             binding.btnGoToTop.visibility = View.GONE
             
+            // 캘린더에서 선택한 날짜가 있으면 적용 (없으면 마지막 선택 날짜 유지)
+            applySelectedDateFromArgs()
+            
             initViewPager()
             setupClickListener()
             observeViewModel()
         }
         
+        /**
+         * 캘린더에서 선택한 날짜 적용 (있는 경우에만)
+         * 다른 화면에서는 마지막 선택된 날짜 유지
+         */
+        private fun applySelectedDateFromArgs() {
+            val args = arguments
+            
+            val year = args?.getInt("selectedYear", -1) ?: -1
+            val month = args?.getInt("selectedMonth", -1) ?: -1
+            val day = args?.getInt("selectedDay", -1) ?: -1
+            
+            // 캘린더에서 유효한 날짜가 전달된 경우에만 적용
+            if (year != -1 && month != -1 && day != -1) {
+                viewModel.onEvent(
+                    DiariesEvent.ChangeDate(
+                        year = year,
+                        month = month,
+                        day = day
+                    )
+                )
+                // "전체" 탭으로 이동
+                binding.vpDiary.setCurrentItem(0, false)
+            }
+            
+            // 인자 사용 후 초기화 (다음 진입 시 재적용 방지)
+            arguments = null
+        }
+        
         override fun onResume() {
             super.onResume()
-            //다른 프래그먼트에서 돌아왔을 때 데이터 새로고침
+            // 다른 화면에서 돌아왔을 때 데이터 새로고침만 수행 (날짜는 유지)
             viewModel.onEvent(DiariesEvent.RefreshDiaries)
         }
 

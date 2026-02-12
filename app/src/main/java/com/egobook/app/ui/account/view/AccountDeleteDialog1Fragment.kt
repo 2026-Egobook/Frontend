@@ -1,5 +1,6 @@
 package com.egobook.app.ui.account.view
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -74,6 +75,11 @@ class AccountDeleteDialog1Fragment : DialogFragment() {
         accountDeleteDialog2Fragment.isCancelable = true
         accountDeleteDialog2Fragment.show(parentFragmentManager, "AccountDeleteDialog2Fragment")
         dismiss()
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        removeScreenBlur()
     }
 
     override fun onDestroyView() {
