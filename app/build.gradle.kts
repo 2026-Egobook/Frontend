@@ -43,6 +43,9 @@ android {
         buildConfigField("String", "BACKEND_BASE_URL", "\"$backendBaseUrl\"")
         val aiBaseUrl = localProperties.getProperty("AI_BASE_URL")
         buildConfigField("String", "AI_BASE_URL", "\"$aiBaseUrl\"")
+
+        val admobAppId = localProperties.getProperty("ADMOB_APP_ID") ?: "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
+        manifestPlaceholders["ADMOB_APP_ID"] = admobAppId
     }
 
     buildTypes {
@@ -162,6 +165,8 @@ dependencies {
 
     //Timber
     implementation("com.jakewharton.timber:timber:5.0.1")
+
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
 }
 
 ksp {

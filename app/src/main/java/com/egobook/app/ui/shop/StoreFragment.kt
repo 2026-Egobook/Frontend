@@ -51,6 +51,7 @@ class StoreFragment: Fragment() {
             insets
         }
         val viewModel: StoreViewModel by activityViewModels()
+        viewModel.loadInk()
         viewPager = binding.vp2StoreCollectionContainer
         viewPager.adapter = StoreCollectionAdapter(this)
         val tabLayout = binding.tlTabs

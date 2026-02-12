@@ -1,10 +1,12 @@
 package com.egobook.app.ui.home.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -41,14 +43,12 @@ class HomeFragment(): Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel: HomeViewModel by viewModels()
+        val viewModel: HomeViewModel by activityViewModels()
         lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { userState ->
-                    binding.tvLevel.text = "Lv ${userState.level.number}"
-                    binding.ivLevelType.setImageResource(userState.level.type.getResId())
-                    binding.tvInk.text = "${userState.ink.value}"
-                }
+            viewModel.uiState.collect { userState ->
+                binding.tvLevel.text = "Lv ${userState.level.number}"
+                binding.ivLevelType.setImageResource(userState.level.type.getResId())
+                binding.tvInk.text = "${userState.ink.value}"
             }
         }
 
@@ -60,13 +60,52 @@ class HomeFragment(): Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.dailyPhycologyReadState.collect { phycologyReadState ->
+                if(phycologyReadState) {
+                    binding.ivDailyBottle.visibility = View.VISIBLE
+                } else {
+                    binding.ivDailyBottle.visibility = View.INVISIBLE
+                }
+            }
+        }
+
         binding.ivStore.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_storeFragment)
         }
 
-        binding.ivAd.setOnClickListener {
+        binding.ivDailyBottle.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
-            val dialog = AdDialog()
+            val dialog = PsychologyDialog()
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "DailyPsychologyDialog")
+            binding.ivDailyBottle.visibility = View.INVISIBLE
+
+            parentFragmentManager.setFragmentResultListener("psychology_key", viewLifecycleOwner) { _, _ ->
+                Log.d("jang", "다이얼로그 닫힘 감지 - 데이터 갱신")
+                viewModel.fetchUser()
+                viewModel.fetchDailyPhycologyReadState()
+            }
+        }
+
+        binding.ivBottle.setOnClickListener {
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = PsychologyDialog()
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "DailyPsychologyDialog")
+            binding.ivDailyBottle.visibility = View.INVISIBLE
+
+            parentFragmentManager.setFragmentResultListener("psychology_key", viewLifecycleOwner) { _, _ ->
+                Log.d("jang", "다이얼로그 닫힘 감지 - 데이터 갱신")
+                viewModel.fetchUser()
+                viewModel.fetchDailyPhycologyReadState()
+            }
+        }
+
+        binding.ivAd.setOnClickListener {
+            val currentUserId = viewModel.uiState.value.id
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = AdDialog.newInstance(currentUserId.toString())
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "ConfirmDialog")
         }

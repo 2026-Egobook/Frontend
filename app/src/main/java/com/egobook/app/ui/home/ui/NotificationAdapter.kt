@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.ui.home.notification.EgoRoomType
@@ -16,8 +18,9 @@ import com.egobook.app.ui.home.notification.NotificationTime
 import com.egobook.app.ui.home.notification.NotificationType
 import java.time.LocalDateTime
 
-class NotificationAdapter(private val notifications: List<Notification>) :
-    RecyclerView.Adapter<NotificationAdapter.NotificationViewHodler>() {
+class NotificationAdapter(
+    val onNotificationClickListener: (Notification) -> Unit
+): ListAdapter<Notification, NotificationAdapter.NotificationViewHodler>(DiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -31,18 +34,17 @@ class NotificationAdapter(private val notifications: List<Notification>) :
         holder: NotificationViewHodler,
         position: Int
     ) {
-        holder.bind(notifications[position])
+        holder.bind(getItem(position), onNotificationClickListener)
     }
-
-    override fun getItemCount() = notifications.size
 
     class NotificationViewHodler(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.tv_notification_title)
         val content: TextView = view.findViewById(R.id.tv_notification_content)
         val time: TextView = view.findViewById(R.id.tv_notification_time)
         val icon: ImageView = view.findViewById(R.id.iv_notification_icon)
+        val root: View = view.rootView
 
-        fun bind(notification: Notification) {
+        fun bind(notification: Notification, onNotificationClickListener: (Notification) -> Unit) {
             val publisherName = when (notification.publisher) {
                 is NotificationPublisher.Admin -> ""
                 is NotificationPublisher.User -> notification.publisher.userName
@@ -99,7 +101,21 @@ class NotificationAdapter(private val notifications: List<Notification>) :
                 }
             }
 
+            root.setOnClickListener {
+                onNotificationClickListener(notification)
+            }
+        }
+    }
 
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<Notification>() {
+            override fun areItemsTheSame(oldItem: Notification, newItem: Notification): Boolean {
+                return oldItem.content == newItem.content && oldItem.publishedDate == newItem.publishedDate
+            }
+
+            override fun areContentsTheSame(oldItem: Notification, newItem: Notification): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 

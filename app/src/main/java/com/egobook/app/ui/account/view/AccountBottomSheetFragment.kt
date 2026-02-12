@@ -13,7 +13,6 @@ import com.egobook.app.databinding.FragmentAccountBottomSheetBinding
 import com.egobook.app.ui.account.viewmodel.AccountViewModel
 import com.egobook.app.util.UiState
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class AccountBottomSheetFragment : BottomSheetDialogFragment() {
@@ -55,21 +54,22 @@ class AccountBottomSheetFragment : BottomSheetDialogFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                // 연동 상태 및 이메일 관찰
+                // 연동 상태 관찰
                 launch {
                     viewModel.linkState.collect { state ->
                         val isLinked = state is UiState.Success
-                        if (isLinked) {
-                            binding.tvAccountEmail.apply {
-                                visibility = View.VISIBLE
-                                text = viewModel.userEmail.firstOrNull() ?: ""
-                            }
-                            binding.btnBottomGoogleLogin.apply {
-                                // 이메일이 있으면 표시, 없으면 기본 메시지
-                                text = "Google계정으로 연동되었습니다"
-                                isEnabled = false
-                            }
+                        binding.tvAccountEmail.visibility = if (isLinked) View.VISIBLE else View.GONE
+                        binding.btnBottomGoogleLogin.apply {
+                            text = if (isLinked) "Google계정으로 연동되었습니다" else "Google계정 연동하기"
+                            isEnabled = !isLinked
                         }
+                    }
+                }
+
+                // 이메일 별도 관찰 - 연동 직후 이메일이 설정되면 UI 갱신
+                launch {
+                    viewModel.userEmail.collect { email ->
+                        binding.tvAccountEmail.text = email ?: ""
                     }
                 }
             }
