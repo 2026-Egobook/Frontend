@@ -113,6 +113,16 @@
         android:id="@+id/calenderFragment"
         android:name="com.egobook.app.ui.diary.view.CalenderFragment"
         android:label="달력 화면" >
+
+        <argument
+            android:name="year"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+
+        <argument
+            android:name="month"
+            app:argType="integer"
+            android:defaultValue="-1"/>
         
         <!-- DiaryFragment로 돌아가는 액션 (날짜 인자 전달) -->
         <action

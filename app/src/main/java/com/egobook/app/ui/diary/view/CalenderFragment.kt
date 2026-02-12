@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -35,6 +36,7 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -63,10 +65,22 @@ class CalenderFragment : Fragment() {
             v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom)
             insets
         }
-
+        
+        // 1. 먼저 초기 년월 결정 (인자 있으면 그걸로, 없으면 현재 달)
+        val initialMonth = getInitialMonthFromArgs()
+        
+        // 2. 캘린더를 처음에는 숨김 (깜빡임 방지)
+        binding.calendarView.visibility = View.INVISIBLE
+        binding.calendarHeaderLayout.visibility = View.INVISIBLE
+        
         setupDayOfWeekTitles()
-        setupCalendar()
-        observeViewModel()
+        setupCalendar(initialMonth)  // 초기 년월 전달
+        
+        // 3. ViewModel을 초기 년월로 설정 (데이터 로드)
+        viewModel.setYearMonth(initialMonth)
+        
+        // 4. observing 시작
+        observeViewModel(initialMonth)  // 초기 년월 전달해서 첫 emission 검증
         setupMonthDialogResultListener()
 
         binding.apply {
@@ -102,7 +116,22 @@ class CalenderFragment : Fragment() {
             }
         }
     }
-    
+
+    /**
+     * 초기 년월을 인자에서 추출 (없으면 현재 달 반환)
+     */
+    private fun getInitialMonthFromArgs(): YearMonth {
+        val args = arguments
+        val year = args?.getInt("year", -1) ?: -1
+        val month = args?.getInt("month", -1) ?: -1
+
+        return if (year != -1 && month != -1) {
+            YearMonth.of(year, month)
+        } else {
+            YearMonth.now()
+        }
+    }
+
     /**
      * MonthDialogFragment에서 월 선택 결과 수신
      */
@@ -121,10 +150,17 @@ class CalenderFragment : Fragment() {
     /**
      * ViewModel 상태 관찰 - 스와이프 없이 해당 월 즉시 표시
      */
-    private fun observeViewModel() {
+    private fun observeViewModel(expectedInitialMonth: YearMonth) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                var isCorrectMonthReceived = false
                 viewModel.state.collectLatest { state ->
+                    // 예상한 초기 달이 나올 때까지 대기 (깜빡임 방지)
+                    if (!isCorrectMonthReceived && state.selectedYearMonth != expectedInitialMonth) {
+                        return@collectLatest  // 잘못된 달은 무시
+                    }
+                    isCorrectMonthReceived = true
+                    
                     // 애니메이션 없이 해당 월 즉시 이동
                     binding.calendarView.scrollToMonth(state.selectedYearMonth)
                     // 상단 텍스트 업데이트
@@ -132,6 +168,12 @@ class CalenderFragment : Fragment() {
                     binding.tvMonth.text = "${state.selectedYearMonth.monthValue}월"
                     // 중요: 감정 데이터 변경 시 해당 월만 캘린더 뷰 갱신
                     binding.calendarView.notifyMonthChanged(state.selectedYearMonth)
+                    
+                    // 첫 번째 올바른 상태 업데이트 후 캘린더 표시
+                    if (binding.calendarView.isInvisible) {
+                        binding.calendarView.visibility = View.VISIBLE
+                        binding.calendarHeaderLayout.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -178,33 +220,30 @@ class CalenderFragment : Fragment() {
     /**
      * 달력 설정 및 초기화
      */
-    private fun setupCalendar() {
-        val currentMonth = YearMonth.now()
-        
-        initializeCalendarRange(currentMonth)
-        initializeYearMonthText(currentMonth)
+    private fun setupCalendar(initialMonth: YearMonth) {
+        initializeCalendarRange(initialMonth)
+        initializeYearMonthText(initialMonth)
         setupDayBinder()
-        // 초기 로드는 ViewModel의 init 블록에서 처리
     }
     
     /**
      * 달력 범위 설정 (과거 100개월 ~ 미래 100개월)
      */
-    private fun initializeCalendarRange(currentMonth: YearMonth) {
-        val startMonth = currentMonth.minusMonths(100)
-        val endMonth = currentMonth.plusMonths(100)
+    private fun initializeCalendarRange(initialMonth: YearMonth) {
+        val startMonth = initialMonth.minusMonths(100)
+        val endMonth = initialMonth.plusMonths(100)
         val firstDayOfWeek = DayOfWeek.MONDAY
         
         binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
-        binding.calendarView.scrollToMonth(currentMonth)
+        binding.calendarView.scrollToMonth(initialMonth)
     }
     
     /**
      * 초기 연/월 텍스트 설정
      */
-    private fun initializeYearMonthText(currentMonth: YearMonth) {
-        binding.tvYear.text = currentMonth.year.toString()
-        binding.tvMonth.text = "${currentMonth.monthValue}월"
+    private fun initializeYearMonthText(initialMonth: YearMonth) {
+        binding.tvYear.text = initialMonth.year.toString()
+        binding.tvMonth.text = "${initialMonth.monthValue}월"
     }
 
     /**

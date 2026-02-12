@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/top_btn_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -58,7 +59,8 @@
             android:id="@+id/tv_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2025"
+            android:text=""
+            tools:text="2025"
             android:textColor="@color/cos_black"
             android:fontFamily="@font/arita_medium"
             android:textSize="14sp" />
@@ -86,7 +88,8 @@
                 android:id="@+id/tv_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12월"
+                android:text=""
+                tools:text="12월"
                 android:textSize="24sp"
                 android:layout_marginHorizontal="24dp"
                 android:fontFamily="@font/arita_semibold" />
