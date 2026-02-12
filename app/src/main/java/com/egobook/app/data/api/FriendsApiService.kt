@@ -17,7 +17,7 @@ interface FriendsApiService {
     suspend fun fetchFriendList(): ApiResponse<List<FriendResponse>>
 
     @DELETE("/friends/{friendId}")
-    suspend fun deleteFriend(@Path("friendId") friendId: Int): ApiResponse<Unit>
+    suspend fun deleteFriend(@Path("friendId") friendId: Long): ApiResponse<Unit>
 
     @GET("/friends/requests/incoming")
     suspend fun fetchIncomingFriendsRequests(): ApiResponse<List<FriendRequestResponse>>
