@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.Query
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -20,6 +21,8 @@ import javax.inject.Singleton
 
 interface HomeNotificationRepository {
     suspend fun loadNotifications(): Flow<Notification>
+    suspend fun loadNotificationSetting(): NotificationSettingDto
+    suspend fun changeNotificationSetting(): NotificationSettingDto
 }
 
 data class NotificationGroupDto(
@@ -56,12 +59,28 @@ data class NotificationDto(
 
 }
 
-interface NetworkNotificationLoadingService {
+data class NotificationSettingDto(
+    val isEnabled: Boolean
+)
+
+data class NotificationChangeDto(
+    val enabled: Boolean
+)
+
+
+interface NetworkNotificationService {
     @GET("/notifications")
     suspend fun loadNotificationsResponse(
         @Query("page") page: Int,
         @Query("size") size: Int
     ): BaseResponse<NotificationGroupDto>
+
+    @GET("/notifications/settings")
+    suspend fun loadNotificationSetting(): BaseResponse<NotificationSettingDto>
+
+    @PATCH("/notifications/settings")
+    suspend fun changeNotificationSetting(): BaseResponse<NotificationChangeDto>
+
 }
 
 
@@ -70,8 +89,8 @@ class NetworkHomeNotificationRepository @Inject constructor(
     @BackendApi private val retrofit: Retrofit
 ) : HomeNotificationRepository {
 
-    private val loadingNotificationService by lazy {
-        retrofit.create(NetworkNotificationLoadingService::class.java)
+    private val notificationService by lazy {
+        retrofit.create(NetworkNotificationService::class.java)
     }
 
     override suspend fun loadNotifications(): Flow<Notification> {
@@ -79,7 +98,7 @@ class NetworkHomeNotificationRepository @Inject constructor(
             var currentPage = 1
             while (true) {
                 try {
-                    val response = loadingNotificationService.loadNotificationsResponse(
+                    val response = notificationService.loadNotificationsResponse(
                         page = currentPage,
                         size = 10
                     ).data
@@ -104,5 +123,15 @@ class NetworkHomeNotificationRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    override suspend fun loadNotificationSetting(): NotificationSettingDto {
+        return notificationService.loadNotificationSetting().data
+    }
+
+    override suspend fun changeNotificationSetting(): NotificationSettingDto {
+        val notificationChangeDto = notificationService.changeNotificationSetting().data
+        Log.d("jang2", "${notificationChangeDto}")
+        return NotificationSettingDto(notificationChangeDto.enabled)
     }
 }

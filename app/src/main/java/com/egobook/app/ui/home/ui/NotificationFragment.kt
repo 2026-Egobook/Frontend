@@ -1,6 +1,7 @@
 package com.egobook.app.ui.home.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.egobook.app.R
 import com.egobook.app.databinding.FragmentNotificationBinding
 import com.egobook.app.ui.home.NotificationViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +39,23 @@ class NotificationFragment: Fragment() {
         binding.rvNotification.apply {
             adapter = notificationAdapter
             layoutManager = LinearLayoutManager(context)
+        }
+
+        binding.ivHomeNotificationButton.setOnClickListener {
+            viewModel.changeNotificationSetting()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.notificationSettingState.collect { notificationSettingDto ->
+                    Log.d("jang", "UI에서 감지된 설정: ${notificationSettingDto}")
+                    if(notificationSettingDto.isEnabled) {
+                        binding.ivHomeNotificationButton.setImageResource(R.drawable.ic_notification_on)
+                    } else {
+                        binding.ivHomeNotificationButton.setImageResource(R.drawable.ic_notification_off)
+                    }
+                }
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
