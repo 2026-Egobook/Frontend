@@ -28,7 +28,7 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_prev_month"
+                android:id="@+id/btn_prev_year"
                 style="@style/Widget.Material3.Button.IconButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -47,7 +47,7 @@
                 android:textSize="16sp"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_next_month"
+                android:id="@+id/btn_next_year"
                 style="@style/Widget.Material3.Button.IconButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"

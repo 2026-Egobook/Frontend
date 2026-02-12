@@ -2,7 +2,10 @@ package com.egobook.app.di.module
 
 import com.egobook.app.domain.repository.diary.FakeDiaryRepository
 import com.egobook.app.domain.repository.auth.AuthRepository
+import com.egobook.app.domain.repository.diary.CalenderRepository
 import com.egobook.app.domain.repository.diary.DiaryRepository
+import com.egobook.app.domain.usecase.CalenderUseCases
+import com.egobook.app.domain.usecase.GetCalender
 import com.egobook.app.domain.usecase.authusecase.AuthUseCases
 import com.egobook.app.domain.usecase.authusecase.GoogleAutoLogin
 import com.egobook.app.domain.usecase.authusecase.GoogleLogin
@@ -51,6 +54,14 @@ object UseCaseModule {
             googleLogin = GoogleLogin(repository),
             guestLogin = GuestLogin(repository),
             guestReLogin = GuestReLogin(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCalenderUseCases(repository: CalenderRepository): CalenderUseCases {
+        return CalenderUseCases(
+            getCalender = GetCalender(repository)
         )
     }
 
