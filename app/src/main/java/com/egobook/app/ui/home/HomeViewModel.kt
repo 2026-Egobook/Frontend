@@ -25,7 +25,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val storeRepository: StoreRepository,
-    private val userAdRepository: UserAdRepository
+    private val userAdRepository: UserAdRepository,
+    private val psychologyRepository: UserPsychologyRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(User(id=-1, Level(1), Ink(0)))
     val uiState: StateFlow<User> = _uiState.asStateFlow()
@@ -35,20 +36,15 @@ class HomeViewModel @Inject constructor(
 
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
     val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
-    private val psychologyRepository: UserPsychologyRepository
-) : ViewModel() {
+
+    private val _dailyPhycologyReadState = MutableStateFlow(false)
+    val dailyPhycologyReadState = _dailyPhycologyReadState.asStateFlow()
 
     init {
         fetchUser()
         fetchEquipItems()
         fetchDailyPhycologyReadState()
     }
-    private val _uiState = MutableStateFlow(User(Level(1), Ink(0)))
-    val uiState: StateFlow<User> = _uiState.asStateFlow()
-    private val _dailyPhycologyReadState = MutableStateFlow(false)
-    val dailyPhycologyReadState = _dailyPhycologyReadState.asStateFlow()
-    private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
-    val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
 
     fun fetchEquipItems() {
         viewModelScope.launch {

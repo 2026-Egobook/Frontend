@@ -70,10 +70,6 @@ data class AdInfoDto(
     val message: String
 )
 
-@Singleton
-class NetworkUserRepository @Inject constructor(
-    @BackendApi private val retrofit: Retrofit
-) : UserRepository, UserTendencyRepository, UserActivityRepository, UserAdRepository {
 data class PsychologyStateDto(
     val isBottleVisible: Boolean
 )
@@ -110,7 +106,7 @@ interface NetworkPsychologyService {
 @Singleton
 class NetworkUserRepository @Inject constructor(
     @BackendApi private val retrofit: Retrofit
-) : UserRepository, UserTendencyRepository, UserActivityRepository, UserPsychologyRepository {
+) : UserRepository, UserTendencyRepository, UserActivityRepository, UserPsychologyRepository, UserAdRepository {
     private val userService by lazy { retrofit.create(NetworkUserService::class.java) }
     private val tendencyLevelService by lazy { retrofit.create(NetworkTendencyLevelService::class.java) }
     private val activityRecordService by lazy { retrofit.create(NetworkActivityRecordService::class.java) }
@@ -148,6 +144,8 @@ class NetworkUserRepository @Inject constructor(
             )
         )
         return watchingAdResponse.message
+    }
+    
     override suspend fun isReadDailyPsychology(): Boolean {
         val psychologyResponse: BaseResponse<PsychologyStateDto> =
             psychologyService.isReadDailyPsychology()
@@ -160,4 +158,5 @@ class NetworkUserRepository @Inject constructor(
             psychologyService.loadDailyPsychology()
         return psychologyResponse.data
     }
+
 }
