@@ -47,10 +47,12 @@
             android:fontFamily="@font/arita_semibold"
             android:lineHeight="21sp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_friends_pending_list_received_title"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_friends_pending_list_received_title"
+            app:layout_constraintBottom_toTopOf="@id/tv_friends_pending_list_sent_title"/>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_friends_pending_list_received"
