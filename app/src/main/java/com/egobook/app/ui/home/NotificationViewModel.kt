@@ -17,11 +17,17 @@ import javax.inject.Inject
 class NotificationViewModel @Inject constructor(
     private val repository: HomeNotificationRepository
 ): ViewModel() {
+
     private val _notifications = MutableStateFlow<List<Notification>>(emptyList())
     val notifications: StateFlow<List<Notification>> = _notifications.asStateFlow()
 
     private val _notificationSettingState = MutableStateFlow<NotificationSettingDto>(NotificationSettingDto(true))
     val notificationSettingState: StateFlow<NotificationSettingDto> = _notificationSettingState.asStateFlow()
+
+    init {
+        loadNotificationSetting()
+    }
+
     fun loadNotifications() {
         Log.d("jang", "loadNotifications")
         viewModelScope.launch {
