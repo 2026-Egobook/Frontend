@@ -11,12 +11,18 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentCalenderBinding
 import com.egobook.app.ui.diary.adapter.DayViewContainer
+import com.egobook.app.ui.diary.viewmodel.CalenderViewModel
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
@@ -26,11 +32,15 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class CalenderFragment : Fragment() {
 
     private var _binding: FragmentCalenderBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: CalenderViewModel by viewModels()
     private val today = LocalDate.now()
 
     override fun onCreateView(
@@ -52,28 +62,64 @@ class CalenderFragment : Fragment() {
 
         setupDayOfWeekTitles()
         setupCalendar()
+        observeViewModel()
+        setupMonthDialogResultListener()
 
         binding.apply {
             btnList.setOnClickListener {
                 findNavController().popBackStack()
             }
             tvMonth.setOnClickListener {
-                applyScreenBlur(BlurLevel.BASE) // 블러 효과 적용
+                applyScreenBlur(BlurLevel.BASE)
 
-                val dialog = MonthDialogFragment()
+                val dialog = MonthDialogFragment.newInstance(
+                    viewModel.selectedYearMonth.value.year
+                )
                 dialog.isCancelable = true
                 dialog.show(childFragmentManager, "MonthDialog")
             }
 
             btnPrevMonth.setOnClickListener {
-                binding.calendarView.findFirstVisibleMonth()?.let {
-                    binding.calendarView.smoothScrollToMonth(it.yearMonth.minusMonths(1))
+                viewModel.selectedYearMonth.value.minusMonths(1).let {
+                    viewModel.setYearMonth(it)
                 }
             }
 
             btnNextMonth.setOnClickListener {
-                binding.calendarView.findFirstVisibleMonth()?.let {
-                    binding.calendarView.smoothScrollToMonth(it.yearMonth.plusMonths(1))
+                viewModel.selectedYearMonth.value.plusMonths(1).let {
+                    viewModel.setYearMonth(it)
+                }
+            }
+        }
+    }
+    
+    /**
+     * MonthDialogFragment에서 월 선택 결과 수신
+     */
+    private fun setupMonthDialogResultListener() {
+        childFragmentManager.setFragmentResultListener(
+            MonthDialogFragment.REQUEST_KEY_MONTH_SELECTED,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val year = bundle.getInt(MonthDialogFragment.BUNDLE_KEY_YEAR)
+            val month = bundle.getInt(MonthDialogFragment.BUNDLE_KEY_MONTH)
+            // 다이얼로그가 닫힌 후 ViewModel 업데이트 → 캘린더 스크롤
+            viewModel.setYearMonth(YearMonth.of(year, month))
+        }
+    }
+    
+    /**
+     * ViewModel 상태 관찰 - 스와이프 없이 해당 월 즉시 표시
+     */
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedYearMonth.collectLatest { yearMonth ->
+                    // 애니메이션 없이 해당 월 즉시 이동
+                    binding.calendarView.scrollToMonth(yearMonth)
+                    // 상단 텍스트 업데이트
+                    binding.tvYear.text = yearMonth.year.toString()
+                    binding.tvMonth.text = "${yearMonth.monthValue}월"
                 }
             }
         }
@@ -104,8 +150,10 @@ class CalenderFragment : Fragment() {
         
         initializeCalendarRange(currentMonth)
         initializeYearMonthText(currentMonth)
-        setupMonthScrollListener()
         setupDayBinder()
+        
+        // 초기 ViewModel 설정
+        viewModel.setYearMonth(currentMonth)
     }
     
     /**
@@ -127,17 +175,7 @@ class CalenderFragment : Fragment() {
         binding.tvYear.text = currentMonth.year.toString()
         binding.tvMonth.text = "${currentMonth.monthValue}월"
     }
-    
-    /**
-     * 월 스크롤 리스너 설정
-     */
-    private fun setupMonthScrollListener() {
-        binding.calendarView.monthScrollListener = { month ->
-            binding.tvYear.text = month.yearMonth.year.toString()
-            binding.tvMonth.text = "${month.yearMonth.monthValue}월"
-        }
-    }
-    
+
     /**
      * 날짜 바인더 설정
      */
@@ -160,7 +198,7 @@ class CalenderFragment : Fragment() {
         
         when {
             data.position != DayPosition.MonthDate -> bindOutOfMonthDate(container)
-            data.date == today -> bindTodayDate(container)
+            data.date == today -> bindTodayDate(container, data.date)
             else -> bindRegularDate(container, data.date)
         }
     }
@@ -171,18 +209,24 @@ class CalenderFragment : Fragment() {
     private fun bindOutOfMonthDate(container: DayViewContainer) {
         container.binding.calendarDayText.visibility = View.INVISIBLE
         container.binding.dayEmotionImg.visibility = View.INVISIBLE
+        container.view.setOnClickListener(null)
     }
     
     /**
      * 오늘 날짜 바인딩
      */
-    private fun bindTodayDate(container: DayViewContainer) {
+    private fun bindTodayDate(container: DayViewContainer, date: LocalDate) {
         container.binding.calendarDayText.apply {
             visibility = View.VISIBLE
             setTextColor(Color.WHITE)
             setBackgroundResource(R.drawable.today_background)
         }
         container.binding.dayEmotionImg.visibility = View.GONE
+        
+        // 오늘 날짜 클릭 리스너 설정
+        container.view.setOnClickListener {
+            navigateToDiaryWithDate(date)
+        }
     }
     
     /**
@@ -195,6 +239,23 @@ class CalenderFragment : Fragment() {
             setTextColor(getDateTextColor(date))
         }
         container.binding.dayEmotionImg.visibility = View.VISIBLE
+        
+        // 일반 날짜 클릭 리스너 설정
+        container.view.setOnClickListener {
+            navigateToDiaryWithDate(date)
+        }
+    }
+    
+    /**
+     * 선택한 날짜를 DiaryFragment로 전달하고 이동
+     */
+    private fun navigateToDiaryWithDate(date: LocalDate) {
+        val action = CalenderFragmentDirections.actionCalenderFragmentToDiaryFragment(
+            selectedYear = date.year,
+            selectedMonth = date.monthValue,
+            selectedDay = date.dayOfMonth
+        )
+        findNavController().navigate(action)
     }
     
     // ========== 색상 헬퍼 함수 ==========

@@ -24,6 +24,21 @@
         android:id="@+id/menu_diary"
         android:name="com.egobook.app.ui.diary.view.DiaryFragment"
         android:label="감정일기">
+        
+        <!-- 선택된 날짜 인자 (CalenderFragment에서 전달) -->
+        <argument
+            android:name="selectedYear"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="selectedMonth"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="selectedDay"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        
         <!-- diaryWriteFragment로의 이동 액션 -->
         <action
             android:id="@+id/action_diaryFragment_to_diaryWriteFragment"
@@ -97,7 +112,15 @@
     <fragment
         android:id="@+id/calenderFragment"
         android:name="com.egobook.app.ui.diary.view.CalenderFragment"
-        android:label="달력 화면" />
+        android:label="달력 화면" >
+        
+        <!-- DiaryFragment로 돌아가는 액션 (날짜 인자 전달) -->
+        <action
+            android:id="@+id/action_calenderFragment_to_diaryFragment"
+            app:destination="@id/menu_diary"
+            app:popUpTo="@id/menu_diary"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <!-- DiaryCheckFragment로의 목적지 정의 -->
     <fragment

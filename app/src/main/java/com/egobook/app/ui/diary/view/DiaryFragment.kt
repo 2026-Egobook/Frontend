@@ -1,32 +1,30 @@
     package com.egobook.app.ui.diary.view
 
     import android.os.Bundle
-    import android.view.Gravity
-    import android.view.LayoutInflater
-    import android.view.View
-    import android.view.ViewGroup
-    import android.widget.Toast
-    import android.graphics.Color
-    import androidx.fragment.app.Fragment
-    import androidx.fragment.app.activityViewModels
-    import androidx.lifecycle.Lifecycle
-    import androidx.lifecycle.lifecycleScope
-    import androidx.lifecycle.repeatOnLifecycle
-    import androidx.navigation.fragment.findNavController
-    import androidx.viewpager2.widget.ViewPager2
-    import com.egobook.app.BlurLevel
-    import com.egobook.app.R
-    import com.egobook.app.applyScreenBlur
-    import com.egobook.app.databinding.FragmentDiaryBinding
-    import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
-    import com.egobook.app.ui.diary.viewmodel.DiariesEvent
-    import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
-    import com.google.android.material.snackbar.Snackbar
-    import com.google.android.material.tabs.TabLayout
-    import com.google.android.material.tabs.TabLayoutMediator
-    import kotlinx.coroutines.flow.collectLatest
-    import kotlinx.coroutines.launch
-    import kotlin.getValue
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.graphics.Color
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
+import com.egobook.app.BlurLevel
+import com.egobook.app.R
+import com.egobook.app.applyScreenBlur
+import com.egobook.app.databinding.FragmentDiaryBinding
+import com.egobook.app.ui.diary.adapter.DiaryVPAdapter
+import com.egobook.app.ui.diary.viewmodel.DiariesEvent
+import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlin.getValue
     class DiaryFragment : Fragment() {
         private var _binding: FragmentDiaryBinding? = null
         private val binding get() = _binding!!
@@ -54,9 +52,36 @@
             // 초기에는 GoToTop 버튼 숨김
             binding.btnGoToTop.visibility = View.GONE
             
+            // Navigation 인자로부터 선택된 날짜 확인 및 적용
+            applySelectedDateFromArgs()
+            
             initViewPager()
             setupClickListener()
             observeViewModel()
+        }
+        
+        /**
+         * Navigation 인자로 전달된 날짜를 확인하고 적용
+         */
+        private fun applySelectedDateFromArgs() {
+            val args = arguments ?: return
+            
+            val year = args.getInt("selectedYear", -1)
+            val month = args.getInt("selectedMonth", -1)
+            val day = args.getInt("selectedDay", -1)
+            
+            // 유효한 날짜인 경우에만 적용 (-1은 기본값, 즉 인자가 전달되지 않은 경우)
+            if (year != -1 && month != -1 && day != -1) {
+                viewModel.onEvent(
+                    DiariesEvent.ChangeDate(
+                        year = year,
+                        month = month,
+                        day = day
+                    )
+                )
+                // "전체" 탭으로 이동
+                binding.vpDiary.setCurrentItem(0, false)
+            }
         }
         
         override fun onResume() {
