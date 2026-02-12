@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.ui.home.repository.AdInfoDto
 import com.egobook.app.ui.home.repository.UserAdRepository
+import com.egobook.app.ui.home.repository.UserPsychologyRepository
 import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.user.Ink
 import com.egobook.app.ui.home.user.Level
@@ -34,15 +35,30 @@ class HomeViewModel @Inject constructor(
 
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
     val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
+    private val psychologyRepository: UserPsychologyRepository
+) : ViewModel() {
 
     init {
         fetchUser()
         fetchEquipItems()
+        fetchDailyPhycologyReadState()
     }
+    private val _uiState = MutableStateFlow(User(Level(1), Ink(0)))
+    val uiState: StateFlow<User> = _uiState.asStateFlow()
+    private val _dailyPhycologyReadState = MutableStateFlow(false)
+    val dailyPhycologyReadState = _dailyPhycologyReadState.asStateFlow()
+    private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
+    val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
 
     fun fetchEquipItems() {
         viewModelScope.launch {
             _equippedItems.value = storeRepository.loadEquippedItems()
+        }
+    }
+
+    fun fetchDailyPhycologyReadState() {
+        viewModelScope.launch {
+            _dailyPhycologyReadState.value = psychologyRepository.isReadDailyPsychology()
         }
     }
 

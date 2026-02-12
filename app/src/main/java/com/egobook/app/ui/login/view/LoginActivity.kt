@@ -36,6 +36,10 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
 import timber.log.Timber
+import androidx.core.net.toUri
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.graphics.Color
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -130,6 +134,12 @@ class LoginActivity : AppCompatActivity() {
 
             }
 
+        }
+
+        //약관
+        binding.tvStartGuide.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, "https://bevel-beetle-a49.notion.site/2f638a539ac58059b9a1c883ad7d7164".toUri())
+            startActivity(intent)
         }
     }
 
@@ -241,32 +251,70 @@ class LoginActivity : AppCompatActivity() {
 
 
 //========================================특정 char 폰트 커스텀===========================================================
-    private fun setupGuideText() {
-        val fullText = "시작 시 이용약관 및\n개인정보 수집 및 이용에 동의하게 됩니다"
-        val spannableString = SpannableString(fullText)
+private fun setupGuideText() {
+    val fullText = "시작 시 이용약관 및\n개인정보 수집 및 이용에 동의하게 됩니다"
+    val spannableString = SpannableString(fullText)
 
-        // 폰트 리소스를 Typeface 객체로 불러옴.
-        val semiBoldTypeface = ResourcesCompat.getFont(this, R.font.arita_semibold) ?: return
+    val semiBoldTypeface = ResourcesCompat.getFont(this, R.font.arita_semibold) ?: return
 
-        // 폰트를 적용할 텍스트 ("이용약관")
-        val target1 = "이용약관"
-        val start1 = fullText.indexOf(target1)
-        if (start1 >= 0) {
-            val end1 = start1 + target1.length
-            spannableString.setSpan(CustomTypefaceSpan(semiBoldTypeface), start1, end1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
+    // ================= 이용약관 =================
+    val termText = "이용약관"
+    val termStart = fullText.indexOf(termText)
+    if (termStart >= 0) {
+        val termEnd = termStart + termText.length
 
-        // 폰트를 적용할 텍스트 ("개인정보 수집 및 이용")
-        val target2 = "개인정보 수집 및 이용"
-        val start2 = fullText.indexOf(target2)
-        if (start2 >= 0) {
-            val end2 = start2 + target2.length
-            spannableString.setSpan(CustomTypefaceSpan(semiBoldTypeface), start2, end2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
+        spannableString.setSpan(
+            CustomTypefaceSpan(semiBoldTypeface),
+            termStart, termEnd,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
-        // 완성된 SpannableString을 TextView에 적용
-        binding.tvStartGuide.text = spannableString
+        spannableString.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://bevel-beetle-a49.notion.site/2f638a539ac5801aa872e99ec4282f28".toUri() // ← 약관 URL
+                )
+                startActivity(intent)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                ds.isUnderlineText = false
+            }
+        }, termStart, termEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
+
+    // ================= 개인정보 =================
+    val privacyText = "개인정보 수집 및 이용"
+    val privacyStart = fullText.indexOf(privacyText)
+    if (privacyStart >= 0) {
+        val privacyEnd = privacyStart + privacyText.length
+
+        spannableString.setSpan(
+            CustomTypefaceSpan(semiBoldTypeface),
+            privacyStart, privacyEnd,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        spannableString.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://bevel-beetle-a49.notion.site/2f638a539ac58059b9a1c883ad7d7164".toUri() // ← 개인정보 URL
+                )
+                startActivity(intent)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                ds.isUnderlineText = false
+            }
+        }, privacyStart, privacyEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+
+    binding.tvStartGuide.text = spannableString
+    binding.tvStartGuide.movementMethod = LinkMovementMethod.getInstance()
+    binding.tvStartGuide.highlightColor = Color.TRANSPARENT
+}
 
     //모든 API 레벨에서 커스텀 폰트를 적용하기 위한 Span 클래스
     private class CustomTypefaceSpan(private val typeface: Typeface) : MetricAffectingSpan() {

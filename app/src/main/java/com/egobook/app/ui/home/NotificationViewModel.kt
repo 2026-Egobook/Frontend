@@ -1,45 +1,36 @@
 package com.egobook.app.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.egobook.app.ui.home.notification.EgoRoomType
+import androidx.lifecycle.viewModelScope
 import com.egobook.app.ui.home.notification.Notification
-import com.egobook.app.ui.home.notification.NotificationPublisher
-import com.egobook.app.ui.home.notification.NotificationStatus
-import com.egobook.app.ui.home.notification.NotificationTime
-import com.egobook.app.ui.home.notification.NotificationType
-import java.time.LocalDateTime
+import com.egobook.app.ui.home.repository.HomeNotificationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NotificationViewModel: ViewModel() {
-    fun loadNotifications(): List<Notification> {
-        return listOf(
-            Notification(
-                "답장에관한 내용이 들어가는 자리",
-                NotificationType.Letter,
-                NotificationStatus.UNREAD,
-                NotificationPublisher.Admin,
-                NotificationTime(LocalDateTime.of(2026, 1, 19, 13, 53))
-            ),
-            Notification(
-                "답장에관한 내용이 들어가는 자리",
-                NotificationType.Letter,
-                NotificationStatus.READ,
-                NotificationPublisher.User("jan_gu", "철수철수"),
-                NotificationTime(LocalDateTime.of(2026, 1, 19, 13, 53))
-            ),
-            Notification(
-                "지난주 주간 리포트가 도착했어요!",
-                NotificationType.EgoRoom(EgoRoomType.WEAKLY_REPORT),
-                NotificationStatus.READ,
-                NotificationPublisher.Admin,
-                NotificationTime(LocalDateTime.of(2026, 1, 19, 13, 53))
-            ),
-            Notification(
-                "11.17 일간 칭찬서가 도착했어요!",
-                NotificationType.EgoRoom(EgoRoomType.DAILY_PRAISE),
-                NotificationStatus.UNREAD,
-                NotificationPublisher.Admin,
-                NotificationTime(LocalDateTime.of(2025, 11, 17, 0, 1))
-            ),
-        )
+@HiltViewModel
+class NotificationViewModel @Inject constructor(
+    private val repository: HomeNotificationRepository
+): ViewModel() {
+    private val _notifications = MutableStateFlow<List<Notification>>(emptyList())
+    val notifications: StateFlow<List<Notification>> = _notifications.asStateFlow()
+    fun loadNotifications() {
+        Log.d("jang", "loadNotifications")
+        viewModelScope.launch {
+            val updatedList = mutableListOf<Notification>()
+            repository.loadNotifications()
+                .collect { notification ->
+                    // 3. 데이터가 올 때마다 리스트에 추가하고 StateFlow 업데이트
+                    updatedList.add(notification)
+                    _notifications.value = updatedList.toList()
+
+                    // 디버깅용 로그: 데이터가 실제로 오는지 확인
+                    Log.d("NotificationViewModel", "새 알림 수신: ${notification.content}")
+                }
+        }
     }
 }

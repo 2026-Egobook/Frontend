@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dl_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -147,16 +148,26 @@
         android:src="@drawable/calendar_icon" />
 
     <ImageView
+        android:id="@+id/iv_daily_bottle"
+        android:layout_width="60dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_bottle"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/iv_turtle"
+        app:layout_constraintEnd_toEndOf="@id/iv_turtle"
+        app:layout_constraintStart_toStartOf="@id/iv_turtle" />
+    
+    <ImageView
         android:id="@+id/iv_turtle"
         android:layout_width="304dp"
         android:layout_height="197dp"
         android:scaleType="fitXY"
         android:visibility="invisible"
         android:src="@drawable/default_turtle"
-        android:layout_marginTop="170dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_store"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
     
     <ImageView
         android:id="@+id/iv_home_turtle_back"
