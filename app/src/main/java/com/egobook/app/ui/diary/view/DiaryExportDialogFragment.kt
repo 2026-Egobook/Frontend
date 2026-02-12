@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.egobook.app.databinding.FragmentDiaryExportDialogBinding
 import com.egobook.app.removeScreenBlur
@@ -33,6 +34,7 @@ class DiaryExportDialogFragment : DialogFragment() {
 
         setupDateInputWatchers()
         setClickListener()
+        updateButtonState() // 초기 버튼 상태 설정
 
     }
 
@@ -72,9 +74,40 @@ class DiaryExportDialogFragment : DialogFragment() {
             }
         }
 
-        // 각 EditText에 TextWatcher를 적용합니다.
+        // 각 EditText에 TextWatcher를 적용.
         binding.tvStartDate.addTextChangedListener(dateWatcher)
         binding.tvLastDate.addTextChangedListener(dateWatcher)
+
+        // 날짜 유효성 검사를 위한 TextWatcher
+        binding.tvStartDate.doAfterTextChanged { updateButtonState() }
+        binding.tvLastDate.doAfterTextChanged { updateButtonState() }
+    }
+
+    /**
+     * 날짜 입력 유효성 검사 후 버튼 상태 업데이트
+     * YYYY.MM.DD 형식(10자리)이 모두 입력되었을 때만 버튼 활성화
+     */
+    private fun updateButtonState() {
+        val startDate = binding.tvStartDate.text.toString()
+        val lastDate = binding.tvLastDate.text.toString()
+
+        // YYYY.MM.DD 형식 확인 (10자리)
+        val isStartDateValid = startDate.length == 10 && isValidDateFormat(startDate)
+        val isLastDateValid = lastDate.length == 10 && isValidDateFormat(lastDate)
+
+        val isBothDatesValid = isStartDateValid && isLastDateValid
+
+        binding.btnPdf.isEnabled = isBothDatesValid
+        binding.btnText.isEnabled = isBothDatesValid
+    }
+
+    /**
+     * 날짜 형식 유효성 검사 (YYYY.MM.DD)
+     */
+    private fun isValidDateFormat(date: String): Boolean {
+        // 정규식: YYYY.MM.DD 형식
+        val datePattern = Regex("""\d{4}\.\d{2}\.\d{2}""")
+        return datePattern.matches(date)
     }
 
 

@@ -94,6 +94,12 @@ class CalenderFragment : Fragment() {
                     viewModel.setYearMonth(it)
                 }
             }
+            btnExport.setOnClickListener {
+                applyScreenBlur(BlurLevel.BASE)
+                val dialog = DiaryExportDialogFragment()
+                dialog.isCancelable = true
+                dialog.show(childFragmentManager, "DiaryExportDialog")
+            }
         }
     }
     
