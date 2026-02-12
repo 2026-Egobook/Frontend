@@ -63,13 +63,13 @@
                 android:src="@drawable/ink_icon" />
 
             <TextView
+                android:id="@+id/tv_ad_reward"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12dp"
                 android:fontFamily="@font/arita_semibold"
                 android:textColor="@color/neutral"
-                android:layout_marginStart="4dp"
-                android:text="8" />
+                android:layout_marginStart="4dp" />
             
         </LinearLayout>
 
@@ -82,7 +82,7 @@
 
             <TextView
                 android:id="@+id/btn_back"
-                android:layout_width="120dp"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/neutral_weak_radius_border_dialog_button"
                 android:textColor="@color/neutral"
@@ -90,22 +90,22 @@
                 android:paddingVertical="12dp"
                 android:fontFamily="@font/arita_semibold"
                 android:layout_marginEnd="12dp"
-                android:textSize="12dp"
+                android:textSize="11dp"
                 android:textAlignment="center"
                 android:text="돌아가기" />
 
             <TextView
                 android:id="@+id/btn_watch"
-                android:layout_width="120dp"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/brand_radius_border_dialog_button"
                 android:textColor="@color/neutral_contrast"
                 android:paddingHorizontal="24dp"
                 android:paddingVertical="12dp"
                 android:fontFamily="@font/arita_semibold"
-                android:textSize="12dp"
+                android:textSize="11dp"
                 android:textAlignment="center"
-                android:text="광고 보기 1/5" />
+                android:text="광고 보기 10/10" />
 
         </LinearLayout>
 

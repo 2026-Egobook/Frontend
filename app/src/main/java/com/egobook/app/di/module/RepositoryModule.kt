@@ -25,6 +25,7 @@ import com.egobook.app.ui.home.repository.NetworkHomeNotificationRepository
 import com.egobook.app.ui.home.repository.NetworkTendencyLevelService
 import com.egobook.app.ui.home.repository.NetworkUserRepository
 import com.egobook.app.ui.home.repository.UserActivityRepository
+import com.egobook.app.ui.home.repository.UserAdRepository
 import com.egobook.app.ui.home.repository.UserPsychologyRepository
 import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.repository.UserTendencyRepository
@@ -84,6 +85,10 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindActivityRecordRepository(impl: NetworkUserRepository): UserActivityRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindAdRepository(impl: NetworkUserRepository): UserAdRepository
+  
     @Binds
     @Singleton
     abstract fun bindPsychologyRepository(impl: NetworkUserRepository): UserPsychologyRepository

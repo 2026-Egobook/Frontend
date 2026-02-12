@@ -5,12 +5,20 @@ import com.egobook.app.di.qualifier.BackendApi
 import com.egobook.app.ui.home.user.Tendency
 import com.egobook.app.ui.home.user.User
 import retrofit2.Retrofit
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface UserRepository {
     suspend fun load(): User
+}
+
+interface UserAdRepository {
+    suspend fun loadAdInfo(): AdInfoDto
+
+    suspend fun watchAd(): String
 }
 
 interface UserTendencyRepository {
@@ -31,6 +39,36 @@ interface NetworkTendencyLevelService {
     @GET("/home/abilities")
     suspend fun loadTendencyLevels(): BaseResponse<TendencyLevels>
 }
+
+data class AdRequestDto(
+    val rewardType: String,
+    val targetId: Int?,
+    val adUnitId: String = "ca-app-pub-test/12345"
+)
+
+data class AdResponseDto(
+    val code: String,
+    val message: String,
+    val status: Int
+)
+
+interface NetworkAdService {
+    @GET("/ads/info")
+    suspend fun loadAdInfo(): BaseResponse<AdInfoDto>
+
+    @POST("/ads/testReward")
+    suspend fun watchAd(
+        @Body adRequest: AdRequestDto
+    ): AdResponseDto
+}
+
+data class AdInfoDto(
+    val currentViewCount: Int,
+    val maxLimit: Int,
+    val isAvailable: Boolean,
+    val rewardPerAd: Int,
+    val message: String
+)
 
 data class PsychologyStateDto(
     val isBottleVisible: Boolean
@@ -68,10 +106,12 @@ interface NetworkPsychologyService {
 @Singleton
 class NetworkUserRepository @Inject constructor(
     @BackendApi private val retrofit: Retrofit
-) : UserRepository, UserTendencyRepository, UserActivityRepository, UserPsychologyRepository {
+) : UserRepository, UserTendencyRepository, UserActivityRepository, UserPsychologyRepository, UserAdRepository {
     private val userService by lazy { retrofit.create(NetworkUserService::class.java) }
     private val tendencyLevelService by lazy { retrofit.create(NetworkTendencyLevelService::class.java) }
     private val activityRecordService by lazy { retrofit.create(NetworkActivityRecordService::class.java) }
+
+    private val networkAdService by lazy { retrofit.create(NetworkAdService::class.java) }
 
     private val psychologyService by lazy { retrofit.create(NetworkPsychologyService::class.java) }
 
@@ -92,6 +132,20 @@ class NetworkUserRepository @Inject constructor(
         return activityRecordResponse.data.toDomain()
     }
 
+    override suspend fun loadAdInfo(): AdInfoDto {
+        val adInfoResponse: BaseResponse<AdInfoDto> = networkAdService.loadAdInfo()
+        return adInfoResponse.data
+    }
+
+    override suspend fun watchAd(): String {
+        val watchingAdResponse = networkAdService.watchAd(
+            AdRequestDto(
+                "INK", null
+            )
+        )
+        return watchingAdResponse.message
+    }
+    
     override suspend fun isReadDailyPsychology(): Boolean {
         val psychologyResponse: BaseResponse<PsychologyStateDto> =
             psychologyService.isReadDailyPsychology()
@@ -104,4 +158,5 @@ class NetworkUserRepository @Inject constructor(
             psychologyService.loadDailyPsychology()
         return psychologyResponse.data
     }
+
 }

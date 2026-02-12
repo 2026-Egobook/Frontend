@@ -1,6 +1,7 @@
 package com.egobook.app
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.egobook.app.databinding.ActivityMainBinding
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -19,9 +26,17 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private var rewardedAd: RewardedAd? = null
+    private val adUnitId = "ca-app-pub-3940256099942544/5224354917"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        MobileAds.initialize(this) {}
+
+        loadAd()
+
         applyDefaultInsets(binding.main)
         applyDefaultInsets(binding.fcvNotificationDrawer)
         setContentView(binding.root)
@@ -75,6 +90,42 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         }
     }
 
+    private fun loadAd() {
+        val adRequest = AdRequest.Builder().build()
+        RewardedAd.load(this, adUnitId, adRequest, object : RewardedAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                rewardedAd = null
+                Log.d("AdMob", "광고 로드 실패")
+            }
+
+            override fun onAdLoaded(ad: RewardedAd) {
+                rewardedAd = ad
+                Log.d("AdMob", "광고 로드 성공!")
+            }
+        })
+    }
+
+    fun showAd(userId: String, onAdClosed: () -> Unit) {
+        if (rewardedAd != null) {
+
+            val ssvOptions = ServerSideVerificationOptions.Builder()
+                .setUserId(userId)
+
+            rewardedAd?.setServerSideVerificationOptions(ssvOptions.build())
+
+            rewardedAd?.show(this) { rewardItem ->
+                val rewardAmount = rewardItem.amount
+                val rewardType = rewardItem.type
+                Log.d("jang", "보상 지급! (서버로 콜백 날아감), $rewardType, rewardAmout: $rewardAmount")
+            }
+            onAdClosed()
+            rewardedAd = null
+            loadAd()
+        } else {
+            Log.d("jang", "아직 광고가 준비 안 됐어요. 잠시 후 다시 시도해주세요.")
+        }
+    }
+
     override fun activateBlur(blurLevel: BlurLevel) {
         binding.blurView.apply {
             setBlurEnabled(true)
@@ -93,4 +144,5 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
     override fun closerDrawer() {
         binding.root.closeDrawer(binding.fcvNotificationDrawer)
     }
+
 }
