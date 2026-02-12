@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.ui.home.notification.Notification
 import com.egobook.app.ui.home.repository.HomeNotificationRepository
+import com.egobook.app.ui.home.repository.NotificationSettingDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,9 @@ class NotificationViewModel @Inject constructor(
 ): ViewModel() {
     private val _notifications = MutableStateFlow<List<Notification>>(emptyList())
     val notifications: StateFlow<List<Notification>> = _notifications.asStateFlow()
+
+    private val _notificationSettingState = MutableStateFlow<NotificationSettingDto>(NotificationSettingDto(true))
+    val notificationSettingState: StateFlow<NotificationSettingDto> = _notificationSettingState.asStateFlow()
     fun loadNotifications() {
         Log.d("jang", "loadNotifications")
         viewModelScope.launch {
@@ -31,6 +35,26 @@ class NotificationViewModel @Inject constructor(
                     // 디버깅용 로그: 데이터가 실제로 오는지 확인
                     Log.d("NotificationViewModel", "새 알림 수신: ${notification.content}")
                 }
+        }
+    }
+
+    fun loadNotificationSetting() {
+        viewModelScope.launch {
+            _notificationSettingState.value = repository.loadNotificationSetting()
+        }
+    }
+
+    fun changeNotificationSetting() {
+        viewModelScope.launch {
+            repository.changeNotificationSetting()
+            loadNotificationSetting()
+        }
+    }
+
+    fun readNotification(notification: Notification) {
+        viewModelScope.launch {
+            repository.readNotification(notification)
+            loadNotifications()
         }
     }
 }

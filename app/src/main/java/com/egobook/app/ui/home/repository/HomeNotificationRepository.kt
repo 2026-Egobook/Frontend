@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
 import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -20,7 +23,20 @@ import javax.inject.Singleton
 
 interface HomeNotificationRepository {
     suspend fun loadNotifications(): Flow<Notification>
+    suspend fun loadNotificationSetting(): NotificationSettingDto
+    suspend fun changeNotificationSetting(): NotificationSettingDto
+
+    suspend fun readNotification(notification: Notification): NotificationReadingDto
 }
+
+data class NotificationReadingDto(
+    val notificationId: Int,
+    val isRead: Boolean
+)
+
+data class NotificationSettingDto(
+    val enabled: Boolean
+)
 
 data class NotificationGroupDto(
     val content: List<NotificationDto>,
@@ -37,6 +53,7 @@ fun String.toNotificationType(): NotificationType = when (this) {
 }
 
 data class NotificationDto(
+    val notificationId: Int,
     val type: String,
     val title: String,
     val content: String?,
@@ -46,6 +63,7 @@ data class NotificationDto(
 ) {
     fun toDomain(): Notification {
         return Notification(
+            id = notificationId,
             content = content ?: "내용이 없습니다",
             type = type.toNotificationType(),
             status = if (isRead) NotificationStatus.READ else NotificationStatus.UNREAD,
@@ -62,6 +80,17 @@ interface NetworkNotificationLoadingService {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): BaseResponse<NotificationGroupDto>
+
+    @GET("/notifications/settings")
+    suspend fun loadNotificationSetting(): BaseResponse<NotificationSettingDto>
+
+    @PATCH("/notifications/settings")
+    suspend fun changeNotificationSetting(): BaseResponse<NotificationSettingDto>
+
+    @POST("/notifications/{notificationId}/read")
+    suspend fun readNotification(
+        @Path("notificationId") notificationId: Int,
+    ): BaseResponse<NotificationReadingDto>
 }
 
 
@@ -104,5 +133,17 @@ class NetworkHomeNotificationRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    override suspend fun loadNotificationSetting(): NotificationSettingDto {
+        return loadingNotificationService.loadNotificationSetting().data
+    }
+
+    override suspend fun changeNotificationSetting(): NotificationSettingDto {
+        return loadingNotificationService.changeNotificationSetting().data
+    }
+
+    override suspend fun readNotification(notification: Notification): NotificationReadingDto {
+        return loadingNotificationService.readNotification(notification.id).data
     }
 }

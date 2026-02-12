@@ -18,7 +18,9 @@ import com.egobook.app.ui.home.notification.NotificationTime
 import com.egobook.app.ui.home.notification.NotificationType
 import java.time.LocalDateTime
 
-class NotificationAdapter: ListAdapter<Notification, NotificationAdapter.NotificationViewHodler>(DiffCallback) {
+class NotificationAdapter(
+    val onNotificationClickListener: (Notification) -> Unit
+): ListAdapter<Notification, NotificationAdapter.NotificationViewHodler>(DiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -32,7 +34,7 @@ class NotificationAdapter: ListAdapter<Notification, NotificationAdapter.Notific
         holder: NotificationViewHodler,
         position: Int
     ) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onNotificationClickListener)
     }
 
     class NotificationViewHodler(view: View) : RecyclerView.ViewHolder(view) {
@@ -40,8 +42,9 @@ class NotificationAdapter: ListAdapter<Notification, NotificationAdapter.Notific
         val content: TextView = view.findViewById(R.id.tv_notification_content)
         val time: TextView = view.findViewById(R.id.tv_notification_time)
         val icon: ImageView = view.findViewById(R.id.iv_notification_icon)
+        val root: View = view.rootView
 
-        fun bind(notification: Notification) {
+        fun bind(notification: Notification, onNotificationClickListener: (Notification) -> Unit) {
             val publisherName = when (notification.publisher) {
                 is NotificationPublisher.Admin -> ""
                 is NotificationPublisher.User -> notification.publisher.userName
@@ -96,6 +99,10 @@ class NotificationAdapter: ListAdapter<Notification, NotificationAdapter.Notific
                     content.setTextColor(neutralColor)
                     time.setTextColor(neutralColor)
                 }
+            }
+
+            root.setOnClickListener {
+                onNotificationClickListener(notification)
             }
         }
     }
