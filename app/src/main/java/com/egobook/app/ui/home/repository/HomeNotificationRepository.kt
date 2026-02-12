@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -23,6 +25,8 @@ interface HomeNotificationRepository {
     suspend fun loadNotifications(): Flow<Notification>
     suspend fun loadNotificationSetting(): NotificationSettingDto
     suspend fun changeNotificationSetting(): NotificationSettingDto
+
+    suspend fun readNotification(notification: Notification): NotificationReadingDto
 }
 
 data class NotificationGroupDto(
@@ -49,6 +53,7 @@ data class NotificationDto(
 ) {
     fun toDomain(): Notification {
         return Notification(
+            id = targetId,
             content = content ?: "내용이 없습니다",
             type = type.toNotificationType(),
             status = if (isRead) NotificationStatus.READ else NotificationStatus.UNREAD,
@@ -67,6 +72,11 @@ data class NotificationChangeDto(
     val enabled: Boolean
 )
 
+data class NotificationReadingDto(
+    val notificationId: Int,
+    val isRead: Boolean
+)
+
 
 interface NetworkNotificationService {
     @GET("/notifications")
@@ -81,6 +91,10 @@ interface NetworkNotificationService {
     @PATCH("/notifications/settings")
     suspend fun changeNotificationSetting(): BaseResponse<NotificationChangeDto>
 
+    @POST("notifications/{notificationId}/read")
+    suspend fun readNotification(
+        @Path("notificationId") notificationId: Int
+    ): BaseResponse<NotificationReadingDto>
 }
 
 
@@ -133,5 +147,9 @@ class NetworkHomeNotificationRepository @Inject constructor(
         val notificationChangeDto = notificationService.changeNotificationSetting().data
         Log.d("jang2", "${notificationChangeDto}")
         return NotificationSettingDto(notificationChangeDto.enabled)
+    }
+
+    override suspend fun readNotification(notification: Notification): NotificationReadingDto {
+        return notificationService.readNotification(notification.id).data
     }
 }

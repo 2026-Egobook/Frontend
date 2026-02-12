@@ -30,6 +30,8 @@ class NotificationFragment: Fragment() {
 
         // "EgoRoom 탭 버튼을 누른 것으로 처리해줘!"
         bottomNav.selectedItemId = R.id.menu_ego_room
+
+        viewModel.readNotification(notification)
     }
     override fun onCreateView(
         inflater: LayoutInflater,

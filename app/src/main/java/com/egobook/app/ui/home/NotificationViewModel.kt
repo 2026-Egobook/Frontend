@@ -55,4 +55,11 @@ class NotificationViewModel @Inject constructor(
             _notificationSettingState.value = notificationSetting
         }
     }
+
+    fun readNotification(notification: Notification) {
+        viewModelScope.launch {
+            val notificationReadingDto = repository.readNotification(notification)
+            Log.d("jang", "${notificationReadingDto}")
+        }
+    }
 }
