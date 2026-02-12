@@ -12,6 +12,10 @@ interface UserRepository {
     suspend fun load(): User
 }
 
+interface UserAdRepository {
+    suspend fun loadAdInfo(): AdInfoDto
+}
+
 interface UserTendencyRepository {
     suspend fun loadTendencies(): List<Tendency>
 }
@@ -26,13 +30,29 @@ interface NetworkTendencyLevelService {
     suspend fun loadTendencyLevels(): BaseResponse<TendencyLevels>
 }
 
+interface NetworkAdService {
+    @GET("/ads/info")
+    suspend fun loadAdInfo(): BaseResponse<AdInfoDto>
+}
+
+data class AdInfoDto(
+    val currentViewCount: Int,
+    val maxLimit: Int,
+    val isAvailable: Boolean,
+    val rewardPerAd: Int,
+    val message: String
+)
+
 @Singleton
 class NetworkUserRepository @Inject constructor(
     @BackendApi private val retrofit: Retrofit
-) : UserRepository, UserTendencyRepository, UserActivityRepository {
+) : UserRepository, UserTendencyRepository, UserActivityRepository, UserAdRepository {
     private val userService by lazy { retrofit.create(NetworkUserService::class.java) }
     private val tendencyLevelService by lazy { retrofit.create(NetworkTendencyLevelService::class.java) }
     private val activityRecordService by lazy { retrofit.create(NetworkActivityRecordService::class.java) }
+
+    private val networkAdService by lazy { retrofit.create(NetworkAdService::class.java) }
+
 
     override suspend fun load(): User {
         val userServiceResponse: BaseResponse<UserDto> = userService.loadBasicUserInformation()
@@ -49,5 +69,10 @@ class NetworkUserRepository @Inject constructor(
         val activityRecordResponse: BaseResponse<ActivityRecordDto> =
             activityRecordService.loadUserActivityRecord()
         return activityRecordResponse.data.toDomain()
+    }
+
+    override suspend fun loadAdInfo(): AdInfoDto {
+        val adInfoResponse: BaseResponse<AdInfoDto> = networkAdService.loadAdInfo()
+        return adInfoResponse.data
     }
 }

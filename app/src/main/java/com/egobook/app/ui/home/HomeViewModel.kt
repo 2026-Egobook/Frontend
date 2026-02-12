@@ -3,6 +3,8 @@ package com.egobook.app.ui.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.ui.home.repository.AdInfoDto
+import com.egobook.app.ui.home.repository.UserAdRepository
 import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.user.Ink
 import com.egobook.app.ui.home.user.Level
@@ -19,10 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val storeRepository: StoreRepository
+    private val storeRepository: StoreRepository,
+    private val userAdRepository: UserAdRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(User(id=-1, Level(1), Ink(0)))
     val uiState: StateFlow<User> = _uiState.asStateFlow()
+
+    private val _adState = MutableStateFlow(AdInfoDto(0, 0, false, 0, ""))
+    val adState: StateFlow<AdInfoDto> = _adState.asStateFlow()
 
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
     val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
@@ -46,6 +52,13 @@ class HomeViewModel @Inject constructor(
             } catch(error: Exception) {
                 Log.e("HomeViewModel", "Failed to fetch user", error)
             }
+        }
+    }
+
+    fun loadCurrentAdInfo() {
+        viewModelScope.launch {
+            val adInfo = userAdRepository.loadAdInfo()
+            _adState.value = adInfo
         }
     }
 }

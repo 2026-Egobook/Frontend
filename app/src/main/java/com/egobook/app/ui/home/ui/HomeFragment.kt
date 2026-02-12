@@ -66,8 +66,9 @@ class HomeFragment(): Fragment() {
         }
 
         binding.ivAd.setOnClickListener {
+            val currentUserId = viewModel.uiState.value.id
             applyScreenBlur(BlurLevel.BASE)
-            val dialog = AdDialog()
+            val dialog = AdDialog.newInstance(currentUserId.toString())
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "ConfirmDialog")
         }

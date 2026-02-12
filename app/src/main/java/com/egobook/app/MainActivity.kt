@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
 
             override fun onAdLoaded(ad: RewardedAd) {
                 rewardedAd = ad
-                Log.d("AdMob", "광고 로드 성공! (장전 완료)")
+                Log.d("AdMob", "광고 로드 성공!")
             }
         })
     }
@@ -108,23 +108,21 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
     fun showAd(userId: String) {
         if (rewardedAd != null) {
 
-//            val ssvOptions = ServerSideVerificationOptions.Builder()
-//                .setUserId(userId)
-//
-//
-//            rewardedAd?.setServerSideVerificationOptions(ssvOptions.build())
+            val ssvOptions = ServerSideVerificationOptions.Builder()
+                .setUserId(userId)
 
-            // 2. 진짜로 보여주기
+            rewardedAd?.setServerSideVerificationOptions(ssvOptions.build())
+
             rewardedAd?.show(this) { rewardItem ->
-                // 사용자에게 보상 지급 (UI 처리)
-                Log.d("AdMob", "보상 지급! (서버로 콜백 날아감)")
+                val rewardAmount = rewardItem.amount
+                val rewardType = rewardItem.type
+                Log.d("jang", "보상 지급! (서버로 콜백 날아감), $rewardType, rewardAmout: $rewardAmount")
             }
 
-            // 3. 광고는 1회용이므로 비우고 다시 로드해둠 (다음 클릭을 위해)
             rewardedAd = null
             loadAd()
         } else {
-            Log.d("AdMob", "아직 광고가 준비 안 됐어요. 잠시 후 다시 시도해주세요.")
+            Log.d("jang", "아직 광고가 준비 안 됐어요. 잠시 후 다시 시도해주세요.")
         }
     }
 
