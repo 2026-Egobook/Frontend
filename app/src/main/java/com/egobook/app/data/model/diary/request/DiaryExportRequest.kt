@@ -7,5 +7,9 @@ import kotlinx.serialization.Serializable
 data class DiaryExportRequest (
     @SerialName("format")
     val format: String,
+    @SerialName("startDate")
+    val startDate: String,
+    @SerialName("endDate")
+    val endDate: String,
 
 )

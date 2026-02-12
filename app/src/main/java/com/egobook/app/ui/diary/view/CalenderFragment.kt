@@ -110,8 +110,12 @@ class CalenderFragment : Fragment() {
         val month = args?.getInt("month", -1) ?: -1
 
         if (year != -1 && month != -1) {
+            // 초기 년월 설정 후 명시적 로드
             viewModel.setYearMonth(YearMonth.of(year, month))
             arguments = null // 재적용 방지
+        } else {
+            // 인자가 없으면 현재 월 로드
+            viewModel.initializeCalendar()
         }
     }
     

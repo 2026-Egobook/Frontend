@@ -2,11 +2,14 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.diary.request.DiaryCreateRequest
+import com.egobook.app.data.model.diary.request.DiaryExportRequest
 import com.egobook.app.data.model.diary.request.DiaryUpdateRequest
 import com.egobook.app.data.model.diary.response.DiariesResponse
 import com.egobook.app.data.model.diary.response.DiaryCreateResponse
 import com.egobook.app.data.model.diary.response.DiaryDeleteResponse
 import com.egobook.app.data.model.diary.response.DiaryEntryResponse
+import com.egobook.app.data.model.diary.response.DiaryExportResponse
+import com.google.android.gms.common.api.Api
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -50,5 +53,11 @@ interface DiaryApiService {
         @Path("diaryId") diaryId: Long,
         @Body request: DiaryUpdateRequest
     ): ApiResponse<DiaryEntryResponse>
+
+    //일기 내보내기
+    @POST("/diaries/export")
+    suspend fun exportDiary(
+        @Body request: DiaryExportRequest
+    ): ApiResponse<DiaryExportResponse>
 
 }

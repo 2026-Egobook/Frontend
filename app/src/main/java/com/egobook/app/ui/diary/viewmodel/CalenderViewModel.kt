@@ -34,10 +34,17 @@ class CalenderViewModel @Inject constructor(
         get() = _state.value.selectedYearMonth
 
     /**
-     * 초기 로드
+     * 초기 로드 - 외부에서 명시적으로 호출 필요
      */
     init {
         Log.d("ViewModel1", "=== ViewModel INIT === selectedYearMonth=${_state.value.selectedYearMonth}")
+        // init에서 자동 로드하지 않음 - Fragment에서 초기 년월 설정 후 명시적 호출
+    }
+
+    /**
+     * 초기 캘린더 데이터 로드 (Fragment에서 명시적 호출)
+     */
+    fun initializeCalendar() {
         loadCalender(_state.value.selectedYearMonth)
     }
 
