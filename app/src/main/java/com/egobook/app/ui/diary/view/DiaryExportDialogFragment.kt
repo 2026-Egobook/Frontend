@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.egobook.app.databinding.FragmentDiaryExportDialogBinding
 import com.egobook.app.removeScreenBlur
@@ -31,7 +32,17 @@ class DiaryExportDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupDateInputWatchers()
+        setClickListener()
 
+    }
+
+    private fun setClickListener() {
+        binding.btnPdf.setOnClickListener {
+            Toast.makeText(requireContext(), "내보내기 기능은 준비중입니다!", Toast.LENGTH_SHORT).show()
+        }
+        binding.btnText.setOnClickListener {
+            Toast.makeText(requireContext(), "내보내기 기능은 준비중입니다!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupDateInputWatchers() {
