@@ -63,6 +63,7 @@ class CalenderFragment : Fragment() {
             v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom)
             insets
         }
+        applyInitialMonthFromArgs()
 
         setupDayOfWeekTitles()
         setupCalendar()
@@ -100,6 +101,17 @@ class CalenderFragment : Fragment() {
                 dialog.isCancelable = true
                 dialog.show(childFragmentManager, "DiaryExportDialog")
             }
+        }
+    }
+
+    private fun applyInitialMonthFromArgs() {
+        val args = arguments
+        val year = args?.getInt("year", -1) ?: -1
+        val month = args?.getInt("month", -1) ?: -1
+
+        if (year != -1 && month != -1) {
+            viewModel.setYearMonth(YearMonth.of(year, month))
+            arguments = null // 재적용 방지
         }
     }
     

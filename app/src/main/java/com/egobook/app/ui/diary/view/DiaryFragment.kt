@@ -113,8 +113,17 @@ import kotlin.getValue
                     }
                 }
                 btnCalender.setOnClickListener {
-                    findNavController().navigate(R.id.action_diaryFragment_to_calenderFragment)
+                    val date = viewModel.state.value.selectedDate
+
+                    val action = DiaryFragmentDirections
+                        .actionDiaryFragmentToCalenderFragment(
+                            year = date.year,
+                            month = date.monthValue
+                        )
+
+                    findNavController().navigate(action)
                 }
+
                 btnExport.setOnClickListener {
                     applyScreenBlur(BlurLevel.BASE)
                     val dialog = DiaryExportDialogFragment()
