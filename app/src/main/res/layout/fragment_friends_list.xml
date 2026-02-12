@@ -54,4 +54,20 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_square_friend_list"/>
 
+    <TextView
+        android:id="@+id/tv_friends_list_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="친구가 아직 추가되지 않았습니다.\n 친구를 추가해보세요!"
+        android:textColor="@color/neutral"
+        android:textSize="16sp"
+        android:fontFamily="@font/arita_semibold"
+        android:textAlignment="center"
+        android:layout_marginTop="80dp"
+        android:lineHeight="21sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/iv_friends_list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

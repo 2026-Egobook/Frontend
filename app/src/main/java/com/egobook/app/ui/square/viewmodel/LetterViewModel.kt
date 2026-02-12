@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.egobook.app.domain.usecase.GetFriendListUseCase
+import com.egobook.app.domain.usecase.GetUserInfoUseCase
 import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.DeleteLetterThreadUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
@@ -16,7 +17,8 @@ import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReportRepliedLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
-import com.egobook.app.ui.square.model.friend.FriendModel
+import com.egobook.app.ui.home.user.User
+import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
@@ -49,17 +51,18 @@ class LetterViewModel @Inject constructor(
     private val getSentLettersUseCase: GetSentLettersUseCase,
     private val getSentLetterWithReplyUseCase: GetSentLetterWithReplyUseCase,
     private val reportRepliedLetterUseCase: ReportRepliedLetterUseCase,
-    private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase
+    private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ): ViewModel() {
 
-    private val _friendList = MutableStateFlow<UiState<List<FriendModel>>>(UiState.Idle)
+    private val _friendList = MutableStateFlow<UiState<FriendListModel>>(UiState.Idle)
     val friendList = _friendList.asStateFlow()
 
     fun getFriendList() {
         viewModelScope.launch {
             _friendList.value = UiState.Loading
             getFriendListUseCase().onSuccess { domainList ->
-                _friendList.value = UiState.Success(domainList.map { it.toPresentation() })
+                _friendList.value = UiState.Success(domainList.toPresentation())
             }.onFailure { error ->
                 _friendList.value = UiState.Failure(error.message)
             }
@@ -199,6 +202,20 @@ class LetterViewModel @Inject constructor(
                 _deleteLetterThreadResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _deleteLetterThreadResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _userInfo = MutableSharedFlow<UiState<User>>()
+    val userInfo = _userInfo.asSharedFlow()
+
+    fun getUserInfo() {
+        viewModelScope.launch {
+            _userInfo.emit(UiState.Loading)
+            getUserInfoUseCase().onSuccess { domain ->
+                _userInfo.emit( UiState.Success(domain))
+            }.onFailure { error ->
+                _userInfo.emit(UiState.Failure(error.message))
             }
         }
     }

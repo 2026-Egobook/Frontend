@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -45,26 +46,32 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                             UiState.Loading -> {}
                             is UiState.Success<List<FriendRequestModel>> -> {
                                 val friendRequestList = state.data
-                                llFriendsPendingListReceived.removeAllViews() // 기존에 추가되어 있던 뷰들 모두 제거
-                                friendRequestList.forEach { friendRequest ->
-                                    val itemView = layoutInflater.inflate(
-                                        R.layout.item_square_friend_pending_received_list,
-                                        llFriendsPendingListReceived,
-                                        false
-                                    ).apply {
-                                        tag = friendRequest.requestId
-                                    }
-                                    val itemBinding = ItemSquareFriendPendingReceivedListBinding.bind(itemView)
-                                    itemBinding.tvItemFriendPendingListName.text = friendRequest.nickname
-                                    itemBinding.btnItemSquareFriendPendingListDeny.setOnClickListener {
-                                        viewModel.rejectFriendRequest(requestId = friendRequest.requestId)
-                                    }
-                                    itemBinding.btnItemSquareFriendPendingListAccept.setOnClickListener {
-                                        viewModel.acceptFriendRequest(requestId = friendRequest.requestId)
-                                    }
-                                    llFriendsPendingListReceived.addView(itemView)
-                                }
                                 tvFriendsPendingListReceivedNum.text = friendRequestList.size.toString()
+                                if(friendRequestList.isEmpty()) {
+                                    llFriendsPendingListReceived.removeAllViews()
+                                    tvFriendsPendingListReceivedEmpty.isVisible = true
+                                } else {
+                                    tvFriendsPendingListReceivedEmpty.isVisible = false
+                                    llFriendsPendingListReceived.removeAllViews() // 기존에 추가되어 있던 뷰들 모두 제거
+                                    friendRequestList.forEach { friendRequest ->
+                                        val itemView = layoutInflater.inflate(
+                                            R.layout.item_square_friend_pending_received_list,
+                                            llFriendsPendingListReceived,
+                                            false
+                                        ).apply {
+                                            tag = friendRequest.requestId
+                                        }
+                                        val itemBinding = ItemSquareFriendPendingReceivedListBinding.bind(itemView)
+                                        itemBinding.tvItemFriendPendingListName.text = friendRequest.nickname
+                                        itemBinding.btnItemSquareFriendPendingListDeny.setOnClickListener {
+                                            viewModel.rejectFriendRequest(requestId = friendRequest.requestId)
+                                        }
+                                        itemBinding.btnItemSquareFriendPendingListAccept.setOnClickListener {
+                                            viewModel.acceptFriendRequest(requestId = friendRequest.requestId)
+                                        }
+                                        llFriendsPendingListReceived.addView(itemView)
+                                    }
+                                }
                             }
                         }
                     }
@@ -77,21 +84,27 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                             UiState.Loading -> {}
                             is UiState.Success<List<FriendRequestModel>> -> {
                                 val friendRequestList = state.data
-                                llFriendsPendingListSent.removeAllViews() // 기존에 추가되어 있던 뷰들 모두 제거
-                                friendRequestList.forEach { friendRequest ->
-                                    val itemView = layoutInflater.inflate(
-                                        R.layout.item_square_friend_pending_sent_list,
-                                        llFriendsPendingListSent,
-                                        false
-                                    ).apply {
-                                        tag = friendRequest.requestId
+                                if(friendRequestList.isEmpty()) {
+                                    llFriendsPendingListSent.removeAllViews()
+                                    tvFriendsPendingListSentEmpty.isVisible = true
+                                } else {
+                                    tvFriendsPendingListSentEmpty.isVisible = false
+                                    llFriendsPendingListSent.removeAllViews() // 기존에 추가되어 있던 뷰들 모두 제거
+                                    friendRequestList.forEach { friendRequest ->
+                                        val itemView = layoutInflater.inflate(
+                                            R.layout.item_square_friend_pending_sent_list,
+                                            llFriendsPendingListSent,
+                                            false
+                                        ).apply {
+                                            tag = friendRequest.requestId
+                                        }
+                                        val itemBinding = ItemSquareFriendPendingSentListBinding.bind(itemView)
+                                        itemBinding.tvItemFriendPendingSentListName.text = friendRequest.nickname
+                                        itemBinding.btnItemSquareFriendPendingSentListCancel.setOnClickListener {
+                                            viewModel.cancelFriendRequest(requestId = friendRequest.requestId)
+                                        }
+                                        llFriendsPendingListSent.addView(itemView)
                                     }
-                                    val itemBinding = ItemSquareFriendPendingSentListBinding.bind(itemView)
-                                    itemBinding.tvItemFriendPendingSentListName.text = friendRequest.nickname
-                                    itemBinding.btnItemSquareFriendPendingSentListCancel.setOnClickListener {
-                                        viewModel.cancelFriendRequest(requestId = friendRequest.requestId)
-                                    }
-                                    llFriendsPendingListSent.addView(itemView)
                                 }
                             }
                         }

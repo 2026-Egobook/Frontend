@@ -74,6 +74,22 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <TextView
+        android:id="@+id/tv_square_all_replies_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아직 전체 유저의 답변이 없습니다\n답을 하지 않았어요"
+        android:textColor="@color/neutral"
+        android:textSize="20sp"
+        android:fontFamily="@font/arita_bold"
+        android:lineHeight="21sp"
+        android:letterSpacing="-0.02"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/cv_square_all_replies_today_question"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_square_all_replies"
         android:layout_width="0dp"

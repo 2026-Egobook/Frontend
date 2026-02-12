@@ -3,6 +3,7 @@ package com.egobook.app.ui.square.view
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -14,7 +15,7 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentFriendsListBinding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.adapter.FriendsListAdapter
-import com.egobook.app.ui.square.model.friend.FriendModel
+import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch
@@ -56,10 +57,17 @@ class FriendsListFragment : Fragment(R.layout.fragment_friends_list) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<List<FriendModel>> -> {
+                            is UiState.Success<FriendListModel> -> {
                                 val friendList = state.data
-                                adapter.submitList(friendList)
-                                tvFriendsValue.text = "${friendList.size}/${MAX_FRIEND_COUNT}명"
+                                tvFriendsValue.text = "${friendList.count}/${MAX_FRIEND_COUNT}명"
+                                if(friendList.count == 0) {
+                                    tvFriendsListPlaceholder.isVisible = true
+                                    rvFriendsList.isVisible = false
+                                } else {
+                                    tvFriendsListPlaceholder.isVisible = false
+                                    rvFriendsList.isVisible = true
+                                    adapter.submitList(friendList.friends)
+                                }
                             }
                         }
                     }

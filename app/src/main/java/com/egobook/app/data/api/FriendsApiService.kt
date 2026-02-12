@@ -2,7 +2,7 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.square.friend.FriendRequestResponse
-import com.egobook.app.data.model.square.friend.FriendResponse
+import com.egobook.app.data.model.square.friend.FriendListResponse
 import com.egobook.app.data.model.square.friend.FriendshipRequest
 import com.egobook.app.data.model.square.friend.SearchUserResponse
 import retrofit2.http.Body
@@ -14,10 +14,10 @@ import retrofit2.http.Query
 
 interface FriendsApiService {
     @GET("/friends")
-    suspend fun fetchFriendList(): ApiResponse<List<FriendResponse>>
+    suspend fun fetchFriendList(): ApiResponse<FriendListResponse>
 
     @DELETE("/friends/{friendId}")
-    suspend fun deleteFriend(@Path("friendId") friendId: Int): ApiResponse<Unit>
+    suspend fun deleteFriend(@Path("friendId") friendId: Long): ApiResponse<Unit>
 
     @GET("/friends/requests/incoming")
     suspend fun fetchIncomingFriendsRequests(): ApiResponse<List<FriendRequestResponse>>

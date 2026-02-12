@@ -1,5 +1,6 @@
 package com.egobook.app.ui.counseling.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -10,7 +11,7 @@ import com.egobook.app.R
 import com.egobook.app.databinding.ItemCounselingWeeklyReportBinding
 import com.egobook.app.ui.counseling.model.WeeklyReportModel
 
-class CounselingWeeklyReportAdapter(private val onItemClick: (WeeklyReportModel) -> Unit) : PagingDataAdapter <WeeklyReportModel, CounselingWeeklyReportAdapter.WeeklyReportViewHolder>(diffUtil) {
+class CounselingWeeklyReportAdapter(private val onItemClick: (WeeklyReportModel) -> Unit) : PagingDataAdapter<WeeklyReportModel, CounselingWeeklyReportAdapter.WeeklyReportViewHolder>(diffUtil) {
 
     inner class WeeklyReportViewHolder(private val binding: ItemCounselingWeeklyReportBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -36,6 +37,7 @@ class CounselingWeeklyReportAdapter(private val onItemClick: (WeeklyReportModel)
 
     override fun onBindViewHolder(holder: WeeklyReportViewHolder, position: Int) {
         val item = getItem(position)
+        Log.e("TTEST", "pagingData adapter: $item")
         if(item != null) (holder.bind(item))
     }
 
