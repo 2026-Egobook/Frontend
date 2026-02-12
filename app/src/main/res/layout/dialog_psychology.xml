@@ -38,6 +38,7 @@
                 android:layout_weight="1" />
 
             <ImageView
+                android:visibility="invisible"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/ic_bookmark_unclicked" />
