@@ -52,6 +52,8 @@ class HomeFragment(): Fragment() {
             }
         }
 
+        viewModel.fetchEquipItems()
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.equippedItems.collect { equippedList ->
                 equippedList.forEach { equippedItem ->
