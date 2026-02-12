@@ -408,6 +408,7 @@
             app:layout_constraintEnd_toEndOf="@id/gd_end">
             
             <TextView
+                android:id="@+id/tv_support"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:padding="10dp"
@@ -429,6 +430,7 @@
                 android:fontFamily="@font/arita_semibold"/>
 
             <TextView
+                android:id="@+id/tv_promise"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:padding="10dp"
