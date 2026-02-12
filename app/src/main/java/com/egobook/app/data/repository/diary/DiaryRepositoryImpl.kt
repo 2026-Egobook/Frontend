@@ -4,13 +4,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.DiaryApiService
-import com.egobook.app.data.model.diary.request.DiaryCreateRequest
 import com.egobook.app.data.repository.diary.paging.DiariesPagingSource
 import com.egobook.app.data.util.safeApiCall
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
-import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryCreateRequest
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryEntity
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryUpdateRequest

@@ -2,6 +2,7 @@ package com.egobook.app.ui.diary.view
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,10 +23,12 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentCalenderBinding
 import com.egobook.app.ui.diary.adapter.DayViewContainer
 import com.egobook.app.ui.diary.viewmodel.CalenderViewModel
+import com.egobook.app.util.UiState
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.MonthDayBinder
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -34,7 +36,9 @@ import java.time.format.TextStyle
 import java.util.Locale
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
+@AndroidEntryPoint
 class CalenderFragment : Fragment() {
 
     private var _binding: FragmentCalenderBinding? = null
@@ -73,20 +77,20 @@ class CalenderFragment : Fragment() {
                 applyScreenBlur(BlurLevel.BASE)
 
                 val dialog = MonthDialogFragment.newInstance(
-                    viewModel.selectedYearMonth.value.year
+                    viewModel.selectedYearMonth.year
                 )
                 dialog.isCancelable = true
                 dialog.show(childFragmentManager, "MonthDialog")
             }
 
             btnPrevMonth.setOnClickListener {
-                viewModel.selectedYearMonth.value.minusMonths(1).let {
+                viewModel.selectedYearMonth.minusMonths(1).let {
                     viewModel.setYearMonth(it)
                 }
             }
 
             btnNextMonth.setOnClickListener {
-                viewModel.selectedYearMonth.value.plusMonths(1).let {
+                viewModel.selectedYearMonth.plusMonths(1).let {
                     viewModel.setYearMonth(it)
                 }
             }
@@ -114,12 +118,35 @@ class CalenderFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.selectedYearMonth.collectLatest { yearMonth ->
+                viewModel.state.collectLatest { state ->
                     // 애니메이션 없이 해당 월 즉시 이동
-                    binding.calendarView.scrollToMonth(yearMonth)
+                    binding.calendarView.scrollToMonth(state.selectedYearMonth)
                     // 상단 텍스트 업데이트
-                    binding.tvYear.text = yearMonth.year.toString()
-                    binding.tvMonth.text = "${yearMonth.monthValue}월"
+                    binding.tvYear.text = state.selectedYearMonth.year.toString()
+                    binding.tvMonth.text = "${state.selectedYearMonth.monthValue}월"
+                    // 중요: 감정 데이터 변경 시 해당 월만 캘린더 뷰 갱신
+                    binding.calendarView.notifyMonthChanged(state.selectedYearMonth)
+                }
+            }
+        }
+        
+        // 로딩 상태 관찰 (로딩 뷰용)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.calenderLoadState.collectLatest { loadState ->
+                    when (loadState) {
+                        is UiState.Loading -> {
+                            // TODO: 로딩 뷰 표시
+                        }
+                        is UiState.Success -> {
+                            // TODO: 로딩 뷰 숨김
+                            // notifyCalendarChanged()는 state 관찰에서 처리
+                        }
+                        is UiState.Failure -> {
+                            // TODO: 에러 처리
+                        }
+                        else -> {}
+                    }
                 }
             }
         }
@@ -151,9 +178,7 @@ class CalenderFragment : Fragment() {
         initializeCalendarRange(currentMonth)
         initializeYearMonthText(currentMonth)
         setupDayBinder()
-        
-        // 초기 ViewModel 설정
-        viewModel.setYearMonth(currentMonth)
+        // 초기 로드는 ViewModel의 init 블록에서 처리
     }
     
     /**
@@ -200,6 +225,42 @@ class CalenderFragment : Fragment() {
             data.position != DayPosition.MonthDate -> bindOutOfMonthDate(container)
             data.date == today -> bindTodayDate(container, data.date)
             else -> bindRegularDate(container, data.date)
+        }
+        
+        // 감정 이미지 바인딩 (API 데이터에서 조회)
+        bindEmotionImage(container, data.date)
+    }
+    
+    /**
+     * 감정 이미지 바인딩
+     */
+    private fun bindEmotionImage(container: DayViewContainer, date: LocalDate) {
+        val emotionLevel = viewModel.getEmotionLevel(date)
+        
+        Timber.tag("CalenderDebug").d("Date: $date, EmotionLevel: $emotionLevel, MapKeys: ${viewModel.state.value.dateEmotionMap.keys}")
+        
+        if (emotionLevel != null) {
+            // 감정 레벨에 따른 이미지 설정 (1~5 유효, 그 외는 기본 이미지)
+            val emotionDrawable = getEmotionDrawable(emotionLevel)
+            container.binding.dayEmotionImg.setImageResource(emotionDrawable)
+            container.binding.dayEmotionImg.visibility = View.VISIBLE
+        } else {
+            // 감정 기록 없음
+            container.binding.dayEmotionImg.visibility = View.INVISIBLE
+        }
+    }
+    
+    /**
+     * 감정 레벨에 따른 Drawable 리소스 반환
+     */
+    private fun getEmotionDrawable(level: Int): Int {
+        return when (level) {
+            1 -> R.drawable.img_emotion_very_sad_unselectd // 오타 있는 파일명 그대로 사용
+            2 -> R.drawable.img_emotion_sad_unselected
+            3 -> R.drawable.img_emotion_neutral_unselected
+            4 -> R.drawable.img_emotion_happy_unselected
+            5 -> R.drawable.img_emotion_very_happy_unselected
+            else -> R.drawable.img_emotion_neutral_unselected
         }
     }
     

@@ -8,6 +8,7 @@ import com.egobook.app.domain.repository.CounselingRepository
 import com.egobook.app.data.repository.auth.AuthRepositoryImpl
 import com.egobook.app.data.repository.QuestionRepositoryImpl
 import com.egobook.app.data.repository.account.AccountRepositoryImpl
+import com.egobook.app.data.repository.diary.CalenderRepositoryImpl
 import com.egobook.app.data.repository.diary.DiaryRepositoryImpl
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.LetterRepository
@@ -18,6 +19,7 @@ import com.egobook.app.ui.shop.StoreRepository
 import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
 import com.egobook.app.domain.repository.account.AccountRepository
+import com.egobook.app.domain.repository.diary.CalenderRepository
 import com.egobook.app.domain.repository.diary.DiaryRepository
 import com.egobook.app.ui.home.repository.NetworkPsychologyService
 import com.egobook.app.ui.home.repository.HomeNotificationRepository
@@ -91,4 +93,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindHomeNotificationRepository(impl: NetworkHomeNotificationRepository): HomeNotificationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCalenderRepository(impl: CalenderRepositoryImpl): CalenderRepository
 }
