@@ -136,16 +136,16 @@ class WeeklyReportViewModel @Inject constructor(
         }
     }
 
-    private val _userInfo = MutableStateFlow<UiState<User>>(UiState.Idle)
-    val userInfo = _userInfo.asStateFlow()
+    private val _userInfo = MutableSharedFlow<UiState<User>>()
+    val userInfo = _userInfo.asSharedFlow()
 
     fun getUserInfo() {
         viewModelScope.launch {
-            _userInfo.value = UiState.Loading
+            _userInfo.emit(UiState.Loading)
             getUserInfoUseCase().onSuccess { domain ->
-                _userInfo.value = UiState.Success(domain)
+                _userInfo.emit( UiState.Success(domain))
             }.onFailure { error ->
-                _userInfo.value = UiState.Failure(error.message)
+                _userInfo.emit(UiState.Failure(error.message))
             }
         }
     }

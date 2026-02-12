@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
-import com.egobook.app.R
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
+import com.egobook.app.R
 import com.egobook.app.databinding.DialogSquareAddFriendBinding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.friend.SearchUserModel
@@ -35,8 +35,13 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DialogSquareAddFriendBinding.bind(view)
+        fetchData()
         initListeners()
         initObservers()
+    }
+
+    private fun fetchData() {
+        viewModel.getUserId()
     }
 
     private fun initListeners() = with(binding) {
@@ -90,6 +95,19 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
                                 btnAddFriendSearchResultApply.isEnabled = false
                                 btnAddFriendSearchResultApply.alpha = 0.5f
                                 btnAddFriendSearchResultApply.text = "신청완료"
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.userId.collect { state ->
+                        when (state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<String> -> {
+                                val userId = state.data
+                                tvAddFriendAccountId.text = userId
                             }
                         }
                     }
