@@ -44,7 +44,7 @@ android {
         val aiBaseUrl = localProperties.getProperty("AI_BASE_URL")
         buildConfigField("String", "AI_BASE_URL", "\"$aiBaseUrl\"")
 
-        val admobAppId = localProperties.getProperty("ADMOB_APP_ID")
+        val admobAppId = localProperties.getProperty("ADMOB_APP_ID") ?: "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
         manifestPlaceholders["ADMOB_APP_ID"] = admobAppId
     }
 
