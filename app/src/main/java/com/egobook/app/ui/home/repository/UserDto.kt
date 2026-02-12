@@ -5,6 +5,7 @@ import com.egobook.app.ui.home.user.Level
 import com.egobook.app.ui.home.user.User
 
 data class UserDto(
+    val userId: Int,
     val nickname: String,
     val level: Int,
     val ink: Int,
@@ -13,5 +14,5 @@ data class UserDto(
     val isFirstAttendanceToday: Boolean,
     val attendanceRewardInk: Int
 ) {
-    fun toDomain(): User = User(Level(level), Ink(ink))
+    fun toDomain(): User = User(id = userId, Level(level), Ink(ink))
 }

@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val storeRepository: StoreRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(User(Level(1), Ink(0)))
+    private val _uiState = MutableStateFlow(User(id=-1, Level(1), Ink(0)))
     val uiState: StateFlow<User> = _uiState.asStateFlow()
 
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
