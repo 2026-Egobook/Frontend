@@ -18,7 +18,22 @@
             android:id="@+id/action_homeFragment_to_accountFragment"
             app:destination="@id/accountFragment" />
 
+        <action
+            android:id="@+id/action_notificationFragment_to_egoRoom"
+            app:destination="@id/menu_ego_room" />
+
     </fragment>
+
+<!--    <fragment-->
+<!--        android:id="@+id/notification_fragment"-->
+<!--        android:name="com.egobook.app.ui.home.ui.NotificationFragment"-->
+<!--        android:label="알림 프래그먼트">-->
+
+<!--        <action-->
+<!--            android:id="@+id/action_notificationFragment_to_egoRoom"-->
+<!--            app:destination="@id/menu_ego_room" />-->
+
+<!--    </fragment>-->
 
     <fragment
         android:id="@+id/menu_diary"
@@ -44,9 +59,15 @@
         android:name="com.egobook.app.ui.counseling.view.EgoRoomFragment"
         android:label="에고룸"
         tools:layout="@layout/fragment_ego_room">
+
         <action
             android:id="@+id/action_menu_ego_room_to_counselingWeeklyReportDetailFragment"
             app:destination="@id/egoRoomWeeklyReportDetailFragment" />
+
+        <action
+            android:id="@+id/action_menu_ego_room_to_homeFragment"
+            app:destination="@id/menu_home" />
+
     </fragment>
     <fragment
         android:id="@+id/menu_square"
