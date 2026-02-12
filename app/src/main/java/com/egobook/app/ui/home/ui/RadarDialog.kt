@@ -69,11 +69,11 @@ class RadarDialog(): DialogFragment() {
     private fun showTendencyLevel(tendencies: List<Tendency>) {
         for(tendency in tendencies) {
             when(tendency.type) {
-                TendencyType.EMPATHY -> binding.tvEmpathyLevel.text = "Lv. ${tendency.level}"
-                TendencyType.SELF_ESTEEM -> binding.tvSelfEsteemLevel.text = "Lv. ${tendency.level}"
-                TendencyType.DILIGENCE -> binding.tvDiligenceLevel.text = "Lv. ${tendency.level}"
-                TendencyType.POSITIVE_THINKING -> binding.tvPositiveThinkingLevel.text = "Lv. ${tendency.level}"
-                TendencyType.EMOTION_REGULATION -> binding.tvEmotionRegulationLevel.text = "Lv. ${tendency.level}"
+                TendencyType.EMPATHY -> binding.tvEmpathyLevel.text = "Lv. ${tendency.level.toString().padStart(3, '0')}"
+                TendencyType.SELF_ESTEEM -> binding.tvSelfEsteemLevel.text = "Lv. ${tendency.level.toString().padStart(3, '0')}"
+                TendencyType.DILIGENCE -> binding.tvDiligenceLevel.text = "Lv. ${tendency.level.toString().padStart(3, '0')}"
+                TendencyType.POSITIVE_THINKING -> binding.tvPositiveThinkingLevel.text = "Lv. ${tendency.level.toString().padStart(3, '0')}"
+                TendencyType.EMOTION_REGULATION -> binding.tvEmotionRegulationLevel.text = "Lv. ${tendency.level.toString().padStart(3, '0')}"
             }
         }
     }
