@@ -255,12 +255,12 @@ class CalenderFragment : Fragment() {
      */
     private fun getEmotionDrawable(level: Int): Int {
         return when (level) {
-            1 -> R.drawable.img_emotion_very_sad_unselectd // 오타 있는 파일명 그대로 사용
-            2 -> R.drawable.img_emotion_sad_unselected
-            3 -> R.drawable.img_emotion_neutral_unselected
-            4 -> R.drawable.img_emotion_happy_unselected
-            5 -> R.drawable.img_emotion_very_happy_unselected
-            else -> R.drawable.img_emotion_neutral_unselected
+            1 -> R.drawable.img_emotion_very_sad // 오타 있는 파일명 그대로 사용
+            2 -> R.drawable.img_emotion_sad
+            3 -> R.drawable.img_emotion_neutral
+            4 -> R.drawable.img_emotion_happy
+            5 -> R.drawable.img_emotion_very_happy
+            else -> R.drawable.img_emotion_neutral
         }
     }
     
