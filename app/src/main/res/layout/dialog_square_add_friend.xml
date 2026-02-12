@@ -65,6 +65,7 @@
                 android:textSize="16sp"
                 android:fontFamily="@font/arita_semibold"/>
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_friend_copy_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="0dp"

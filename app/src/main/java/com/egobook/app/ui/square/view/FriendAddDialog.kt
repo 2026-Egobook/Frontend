@@ -1,10 +1,14 @@
 package com.egobook.app.ui.square.view
 
 import android.app.Dialog
+import android.content.ClipData
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import android.content.ClipboardManager
+import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -51,10 +55,21 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
         }
         tvAddFriendSearch.setOnClickListener {
             val keyword = etAddFriendUserKeyword.text.toString()
-            viewModel.searchUser(keyword = keyword)
+            if(keyword.isEmpty()) {
+                Toast.makeText(context, "ID를 입력해주세요!", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.searchUser(keyword = keyword)
+            }
         }
         btnAddFriendSearchResultApply.setOnClickListener {
             viewModel.requestFriendship(receiverId = receiverId ?: -1L)
+        }
+        btnAddFriendCopyId.setOnClickListener {
+            val copyId = tvAddFriendAccountId.text.toString()
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("User ID", copyId)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(context, "계정 ID가 복사되었습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -70,6 +85,7 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
                             is UiState.Success<SearchUserModel?> -> {
                                 val searchUserResult = state.data
                                 if(searchUserResult == null) {
+                                    Toast.makeText(context, "검색 결과가 존재하지 않습니다!", Toast.LENGTH_SHORT).show()
                                     clAddFriendSearchResultFound.visibility = View.GONE
                                     tvAddFriendSearchResultEmpty.visibility = View.VISIBLE
                                 } else {
