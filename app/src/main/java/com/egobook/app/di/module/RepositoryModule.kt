@@ -19,6 +19,8 @@ import dagger.Binds
 import com.egobook.app.domain.repository.QuestionRepository
 import com.egobook.app.domain.repository.account.AccountRepository
 import com.egobook.app.domain.repository.diary.DiaryRepository
+import com.egobook.app.ui.home.repository.HomeNotificationRepository
+import com.egobook.app.ui.home.repository.NetworkHomeNotificationRepository
 import com.egobook.app.ui.home.repository.NetworkTendencyLevelService
 import com.egobook.app.ui.home.repository.NetworkUserRepository
 import com.egobook.app.ui.home.repository.UserActivityRepository
@@ -79,4 +81,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindActivityRecordRepository(impl: NetworkUserRepository): UserActivityRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindHomeNotificationRepository(impl: NetworkHomeNotificationRepository): HomeNotificationRepository
 }

@@ -6,30 +6,45 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egobook.app.databinding.FragmentNotificationBinding
 import com.egobook.app.ui.home.NotificationViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class NotificationFragment: Fragment() {
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
-
+    private val viewModel: NotificationViewModel by viewModels()
+    private val notificationAdapter = NotificationAdapter()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNotificationBinding.inflate(inflater)
+        _binding = FragmentNotificationBinding.inflate(inflater, container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel: NotificationViewModel by viewModels()
+        viewModel.loadNotifications()
 
         binding.rvNotification.apply {
-            adapter = NotificationAdapter(viewModel.loadNotifications())
+            adapter = notificationAdapter
             layoutManager = LinearLayoutManager(context)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.notifications.collect { list ->
+                    notificationAdapter.submitList(list)
+                }
+            }
         }
     }
 
