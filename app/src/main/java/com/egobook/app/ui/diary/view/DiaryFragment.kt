@@ -24,7 +24,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.getValue
+    import java.time.LocalDate
+    import kotlin.getValue
     class DiaryFragment : Fragment() {
         private var _binding: FragmentDiaryBinding? = null
         private val binding get() = _binding!!
@@ -52,7 +53,7 @@ import kotlin.getValue
             // 초기에는 GoToTop 버튼 숨김
             binding.btnGoToTop.visibility = View.GONE
             
-            // Navigation 인자로부터 선택된 날짜 확인 및 적용
+            // 캘린더에서 선택한 날짜가 있으면 적용 (없으면 마지막 선택 날짜 유지)
             applySelectedDateFromArgs()
             
             initViewPager()
@@ -61,16 +62,17 @@ import kotlin.getValue
         }
         
         /**
-         * Navigation 인자로 전달된 날짜를 확인하고 적용
+         * 캘린더에서 선택한 날짜 적용 (있는 경우에만)
+         * 다른 화면에서는 마지막 선택된 날짜 유지
          */
         private fun applySelectedDateFromArgs() {
-            val args = arguments ?: return
+            val args = arguments
             
-            val year = args.getInt("selectedYear", -1)
-            val month = args.getInt("selectedMonth", -1)
-            val day = args.getInt("selectedDay", -1)
+            val year = args?.getInt("selectedYear", -1) ?: -1
+            val month = args?.getInt("selectedMonth", -1) ?: -1
+            val day = args?.getInt("selectedDay", -1) ?: -1
             
-            // 유효한 날짜인 경우에만 적용 (-1은 기본값, 즉 인자가 전달되지 않은 경우)
+            // 캘린더에서 유효한 날짜가 전달된 경우에만 적용
             if (year != -1 && month != -1 && day != -1) {
                 viewModel.onEvent(
                     DiariesEvent.ChangeDate(
@@ -86,7 +88,7 @@ import kotlin.getValue
         
         override fun onResume() {
             super.onResume()
-            //다른 프래그먼트에서 돌아왔을 때 데이터 새로고침
+            // 다른 화면에서 돌아왔을 때 데이터 새로고침만 수행 (날짜는 유지)
             viewModel.onEvent(DiariesEvent.RefreshDiaries)
         }
 
