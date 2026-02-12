@@ -49,6 +49,7 @@
         app:layout_constraintStart_toEndOf="@id/civ_item_square_question_reply_user_image"/>
 
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/iv_square_question_reply_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
