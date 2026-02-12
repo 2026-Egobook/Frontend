@@ -148,6 +148,7 @@
         android:textSize="12sp"
         android:fontFamily="@font/arita_semibold"
         app:cornerRadius="4dp"
+        android:visibility="gone"
         android:layout_marginHorizontal="16.16dp"
         android:layout_marginBottom="16dp"
         app:backgroundTint="@color/brand_grass"
