@@ -24,8 +24,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-    import java.time.LocalDate
-    import kotlin.getValue
+import kotlin.getValue
     class DiaryFragment : Fragment() {
         private var _binding: FragmentDiaryBinding? = null
         private val binding get() = _binding!!
@@ -84,6 +83,9 @@ import kotlinx.coroutines.launch
                 // "전체" 탭으로 이동
                 binding.vpDiary.setCurrentItem(0, false)
             }
+            
+            // 인자 사용 후 초기화 (다음 진입 시 재적용 방지)
+            arguments = null
         }
         
         override fun onResume() {
