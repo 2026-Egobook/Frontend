@@ -236,6 +236,8 @@ class CalenderFragment : Fragment() {
         
         binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
         binding.calendarView.scrollToMonth(initialMonth)
+
+
     }
     
     /**
