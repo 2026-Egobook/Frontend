@@ -26,7 +26,7 @@ interface FriendsApiService {
     suspend fun fetchOutgoingFriendsRequests(): ApiResponse<List<FriendRequestResponse>>
 
     @GET("/friends/search")
-    suspend fun searchUser(@Query("keyword") keyword: String): ApiResponse<List<SearchUserResponse>?>
+    suspend fun searchUser(@Query("keyword") keyword: String): ApiResponse<List<SearchUserResponse>>
 
     @POST("/friends/requests")
     suspend fun requestFriendship(@Body request: FriendshipRequest): ApiResponse<Unit>

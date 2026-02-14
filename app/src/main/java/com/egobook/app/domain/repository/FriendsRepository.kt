@@ -9,7 +9,7 @@ interface FriendsRepository {
     suspend fun fetchFriendList(): Result<FriendList>
     suspend fun fetchIncomingFriendRequestList(): Result<List<FriendRequest>>
     suspend fun fetchOutgoingFriendRequestList(): Result<List<FriendRequest>>
-    suspend fun searchUser(keyword: String): Result<List<SearchUser>?>
+    suspend fun searchUser(keyword: String): Result<List<SearchUser>>
 
     suspend fun requestFriendship(receiverId: Long): Result<Unit>
 

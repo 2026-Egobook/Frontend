@@ -43,10 +43,10 @@ class FriendsRepositoryImpl @Inject constructor(private val apiService: FriendsA
         Result.failure(e)
     }
 
-    override suspend fun searchUser(keyword: String): Result<List<SearchUser>?> = try {
+    override suspend fun searchUser(keyword: String): Result<List<SearchUser>> = try {
         val response = apiService.searchUser(keyword = keyword)
         if(response.status == 200) {
-            Result.success(response.data?.map { it.toDomain() })
+            Result.success(response.data.map { it.toDomain() })
         } else {
             Result.failure(Exception("Error: ${response.status}"))
         }

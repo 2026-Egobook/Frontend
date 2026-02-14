@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import android.content.ClipboardManager
+import android.view.inputmethod.InputMethodManager
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -69,8 +70,10 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
             val keyword = etAddFriendUserKeyword.text.toString()
             if(keyword.isEmpty()) {
                 Toast.makeText(context, "ID를 입력해주세요!", Toast.LENGTH_SHORT).show()
+            } else if(keyword == tvAddFriendAccountId.text.toString()) {
+                Toast.makeText(context, "자신의 ID는 검색할 수 없습니다!", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.searchUser(keyword = keyword)
+                viewModel.searchUserWithoutRequest(keyword = keyword)
             }
         }
         btnAddFriendCopyId.setOnClickListener {
@@ -91,15 +94,19 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<List<SearchUserModel>?> -> {
+                            is UiState.Success<List<SearchUserModel>> -> {
                                 val searchUserList = state.data
-                                if(searchUserList == null) {
+                                if(searchUserList.isEmpty()) {
                                     Toast.makeText(context, "검색 결과가 존재하지 않습니다!", Toast.LENGTH_SHORT).show()
                                     rvAddFriendSearchResultFound.isVisible = false
-                                    tvAddFriendSearchResultEmpty.isVisible = true
+                                    tvAddFriendSearchResultEmptyMain.isVisible = true
+                                    tvAddFriendSearchResultEmptySub.isVisible = true
                                 } else {
+                                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                    imm.hideSoftInputFromWindow(etAddFriendUserKeyword.windowToken, 0) // flags = 0 → "조건 따지지 않고 무조건 키보드를 내린다"
                                     adapter.submitList(searchUserList.toMutableList())
-                                    tvAddFriendSearchResultEmpty.isVisible = false
+                                    tvAddFriendSearchResultEmptyMain.isVisible = false
+                                    tvAddFriendSearchResultEmptySub.isVisible = false
                                     rvAddFriendSearchResultFound.isVisible = true
                                 }
                             }
