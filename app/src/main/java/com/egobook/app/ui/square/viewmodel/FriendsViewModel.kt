@@ -94,14 +94,14 @@ class FriendsViewModel @Inject constructor(
         }
     }
 
-    private val _searchUserResult = MutableSharedFlow<UiState<SearchUserModel?>>()
+    private val _searchUserResult = MutableSharedFlow<UiState<List<SearchUserModel>?>>()
     val searchUserResult = _searchUserResult.asSharedFlow()
 
     fun searchUser(keyword: String) {
         viewModelScope.launch {
             _searchUserResult.emit(UiState.Loading)
             searchUserUseCase(keyword = keyword).onSuccess { domainList ->
-                _searchUserResult.emit(UiState.Success(domainList.map { it.toPresentation() }.firstOrNull()))
+                _searchUserResult.emit(UiState.Success(domainList?.map { it.toPresentation() }))
             }.onFailure { error ->
                 _searchUserResult.emit(UiState.Failure(error.message))
             }
