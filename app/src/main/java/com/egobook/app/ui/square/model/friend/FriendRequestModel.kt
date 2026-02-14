@@ -6,12 +6,12 @@ data class FriendRequestModel(
     val requestId: Long,
     val userId: Long,
     val nickname: String,
-    val requestedAt: String
+    val level: Long,
 )
 
 fun FriendRequest.toPresentation(): FriendRequestModel = FriendRequestModel(
     requestId = requestId,
     userId = userId,
     nickname = nickname,
-    requestedAt = requestedAt
+    level = level
 )

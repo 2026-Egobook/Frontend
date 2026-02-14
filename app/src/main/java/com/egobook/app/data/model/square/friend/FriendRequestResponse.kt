@@ -10,6 +10,8 @@ data class FriendRequestResponse(
     val userId: Long,
     @SerializedName("nickname")
     val nickname: String,
+    @SerializedName("level")
+    val level: Long,
     @SerializedName("requestedAt")
     val requestedAt: String
 )
@@ -18,5 +20,6 @@ fun FriendRequestResponse.toDomain(): FriendRequest = FriendRequest(
     requestId = requestId,
     userId = userId,
     nickname = nickname,
+    level = level,
     requestedAt = requestedAt
 )
