@@ -16,6 +16,7 @@ import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentMyLetterDetailBinding
+import com.egobook.app.domain.model.square.ReportOrigin
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.ui.square.model.letter.SentLetterWithReplyModel
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
@@ -73,7 +74,7 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
         ivMyLetterDetailReport.setOnClickListener {
             if(isReplyReported == true) Toast.makeText(context, "답장이 이미 신고되었습니다.", Toast.LENGTH_SHORT).show()
             else {
-                val dialog = SquareReportDialog(letterId = letterId, replyId = replyId ?: -1L).apply { isCancelable = false }
+                val dialog = SquareReportDialog(origin = ReportOrigin.LETTER_REPLY, letterId = letterId, replyId = replyId).apply { isCancelable = false }
                 dialog.show(childFragmentManager, SquareReportDialog.TAG)
                 applyScreenBlur(BlurLevel.BASE)
             }

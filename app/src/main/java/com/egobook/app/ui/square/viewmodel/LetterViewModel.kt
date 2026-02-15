@@ -23,7 +23,7 @@ import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.letter.ReplyLetterModel
-import com.egobook.app.ui.square.model.letter.ReportLetterModel
+import com.egobook.app.ui.square.model.letter.ReportContentModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
 import com.egobook.app.ui.square.model.letter.SentLetterModel
 import com.egobook.app.ui.square.model.letter.SentLetterWithReplyModel
@@ -181,10 +181,10 @@ class LetterViewModel @Inject constructor(
     private val _reportRepliedLetterResult = MutableSharedFlow<UiState<Unit>>()
     val reportRepliedLetterResult = _reportRepliedLetterResult.asSharedFlow()
 
-    fun reportRepliedLetter(replyId: Long, reportLetter: ReportLetterModel) {
+    fun reportRepliedLetter(replyId: Long, reportLetter: ReportContentModel) {
         viewModelScope.launch {
             _reportRepliedLetterResult.emit(UiState.Loading)
-            reportRepliedLetterUseCase(replyId = replyId, reportLetter = reportLetter.toDomain()).onSuccess {
+            reportRepliedLetterUseCase(replyId = replyId, reportContent = reportLetter.toDomain()).onSuccess {
                 _reportRepliedLetterResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _reportRepliedLetterResult.emit(UiState.Failure(error.message))

@@ -18,6 +18,7 @@ import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentSquareAllRepliesBinding
+import com.egobook.app.domain.model.square.ReportOrigin
 import com.egobook.app.ui.square.adapter.SquareAllRepliesAdapter
 import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -26,8 +27,10 @@ import kotlinx.coroutines.launch
 class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) {
     private lateinit var binding: FragmentSquareAllRepliesBinding
     private val adapter by lazy {
-        SquareAllRepliesAdapter {
-
+        SquareAllRepliesAdapter { answerId ->
+            val dialog = SquareReportDialog(origin = ReportOrigin.TODAY_QUESTION_ANSWER, answerId = answerId).apply { isCancelable = false }
+            dialog.show(childFragmentManager, SquareReportDialog.TAG)
+            applyScreenBlur(BlurLevel.BASE)
         }
     }
     private val viewModel: QuestionViewModel by activityViewModels()

@@ -4,12 +4,14 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.QuestionApiService
+import com.egobook.app.data.model.square.letter.toData
 import com.egobook.app.data.model.square.question.TodayAnswerRequest
 import com.egobook.app.data.model.square.question.toDomain
 import com.egobook.app.data.repository.paging.AllUserRepliesPagingSource
 import com.egobook.app.data.repository.paging.FriendRepliesPagingSource
 import com.egobook.app.data.repository.paging.MyRepliesHistoryPagingSource
 import com.egobook.app.domain.model.TodayQuestion
+import com.egobook.app.domain.model.square.letter.ReportContent
 import com.egobook.app.domain.model.square.question.MyTodayQuestionAnswerItem
 import com.egobook.app.domain.model.square.question.TodayAnswer
 import com.egobook.app.domain.model.square.question.UserTodayQuestionAnswerItem
@@ -118,4 +120,14 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
         Result.failure(e)
     }
 
+    override suspend fun reportTodayQuestionAnswer(answerId: Long, request: ReportContent): Result<Unit> = try {
+        val response = apiService.reportTodayQuestionAnswer(answerId = answerId, request = request.toData())
+        if(response.status == 200) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }
