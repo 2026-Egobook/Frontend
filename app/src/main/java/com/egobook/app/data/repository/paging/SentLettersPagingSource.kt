@@ -8,17 +8,17 @@ import com.egobook.app.domain.model.square.letter.SentLetterItem
 
 class SentLettersPagingSource(private val apiService: LetterApiService): PagingSource<Int, SentLetterItem>() {
     override fun getRefreshKey(state: PagingState<Int, SentLetterItem>): Int {
-        return 1
+        return FIRST_PAGE_NUM
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SentLetterItem> {
         return try {
-            val page = params.key ?: 1
+            val page = params.key ?: FIRST_PAGE_NUM
             val size = params.loadSize
             val data = apiService.fetchSentLetters(page = page, size = size).data
             LoadResult.Page(
                 data = data.content.map { it.toDomain() },
-                prevKey = if(page == 1) null else page - 1,
+                prevKey = if(page == FIRST_PAGE_NUM) null else page - 1,
                 nextKey = if(data.hasNext) page + 1 else null
             )
         } catch (e: Exception) {
@@ -26,4 +26,7 @@ class SentLettersPagingSource(private val apiService: LetterApiService): PagingS
         }
     }
 
+    companion object {
+        private val FIRST_PAGE_NUM = 1
+    }
 }

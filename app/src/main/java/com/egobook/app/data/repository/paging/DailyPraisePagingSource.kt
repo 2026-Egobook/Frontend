@@ -9,21 +9,25 @@ import com.egobook.app.domain.model.counseling.DailyPraise
 class DailyPraisePagingSource(private val apiService: CounselingApiService) :
     PagingSource<Int, DailyPraise>() {
     override fun getRefreshKey(state: PagingState<Int, DailyPraise>): Int {
-        return 1
+        return FIRST_PAGE_NUM
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DailyPraise> {
         return try {
-            val page = params.key ?: 1
+            val page = params.key ?: FIRST_PAGE_NUM
             val size = params.loadSize
             val result = apiService.fetchDailyPraises(page = page, size = size).data
             LoadResult.Page(
                 data = result.content.map { it.toDomain() },
-                prevKey = if(result.page == 1) null else result.page - 1,
+                prevKey = if(result.page == FIRST_PAGE_NUM) null else result.page - 1,
                 nextKey = if(result.hasNext) result.page + 1 else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
+    }
+
+    companion object {
+        private val FIRST_PAGE_NUM = 1
     }
 }
