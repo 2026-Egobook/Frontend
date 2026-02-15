@@ -3,12 +3,14 @@ package com.egobook.app.ui.square.view
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentMyRepliesHistoryBinding
 import com.egobook.app.ui.square.adapter.MyRepliesHistoryAdapter
@@ -61,6 +63,15 @@ class MyRepliesHistoryFragment : Fragment(R.layout.fragment_my_replies_history) 
                         if(item != null) {
                             adapter.submitData(lifecycle, item)
                         }
+                    }
+                }
+                launch {
+                    adapter.loadStateFlow.collectLatest { loadStates ->
+                        val isListEmpty = loadStates.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                        tvSquareMyRepliesHistoryPlaceholderMain.isVisible = isListEmpty
+                        tvSquareMyRepliesHistoryPlaceholderSub.isVisible = isListEmpty
+                        rvMyRepliesHistory.isVisible = !isListEmpty
+                        btnMyRepliesHistoryScrollUp.isVisible = !isListEmpty
                     }
                 }
                 launch {
