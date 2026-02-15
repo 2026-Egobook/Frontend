@@ -38,7 +38,7 @@
         android:id="@+id/tv_square_my_replies_history_placeholder_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="80dp"
         android:text="아직 답변을\n기록하지 않았어요"
         android:textColor="@color/neutral"
         android:textSize="16sp"
