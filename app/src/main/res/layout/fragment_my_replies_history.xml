@@ -52,9 +52,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/brand"
+        android:contentDescription="Go To My First Replies!"
         android:src="@drawable/ic_arrow_up"
+        android:backgroundTint="@color/brand"
         app:tint="@color/layer_white"
+        app:shapeAppearanceOverlay="@style/Circle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
