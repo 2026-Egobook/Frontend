@@ -85,6 +85,7 @@
         android:lineHeight="21sp"
         android:letterSpacing="-0.02"
         android:textAlignment="center"
+        android:visibility="gone"
         app:layout_constraintVertical_bias="0.2"
         app:layout_constraintTop_toBottomOf="@id/cv_square_all_replies_today_question"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,7 +93,6 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:visibility="gone"
         android:id="@+id/rv_square_all_replies"
         android:layout_width="0dp"
         android:layout_height="0dp"
