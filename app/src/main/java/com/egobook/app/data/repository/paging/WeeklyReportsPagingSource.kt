@@ -27,6 +27,6 @@ class WeeklyReportsPagingSource(private val apiService: CounselingApiService): P
     }
 
     companion object {
-        private val FIRST_PAGE_NUM = 1
+        private const val FIRST_PAGE_NUM = 1
     }
 }

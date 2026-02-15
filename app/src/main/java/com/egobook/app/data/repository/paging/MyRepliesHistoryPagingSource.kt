@@ -30,8 +30,8 @@ class MyRepliesHistoryPagingSource(private val apiService: QuestionApiService): 
 
             LoadResult.Page(
                 data = result.content.map { it.toDomain() },
-                prevKey = if(result.page == FIRST_PAGE_NUM) null else result.page - 1,
-                nextKey = if(result.hasNext) result.page + 1 else null
+                prevKey = if(page == FIRST_PAGE_NUM) null else page - 1,
+                nextKey = if(result.hasNext) page + 1 else null
             )
 
         } catch (e: Exception) {
@@ -40,6 +40,6 @@ class MyRepliesHistoryPagingSource(private val apiService: QuestionApiService): 
     }
 
     companion object {
-        private val FIRST_PAGE_NUM = 1
+        private const val FIRST_PAGE_NUM = 1
     }
 }

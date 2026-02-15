@@ -27,6 +27,6 @@ class SentLettersPagingSource(private val apiService: LetterApiService): PagingS
     }
 
     companion object {
-        private val FIRST_PAGE_NUM = 1
+        private const val FIRST_PAGE_NUM = 1
     }
 }
