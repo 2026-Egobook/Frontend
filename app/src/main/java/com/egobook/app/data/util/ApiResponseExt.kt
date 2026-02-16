@@ -2,6 +2,33 @@ package com.egobook.app.data.util
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.ApiResponseEmpty
+import com.egobook.app.domain.model.auth.AuthError
+import java.io.IOException
+
+
+/**
+ * 로그인/회원가입 전용 에러 매핑 함수
+ */
+fun ApiResponse<*>.toAuthError(): AuthError {
+    return when (this.status) {
+        400 -> AuthError.BadRequest()
+        401 -> AuthError.InvalidCredentials()
+        404 -> AuthError.UserNotFound()
+        409 -> AuthError.UserAlreadyExists()
+        else -> AuthError.Unknown(this.message)
+    }
+}
+
+/**
+ * 로그인/회원가입 전용 Result로 변환 확장 함수
+ */
+fun <T> ApiResponse<T>.toAuthResult(): Result<T> {
+    return if (this.status == 200) {
+        Result.success(this.data)
+    } else {
+        Result.failure(this.toAuthError())
+    }
+}
 
 
 /**
@@ -10,7 +37,7 @@ import com.egobook.app.data.model.ApiResponseEmpty
 inline fun <T, R> ApiResponse<T>.toResult(
     transform: (T) -> R
 ): Result<R> {
-    return if (this.code == "SUCCESS") {
+    return if (this.status == 200) {
         Result.success(transform(this.data))
     } else {
         Result.failure(Exception(this.message))
@@ -21,10 +48,25 @@ inline fun <T, R> ApiResponse<T>.toResult(
  * ApiResponse를 Result로 변환 (변환 없이)
  */
 fun <T> ApiResponse<T>.toResult(): Result<T> {
-    return if (this.code == "SUCCESS") {
+    return if (this.status == 200) {
         Result.success(this.data)
     } else {
         Result.failure(Exception(this.message))
+    }
+}
+
+/**
+ * (로그인/회원가입 전용) API 호출을 안전하게 실행하는 헬퍼 함수
+ */
+suspend fun <T> safeAuthApiCall(
+    apiCall: suspend () -> ApiResponse<T>
+): Result<T> {
+    return try {
+        apiCall().toAuthResult()
+    } catch (e: IOException) {
+        Result.failure(AuthError.NetworkError())
+    } catch (e: Exception) {
+        Result.failure(AuthError.Unknown(e.message))
     }
 }
 
@@ -66,7 +108,7 @@ suspend inline fun <T, R> safeApiCallWithSuspendTransform(
 ): Result<R> {
     return try {
         val response = apiCall()
-        if (response.code == "SUCCESS") {
+        if (response.status == 200) {
             Result.success(transform(response.data))
         } else {
             Result.failure(Exception(response.message))
@@ -81,7 +123,7 @@ suspend inline fun <T, R> safeApiCallWithSuspendTransform(
  */
 
 fun ApiResponseEmpty.toResult(): Result<Unit> {
-    return if (this.code == "SUCCESS") {
+    return if (this.status == 200) {
         Result.success(Unit)
     } else {
         Result.failure(Exception(this.message))

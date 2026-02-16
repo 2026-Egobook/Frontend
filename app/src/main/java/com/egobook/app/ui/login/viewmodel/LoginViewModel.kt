@@ -28,6 +28,9 @@ class LoginViewModel @Inject constructor(
     private val _signUpError = MutableSharedFlow<String>()
     val signUpError = _signUpError.asSharedFlow()
 
+    private val _alreadyRegistered = MutableSharedFlow<Unit>()
+    val alreadyRegistered = _alreadyRegistered.asSharedFlow()
+
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState = _loginState.asStateFlow()
 
@@ -49,7 +52,13 @@ class LoginViewModel @Inject constructor(
                             _loginState.value = LoginState.Idle  // 로딩 해제
                         },
                         onFailure = { error ->
-                            _signUpError.emit(error.message ?: "알 수 없는 오류")
+                            val errorMessage = error.message ?: "알 수 없는 오류"
+                            // 이미 가입된 계정인 경우
+                            if (errorMessage.contains("이미") || errorMessage.contains("already", ignoreCase = true)) {
+                                _alreadyRegistered.emit(Unit)
+                            } else {
+                                _signUpError.emit(errorMessage)
+                            }
                             _loginState.value = LoginState.Idle  // 로딩 해제
                         }
                     )

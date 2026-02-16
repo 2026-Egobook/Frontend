@@ -112,7 +112,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    //구글 로그인 시 사용
+    // 구글 로그인 시 사용
     override suspend fun refreshTokens(idToken: String): Result<Unit> {
         // 액세스 토큰 가져오기 (없으면 null)
         val accessToken = userInfoStorage.getAccessToken().first()

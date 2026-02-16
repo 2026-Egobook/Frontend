@@ -72,6 +72,7 @@ class LoginActivity : AppCompatActivity() {
         observeFirstSignUp()
         observeGuestSignUp()
         observeSignUpError()
+        observeAlreadyRegistered()
         setupGuideText() //폰트 커스텀 적용
         setupBlur() //블러뷰
         setupClickListeners() //클릭리스너 설정
@@ -231,6 +232,18 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(
                     this@LoginActivity,
                     "회원가입 실패: $errorMessage",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun observeAlreadyRegistered() {
+        lifecycleScope.launch {
+            viewModel.alreadyRegistered.collect {
+                Toast.makeText(
+                    this@LoginActivity,
+                    "이미 가입되어 있는 계정입니다",
                     Toast.LENGTH_SHORT
                 ).show()
             }
