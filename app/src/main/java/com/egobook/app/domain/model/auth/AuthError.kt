@@ -8,7 +8,10 @@ sealed class AuthError(
         AuthError("잘못된 요청입니다.")
 
     class InvalidCredentials :
-        AuthError("구글 로그인을 시도할 수 없습니다. 조금 뒤에 시도해주세요")
+        AuthError("유효하지 않은 구글 계정입니다.")
+
+    class WaitDelete :
+        AuthError("탈퇴 처리 중인 계정입니다. 관리자에게 문의하세요.")
 
     class UserAlreadyExists :
         AuthError("이미 가입된 계정입니다.")

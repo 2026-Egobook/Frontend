@@ -3,6 +3,8 @@ package com.egobook.app.data.util
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.ApiResponseEmpty
 import com.egobook.app.domain.model.auth.AuthError
+import retrofit2.HttpException
+import timber.log.Timber
 import java.io.IOException
 
 
@@ -10,9 +12,11 @@ import java.io.IOException
  * 로그인/회원가입 전용 에러 매핑 함수
  */
 fun ApiResponse<*>.toAuthError(): AuthError {
+    Timber.d("toAuthError called with status: $status, message: $message")
     return when (this.status) {
         400 -> AuthError.BadRequest()
         401 -> AuthError.InvalidCredentials()
+        403 -> AuthError.WaitDelete()
         404 -> AuthError.UserNotFound()
         409 -> AuthError.UserAlreadyExists()
         else -> AuthError.Unknown(this.message)
@@ -63,6 +67,18 @@ suspend fun <T> safeAuthApiCall(
 ): Result<T> {
     return try {
         apiCall().toAuthResult()
+    } catch (e: HttpException) {
+        val statusCode = e.code()
+        Timber.d("HttpException caught with code: $statusCode")
+        val authError = when (statusCode) {
+            400 -> AuthError.BadRequest()
+            401 -> AuthError.InvalidCredentials()
+            403 -> AuthError.WaitDelete()
+            404 -> AuthError.UserNotFound()
+            409 -> AuthError.UserAlreadyExists()
+            else -> AuthError.Unknown(e.message)
+        }
+        Result.failure(authError)
     } catch (e: IOException) {
         Result.failure(AuthError.NetworkError())
     } catch (e: Exception) {
@@ -111,10 +127,12 @@ suspend inline fun <T, R> safeApiCallWithSuspendTransform(
         if (response.status == 200) {
             Result.success(transform(response.data))
         } else {
-            Result.failure(Exception(response.message))
+            Result.failure(response.toAuthError())
         }
+    } catch (e: IOException) {
+        Result.failure(AuthError.NetworkError())
     } catch (e: Exception) {
-        Result.failure(e)
+        Result.failure(AuthError.Unknown(e.message))
     }
 }
 
