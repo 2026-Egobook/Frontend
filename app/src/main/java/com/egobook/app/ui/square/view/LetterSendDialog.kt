@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+ import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -63,7 +64,7 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
             removeScreenBlur()
             dismiss()
         }
-        btnLetterSendApply.setOnClickListener {
+        btnLetterSend.setOnClickListener {
             viewModel.detectAbusiveContent(text = letterContent)
         }
     }
@@ -77,7 +78,6 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {
-                                dismiss() // 얘가 중요하다
                                 showLoadingDialog()
                             }
                             is UiState.Success<AbusiveContentModel> -> {
@@ -89,6 +89,7 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
                                     }
                                     dialog.show(parentFragmentManager, DetectAbusiveContentFailureDialog.TAG)
                                     applyScreenBlur(BlurLevel.BASE)
+                                    dismiss()
                                 } else {
                                     val letter = SendLetterModel(
                                         mode = mode,
@@ -114,6 +115,7 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
                                 }
                                 dialog.show(parentFragmentManager, DetectAbusiveContentSuccessDialog.TAG)
                                 applyScreenBlur(BlurLevel.BASE)
+                                dismiss()
                             }
                         }
                     }

@@ -33,7 +33,7 @@ class DetectAbusiveContentSuccessDialog(private val status: LetterStatus, privat
     private fun initViews() = with(binding) {
         when(status) {
             LetterStatus.SENT -> {
-                btnDetectAbusiveSuccess.text = "잉크 1 획득!" // TODO: 조건에 따른 동적 변경 필요한 지 확인
+                btnDetectAbusiveSuccess.text = "잉크 1 획득!"
             }
             LetterStatus.REPLIED -> {
                 val rewardList = mutableListOf<String>()

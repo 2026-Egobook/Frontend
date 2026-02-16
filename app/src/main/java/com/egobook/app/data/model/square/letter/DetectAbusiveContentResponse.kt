@@ -7,7 +7,7 @@ data class DetectAbusiveContentResponse(
     @SerializedName("text")
     val text: String,
     @SerializedName("percentage")
-    val percentage: Double,
+    val riskScore: Double,
     @SerializedName("is_harmful")
     val isHarmful: Boolean,
     @SerializedName("label")
@@ -18,7 +18,7 @@ data class DetectAbusiveContentResponse(
 
 fun DetectAbusiveContentResponse.toDomain(): AbusiveContentAnalysis = AbusiveContentAnalysis(
     text = text,
-    riskScore = percentage,
+    riskScore = riskScore,
     isHarmful = isHarmful,
     label = label,
     detectedBadWords = badWords
