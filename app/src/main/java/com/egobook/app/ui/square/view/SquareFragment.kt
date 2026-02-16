@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -337,8 +338,20 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 launch {
                     sentLetterAdapter.loadStateFlow.collectLatest { loadStates ->
                         val isListEmpty = loadStates.refresh is LoadState.NotLoading && sentLetterAdapter.itemCount == 0
-                        tvSquareSentLetterPlaceholder.isVisible = isListEmpty
-                        rvSquareSentLetter.visibility = if(isListEmpty) View.INVISIBLE else View.VISIBLE
+                        tvSquareSentLetterPlaceholderMain.isVisible = isListEmpty
+                        tvSquareSentLetterPlaceholderSub.isVisible = isListEmpty
+                        rvSquareSentLetter.isVisible = !isListEmpty
+
+                        val layoutParams = llSquareTodayQuestionHeader.layoutParams as ConstraintLayout.LayoutParams
+                        if(!isListEmpty) {
+                            layoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
+                            layoutParams.topToBottom = rvSquareSentLetter.id
+                            layoutParams.topMargin = (24 * resources.displayMetrics.density).toInt()
+                        } else {
+                            layoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
+                            layoutParams.topToBottom = tvSquareSentLetterPlaceholderSub.id
+                            layoutParams.topMargin = (48 * resources.displayMetrics.density).toInt()
+                        }
                     }
                 }
             }

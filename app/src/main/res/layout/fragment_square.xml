@@ -166,30 +166,45 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_square_sent_letter_placeholder"
+            android:id="@+id/tv_square_sent_letter_placeholder_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="아직 내가 쓴 편지가 없습니다."
+            android:layout_marginTop="36dp"
+            android:text="아직 작성한 편지가 없어요"
+            android:textColor="@color/neutral"
+            android:textSize="16sp"
+            android:fontFamily="@font/arita_semibold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_square_letter_mine_header"/>
+
+        <TextView
+            android:id="@+id/tv_square_sent_letter_placeholder_sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="편지를 쓰고\n다른 유저에게 답을 받아보세요"
             android:textColor="@color/neutral"
             android:textSize="14sp"
             android:fontFamily="@font/arita_medium"
             android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="@id/ll_square_letter_mine_header"
-            app:layout_constraintStart_toStartOf="@id/ll_square_letter_mine_header"
-            app:layout_constraintTop_toBottomOf="@id/ll_square_letter_mine_header"/>
+            android:lineHeight="21sp"
+            android:letterSpacing="-0.02"
+            app:layout_constraintEnd_toEndOf="@id/tv_square_sent_letter_placeholder_main"
+            app:layout_constraintStart_toStartOf="@id/tv_square_sent_letter_placeholder_main"
+            app:layout_constraintTop_toBottomOf="@id/tv_square_sent_letter_placeholder_main"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_square_sent_letter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            tools:itemCount="4"
             android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="@id/ll_square_letter_mine_header"
             app:layout_constraintStart_toStartOf="@id/ll_square_letter_mine_header"
             app:layout_constraintTop_toBottomOf="@id/ll_square_letter_mine_header"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_square_letter"/>
+            tools:listitem="@layout/item_square_letter"
+            tools:itemCount="4"/>
 
         <LinearLayout
             android:id="@+id/ll_square_today_question_header"
@@ -199,8 +214,9 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingVertical="6.5dp"
-            app:layout_constraintEnd_toEndOf="@id/rv_square_sent_letter"
-            app:layout_constraintStart_toStartOf="@id/rv_square_sent_letter"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_square_sent_letter">
 
             <TextView
