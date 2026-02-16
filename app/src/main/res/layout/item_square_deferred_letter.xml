@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_square_write_letter"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:strokeColor="@color/neutral_stroke">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="14.5dp"
+        android:paddingVertical="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_letter" />
+
+        <TextView
+            android:id="@+id/tv_square_deferred_letter_fromLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arita_semibold"
+            android:lineHeight="21sp"
+            tools:text="철수"
+            android:textColor="@color/neutral"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_square_deferred_letter_reply_deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/arita_medium"
+            tools:text="3시간 남음"
+            android:textColor="@color/neutral_subtle"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>
+

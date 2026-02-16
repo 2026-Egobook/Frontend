@@ -1,15 +1,12 @@
 package com.egobook.app.domain.model.square.letter
 
-data class ArrivedPendingLetter(
-    val letter: ArrivedPendingLetterItem? = null
-)
-
-data class ArrivedPendingLetterItem(
+data class DeferredLetter(
     val letterId: Long,
     val status: LetterStatus,
     val mode: LetterMode,
     val fromLabel: String,
-    val content: String,
+    val backgroundColor: LetterBackgroundColor,
+    val contentPreview: String,
     val arrivedAt: String,
     val replyDeadlineAt: String
 )

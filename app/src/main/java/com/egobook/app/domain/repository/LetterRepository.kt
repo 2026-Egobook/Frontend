@@ -3,6 +3,7 @@ package com.egobook.app.domain.repository
 import androidx.paging.PagingData
 import com.egobook.app.domain.model.square.letter.AbusiveContentAnalysis
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
+import com.egobook.app.domain.model.square.letter.DeferredLetter
 import com.egobook.app.domain.model.square.letter.ReplyLetter
 import com.egobook.app.domain.model.square.letter.ReportContent
 import com.egobook.app.domain.model.square.letter.SendLetter
@@ -21,4 +22,6 @@ interface LetterRepository {
     suspend fun fetchSentLetterWithReply(letterId: Long): Result<SentLetterWithReply>
     suspend fun reportRepliedLetter(replyId: Long, reportContent: ReportContent): Result<Unit>
     suspend fun deleteLetterThread(threadId: Long): Result<Unit>
+
+    fun fetchDeferredLetters(size: Int): Flow<PagingData<DeferredLetter>>
 }

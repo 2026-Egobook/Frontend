@@ -2,6 +2,7 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.square.letter.ArrivedPendingLetterResponse
+import com.egobook.app.data.model.square.letter.DeferredLettersResponse
 import com.egobook.app.data.model.square.letter.ReplyLetterRequest
 import com.egobook.app.data.model.square.letter.ReplyLetterResponse
 import com.egobook.app.data.model.square.letter.ReportContentRequest
@@ -60,4 +61,10 @@ interface LetterApiService {
     suspend fun deleteLetterThread(
         @Path("threadId") threadId: Long
     ): ApiResponse<Unit>
+
+    @GET("/plaza/letters/inbox/deferred")
+    suspend fun fetchDeferredLetters(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): ApiResponse<DeferredLettersResponse>
 }

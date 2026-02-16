@@ -6,5 +6,6 @@ enum class LetterStatus(val value: String) {
     REPLIED("REPLIED"),
     DEFERRED("DEFERRED"),
     GAVE_UP("GAVE_UP"),
-    AI_REPLIED("AI_REPLIED")
+    AI_REPLIED("AI_REPLIED"),
+    WAITING("WAITING")
 }

@@ -42,7 +42,7 @@ class ArrivedPendingLetterPopupDialog(private val letterInfo: ArrivedPendingLett
     }
 
     private fun initViews() = with(binding) {
-        tvArrivedPendingLetterTitle.text = "낯선 고북이의\n편지가 도착했어요" // TODO: 친구인지 익명인지 구분 필요
+        tvArrivedPendingLetterTitle.text = "${letterInfo.fromLabel}의\n편지가 도착했어요"
         tvArrivedPendingLetterReplyDeadline.text = getRemainingTime(replyDeadlineAt = letterInfo.replyDeadlineAt)
     }
 

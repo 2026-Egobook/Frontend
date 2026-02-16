@@ -20,15 +20,13 @@ data class ArrivedPendingLetterItemResponse(
     @SerializedName("mode")
     val mode: LetterMode,
     @SerializedName("fromLabel")
-    val fromLabel: String, // 무슨 필드인지 의미 잘 모르겠음
+    val fromLabel: String,
     @SerializedName("content")
     val content: String,
     @SerializedName("arrivedAt")
     val arrivedAt: String,
     @SerializedName("replyDeadlineAt")
     val replyDeadlineAt: String,
-    @SerializedName("letterColor")
-    val letterColor: LetterBackgroundColor // TODO: 백엔드한테 필드 넣어달라고 하기
 )
 
 fun ArrivedPendingLetterResponse.toDomain(): ArrivedPendingLetter = ArrivedPendingLetter(
@@ -42,6 +40,5 @@ fun ArrivedPendingLetterItemResponse.toDomain(): ArrivedPendingLetterItem = Arri
     fromLabel = fromLabel,
     content = content,
     arrivedAt = arrivedAt,
-    replyDeadlineAt = replyDeadlineAt,
-    letterColor = letterColor
+    replyDeadlineAt = replyDeadlineAt
 )

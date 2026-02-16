@@ -9,9 +9,11 @@ import com.egobook.app.data.model.square.letter.DetectAbusiveContentRequest
 import com.egobook.app.data.model.square.letter.ReplyLetterRequest
 import com.egobook.app.data.model.square.letter.toData
 import com.egobook.app.data.model.square.letter.toDomain
+import com.egobook.app.data.repository.paging.DeferredLettersPagingSource
 import com.egobook.app.data.repository.paging.SentLettersPagingSource
 import com.egobook.app.domain.model.square.letter.AbusiveContentAnalysis
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
+import com.egobook.app.domain.model.square.letter.DeferredLetter
 import com.egobook.app.domain.model.square.letter.ReplyLetter
 import com.egobook.app.domain.model.square.letter.ReportContent
 import com.egobook.app.domain.model.square.letter.SendLetter
@@ -138,5 +140,18 @@ class LetterRepositoryImpl @Inject constructor(
         }
     } catch (e: Exception) {
         Result.failure(e)
+    }
+
+    override fun fetchDeferredLetters(size: Int): Flow<PagingData<DeferredLetter>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = size,
+                initialLoadSize = size,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                DeferredLettersPagingSource(apiService = letterApiService)
+            }
+        ).flow
     }
 }

@@ -26,6 +26,7 @@ import com.egobook.app.databinding.FragmentSquareBinding
 import com.egobook.app.databinding.LayoutPopupVisibilityTypeBinding
 import com.egobook.app.domain.model.square.question.AnswerVisibility
 import com.egobook.app.ui.square.adapter.MySentLettersAdapter
+import com.egobook.app.ui.square.adapter.SquareDeferredLettersAdapter
 import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.question.SubmitStatus
@@ -42,7 +43,11 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private val questionViewModel: QuestionViewModel by activityViewModels()
     private val letterViewModel: LetterViewModel by activityViewModels()
 
-    private var visibilityType = AnswerVisibility.PUBLIC // 오늘의 질문 답변 제출할 때 필요한 변수
+    private var visibilityType = AnswerVisibility.PUBLIC
+
+    private val deferredLettersAdapter by lazy {
+        SquareDeferredLettersAdapter()
+    }
 
     private val todayQuestionAdapter by lazy {
         TodayQuestionFriendRepliesAdapter()
@@ -78,11 +83,13 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private fun fetchData() {
         questionViewModel.getTodayQuestion()
         questionViewModel.getTodayFriendsReplies(size = 3)
+        letterViewModel.getDeferredLetters(size = 10)
         letterViewModel.getArrivedPendingLetter()
         letterViewModel.getSentLetters(size = 4)
     }
 
     private fun initViews() = with(binding) {
+        rvSquareDeferredLetters.adapter = deferredLettersAdapter
         rvSquareTodayQuestionFriendReply.adapter = todayQuestionAdapter
         rvSquareTodayQuestionFriendReply.addItemDecoration(object: RecyclerView.ItemDecoration() {
             override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
@@ -325,6 +332,13 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                     applyScreenBlur(BlurLevel.BASE)
                                 }
                             }
+                        }
+                    }
+                }
+                launch {
+                    letterViewModel.deferredLetters.collectLatest { pagingData ->
+                        if(pagingData != null) {
+                            deferredLettersAdapter.submitData(lifecycle, pagingData)
                         }
                     }
                 }

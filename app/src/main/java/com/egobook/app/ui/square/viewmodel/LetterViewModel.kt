@@ -11,6 +11,7 @@ import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.DeleteLetterThreadUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
+import com.egobook.app.domain.usecase.letter.GetDeferredLettersUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLetterWithReplyUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLettersUseCase
 import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
@@ -22,6 +23,7 @@ import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
+import com.egobook.app.ui.square.model.letter.DeferredLetterModel
 import com.egobook.app.ui.square.model.letter.ReplyLetterModel
 import com.egobook.app.ui.square.model.letter.ReportContentModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
@@ -52,6 +54,7 @@ class LetterViewModel @Inject constructor(
     private val getSentLetterWithReplyUseCase: GetSentLetterWithReplyUseCase,
     private val reportRepliedLetterUseCase: ReportRepliedLetterUseCase,
     private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase,
+    private val getDeferredLettersUseCase: GetDeferredLettersUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase
 ): ViewModel() {
 
@@ -202,6 +205,17 @@ class LetterViewModel @Inject constructor(
                 _deleteLetterThreadResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _deleteLetterThreadResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _deferredLetters = MutableStateFlow<PagingData<DeferredLetterModel>?>(null)
+    val deferredLetters = _deferredLetters.asStateFlow()
+
+    fun getDeferredLetters(size: Int) {
+        viewModelScope.launch {
+            getDeferredLettersUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
+                _deferredLetters.value = pagingData.map { it.toPresentation() }
             }
         }
     }
