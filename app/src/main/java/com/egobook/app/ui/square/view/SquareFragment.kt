@@ -38,6 +38,8 @@ import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZonedDateTime
 
 class SquareFragment : Fragment(R.layout.fragment_square) {
     private lateinit var binding: FragmentSquareBinding
@@ -365,7 +367,20 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 }
                 launch {
                     sentLetterAdapter.loadStateFlow.collectLatest { loadStates ->
+
                         val isListEmpty = loadStates.refresh is LoadState.NotLoading && sentLetterAdapter.itemCount == 0
+
+                        if(!isListEmpty) {
+                            val hasSentLetterToday = (0 until sentLetterAdapter.itemCount).any { index ->
+                                val item = sentLetterAdapter.peek(index)
+                                val createdDate = ZonedDateTime.parse(item?.createdAt).toLocalDate()
+                                val today = LocalDate.now()
+                                createdDate.isEqual(today)
+                            }
+                            cvSquareWriteLetter.isEnabled = !hasSentLetterToday
+                            cvSquareWriteLetter.alpha = if(hasSentLetterToday) 0.4f else 1f
+                        }
+
                         tvSquareSentLetterPlaceholderMain.isVisible = isListEmpty
                         tvSquareSentLetterPlaceholderSub.isVisible = isListEmpty
                         rvSquareSentLetter.isVisible = !isListEmpty
