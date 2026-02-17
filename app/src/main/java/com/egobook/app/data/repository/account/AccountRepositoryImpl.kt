@@ -4,7 +4,7 @@ import com.egobook.app.data.api.AccountApiService
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.account.LinkRequest
 import com.egobook.app.data.util.safeApiCall
-import com.egobook.app.data.util.safeApiCallWithSuspendTransform
+import com.egobook.app.data.util.safeAuthApiCall
 import com.egobook.app.domain.repository.account.AccountRepository
 import com.egobook.app.domain.repository.account.LinkedAccountInfo
 import javax.inject.Inject
@@ -50,29 +50,26 @@ class AccountRepositoryImpl @Inject constructor(
         }
         
         // idToken 전송 (API 호출) 및 토큰 저장
-        return safeApiCallWithSuspendTransform(
+        return safeAuthApiCall(
             apiCall = {
                 apiService.linkToGoogle(LinkRequest(idToken = idToken))
-            },
-            transform = { tokenData ->
-                // Access, Refresh Token 저장 (Recover Token은 null로 설정하여 저장하지 않음)
-                userInfoStorage.saveAllTokens(
-                    accessToken = tokenData.accessToken,
-                    refreshToken = tokenData.refreshToken,
-                    recoverToken = null
-                )
-                
-                // 로그인 타입을 GOOGLE로 변경
-                val loginType = UserInfoStorage.LoginType.GOOGLE
-                userInfoStorage.saveLoginType(loginType)
-
-                // 이메일 저장
-                userInfoStorage.saveUserEmail(tokenData.email)
-                Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
-
-                Unit
             }
-        )
+        ).map { tokenData ->
+            // Access, Refresh Token 저장 (Recover Token은 null로 설정하여 저장하지 않음)
+            userInfoStorage.saveAllTokens(
+                accessToken = tokenData.accessToken,
+                refreshToken = tokenData.refreshToken,
+                recoverToken = null
+            )
+            
+            // 로그인 타입을 GOOGLE로 변경
+            val loginType = UserInfoStorage.LoginType.GOOGLE
+            userInfoStorage.saveLoginType(loginType)
+
+            // 이메일 저장
+            userInfoStorage.saveUserEmail(tokenData.email)
+            Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
+        }
     }
 
     override suspend fun getLinkedAccountInfo(): Result<LinkedAccountInfo> {
