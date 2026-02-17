@@ -120,6 +120,20 @@ class LetterRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
+    override suspend fun reportArrivedLetter(
+        letterId: Long,
+        reportContent: ReportContent
+    ): Result<Unit> = try {
+        val response = letterApiService.reportArrivedLetter(letterId = letterId, request = reportContent.toData())
+        if(response.status == 200) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
     override suspend fun reportRepliedLetter(replyId: Long, reportContent: ReportContent): Result<Unit> = try {
         val response = letterApiService.reportRepliedLetter(replyId = replyId, request = reportContent.toData())
         if(response.status == 200) {

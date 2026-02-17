@@ -98,6 +98,12 @@ class SquareReportDialog(private val origin: ReportOrigin, private val letterId:
         })
         btnSquareReportSubmit.setOnClickListener {
             when(origin) {
+                ReportOrigin.LETTER_ARRIVED -> {
+                    letterViewModel.reportArrivedLetter(letterId = letterId ?: -1L, reportLetter = ReportContentModel(
+                        reason = reportType,
+                        description = if(reportType == ReportLetterType.OTHER) etSquareReportEtcReason.text.toString() else null
+                    ))
+                }
                 ReportOrigin.LETTER_REPLY -> {
                     letterViewModel.reportRepliedLetter(replyId = replyId ?: -1L, reportLetter = ReportContentModel(
                         reason = reportType,
@@ -117,6 +123,20 @@ class SquareReportDialog(private val origin: ReportOrigin, private val letterId:
     private fun initObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    letterViewModel.reportArrivedLetterResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                Toast.makeText(context, "편지가 신고되었습니다.", Toast.LENGTH_SHORT).show()
+                                removeScreenBlur()
+                                dismiss()
+                            }
+                        }
+                    }
+                }
                 launch {
                     letterViewModel.reportRepliedLetterResult.collect { state ->
                         when(state) {

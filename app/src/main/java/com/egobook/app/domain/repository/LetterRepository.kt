@@ -22,6 +22,6 @@ interface LetterRepository {
     suspend fun fetchSentLetterWithReply(letterId: Long): Result<SentLetterWithReply>
     suspend fun reportRepliedLetter(replyId: Long, reportContent: ReportContent): Result<Unit>
     suspend fun deleteLetterThread(threadId: Long): Result<Unit>
-
     fun fetchDeferredLetters(size: Int): Flow<PagingData<DeferredLetter>>
+    suspend fun reportArrivedLetter(letterId: Long, reportContent: ReportContent): Result<Unit>
 }

@@ -16,6 +16,7 @@ import com.egobook.app.domain.usecase.letter.GetSentLetterWithReplyUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLettersUseCase
 import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
+import com.egobook.app.domain.usecase.letter.ReportArrivedLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReportRepliedLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
 import com.egobook.app.ui.home.user.User
@@ -53,6 +54,7 @@ class LetterViewModel @Inject constructor(
     private val getSentLettersUseCase: GetSentLettersUseCase,
     private val getSentLetterWithReplyUseCase: GetSentLetterWithReplyUseCase,
     private val reportRepliedLetterUseCase: ReportRepliedLetterUseCase,
+    private val reportArrivedLetterUseCase: ReportArrivedLetterUseCase,
     private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase,
     private val getDeferredLettersUseCase: GetDeferredLettersUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase
@@ -177,6 +179,20 @@ class LetterViewModel @Inject constructor(
                 _sentLetterWithReply.value = UiState.Success(domain.toPresentation())
             }.onFailure { error ->
                 _sentLetterWithReply.value = UiState.Failure(error.message)
+            }
+        }
+    }
+
+    private val _reportArrivedLetterResult = MutableSharedFlow<UiState<Unit>>()
+    val reportArrivedLetterResult = _reportArrivedLetterResult.asSharedFlow()
+
+    fun reportArrivedLetter(letterId: Long, reportLetter: ReportContentModel) {
+        viewModelScope.launch {
+            _reportArrivedLetterResult.emit(UiState.Loading)
+            reportArrivedLetterUseCase(letterId = letterId, reportContent = reportLetter.toDomain()).onSuccess {
+                _reportArrivedLetterResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _reportArrivedLetterResult.emit(UiState.Failure(error.message))
             }
         }
     }

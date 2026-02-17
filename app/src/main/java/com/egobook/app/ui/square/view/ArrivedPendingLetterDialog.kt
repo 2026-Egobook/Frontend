@@ -11,8 +11,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.egobook.app.BlurLevel
 import com.egobook.app.R
+import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.DialogArrivedPendingLetterBinding
+import com.egobook.app.domain.model.square.ReportOrigin
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterItemModel
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
@@ -61,7 +64,9 @@ class ArrivedPendingLetterDialog(
             viewModel.deferReplyLetter(letterId = letterInfo.letterId)
         }
         ivArrivedPendingLetterReport.setOnClickListener {
-
+            val dialog = SquareReportDialog(origin = ReportOrigin.LETTER_ARRIVED, letterId = letterInfo.letterId).apply { isCancelable = false }
+            dialog.show(childFragmentManager, SquareReportDialog.TAG)
+            applyScreenBlur(BlurLevel.BASE)
         }
         btnArrivedPendingLetterGiveUp.setOnClickListener {
             dismiss()

@@ -57,6 +57,12 @@ interface LetterApiService {
         @Body request: ReportContentRequest
     ): ApiResponse<Unit>
 
+    @POST("/plaza/letters/{letterId}/report")
+    suspend fun reportArrivedLetter(
+        @Path("letterId") letterId: Long,
+        @Body request: ReportContentRequest
+    ): ApiResponse<Unit>
+
     @DELETE("/plaza/letters/threads/{threadId}")
     suspend fun deleteLetterThread(
         @Path("threadId") threadId: Long
