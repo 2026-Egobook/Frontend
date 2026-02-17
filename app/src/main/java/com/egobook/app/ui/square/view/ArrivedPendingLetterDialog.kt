@@ -46,6 +46,14 @@ class ArrivedPendingLetterDialog(
         tvArrivedPendingLetterArrivedAt.text = formatArrivedDateTime(dateTimeStr = letterInfo.arrivedAt)
         tvArrivedPendingLetterContent.text = letterInfo.content
         tvArrivedPendingLetterFromLabel.text = "From ${letterInfo.fromLabel}"
+        cvArrivedPendingLetterContainer.backgroundTintList =
+            when(letterInfo.backgroundColor) {
+                LetterBackgroundColor.WHITE -> resources.getColorStateList(R.color.letter_bg_beige, null)
+                LetterBackgroundColor.PINK -> resources.getColorStateList(R.color.letter_bg_pink, null)
+                LetterBackgroundColor.GREEN -> resources.getColorStateList(R.color.letter_bg_green, null)
+                LetterBackgroundColor.BLUE -> resources.getColorStateList(R.color.letter_bg_blue, null)
+                LetterBackgroundColor.PURPLE -> resources.getColorStateList(R.color.letter_bg_purple, null)
+            }
     }
 
     private fun initListeners() = with(binding) {

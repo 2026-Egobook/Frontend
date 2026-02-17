@@ -28,6 +28,7 @@ import com.egobook.app.domain.model.square.question.AnswerVisibility
 import com.egobook.app.ui.square.adapter.MySentLettersAdapter
 import com.egobook.app.ui.square.adapter.SquareDeferredLettersAdapter
 import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
+import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterItemModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.question.SubmitStatus
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
@@ -46,7 +47,20 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private var visibilityType = AnswerVisibility.PUBLIC
 
     private val deferredLettersAdapter by lazy {
-        SquareDeferredLettersAdapter()
+        SquareDeferredLettersAdapter { item ->
+            val letterInfo = ArrivedPendingLetterItemModel(
+                letterId = item.letterId,
+                status = item.status,
+                mode = item.mode,
+                fromLabel = item.fromLabel,
+                backgroundColor = item.backgroundColor,
+                content = item.contentPreview,
+                arrivedAt = item.arrivedAt,
+                replyDeadlineAt = item.replyDeadlineAt
+            )
+            val dialog = ArrivedPendingLetterDialog(letterInfo = letterInfo).apply { isCancelable = false }
+            dialog.show(childFragmentManager, ArrivedPendingLetterDialog.TAG)
+        }
     }
 
     private val todayQuestionAdapter by lazy {

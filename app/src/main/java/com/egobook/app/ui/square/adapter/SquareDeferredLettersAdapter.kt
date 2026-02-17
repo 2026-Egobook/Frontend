@@ -12,7 +12,9 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class SquareDeferredLettersAdapter: PagingDataAdapter<DeferredLetterModel, SquareDeferredLettersAdapter.SquareDeferredLettersViewHolder>(diffUtil) {
+class SquareDeferredLettersAdapter(
+    private val onClicked: (DeferredLetterModel) -> Unit
+): PagingDataAdapter<DeferredLetterModel, SquareDeferredLettersAdapter.SquareDeferredLettersViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -32,12 +34,15 @@ class SquareDeferredLettersAdapter: PagingDataAdapter<DeferredLetterModel, Squar
         }
     }
 
-    class SquareDeferredLettersViewHolder(
+    inner class SquareDeferredLettersViewHolder(
         private val binding: ItemSquareDeferredLetterBinding,
     ): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DeferredLetterModel) = with(binding) {
             tvSquareDeferredLetterFromLabel.text = item.fromLabel
             tvSquareDeferredLetterReplyDeadline.text = getRemainingTime(replyDeadlineAt = item.replyDeadlineAt)
+            root.setOnClickListener {
+                onClicked(item)
+            }
         }
     }
 

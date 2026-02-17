@@ -27,6 +27,8 @@ data class ArrivedPendingLetterItemResponse(
     val arrivedAt: String,
     @SerializedName("replyDeadlineAt")
     val replyDeadlineAt: String,
+    @SerializedName("backgroundColor")
+    val backgroundColor: LetterBackgroundColor
 )
 
 fun ArrivedPendingLetterResponse.toDomain(): ArrivedPendingLetter = ArrivedPendingLetter(
@@ -40,5 +42,6 @@ fun ArrivedPendingLetterItemResponse.toDomain(): ArrivedPendingLetterItem = Arri
     fromLabel = fromLabel,
     content = content,
     arrivedAt = arrivedAt,
-    replyDeadlineAt = replyDeadlineAt
+    replyDeadlineAt = replyDeadlineAt,
+    backgroundColor = backgroundColor
 )
