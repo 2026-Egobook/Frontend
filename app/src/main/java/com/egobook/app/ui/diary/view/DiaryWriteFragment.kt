@@ -1,5 +1,6 @@
 package com.egobook.app.ui.diary.view
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -7,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
@@ -19,12 +21,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryWriteBinding
+import com.egobook.app.ui.diary.model.ToastMessage
+import com.egobook.app.ui.diary.viewmodel.DiaryWriteViewModel
 import com.egobook.app.ui.util.toDateTimeString
 import com.egobook.app.ui.util.toDayOfMonthString
 import com.egobook.app.ui.util.toMonthString
 import com.egobook.app.ui.util.toYearString
-import com.egobook.app.ui.diary.viewmodel.DiaryWriteViewModel
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -86,7 +90,7 @@ class DiaryWriteFragment : Fragment() {
         setupDiaryContentEditText()     // 일기 내용 입력 필드 설정 (글자수 제한, TextWatcher)
         observeSelectedDate()           // 선택된 날짜 관찰 및 UI 업데이트
         observeContentState()           // 컨텐츠 상태 관찰 (글자수, 감정 섹션, 저장 버튼 활성화)
-        observeSaveSuccess()            // 저장 성공/실패 관찰
+        observeSaveResult()            // 저장 성공/실패 관찰
     }
     
     private fun setupDiaryTypeCards() {
@@ -246,22 +250,103 @@ class DiaryWriteFragment : Fragment() {
             else -> R.drawable.img_emotion_neutral_unselected
         }
     }
+
     
-    private fun observeSaveSuccess() {
+    private fun observeSaveResult() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.saveSuccess.collectLatest { success ->
-                    if (success) {
-                        // 저장 성공
-                        Toast.makeText(requireContext(), "일기가 저장되었습니다", Toast.LENGTH_SHORT).show()
-                        findNavController().popBackStack() // 이전 화면으로 이동
-                    } else {
-                        // 저장 실패
-                        Toast.makeText(requireContext(), "일기 저장에 실패했습니다", Toast.LENGTH_SHORT).show()
+                viewModel.saveResult.collectLatest { result ->
+                    when (result) {
+                        is DiaryWriteViewModel.SaveResult.Success -> {
+                            // 저장 성공 -> 리워드 토스트 메시지 순차 표시
+                            showToastMessages(result.toastMessages)
+                            findNavController().popBackStack() // 이전 화면으로 이동
+                        }
+                        is DiaryWriteViewModel.SaveResult.Error -> {
+                            // 저장 실패
+                            Toast.makeText(requireContext(), "일기 저장에 실패했습니다", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
         }
+    }
+
+    /**
+     * 토스트 메시지 리스트를 순차적으로 표시
+     */
+    private fun showToastMessages(messages: List<ToastMessage>) {
+        if (messages.isEmpty()) return
+
+        messages.forEachIndexed { index, message ->
+            when (message.rewardType) {
+                "INK" -> showInkToast(message.amount)
+                "REWARD" -> showRewardToast(message.message)
+            }
+
+            // 연속 토스트 사이에 딜레이 (마지막 제외)
+            if (index < messages.size - 1) {
+                Thread.sleep(2500) // 2.5초 딜레이
+            }
+        }
+    }
+
+    /**
+     * 잉크 토스트 표시 (toast_ink.xml)
+     */
+    private fun showInkToast(amount: Int) {
+        val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
+        val customView = layoutInflater.inflate(R.layout.toast_ink, null)
+
+        // 메시지 설정
+        val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
+        tvMessage.text = "잉크를 ${amount} 획득했어요"
+
+        val layout = snackBar.view as ViewGroup
+        layout.setPadding(0, 0, 0, 0)
+        layout.setBackgroundColor(Color.TRANSPARENT)
+        layout.addView(customView, 0)
+
+        // BottomNav에 붙이기
+        val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
+        snackBar.anchorView = bottomNav
+
+        // margin으로 띄우기
+        val extra = (9 * resources.displayMetrics.density).toInt()
+        val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin += extra
+        snackBar.view.layoutParams = params
+
+        snackBar.show()
+    }
+
+    /**
+     * 리워드 토스트 표시 (toast_reward.xml)
+     */
+    private fun showRewardToast(message: String) {
+        val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
+        val customView = layoutInflater.inflate(R.layout.toast_reward, null)
+
+        // 메시지 설정
+        val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
+        tvMessage.text = message
+
+        val layout = snackBar.view as ViewGroup
+        layout.setPadding(0, 0, 0, 0)
+        layout.setBackgroundColor(Color.TRANSPARENT)
+        layout.addView(customView, 0)
+
+        // BottomNav에 붙이기
+        val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
+        snackBar.anchorView = bottomNav
+
+        // margin으로 띄우기
+        val extra = (9 * resources.displayMetrics.density).toInt()
+        val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin += extra
+        snackBar.view.layoutParams = params
+
+        snackBar.show()
     }
 
     override fun onDestroyView() {

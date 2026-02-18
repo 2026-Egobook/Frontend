@@ -8,9 +8,11 @@ import com.egobook.app.data.repository.diary.paging.DiariesPagingSource
 import com.egobook.app.data.util.safeApiCall
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
+import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryCreateRequest
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryEntity
+import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryRewardsEntity
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryUpdateRequest
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toRequestParams
 import com.egobook.app.domain.repository.diary.DiaryRepository
@@ -61,14 +63,14 @@ class DiaryRepositoryImpl  @Inject constructor(
         )
     }
 
-    override suspend fun addDiary(diary: Diary): Result<Unit> {
+    override suspend fun addDiary(diary: Diary): Result<DiaryRewards> {
         return safeApiCall(
             apiCall = {
                 apiService.addDiary(
                     diary.toDiaryCreateRequest()
                 )
             },
-            transform = { Unit }
+            transform = { it.toDiaryRewardsEntity() }
         )
     }
 

@@ -29,4 +29,6 @@
 
     <!--  Custom Toast  -->
     <string name="limit_diary_write">하루에 최대 48번 기록 가능해요</string>
+    <string name="get_ink">잉크를 1 획득했어요</string>
+    <string name="get_thinking_reward">칭찬 일기를 작성하여\n긍정사고가 상승했어요</string>
 </resources>

@@ -1,9 +1,12 @@
 package com.egobook.app.ui.diary.mapper
 
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiaryType
+import com.egobook.app.domain.model.diary.entity.RewardType
 import java.time.LocalDate
 import java.time.LocalDateTime
+import com.egobook.app.ui.diary.model.ToastMessage
 
 /**
  * Domain 모델과 UI 레이어 간의 데이터 변환을 담당하는 매퍼
@@ -28,8 +31,51 @@ object DiaryEntityMapper {
     }
 
     /**
-     * Domain Diary -> DiaryCheckFragment에 표시될 값..? 필요하면 정의하는 게 좋을 것 같은데..
+     * Domain RewardType -> UI displayType("잉크", "감정조절", "긍정사고")
      */
+    fun domainRewardTypeToUiDisplayType(rewardType: RewardType): String {
+        return rewardType.displayType
+    }
+
+    fun domainRewardTypesToUiDisplayTypes(types: List<RewardType>): List<String> {
+        return types.map { it.displayType }
+    }
+
+    fun createToastMessages(rewards: DiaryRewards): List<ToastMessage> {
+        // 작성한 일기 타입 중 첫 번째를 대표로 사용
+        val primaryDiaryType = rewards.type.firstOrNull() ?: DiaryType.EMOTION
+
+        return rewards.rewards.map { reward ->
+            when (reward.rewardType) {
+                RewardType.INK -> ToastMessage(
+                    rewardType = "INK",
+                    message = "잉크를 ${reward.amount} 획득했어요",
+                    amount = reward.amount
+                )
+                else -> ToastMessage(
+                    rewardType = "REWARD",
+                    message = createRewardMessage(primaryDiaryType, reward.rewardType),
+                    amount = reward.amount
+                )
+            }
+        }
+    }
+
+    /**
+     * STAT 보상 메시지 생성
+     * "{일기타입} 일기를 작성하여\n{보상타입}가 상승했어요"
+     */
+    private fun createRewardMessage(
+        diaryType: DiaryType,
+        rewardType: RewardType
+    ): String {
+        val diaryDisplay = diaryType.displayType      // "감정", "고민", "칭찬", "감사"
+        val rewardDisplay = rewardType.displayType    // "감정조절", "긍정사고"
+
+        return "${diaryDisplay} 일기를 작성하여\n${rewardDisplay}가 상승했어요"
+    }
+
+
 
 
     // ========== UI -> Domain Entity ==========
