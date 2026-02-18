@@ -1,5 +1,5 @@
     package com.egobook.app.ui.diary.view
-
+    
     import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -286,7 +286,7 @@ import kotlin.getValue
             viewLifecycleOwner.lifecycleScope.launch {
                 messages.forEachIndexed { index, message ->
                     when (message.rewardType) {
-                        "INK" -> showInkToast(message.amount, message.imageRes)
+                        "INK" -> showInkToast(message.message, message.imageRes)
                         "REWARD" -> showRewardToast(message.message, message.imageRes)
                     }
 
@@ -301,13 +301,13 @@ import kotlin.getValue
         /**
          * 잉크 토스트 표시 (toast_ink.xml)
          */
-        private fun showInkToast(amount: Int, imageRes: Int) {
+        private fun showInkToast(message: String, imageRes: Int) {
             val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
             val customView = layoutInflater.inflate(R.layout.toast_ink, null)
 
-            // 메시지 설정
+            // 메시지 설정 (서버에서 내려준 메시지 그대로 사용)
             val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
-            tvMessage.text = "잉크를 $amount 획득했어요"
+            tvMessage.text = message
 
             // 이미지 설정
             val ivInk = customView.findViewById<ImageView>(R.id.iv_ink)

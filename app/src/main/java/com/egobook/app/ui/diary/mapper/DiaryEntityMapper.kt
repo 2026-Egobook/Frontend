@@ -43,25 +43,23 @@ object DiaryEntityMapper {
     }
 
     fun createToastMessages(rewards: DiaryRewards): List<ToastMessage> {
-        // 작성한 일기 타입 중 첫 번째를 대표로 사용
+        // 작성한 일기 타입 중 첫 번째를 대표로 사용 (이미지 매핑용)
         val primaryDiaryType = rewards.type.firstOrNull() ?: DiaryType.EMOTION
-
-        // 일기 타입에 따른 이미지 결정
         val rewardImageRes = getRewardImageResForDiaryType(primaryDiaryType)
 
         return rewards.rewards.map { reward ->
             when (reward.rewardType) {
                 RewardType.INK -> ToastMessage(
                     rewardType = "INK",
-                    message = "잉크를 ${reward.amount} 획득했어요",
+                    message = reward.message,  // 서버에서 내려준 메시지 그대로 사용
                     amount = reward.amount,
-                    imageRes = R.drawable.ink_icon  // 잉크는 기본 잉크 아이콘
+                    imageRes = R.drawable.ink_icon
                 )
                 else -> ToastMessage(
                     rewardType = "REWARD",
-                    message = createRewardMessage(primaryDiaryType, reward.rewardType),
+                    message = reward.message,  // 서버에서 내려준 메시지 그대로 사용
                     amount = reward.amount,
-                    imageRes = rewardImageRes  // 일기 타입에 따른 이미지
+                    imageRes = rewardImageRes
                 )
             }
         }
