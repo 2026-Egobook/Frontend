@@ -1,5 +1,6 @@
 package com.egobook.app.ui.diary.mapper
 
+import com.egobook.app.R
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiaryType
@@ -45,19 +46,38 @@ object DiaryEntityMapper {
         // 작성한 일기 타입 중 첫 번째를 대표로 사용
         val primaryDiaryType = rewards.type.firstOrNull() ?: DiaryType.EMOTION
 
+        // 일기 타입에 따른 이미지 결정
+        val rewardImageRes = getRewardImageResForDiaryType(primaryDiaryType)
+
         return rewards.rewards.map { reward ->
             when (reward.rewardType) {
                 RewardType.INK -> ToastMessage(
                     rewardType = "INK",
                     message = "잉크를 ${reward.amount} 획득했어요",
-                    amount = reward.amount
+                    amount = reward.amount,
+                    imageRes = R.drawable.ink_icon  // 잉크는 기본 잉크 아이콘
                 )
                 else -> ToastMessage(
                     rewardType = "REWARD",
                     message = createRewardMessage(primaryDiaryType, reward.rewardType),
-                    amount = reward.amount
+                    amount = reward.amount,
+                    imageRes = rewardImageRes  // 일기 타입에 따른 이미지
                 )
             }
+        }
+    }
+
+    /**
+     * 일기 타입에 따른 리워드 토스트 이미지 결정
+     * - 칭찬, 감사 → ic_radar_sun
+     * - 고민 → ic_radar_star
+     * - 감정 → ic_radar_sun (기본값)
+     */
+    private fun getRewardImageResForDiaryType(diaryType: DiaryType): Int {
+        return when (diaryType) {
+            DiaryType.PRAISE, DiaryType.GRATITUDE -> R.drawable.ic_radar_sun
+            DiaryType.CONCERN -> R.drawable.ic_radar_star
+            DiaryType.EMOTION -> R.drawable.ic_radar_sun
         }
     }
 

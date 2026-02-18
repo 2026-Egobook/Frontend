@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.graphics.Color
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -285,8 +286,8 @@ import kotlin.getValue
             viewLifecycleOwner.lifecycleScope.launch {
                 messages.forEachIndexed { index, message ->
                     when (message.rewardType) {
-                        "INK" -> showInkToast(message.amount)
-                        "REWARD" -> showRewardToast(message.message)
+                        "INK" -> showInkToast(message.amount, message.imageRes)
+                        "REWARD" -> showRewardToast(message.message, message.imageRes)
                     }
 
                     // 연속 토스트 사이에 딜레이 (마지막 제외)
@@ -300,13 +301,17 @@ import kotlin.getValue
         /**
          * 잉크 토스트 표시 (toast_ink.xml)
          */
-        private fun showInkToast(amount: Int) {
+        private fun showInkToast(amount: Int, imageRes: Int) {
             val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
             val customView = layoutInflater.inflate(R.layout.toast_ink, null)
 
             // 메시지 설정
             val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
             tvMessage.text = "잉크를 $amount 획득했어요"
+
+            // 이미지 설정
+            val ivInk = customView.findViewById<ImageView>(R.id.iv_ink)
+            ivInk.setImageResource(imageRes)
 
             val layout = snackBar.view as ViewGroup
             layout.setPadding(0, 0, 0, 0)
@@ -329,13 +334,17 @@ import kotlin.getValue
         /**
          * 리워드 토스트 표시 (toast_reward.xml)
          */
-        private fun showRewardToast(message: String) {
+        private fun showRewardToast(message: String, imageRes: Int) {
             val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
             val customView = layoutInflater.inflate(R.layout.toast_reward, null)
 
             // 메시지 설정
             val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
             tvMessage.text = message
+
+            // 이미지 설정
+            val ivSun = customView.findViewById<ImageView>(R.id.iv_sun)
+            ivSun.setImageResource(imageRes)
 
             val layout = snackBar.view as ViewGroup
             layout.setPadding(0, 0, 0, 0)
