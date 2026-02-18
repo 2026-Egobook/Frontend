@@ -28,7 +28,7 @@ import com.egobook.app.ui.util.toDayOfMonthString
 import com.egobook.app.ui.util.toMonthString
 import com.egobook.app.ui.util.toYearString
 import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -258,9 +258,14 @@ class DiaryWriteFragment : Fragment() {
                 viewModel.saveResult.collectLatest { result ->
                     when (result) {
                         is DiaryWriteViewModel.SaveResult.Success -> {
-                            // 저장 성공 -> 리워드 토스트 메시지 순차 표시
-                            showToastMessages(result.toastMessages)
-                            findNavController().popBackStack() // 이전 화면으로 이동
+                            // 저장 성공 -> 결과를 이전 화면(DiaryFragment)에 전달하고 이동
+                            val messages = result.toastMessages
+                            if (messages.isNotEmpty()) {
+                                // SavedStateHandle로 토스트 메시지 전달 (더 안정적)
+                                val jsonMessages = Gson().toJson(messages)
+                                findNavController().previousBackStackEntry?.savedStateHandle?.set("toast_messages", jsonMessages)
+                            }
+                            findNavController().popBackStack()
                         }
                         is DiaryWriteViewModel.SaveResult.Error -> {
                             // 저장 실패
@@ -270,83 +275,6 @@ class DiaryWriteFragment : Fragment() {
                 }
             }
         }
-    }
-
-    /**
-     * 토스트 메시지 리스트를 순차적으로 표시
-     */
-    private fun showToastMessages(messages: List<ToastMessage>) {
-        if (messages.isEmpty()) return
-
-        messages.forEachIndexed { index, message ->
-            when (message.rewardType) {
-                "INK" -> showInkToast(message.amount)
-                "REWARD" -> showRewardToast(message.message)
-            }
-
-            // 연속 토스트 사이에 딜레이 (마지막 제외)
-            if (index < messages.size - 1) {
-                Thread.sleep(2500) // 2.5초 딜레이
-            }
-        }
-    }
-
-    /**
-     * 잉크 토스트 표시 (toast_ink.xml)
-     */
-    private fun showInkToast(amount: Int) {
-        val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
-        val customView = layoutInflater.inflate(R.layout.toast_ink, null)
-
-        // 메시지 설정
-        val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
-        tvMessage.text = "잉크를 ${amount} 획득했어요"
-
-        val layout = snackBar.view as ViewGroup
-        layout.setPadding(0, 0, 0, 0)
-        layout.setBackgroundColor(Color.TRANSPARENT)
-        layout.addView(customView, 0)
-
-        // BottomNav에 붙이기
-        val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
-        snackBar.anchorView = bottomNav
-
-        // margin으로 띄우기
-        val extra = (9 * resources.displayMetrics.density).toInt()
-        val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
-        params.bottomMargin += extra
-        snackBar.view.layoutParams = params
-
-        snackBar.show()
-    }
-
-    /**
-     * 리워드 토스트 표시 (toast_reward.xml)
-     */
-    private fun showRewardToast(message: String) {
-        val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
-        val customView = layoutInflater.inflate(R.layout.toast_reward, null)
-
-        // 메시지 설정
-        val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
-        tvMessage.text = message
-
-        val layout = snackBar.view as ViewGroup
-        layout.setPadding(0, 0, 0, 0)
-        layout.setBackgroundColor(Color.TRANSPARENT)
-        layout.addView(customView, 0)
-
-        // BottomNav에 붙이기
-        val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
-        snackBar.anchorView = bottomNav
-
-        // margin으로 띄우기
-        val extra = (9 * resources.displayMetrics.density).toInt()
-        val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
-        params.bottomMargin += extra
-        snackBar.view.layoutParams = params
-
-        snackBar.show()
     }
 
     override fun onDestroyView() {

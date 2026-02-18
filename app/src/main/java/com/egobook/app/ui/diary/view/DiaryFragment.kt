@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.graphics.Color
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -24,6 +25,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.egobook.app.ui.diary.model.ToastMessage
 import kotlin.getValue
     class DiaryFragment : Fragment() {
         private var _binding: FragmentDiaryBinding? = null
@@ -51,10 +56,13 @@ import kotlin.getValue
 
             // 초기에는 GoToTop 버튼 숨김
             binding.btnGoToTop.visibility = View.GONE
-            
+
             // 캘린더에서 선택한 날짜가 있으면 적용 (없으면 마지막 선택 날짜 유지)
             applySelectedDateFromArgs()
-            
+
+            // SavedStateHandle로부터 토스트 메시지 확인 및 표시
+            checkAndShowToastMessages()
+
             initViewPager()
             setupClickListener()
             observeViewModel()
@@ -244,6 +252,101 @@ import kotlin.getValue
             snackBar.anchorView = bottomNav
 
             // translationY 대신 margin으로 띄우기
+            val extra = (9 * resources.displayMetrics.density).toInt()
+            val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
+            params.bottomMargin += extra
+            snackBar.view.layoutParams = params
+
+            snackBar.show()
+        }
+
+        /**
+         * SavedStateHandle로부터 토스트 메시지 확인 및 표시
+         */
+        private fun checkAndShowToastMessages() {
+            val savedStateHandle = findNavController().currentBackStackEntry?.savedStateHandle
+            val jsonMessages = savedStateHandle?.get<String>("toast_messages")
+
+            if (!jsonMessages.isNullOrEmpty()) {
+                val type = object : TypeToken<List<ToastMessage>>() {}.type
+                val messages = Gson().fromJson<List<ToastMessage>>(jsonMessages, type)
+                showToastMessages(messages)
+                // 사용 후 삭제 (중복 표시 방지)
+                savedStateHandle.remove<String>("toast_messages")
+            }
+        }
+
+        /**
+         * 토스트 메시지 리스트를 순차적으로 표시
+         */
+        private fun showToastMessages(messages: List<ToastMessage>) {
+            if (messages.isEmpty()) return
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                messages.forEachIndexed { index, message ->
+                    when (message.rewardType) {
+                        "INK" -> showInkToast(message.amount)
+                        "REWARD" -> showRewardToast(message.message)
+                    }
+
+                    // 연속 토스트 사이에 딜레이 (마지막 제외)
+                    if (index < messages.size - 1) {
+                        delay(2500) // 2.5초 딜레이
+                    }
+                }
+            }
+        }
+
+        /**
+         * 잉크 토스트 표시 (toast_ink.xml)
+         */
+        private fun showInkToast(amount: Int) {
+            val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
+            val customView = layoutInflater.inflate(R.layout.toast_ink, null)
+
+            // 메시지 설정
+            val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
+            tvMessage.text = "잉크를 $amount 획득했어요"
+
+            val layout = snackBar.view as ViewGroup
+            layout.setPadding(0, 0, 0, 0)
+            layout.setBackgroundColor(Color.TRANSPARENT)
+            layout.addView(customView, 0)
+
+            // BottomNav에 붙이기
+            val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
+            snackBar.anchorView = bottomNav
+
+            // margin으로 띄우기
+            val extra = (9 * resources.displayMetrics.density).toInt()
+            val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
+            params.bottomMargin += extra
+            snackBar.view.layoutParams = params
+
+            snackBar.show()
+        }
+
+        /**
+         * 리워드 토스트 표시 (toast_reward.xml)
+         */
+        private fun showRewardToast(message: String) {
+            val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
+            val customView = layoutInflater.inflate(R.layout.toast_reward, null)
+
+            // 메시지 설정
+            val tvMessage = customView.findViewById<TextView>(R.id.tv_message)
+            tvMessage.text = message
+
+            val layout = snackBar.view as ViewGroup
+            layout.setPadding(0, 0, 0, 0)
+            layout.setBackgroundColor(Color.TRANSPARENT)
+            layout.addView(customView, 0)
+
+            // BottomNav에 붙이기
+            val bottomNav = requireActivity().findViewById<View>(R.id.bottom_navigation)
+            snackBar.anchorView = bottomNav
+
+            // margin으로 띄우기
             val extra = (9 * resources.displayMetrics.density).toInt()
             val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
             params.bottomMargin += extra
