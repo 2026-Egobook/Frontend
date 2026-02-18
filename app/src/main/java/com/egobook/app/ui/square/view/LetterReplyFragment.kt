@@ -20,6 +20,7 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentLetterReplyBinding
 import com.egobook.app.databinding.LayoutLetterTooltipPopupBinding
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
@@ -49,9 +50,14 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLetterReplyBinding.bind(view)
+        fetchData()
         initViews()
         initListeners()
         initObservers()
+    }
+
+    private fun fetchData() {
+        viewModel.getUserInfo()
     }
 
     private fun initViews() = with(binding) {
@@ -112,7 +118,9 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
     }
 
     private fun showTooltipPopup(anchorView: View) {
-        val popupBinding = LayoutLetterTooltipPopupBinding.inflate(layoutInflater)
+        val popupBinding = LayoutLetterTooltipPopupBinding.inflate(layoutInflater).apply {
+            tvTooltipContent.text = if(letterItem.mode == LetterMode.RANDOM) "익명으로 상대에게 전달돼요\n비하나 과도한 비판 대신,\n공감부터 시작하는\n따뜻한 말을 보내주세요!" else "친구에게 편지가 전달돼요\n비하나 과도한 비판 대신,\n공감부터 시작하는\n따뜻한 말을 보내주세요!"
+        }
         val popupWindow = PopupWindow(
             popupBinding.root,
             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -134,6 +142,28 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
     private fun initObservers() = with(binding) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.userInfo.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success -> {
+                                val userNickname = state.data.nickname
+                                when(letterItem.mode) {
+                                    LetterMode.FRIEND -> {
+                                        tvLetterReplyReceiver.text = "To ${letterItem.fromLabel}"
+                                        tvLetterReplySender.text = "From $userNickname"
+                                    }
+                                    LetterMode.RANDOM -> {
+                                        tvLetterReplyReceiver.text = "To 낯선 고북이"
+                                        tvLetterReplySender.text = "From 또다른 고북이"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 launch {
                     viewModel.detectAbusiveContentResult.collect { state ->
                         when (state) {

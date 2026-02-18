@@ -90,7 +90,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_letter_reply_mine_container"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp"
@@ -219,7 +219,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_letter_reply_container"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 app:cardBackgroundColor="@color/letter_bg_beige"
                 app:cardCornerRadius="8dp"
@@ -231,14 +231,14 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:padding="16dp">
 
                     <TextView
                         android:id="@+id/tv_letter_reply_receiver"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="To 낯선 고북이"
+                        tools:text="To 낯선 고북이"
                         android:textColor="@color/neutral"
                         android:textSize="14sp"
                         android:fontFamily="@font/arita_semibold"
@@ -258,10 +258,12 @@
                     <EditText
                         android:id="@+id/et_letter_reply_content"
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="160dp"
                         android:layout_marginTop="12dp"
                         android:backgroundTint="@android:color/transparent"
                         android:hint="편지를 작성해 보세요"
+                        android:text="ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ"
                         android:gravity="start"
                         android:maxLength="350"
                         android:textColor="@color/neutral"
@@ -292,7 +294,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="From 또다른 고북이"
+                        tools:text="From 또다른 고북이"
                         android:textColor="@color/neutral"
                         android:textSize="14sp"
                         android:fontFamily="@font/arita_semibold"
