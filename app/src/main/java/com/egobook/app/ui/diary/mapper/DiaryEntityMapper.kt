@@ -83,7 +83,9 @@ object DiaryEntityMapper {
 
     /**
      * STAT 보상 메시지 생성
-     * "{일기타입} 일기를 작성하여\n{보상타입}가 상승했어요"
+     * "{일기타입} 일기를 작성하여\n{보상타입}[이/가] 상승했어요"
+     * - 받침 있음(감정조절) → "이"
+     * - 받침 없음(긍정사고) → "가"
      */
     private fun createRewardMessage(
         diaryType: DiaryType,
@@ -91,12 +93,23 @@ object DiaryEntityMapper {
     ): String {
         val diaryDisplay = diaryType.displayType      // "감정", "고민", "칭찬", "감사"
         val rewardDisplay = rewardType.displayType    // "감정조절", "긍정사고"
+        
+        // 받침 여부에 따라 조사 결정
+        val particle = if (hasFinalConsonant(rewardDisplay)) "이" else "가"
 
-        return "${diaryDisplay} 일기를 작성하여\n${rewardDisplay}가 상승했어요"
+        return "${diaryDisplay} 일기를 작성하여\n${rewardDisplay}${particle} 상승했어요"
     }
-
-
-
+    
+    /**
+     * 한글 받침(종성) 여부 확인
+     */
+    private fun hasFinalConsonant(text: String): Boolean {
+        if (text.isEmpty()) return false
+        val lastChar = text.last()
+        // 한글 완성형 범위: 0xAC00 ~ 0xD7A3
+        // 받침 있음: (code - 0xAC00) % 28 != 0
+        return lastChar.code in 0xAC00..0xD7A3 && (lastChar.code - 0xAC00) % 28 != 0
+    }
 
     // ========== UI -> Domain Entity ==========
     
