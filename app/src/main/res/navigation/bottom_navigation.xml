@@ -15,8 +15,23 @@
             app:destination="@id/storeFragment" />
 
         <action
+            android:id="@+id/action_homeFragment_to_psychologyFragment"
+            app:destination="@id/psychologyFragment" />
+
+        <action
             android:id="@+id/action_homeFragment_to_accountFragment"
             app:destination="@id/accountFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/psychologyFragment"
+        android:name="com.egobook.app.ui.home.ui.PsychologyFragment"
+        android:label="유리병">
+
+        <action
+            android:id="@+id/action_psychologyFragment_to_homeFragment"
+            app:destination="@id/menu_home" />
 
     </fragment>
 

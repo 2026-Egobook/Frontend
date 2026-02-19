@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -64,7 +65,10 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
             dismiss()
         }
         btnLetterSendApply.setOnClickListener {
-            viewModel.detectAbusiveContent(text = letterContent)
+//            viewModel.detectAbusiveContent(text = letterContent)
+            Toast.makeText(context, "서버 점검중입니다.", Toast.LENGTH_SHORT).show()
+            removeScreenBlur()
+            dismiss()
         }
     }
 

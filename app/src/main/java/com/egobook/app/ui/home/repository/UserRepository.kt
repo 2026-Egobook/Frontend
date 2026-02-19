@@ -6,8 +6,10 @@ import com.egobook.app.ui.home.user.Tendency
 import com.egobook.app.ui.home.user.User
 import retrofit2.Retrofit
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,6 +30,11 @@ interface UserTendencyRepository {
 interface UserPsychologyRepository {
     suspend fun isReadDailyPsychology(): Boolean
     suspend fun loadDailyPsychology(): DailyPsychologyDto
+    suspend fun saveDailyPsychology(knowledgeId: Int): SavingPsychologyLogDto
+
+    suspend fun deletePsychology(knowledgeId: Int): DeletingPsychologyLogDto
+
+    suspend fun loadSavedPsychology(): List<SavedPsychologyDto>
 }
 
 interface NetworkUserService {
@@ -95,12 +102,48 @@ data class DailyPsychologyDto(
 
 )
 
+data class SavingPsychologyLogDto(
+    val knowledgeId: Long,
+    val saved: Boolean,
+    val toastMessage: String
+)
+
+data class DeletingPsychologyLogDto(
+    val saved: Boolean,
+    val knowledgeId: Long,
+    val toastMessage: String
+)
+
+data class SavedPsychologyDto(
+    val knowledgeId: Int,
+    val preview: String,
+    val savedAt: String,
+    val source: String,
+    val title: String
+)
+
+data class SavedPsychologyGroupDto(
+    val values: List<SavedPsychologyDto>,
+    val hasNext: Boolean,
+    val nextCursor: Int
+)
+
 interface NetworkPsychologyService {
     @GET("/psychology/daily/status")
     suspend fun isReadDailyPsychology(): BaseResponse<PsychologyStateDto>
 
     @GET("/psychology/daily")
     suspend fun loadDailyPsychology(): BaseResponse<DailyPsychologyDto>
+
+    @POST("/psychology/{knowledgeId}/save")
+    suspend fun savePsychology(@Path("knowledgeId") knowledgeId: Int): BaseResponse<SavingPsychologyLogDto>
+
+    @DELETE("/psychology/{knowledgeId}/save")
+    suspend fun deletePsychology(@Path("knowledgeId") knowledgeId: Int): BaseResponse<DeletingPsychologyLogDto>
+
+    @GET("/psychology/saved")
+    suspend fun loadSavedPsychology(): BaseResponse<SavedPsychologyGroupDto>
+
 }
 
 @Singleton
@@ -145,7 +188,7 @@ class NetworkUserRepository @Inject constructor(
         )
         return watchingAdResponse.message
     }
-    
+
     override suspend fun isReadDailyPsychology(): Boolean {
         val psychologyResponse: BaseResponse<PsychologyStateDto> =
             psychologyService.isReadDailyPsychology()
@@ -157,6 +200,24 @@ class NetworkUserRepository @Inject constructor(
         val psychologyResponse: BaseResponse<DailyPsychologyDto> =
             psychologyService.loadDailyPsychology()
         return psychologyResponse.data
+    }
+
+    override suspend fun saveDailyPsychology(knowledgeId: Int): SavingPsychologyLogDto {
+        val psychologyResponse: BaseResponse<SavingPsychologyLogDto> =
+            psychologyService.savePsychology(knowledgeId)
+        return psychologyResponse.data
+    }
+
+    override suspend fun deletePsychology(knowledgeId: Int): DeletingPsychologyLogDto {
+        val psychologyResponse: BaseResponse<DeletingPsychologyLogDto> =
+            psychologyService.deletePsychology(knowledgeId)
+        return psychologyResponse.data
+    }
+
+    override suspend fun loadSavedPsychology(): List<SavedPsychologyDto> {
+        val psychologyResponse: BaseResponse<SavedPsychologyGroupDto> =
+            psychologyService.loadSavedPsychology()
+        return psychologyResponse.data.values
     }
 
 }
