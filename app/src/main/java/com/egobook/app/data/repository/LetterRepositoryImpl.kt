@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.egobook.app.data.api.AIApiService
 import com.egobook.app.data.api.LetterApiService
 import com.egobook.app.data.model.square.letter.DetectAbusiveContentRequest
+import com.egobook.app.data.model.square.letter.ReceivedReplyResponse
 import com.egobook.app.data.model.square.letter.ReplyLetterRequest
 import com.egobook.app.data.model.square.letter.toData
 import com.egobook.app.data.model.square.letter.toDomain
@@ -14,6 +15,8 @@ import com.egobook.app.data.repository.paging.SentLettersPagingSource
 import com.egobook.app.domain.model.square.letter.AbusiveContentAnalysis
 import com.egobook.app.domain.model.square.letter.ArrivedPendingLetter
 import com.egobook.app.domain.model.square.letter.DeferredLetter
+import com.egobook.app.domain.model.square.letter.ReceivedReplies
+import com.egobook.app.domain.model.square.letter.ReceivedReply
 import com.egobook.app.domain.model.square.letter.ReplyLetter
 import com.egobook.app.domain.model.square.letter.ReportContent
 import com.egobook.app.domain.model.square.letter.SendLetter
@@ -167,5 +170,30 @@ class LetterRepositoryImpl @Inject constructor(
                 DeferredLettersPagingSource(apiService = letterApiService)
             }
         ).flow
+    }
+
+    override suspend fun fetchReceivedReplyById(replyId: Long): Result<ReceivedReply> {
+        return try {
+            var currentPage = 1 // 초기값은 1 페이지
+            val size = 20 // 한 페이지당 가져올 데이터값
+            var replyItem: ReceivedReplyResponse
+            while(true) {
+                val response = letterApiService.fetchReceivedReplies(page = currentPage, size = size)
+                if(response.status == 200) {
+                    val targetReply = response.data.content.find { it.replyId == replyId }
+                    if(targetReply != null) {
+                        replyItem = targetReply
+                        break
+                    } else {
+                        currentPage++
+                    }
+                } else {
+                    return Result.failure(Exception("Error: ${response.status}"))
+                }
+            }
+            Result.success(replyItem.toDomain())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

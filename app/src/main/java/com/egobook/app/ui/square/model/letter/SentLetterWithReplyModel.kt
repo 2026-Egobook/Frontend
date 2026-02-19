@@ -15,6 +15,7 @@ data class SentLetterWithReplyModel(
     val backgroundColor: LetterBackgroundColor,
     val createdAt: String,
     val arrivedAt: String,
+    val fromLabel: String,
     val reply: LetterReplyModel? = null
 )
 
@@ -35,6 +36,7 @@ fun SentLetterWithReply.toPresentation() = SentLetterWithReplyModel(
     backgroundColor = backgroundColor,
     createdAt = createdAt,
     arrivedAt = arrivedAt,
+    fromLabel = fromLabel,
     reply = reply?.toPresentation()
 )
 

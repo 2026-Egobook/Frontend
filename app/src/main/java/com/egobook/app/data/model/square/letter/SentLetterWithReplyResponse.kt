@@ -24,6 +24,8 @@ data class SentLetterWithReplyResponse(
     val createdAt: String,
     @SerializedName("arrivedAt")
     val arrivedAt: String,
+    @SerializedName("fromLabel")
+    val fromLabel: String,
     @SerializedName("reply")
     val reply: LetterReplyResponse? = null
 )
@@ -58,5 +60,6 @@ fun SentLetterWithReplyResponse.toDomain(): SentLetterWithReply = SentLetterWith
     backgroundColor = backgroundColor,
     createdAt = createdAt,
     arrivedAt = arrivedAt,
+    fromLabel = fromLabel,
     reply = reply?.toDomain()
 )

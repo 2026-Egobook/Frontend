@@ -12,6 +12,7 @@ import com.egobook.app.domain.usecase.letter.DeleteLetterThreadUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
 import com.egobook.app.domain.usecase.letter.GetDeferredLettersUseCase
+import com.egobook.app.domain.usecase.letter.GetReceivedReplyByIdUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLetterWithReplyUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLettersUseCase
 import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
@@ -25,6 +26,7 @@ import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.letter.DeferredLetterModel
+import com.egobook.app.ui.square.model.letter.ReceivedReplyModel
 import com.egobook.app.ui.square.model.letter.ReplyLetterModel
 import com.egobook.app.ui.square.model.letter.ReportContentModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
@@ -57,7 +59,8 @@ class LetterViewModel @Inject constructor(
     private val reportArrivedLetterUseCase: ReportArrivedLetterUseCase,
     private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase,
     private val getDeferredLettersUseCase: GetDeferredLettersUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getReceivedReplyByIdUseCase: GetReceivedReplyByIdUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<FriendListModel>>(UiState.Idle)
@@ -232,6 +235,20 @@ class LetterViewModel @Inject constructor(
         viewModelScope.launch {
             getDeferredLettersUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
                 _deferredLetters.value = pagingData.map { it.toPresentation() }
+            }
+        }
+    }
+
+    private val _receivedReplies = MutableStateFlow<UiState<ReceivedReplyModel>>(UiState.Idle)
+    val receivedReplies = _receivedReplies.asStateFlow()
+
+    fun getReceivedReplyById(replyId: Long) {
+        viewModelScope.launch {
+            _receivedReplies.value = UiState.Loading
+            getReceivedReplyByIdUseCase(replyId = replyId).onSuccess { domainItem ->
+                _receivedReplies.value = UiState.Success(domainItem.toPresentation())
+            }.onFailure { error ->
+                _receivedReplies.value = UiState.Failure(error.message)
             }
         }
     }

@@ -3,6 +3,7 @@ package com.egobook.app.data.api
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.square.letter.ArrivedPendingLetterResponse
 import com.egobook.app.data.model.square.letter.DeferredLettersResponse
+import com.egobook.app.data.model.square.letter.ReceivedRepliesResponse
 import com.egobook.app.data.model.square.letter.ReplyLetterRequest
 import com.egobook.app.data.model.square.letter.ReplyLetterResponse
 import com.egobook.app.data.model.square.letter.ReportContentRequest
@@ -73,4 +74,10 @@ interface LetterApiService {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): ApiResponse<DeferredLettersResponse>
+
+    @GET("/plaza/letters/replies/received")
+    suspend fun fetchReceivedReplies(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): ApiResponse<ReceivedRepliesResponse>
 }
