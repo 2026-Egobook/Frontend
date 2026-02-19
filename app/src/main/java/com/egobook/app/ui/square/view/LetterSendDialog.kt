@@ -65,6 +65,7 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
             dismiss()
         }
         btnLetterSend.setOnClickListener {
+            root.alpha = 0.0f
             viewModel.detectAbusiveContent(text = letterContent)
         }
     }
