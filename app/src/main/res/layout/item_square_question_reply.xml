@@ -32,7 +32,7 @@
         android:id="@+id/tv_item_square_question_reply_user_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LV 1234"
+        android:text="LV 1"
         android:textColor="@color/neutral"
         android:textSize="12sp"
         android:fontFamily="@font/arita_medium"
