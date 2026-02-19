@@ -1,18 +1,12 @@
 package com.egobook.app.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.ui.home.repository.DailyPsychologyDto
 import com.egobook.app.ui.home.repository.PsychologyKnowledge
 import com.egobook.app.ui.home.repository.PsychologyReward
+import com.egobook.app.ui.home.repository.SavedPsychologyDto
 import com.egobook.app.ui.home.repository.UserPsychologyRepository
-import com.egobook.app.ui.home.repository.UserRepository
-import com.egobook.app.ui.home.user.Ink
-import com.egobook.app.ui.home.user.Level
-import com.egobook.app.ui.home.user.User
-import com.egobook.app.ui.shop.CustomItem
-import com.egobook.app.ui.shop.StoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +18,14 @@ import javax.inject.Inject
 class PsychologyViewModel @Inject constructor(
     private val psychologyRepository: UserPsychologyRepository
 ) : ViewModel() {
+
+    init {
+        loadDailyPsychology()
+        loadSavedPsychology()
+    }
+
+    private val _savedPsychologies = MutableStateFlow(emptyList<SavedPsychologyDto>())
+    val savedPsychologies: StateFlow<List<SavedPsychologyDto>> = _savedPsychologies.asStateFlow()
 
     private val _dailyPhycologyDto = MutableStateFlow(
         DailyPsychologyDto(
@@ -50,6 +52,27 @@ class PsychologyViewModel @Inject constructor(
         viewModelScope.launch {
             _dailyPhycologyDto.value = psychologyRepository.loadDailyPsychology()
         }
+    }
 
+    fun savePsychology(knowledgeId: Int) {
+        viewModelScope.launch {
+            psychologyRepository.saveDailyPsychology(knowledgeId)
+            loadDailyPsychology()
+            loadSavedPsychology()
+        }
+    }
+
+    fun deletePsychology(knowledgeId: Int) {
+        viewModelScope.launch {
+            psychologyRepository.deletePsychology(knowledgeId)
+            loadDailyPsychology()
+            loadSavedPsychology()
+        }
+    }
+
+    fun loadSavedPsychology() {
+        viewModelScope.launch {
+            _savedPsychologies.value = psychologyRepository.loadSavedPsychology()
+        }
     }
 }

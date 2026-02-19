@@ -23,7 +23,7 @@ import com.egobook.app.databinding.FragmentLetterWriteBinding
 import com.egobook.app.databinding.LayoutPopupFriendListBinding
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.adapter.FriendPopupListAdapter
-import com.egobook.app.ui.square.model.friend.FriendModel
+import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
@@ -39,7 +39,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
 
     private val viewModel: LetterViewModel by activityViewModels()
 
-    private lateinit var friendList: List<FriendModel>
+    private lateinit var friendList: FriendListModel
     private var letterColor: LetterBackgroundColor = LetterBackgroundColor.WHITE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -153,7 +153,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
                 }
             })
         }
-        (popupBinding.rvPopupFriendList.adapter as FriendPopupListAdapter).submitList(friendList)
+        (popupBinding.rvPopupFriendList.adapter as FriendPopupListAdapter).submitList(friendList.friends)
         popupWindow.showAsDropDown(
             anchorView,
             0,
@@ -169,9 +169,9 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
                         is UiState.Failure -> {}
                         UiState.Idle -> {}
                         UiState.Loading -> {}
-                        is UiState.Success<List<FriendModel>> -> {
+                        is UiState.Success<FriendListModel> -> {
                             val friendList = state.data
-                            if(friendList.isEmpty()) {
+                            if(friendList.friends.isEmpty()) {
                                 btnLetterSendFriend.isVisible = false
                                 val params = btnLetterSendAnonymous.layoutParams as ConstraintLayout.LayoutParams
                                 params.startToEnd = ConstraintLayout.LayoutParams.UNSET

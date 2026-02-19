@@ -11,17 +11,21 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
+import com.egobook.app.R
 import com.egobook.app.databinding.DialogAdBinding
 import com.egobook.app.databinding.DialogPsychologyBinding
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.home.HomeViewModel
 import com.egobook.app.ui.home.PsychologyViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 class PsychologyDialog() : DialogFragment() {
 
     private var _binding: DialogPsychologyBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
+
+    private var ink: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,19 +42,26 @@ class PsychologyDialog() : DialogFragment() {
 
         val viewModel: PsychologyViewModel by activityViewModels()
 
-        viewModel.loadDailyPsychology()
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dailyPhycologyDto.collect { dailyPhycologyDto ->
                 binding.tvPsychologyContent.text = dailyPhycologyDto.knowledge.content
                 binding.tvPsychologySource.text = dailyPhycologyDto.knowledge.source
                 binding.tvPsychologyDate.text = dailyPhycologyDto.date
-                if(dailyPhycologyDto.reward == null) {
-                    binding.btnReward.text = "메인으로 돌아가기"
+                ink = max(ink, dailyPhycologyDto.reward?.inkGranted ?: 0)
+                binding.btnReward.text = "잉크 ${ink}개 획득!"
+                if (dailyPhycologyDto.isBookmarked) {
+                    binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_clicked)
                 } else {
-                    binding.btnReward.text = "잉크 ${dailyPhycologyDto.reward.inkGranted}개 획득!"
+                    binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_unclicked)
                 }
+            }
+        }
 
+        binding.ivBookmark.setOnClickListener {
+            if (viewModel.dailyPhycologyDto.value.isBookmarked) {
+                viewModel.deletePsychology(viewModel.dailyPhycologyDto.value.knowledge.knowledgeId)
+            } else {
+                viewModel.savePsychology(viewModel.dailyPhycologyDto.value.knowledge.knowledgeId)
             }
         }
 

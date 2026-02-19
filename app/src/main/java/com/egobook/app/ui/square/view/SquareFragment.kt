@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
@@ -256,6 +257,23 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                     }
                 }
                 launch {
+                    todayQuestionAdapter.loadStateFlow.collectLatest { loadStates ->
+                        // 1. 현재 '새로고침(refresh)' 중인지 확인
+                        val isRefreshing = loadStates.refresh is LoadState.Loading
+
+                        // 2. '로딩 중이 아니면서' + '아이템이 0개'일 때만 진짜 비어있는 것으로 간주
+                        val isListEmpty = loadStates.refresh is LoadState.NotLoading && todayQuestionAdapter.itemCount == 0
+
+                        // 로딩 중일 때는 플레이스홀더와 리사이클러뷰를 모두 숨기거나,
+                        // 데이터가 없을 때만 플레이스홀더를 보여줍니다.
+                        tvSquareTodayQuestionFriendReplyPlaceholderMain.isVisible = isListEmpty
+                        tvSquareTodayQuestionFriendReplyPlaceholderSub.isVisible = isListEmpty
+
+                        // 데이터가 있고 로딩 중이 아닐 때만 리사이클러뷰를 보여줌
+                        rvSquareTodayQuestionFriendReply.isVisible = !isListEmpty && !isRefreshing
+                    }
+                }
+                launch {
                     questionViewModel.updateTodayAnswerResult.collect { state ->
                         when(state) {
                             is UiState.Failure -> {}
@@ -291,6 +309,14 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                         if(pagingData != null) {
                             sentLetterAdapter.submitData(lifecycle, pagingData)
                         }
+                    }
+                }
+                launch {
+                    sentLetterAdapter.loadStateFlow.collectLatest { loadStates ->
+                        val isRefreshing = loadStates.refresh is LoadState.Loading
+                        val isListEmpty = loadStates.refresh is LoadState.NotLoading && sentLetterAdapter.itemCount == 0
+                        tvSquareSentLetterPlaceholder.isVisible = isListEmpty
+                        rvSquareSentLetter.visibility = if(isListEmpty) View.INVISIBLE else View.VISIBLE
                     }
                 }
             }

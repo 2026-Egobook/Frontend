@@ -38,6 +38,7 @@
                 android:layout_weight="1" />
 
             <ImageView
+                android:id="@+id/iv_bookmark"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/ic_bookmark_unclicked" />
@@ -82,7 +83,6 @@
             android:textSize="12dp"
             android:textAlignment="center"
             android:text="잉크 획득" />
-
 
     </LinearLayout>
 

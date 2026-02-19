@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -14,12 +15,12 @@ import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.DialogLetterSendBinding
-import com.egobook.app.removeScreenBlur
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.domain.model.square.letter.LetterMode
+import com.egobook.app.domain.model.square.letter.LetterStatus
+import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
-import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
-import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.ui.square.model.letter.SendLetterModel
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
@@ -64,7 +65,10 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
             dismiss()
         }
         btnLetterSendApply.setOnClickListener {
-            viewModel.detectAbusiveContent(text = letterContent)
+//            viewModel.detectAbusiveContent(text = letterContent)
+            Toast.makeText(context, "서버 점검중입니다.", Toast.LENGTH_SHORT).show()
+            removeScreenBlur()
+            dismiss()
         }
     }
 

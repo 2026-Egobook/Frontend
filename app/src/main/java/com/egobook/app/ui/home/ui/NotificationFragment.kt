@@ -66,6 +66,10 @@ class NotificationFragment: Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.notifications.collect { list ->
                     notificationAdapter.submitList(list)
+                    val isEmpty = list.isEmpty()
+
+                    binding.tvNoNotificationTitle.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                    binding.tvNoNotificationContent.visibility = if (isEmpty) View.VISIBLE else View.GONE
                 }
             }
         }

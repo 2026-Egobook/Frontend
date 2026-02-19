@@ -36,7 +36,9 @@ class FriendsFragment : Fragment(R.layout.fragment_square_friends) {
         }
         btnSquareFriendsAdd.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
-            val dialog = FriendAddDialog()
+            val dialog = FriendAddDialog().apply {
+                isCancelable = false
+            }
             dialog.show(childFragmentManager, FriendAddDialog.TAG)
         }
     }

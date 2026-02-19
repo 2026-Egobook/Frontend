@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,18 +16,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentEgoRoomWeeklyReportBinding
-import com.egobook.app.domain.model.NotificationType
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.ui.counseling.adapter.CounselingWeeklyReportAdapter
 import com.egobook.app.ui.counseling.model.DailyAndWeeklyNotificationModel
-import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
 import com.egobook.app.ui.counseling.viewmodel.WeeklyReportViewModel
-import com.egobook.app.ui.notification.model.NotificationModel
 import com.egobook.app.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 @AndroidEntryPoint
 class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_report) {

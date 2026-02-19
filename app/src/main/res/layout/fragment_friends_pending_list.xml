@@ -29,13 +29,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="3"
+            tools:text="3"
             android:textColor="@color/neutral_subtle"
             android:textSize="14sp"
             android:fontFamily="@font/arita_semibold"
             app:layout_constraintBottom_toBottomOf="@id/tv_friends_pending_list_received_title"
             app:layout_constraintStart_toEndOf="@id/tv_friends_pending_list_received_title"
             app:layout_constraintTop_toTopOf="@id/tv_friends_pending_list_received_title" />
+
+        <TextView
+            android:id="@+id/tv_friends_pending_list_received_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="나에게 온 친구 신청이 아직 존재하지 않아요"
+            android:textColor="@color/neutral"
+            android:textSize="16sp"
+            android:fontFamily="@font/arita_semibold"
+            android:lineHeight="21sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_friends_pending_list_received_title"
+            app:layout_constraintBottom_toTopOf="@id/tv_friends_pending_list_sent_title"/>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_friends_pending_list_received"
@@ -59,6 +76,21 @@
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/ll_friends_pending_list_received"
             app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_friends_pending_list_sent_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내가 한 친구 신청이 아직 존재하지 않아요"
+            android:textColor="@color/neutral"
+            android:textSize="16sp"
+            android:fontFamily="@font/arita_semibold"
+            android:lineHeight="21sp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_friends_pending_list_sent_title"/>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_friends_pending_list_sent"
