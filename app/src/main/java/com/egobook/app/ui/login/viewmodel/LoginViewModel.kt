@@ -3,6 +3,7 @@ package com.egobook.app.ui.login.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.data.local.UserInfoStorage
+import com.egobook.app.domain.model.auth.AuthError
 import com.egobook.app.domain.usecase.authusecase.AuthUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -25,9 +26,6 @@ class LoginViewModel @Inject constructor(
     private val _isGuestSignUp = MutableSharedFlow<Unit>()
     val isGuestSignUp = _isGuestSignUp.asSharedFlow()
 
-    private val _signUpError = MutableSharedFlow<String>()
-    val signUpError = _signUpError.asSharedFlow()
-
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState = _loginState.asStateFlow()
 
@@ -42,17 +40,19 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.TrySignInByGoogle -> {
                 viewModelScope.launch {
                     _loginState.value = LoginState.Loading
-                    val result = authUseCases.googleSignUp(event.idToken)
-                    result.fold(
-                        onSuccess = {
-                            _isFirstSignUp.emit(Unit)
-                            _loginState.value = LoginState.Idle  // 로딩 해제
-                        },
-                        onFailure = { error ->
-                            _signUpError.emit(error.message ?: "알 수 없는 오류")
-                            _loginState.value = LoginState.Idle  // 로딩 해제
-                        }
-                    )
+
+                    authUseCases.googleSignUp(event.idToken)
+                        .fold(
+                            onSuccess = {
+                                _isFirstSignUp.emit(Unit)
+                                _loginState.value = LoginState.Idle
+                            },
+                            onFailure = { throwable ->
+                                val authError = throwable as? AuthError
+                                    ?: AuthError.Unknown(throwable.message)
+                                _loginState.value = LoginState.Error(authError)
+                            }
+                        )
                 }
             }
             //구글 로그인 시도 -> 토큰 재발급 & 로그인 타입 저장
@@ -67,9 +67,11 @@ class LoginViewModel @Inject constructor(
                             _loginState.value = LoginState.Success
 
                         },
-                        onFailure = { error ->
-                            _loginState.value =
-                                LoginState.Error(error.message ?: "알 수 없는 오류")
+                        onFailure = { throwable ->
+                            val authError = throwable as? AuthError
+                                ?: AuthError.Unknown(throwable.message)
+
+                            _loginState.value = LoginState.Error(authError)
                         }
                     )
                 }
@@ -101,9 +103,10 @@ class LoginViewModel @Inject constructor(
                                 Timber.d("회원가입 성공, 토큰 발급")
                             }
                         },
-                        onFailure = { error ->
-                            _signUpError.emit(error.message ?: "알 수 없는 오류")
-                            _loginState.value = LoginState.Idle
+                        onFailure = { throwable ->
+                            val authError = throwable as? AuthError
+                                ?: AuthError.Unknown(throwable.message)
+                            _loginState.value = LoginState.Error(authError)
                         }
                     )
                 }
@@ -123,7 +126,7 @@ class LoginViewModel @Inject constructor(
         data object Idle : LoginState()
         data object Loading : LoginState()
         data object Success : LoginState() //성공시 메인 화면으로
-        data class Error(val message: String) : LoginState()
+        data class Error(val error: AuthError) : LoginState()
     }
 
 }

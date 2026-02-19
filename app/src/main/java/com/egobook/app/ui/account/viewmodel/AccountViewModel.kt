@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.egobook.app.domain.model.auth.AuthError
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
@@ -84,9 +85,16 @@ class AccountViewModel @Inject constructor(
                         }
                 }
                 .onFailure { e ->
-                    _linkState.value =
-                        UiState.Failure(e.message ?: "구글 계정 연동에 실패했습니다")
-                    _linkToastEvent.emit("구글 계정 연동에 실패했습니다.")
+                    val errorMessage = when (e) {
+                        is AuthError.BadRequest -> "잘못된 요청입니다. 다시 시도해주세요."
+                        is AuthError.InvalidCredentials -> "GUEST 로그인이 되어 있지 않습니다. 다시 로그인해주세요."
+                        is AuthError.UserNotFound -> "Guest 계정 정보를 찾을 수 없습니다."
+                        is AuthError.UserAlreadyExists -> "이미 연동된 Google 계정입니다."
+                        is AuthError.NetworkError -> "네트워크 연결을 확인해주세요."
+                        else -> e.message ?: "구글 계정 연동에 실패했습니다. 잠시 후 다시 시도해주세요"
+                    }
+                    _linkState.value = UiState.Failure(errorMessage)
+                    _linkToastEvent.emit(errorMessage)
                 }
         }
     }

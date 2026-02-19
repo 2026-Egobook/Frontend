@@ -8,6 +8,7 @@ import com.egobook.app.data.model.auth.TokenRequestByGuest
 import com.egobook.app.data.model.auth.TokensRequest
 import com.egobook.app.data.model.auth.TokensRequestAgainByGuest
 import com.egobook.app.data.util.safeApiCallWithSuspendTransform
+import com.egobook.app.data.util.safeAuthApiCall
 import com.egobook.app.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
@@ -20,26 +21,24 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun googleSignUp(idToken: String): Result<Unit> {
-        return safeApiCallWithSuspendTransform(
+        return safeAuthApiCall(
             apiCall = {
                 apiService.googleSignUp(
                     TokenRequestByGoogle(idToken = idToken)
                 )
-            },
-            transform = { tokenData ->
-                userInfoStorage.saveAllTokens(
-                    accessToken = tokenData.accessToken,
-                    refreshToken = tokenData.refreshToken
-                )
-                val loginType = UserInfoStorage.LoginType.GOOGLE
-                userInfoStorage.saveLoginType(loginType)
-
-                //유저 이메일 저장
-                userInfoStorage.saveUserEmail(tokenData.email)
-                Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
-                Unit
             }
-        )
+        ).map { tokenData ->
+            userInfoStorage.saveAllTokens(
+                accessToken = tokenData.accessToken,
+                refreshToken = tokenData.refreshToken
+            )
+            val loginType = UserInfoStorage.LoginType.GOOGLE
+            userInfoStorage.saveLoginType(loginType)
+
+            //유저 이메일 저장
+            userInfoStorage.saveUserEmail(tokenData.email)
+            Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
+        }
     }
 
     override suspend fun guestLogin(): Result<Unit> {
@@ -112,12 +111,12 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    //구글 로그인 시 사용
+    // 구글 로그인 시 사용
     override suspend fun refreshTokens(idToken: String): Result<Unit> {
         // 액세스 토큰 가져오기 (없으면 null)
         val accessToken = userInfoStorage.getAccessToken().first()
 
-        return safeApiCallWithSuspendTransform(
+        return safeAuthApiCall(
             apiCall = {
                 apiService.reGetTokens(
                     TokensRequest(
@@ -125,21 +124,19 @@ class AuthRepositoryImpl @Inject constructor(
                         accessToken = accessToken
                     )
                 )
-            },
-            transform = { tokenData ->
-                userInfoStorage.saveAllTokens(
-                    accessToken = tokenData.accessToken,
-                    refreshToken = tokenData.refreshToken
-                )
-                //로그인 타입 저장
-                val loginType = UserInfoStorage.LoginType.GOOGLE
-                userInfoStorage.saveLoginType(loginType)
-                //유저 이메일 저장
-                userInfoStorage.saveUserEmail(tokenData.email)
-                Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
-                Unit
             }
-        )
+        ).map { tokenData ->
+            userInfoStorage.saveAllTokens(
+                accessToken = tokenData.accessToken,
+                refreshToken = tokenData.refreshToken
+            )
+            //로그인 타입 저장
+            val loginType = UserInfoStorage.LoginType.GOOGLE
+            userInfoStorage.saveLoginType(loginType)
+            //유저 이메일 저장
+            userInfoStorage.saveUserEmail(tokenData.email)
+            Timber.d("구글 로그인 성공, loginType=$loginType, email=${tokenData.email}")
+        }
     }
 
     override suspend fun refreshGuestTokens(): Result<Unit> {

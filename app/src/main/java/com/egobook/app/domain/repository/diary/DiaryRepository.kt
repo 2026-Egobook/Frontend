@@ -3,6 +3,7 @@ package com.egobook.app.domain.repository.diary
 import androidx.paging.PagingData
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
+import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,7 @@ interface DiaryRepository {
     /**
      * 일기 생성
      */
-    suspend fun addDiary(diary: Diary): Result<Unit>
+    suspend fun addDiary(diary: Diary): Result<DiaryRewards>
 
     /**
      * 일기 수정

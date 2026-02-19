@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
+import com.egobook.app.ui.diary.model.ToastMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +16,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
+import com.egobook.app.domain.model.diary.entity.DiaryRewards
+
 
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
@@ -28,9 +31,9 @@ class DiaryWriteViewModel @Inject constructor(
     private val _contentState = MutableStateFlow(ContentState())
     val contentState = _contentState.asStateFlow()
     
-    // 저장 성공 여부를 전달하는 이벤트 Flow (일회성 이벤트)
-    private val _saveSuccess = MutableSharedFlow<Boolean>()
-    val saveSuccess = _saveSuccess.asSharedFlow()
+    // 저장 성공 여부 및 토스트 메시지를 전달하는 이벤트 Flow (일회성 이벤트)
+    private val _saveResult = MutableSharedFlow<SaveResult>()
+    val saveResult = _saveResult.asSharedFlow()
     
     // 수정 모드인지 확인 (diaryId가 -1이 아니면 수정 모드)
     private val diaryId: Long = savedStateHandle.get<Long>("diaryId") ?: -1L
@@ -143,60 +146,79 @@ class DiaryWriteViewModel @Inject constructor(
         viewModelScope.launch {
             val state = _contentState.value
 
-            // 수정 모드 vs 생성 모드 분기
-            val result = if (isEditMode) {
-                // 수정 모드: updateDiary 호출
-                val diaryTypes = DiaryEntityMapper.uiDisplayTypesToDomain(state.selectedTypes)
-                val emotionLevel = if (state.selectedTypes.contains("감정")) {
-                    state.selectedEmotionLevel
-                } else {
-                    null
-                }
-                val now = LocalDateTime.now()
-
-                val updatedDiary = DiaryEntityMapper.createUpdatedDiary(
-                    diaryId = diaryId,
-                    selectedTypes = state.selectedTypes,
-                    content = state.content,
-                    emotionLevel = emotionLevel,
-                    writtenAt = now // 실제 현재 시간으로(임시 삽입)
-                )
-                
-                diaryUseCases.updateDiary(
-                    diaryId = diaryId,
-                    diary = updatedDiary
-                )
+            if (isEditMode) {
+                // 수정 모드 처리
+                saveEditMode(state)
             } else {
-                // 생성 모드: UI 상태를 Diary 엔티티로 변환
-                val now = LocalDateTime.now()
-
-                val newDiary = DiaryEntityMapper.createNewDiary(
-                    selectedTypes = state.selectedTypes,
-                    content = state.content,
-                    emotionLevel = state.selectedEmotionLevel,
-                    date = _selectedDate.value,  // 선택된 날짜의 일기로
-                    writtenAt = now // 실제 현재 시간으로(임시 삽입)
-                )
-                
-                // addDiary 호출
-                diaryUseCases.addDiary(newDiary)
-            }
-
-            // 저장 결과 전달
-            result.onSuccess {
-                _saveSuccess.emit(true) // 저장 성공
-            }.onFailure {
-                _saveSuccess.emit(false) // 저장 실패
+                // 생성 모드 처리
+                saveCreateMode(state)
             }
         }
     }
-    
+
+    /**
+     * 수정 모드 저장 처리
+     */
+    private suspend fun saveEditMode(state: ContentState) {
+        val emotionLevel = if (state.selectedTypes.contains("감정")) {
+            state.selectedEmotionLevel
+        } else {
+            null
+        }
+        val now = LocalDateTime.now()
+
+        val updatedDiary = DiaryEntityMapper.createUpdatedDiary(
+            diaryId = diaryId,
+            selectedTypes = state.selectedTypes,
+            content = state.content,
+            emotionLevel = emotionLevel,
+            writtenAt = now
+        )
+
+        diaryUseCases.updateDiary(
+            diaryId = diaryId,
+            diary = updatedDiary
+        ).onSuccess {
+            _saveResult.emit(SaveResult.Success(emptyList()))
+        }.onFailure { error ->
+            _saveResult.emit(SaveResult.Error(error.message))
+        }
+    }
+
+    /**
+     * 생성 모드 저장 처리 (토스트 메시지 포함)
+     */
+    private suspend fun saveCreateMode(state: ContentState) {
+        val now = LocalDateTime.now()
+
+        val newDiary = DiaryEntityMapper.createNewDiary(
+            selectedTypes = state.selectedTypes,
+            content = state.content,
+            emotionLevel = state.selectedEmotionLevel,
+            date = _selectedDate.value,
+            writtenAt = now
+        )
+
+        diaryUseCases.addDiary(newDiary)
+            .onSuccess { rewards ->
+                val messages = DiaryEntityMapper.createToastMessages(rewards)
+                _saveResult.emit(SaveResult.Success(messages))
+            }.onFailure { error ->
+                _saveResult.emit(SaveResult.Error(error.message))
+            }
+    }
+
     /**
      * 저장 버튼 활성화 조건 체크
      * 조건: 1) 하나 이상의 일기 타입 선택 && 2) 텍스트가 조금이라도 있음
      */
     private fun isSaveButtonEnabled(selectedTypes: Set<String>, content: String): Boolean {
         return selectedTypes.isNotEmpty() && content.isNotBlank()
+    }
+
+    sealed class SaveResult {
+        data class Success(val toastMessages: List<ToastMessage>) : SaveResult()
+        data class Error(val message: String?) : SaveResult()
     }
 
     sealed class ContentEvent {

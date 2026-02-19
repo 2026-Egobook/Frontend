@@ -1,5 +1,6 @@
 package com.egobook.app.ui.diary.view
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -7,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
@@ -19,12 +21,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryWriteBinding
+import com.egobook.app.ui.diary.model.ToastMessage
+import com.egobook.app.ui.diary.viewmodel.DiaryWriteViewModel
 import com.egobook.app.ui.util.toDateTimeString
 import com.egobook.app.ui.util.toDayOfMonthString
 import com.egobook.app.ui.util.toMonthString
 import com.egobook.app.ui.util.toYearString
-import com.egobook.app.ui.diary.viewmodel.DiaryWriteViewModel
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -86,7 +90,7 @@ class DiaryWriteFragment : Fragment() {
         setupDiaryContentEditText()     // 일기 내용 입력 필드 설정 (글자수 제한, TextWatcher)
         observeSelectedDate()           // 선택된 날짜 관찰 및 UI 업데이트
         observeContentState()           // 컨텐츠 상태 관찰 (글자수, 감정 섹션, 저장 버튼 활성화)
-        observeSaveSuccess()            // 저장 성공/실패 관찰
+        observeSaveResult()            // 저장 성공/실패 관찰
     }
     
     private fun setupDiaryTypeCards() {
@@ -246,18 +250,27 @@ class DiaryWriteFragment : Fragment() {
             else -> R.drawable.img_emotion_neutral_unselected
         }
     }
+
     
-    private fun observeSaveSuccess() {
+    private fun observeSaveResult() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.saveSuccess.collectLatest { success ->
-                    if (success) {
-                        // 저장 성공
-                        Toast.makeText(requireContext(), "일기가 저장되었습니다", Toast.LENGTH_SHORT).show()
-                        findNavController().popBackStack() // 이전 화면으로 이동
-                    } else {
-                        // 저장 실패
-                        Toast.makeText(requireContext(), "일기 저장에 실패했습니다", Toast.LENGTH_SHORT).show()
+                viewModel.saveResult.collectLatest { result ->
+                    when (result) {
+                        is DiaryWriteViewModel.SaveResult.Success -> {
+                            // 저장 성공 -> 결과를 이전 화면(DiaryFragment)에 전달하고 이동
+                            val messages = result.toastMessages
+                            if (messages.isNotEmpty()) {
+                                // SavedStateHandle로 토스트 메시지 전달 (더 안정적)
+                                val jsonMessages = Gson().toJson(messages)
+                                findNavController().previousBackStackEntry?.savedStateHandle?.set("toast_messages", jsonMessages)
+                            }
+                            findNavController().popBackStack()
+                        }
+                        is DiaryWriteViewModel.SaveResult.Error -> {
+                            // 저장 실패
+                            Toast.makeText(requireContext(), "일기 저장에 실패했습니다", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }

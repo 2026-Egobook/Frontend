@@ -32,14 +32,20 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:letterSpacing="-0.03"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gd_turtle_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.175"/>
             
             <LinearLayout
                 android:layout_width="261dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/gd_turtle_top"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="125dp"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:clipToPadding="false"
@@ -77,46 +83,54 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_start_guide"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gd_bottom"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:gravity="center"
-                android:text="시작 시 이용약관 및\n개인정보 수집 및 이용에 동의하게 됩니다"
-                android:textSize="12sp"
-                android:fontFamily="@font/arita_medium"
-                android:lineHeight="18sp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.975"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_guest_login"
-                style="@style/LoginButtonStyle1"
-                android:layout_width="328dp"
-                android:layout_height="40dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="게스트로 둘러보기"
-                android:layout_marginBottom="24dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_start_guide"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                app:layout_constraintBottom_toTopOf="@id/gd_bottom"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_google_login"
-                style="@style/LoginButtonStyle1"
-                android:layout_width="328dp"
-                android:layout_height="40dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="Google 계정으로 회원가입"
-                app:icon="@drawable/ic_google_logo"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toTopOf="@id/btn_guest_login"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_google_login"
+                    style="@style/LoginButtonStyle1"
+                    android:layout_width="328dp"
+                    android:layout_height="40dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="Google 계정으로 회원가입"
+                    app:icon="@drawable/ic_google_logo"
+                    android:layout_marginBottom="16dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_guest_login"
+                    style="@style/LoginButtonStyle1"
+                    android:layout_width="328dp"
+                    android:layout_height="40dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="게스트로 둘러보기"
+                    android:layout_marginBottom="24dp"/>
+
+                <TextView
+                    android:id="@+id/tv_start_guide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:gravity="center"
+                    android:text="시작 시 이용약관 및\n개인정보 수집 및 이용에 동의하게 됩니다"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:lineHeight="18sp"/>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

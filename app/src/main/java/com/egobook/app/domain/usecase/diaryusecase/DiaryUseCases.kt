@@ -3,6 +3,7 @@ package com.egobook.app.domain.usecase.diaryusecase
 import androidx.paging.PagingData
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
+import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.repository.diary.DiaryRepository
@@ -42,7 +43,7 @@ class GetDiary @Inject constructor(
 class AddDiary @Inject constructor(
     private val repository: DiaryRepository
 ) {
-    suspend operator fun invoke(diary: Diary): Result<Unit> {
+    suspend operator fun invoke(diary: Diary): Result<DiaryRewards> {
         return repository.addDiary(diary)
     }
 }

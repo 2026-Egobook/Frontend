@@ -3,14 +3,19 @@ package com.egobook.app.domain.model.diary.mapper
 import com.egobook.app.data.model.diary.request.DiaryCreateRequest
 import com.egobook.app.data.model.diary.request.DiaryUpdateRequest
 import com.egobook.app.data.model.diary.response.DiariesResponse
+import com.egobook.app.data.model.diary.response.DiaryCreateResponse
 import com.egobook.app.data.model.diary.response.DiaryEntryResponse
 import com.egobook.app.data.model.diary.response.DiarySlice
+import com.egobook.app.data.model.diary.response.Reward
 import com.egobook.app.domain.model.diary.entity.DayDiaries
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiaryList
+import com.egobook.app.domain.model.diary.entity.DiaryReward
+import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
+import com.egobook.app.domain.model.diary.entity.RewardType
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,8 +25,6 @@ import java.time.ZoneId
  * Data Layer ↔ Domain Layer 변환 Mapper
  */
 object DiaryMapper {
-    
-    private val KST: ZoneId = ZoneId.of("Asia/Seoul")
 
     // ========== Response → Domain Entity ==========
 
@@ -49,17 +52,23 @@ object DiaryMapper {
             createdAt = LocalDateTime.parse(createdAt)
         )
     }
-    
+
     /**
-     * UTC 시간 문자열을 KST LocalDateTime으로 변환
-     * @param utcString ISO 8601 UTC 형식 (예: "2026-02-08T16:03:07.148Z")
-     * @return KST LocalDateTime
+     * DiaryCreateResponse → DiaryRewards
      */
-    private fun parseUtcToKst(utcString: String): LocalDateTime {
-        val withZ = if (utcString.endsWith("Z")) utcString else "${utcString}Z"
-        return Instant.parse(withZ)
-            .atZone(KST)
-            .toLocalDateTime()
+    fun DiaryCreateResponse.toDiaryRewardsEntity(): DiaryRewards {
+        return DiaryRewards(
+            type = entry.type.map { DiaryType.from(it) },
+            rewards = rewards.map { it.toDiaryRewardEntity() }
+        )
+    }
+
+    fun Reward.toDiaryRewardEntity(): DiaryReward {
+        return DiaryReward(
+            rewardType = RewardType.from(rewardType),
+            amount = amount,
+            message = message
+        )
     }
 
 
@@ -74,6 +83,8 @@ object DiaryMapper {
             hasNext = hasNext
         )
     }
+
+
 
     // ========== Domain Entity → Domain Entity ==========
 

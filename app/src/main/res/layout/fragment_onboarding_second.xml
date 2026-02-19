@@ -12,7 +12,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="64dp"/>
+        app:layout_constraintGuide_percent="0.1"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gd_center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gd_center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
         android:id="@+id/tv_onboarding_2_1"
@@ -47,11 +61,11 @@
         android:layout_width="279dp"
         android:layout_height="388dp"
         android:padding="10dp"
-        android:layout_marginTop="156dp"
         android:background="@drawable/bg_onboarding_image_container2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/gd_center_horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/gd_center_horizontal"
+        app:layout_constraintStart_toStartOf="@id/gd_center_vertical"
+        app:layout_constraintEnd_toEndOf="@id/gd_center_vertical"
         android:elevation="5dp">
 
         <FrameLayout
