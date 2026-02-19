@@ -54,7 +54,7 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
 //        }
         val mockDetails = listOf(
             DailyPraiseDetail(
-                diaryDate = "2024-02-03",
+                diaryDate = "2026.02.03",
                 content = """
                 새로운 한 달의 시작을 차분하게 잘 열어가고 계시네요.
                 당신이 가진 긍정적인 태도는 주변 사람들에게도 좋은 영향을 줍니다.
@@ -62,12 +62,12 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 내일도 당신의 앞날에 따뜻한 햇살이 가득하기를 진심으로 바랍니다.
                 충분한 휴식과 함께 편안한 밤 되시길 응원하겠습니다.
             """.trimIndent(),
-                createdAt = "2024-02-03T19:15:30",
+                createdAt = "2026-02-03T19:15:30",
                 isRead = true,
                 rewards = emptyList()
             ),
             DailyPraiseDetail(
-                diaryDate = "2024-02-05",
+                diaryDate = "2026.02.05",
                 content = """
                 월요일의 무게를 견디고 묵묵히 자신의 자리를 지킨 당신이 대견합니다.
                 가끔은 지치기도 하겠지만, 당신은 생각보다 훨씬 더 강한 사람이에요.
@@ -75,12 +75,12 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 당신의 꾸준함이 모여 결국은 커다란 결실을 맺게 될 것임을 믿습니다.
                 포근한 이불 속에서 오늘 하루의 긴장을 모두 녹여내시길 바라요.
             """.trimIndent(),
-                createdAt = "2024-02-05T20:40:12",
+                createdAt = "2026-02-05T20:40:12",
                 isRead = true,
                 rewards = emptyList()
             ),
             DailyPraiseDetail(
-                diaryDate = "2024-02-06",
+                diaryDate = "2026.02.06",
                 content = """
                 어제보다 조금 더 성장한 오늘의 당신을 진심으로 칭찬합니다.
                 사소해 보이는 일상 속에서도 당신만의 의미를 찾아내는 모습이 참 아름다워요.
@@ -88,12 +88,12 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 세상은 당신의 진심 어린 노력을 반드시 기억하고 보상해 줄 것입니다.
                 오늘 밤은 걱정 없이 깊고 단잠을 자며 에너지를 충전하세요.
             """.trimIndent(),
-                createdAt = "2024-02-06T18:55:45",
+                createdAt = "2026-02-06T18:55:45",
                 isRead = true,
                 rewards = emptyList()
             ),
             DailyPraiseDetail(
-                diaryDate = "2024-02-09",
+                diaryDate = "2026.02.09",
                 content = """
                 한 주의 마무리를 향해 달려가는 당신의 열정에 박수를 보냅니다.
                 힘든 순간에도 미소를 잃지 않으려 노력하는 모습이 정말 인상적이에요.
@@ -101,12 +101,12 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 오늘 하루 고생한 자신을 위해 맛있는 음식이나 작은 선물을 주면 어떨까요?
                 당신의 내일이 오늘보다 더 평온하고 행복하기를 항상 기도할게요.
             """.trimIndent(),
-                createdAt = "2024-02-09T21:10:05",
+                createdAt = "2026-02-09T21:10:05",
                 isRead = true,
                 rewards = emptyList()
             ),
             DailyPraiseDetail(
-                diaryDate = "2024-02-11",
+                diaryDate = "2026.02.11",
                 content = """
                 오늘 하루 정말 고생 많으셨어요. 
                 비록 작은 실수들이 있었을지라도 그것은 성장을 위한 과정일 뿐이에요.
@@ -114,12 +114,12 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 내일은 오늘보다 조금 더 밝은 미소를 지을 수 있을 거예요.
                 스스로를 조금 더 믿고 편안하게 휴식을 취하시길 바랍니다.
             """.trimIndent(),
-                createdAt = "2024-02-11T18:30:15",
+                createdAt = "2026-02-11T18:30:15",
                 isRead = true,
                 rewards = emptyList()
             ),
             DailyPraiseDetail(
-                diaryDate = "2024-02-13",
+                diaryDate = "2026.02.13",
                 content = """
                 누구보다 성실하게 오늘을 살아낸 당신이 자랑스럽습니다.
                 복잡한 생각들은 잠시 내려놓고 마음의 소리에 귀를 기울여 보세요.
@@ -127,12 +127,12 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 주변 사람들에게 긍정적인 에너지를 주는 특별한 존재입니다.
                 오늘 밤은 당신의 노력을 칭찬하며 깊은 잠에 드시길 응원해요.
             """.trimIndent(),
-                createdAt = "2024-02-13T19:45:22",
+                createdAt = "2026-02-13T19:45:22",
                 isRead = true,
                 rewards = emptyList()
             ),
             DailyPraiseDetail(
-                diaryDate = "2024-02-14",
+                diaryDate = "2026.02.14",
                 content = """
                 어려운 상황 속에서도 포기하지 않고 묵묵히 나아가는 모습이 멋져요.
                 타인의 기준에 맞추려 애쓰기보다 당신만의 속도를 존중해 주세요.
@@ -140,12 +140,12 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 오늘 하루 당신이 뿌린 작은 씨앗들이 곧 예쁜 꽃을 피울 거예요.
                 당신의 모든 걸음을 진심으로 지지하고 응원하고 있습니다.
             """.trimIndent(),
-                createdAt = "2024-02-14T20:10:05",
+                createdAt = "2026-02-14T20:10:05",
                 isRead = true,
                 rewards = emptyList()
             ),
             DailyPraiseDetail(
-                diaryDate = "2024-02-16",
+                diaryDate = "2026.02.16",
                 content = """
                 오늘의 당신은 어제보다 한 뼘 더 성장한 멋진 사람입니다.
                 사소한 성취 하나에도 자신을 마음껏 칭찬해 주는 건 어떨까요?
@@ -153,7 +153,7 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 남들의 시선보다는 당신의 행복을 최우선으로 생각했으면 좋겠어요.
                 수고한 당신에게 따뜻한 차 한 잔과 같은 평온함이 깃들길 바랍니다.
             """.trimIndent(),
-                createdAt = "2024-02-16T17:55:40",
+                createdAt = "2026-02-16T17:55:40",
                 isRead = false,
                 rewards = listOf(
                     CounselingReward(
@@ -164,7 +164,7 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 )
             ),
             DailyPraiseDetail(
-                diaryDate = "2024-02-18",
+                diaryDate = "2026.02.18",
                 content = """
                 마음이 무거운 날이었을지도 모르지만, 당신은 충분히 잘 해냈습니다.
                 내일의 걱정은 내일에게 맡기고 지금 이 순간의 평안을 누려보세요.
@@ -172,7 +172,7 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                 스스로를 다독여주는 시간을 가지며 오늘 하루를 마무리해 보세요.
                 당신의 빛나는 미래를 믿어 의심치 않으며 늘 곁에서 응원할게요.
             """.trimIndent(),
-                createdAt = "2024-02-18T21:20:12",
+                createdAt = "2026-02-18T21:20:12",
                 isRead = false,
                 rewards = listOf(
                     CounselingReward(
@@ -251,8 +251,8 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
 //            }
             val dummyDetail = listOf(
                 WeeklyReportDetail(
-                    startDate = "2026-02-02",
-                    endDate = "2026-02-08",
+                    startDate = "2026.02.02",
+                    endDate = "2026.02.08",
                     summary = """
                     이번 주 상담의 핵심 주제는 직무 몰입도 저하와 그로 인한 심리적 소진이었습니다.
                     사용자는 업무 성과에 대한 과도한 압박감으로 인해 일상적인 즐거움을 잃어버린 상태였으며,
@@ -301,8 +301,8 @@ class CounselingRepositoryImpl @Inject constructor(private val apiService: Couns
                     isRead = false
                 ),
                 WeeklyReportDetail(
-                    startDate = "2026-02-09",
-                    endDate = "2026-02-15",
+                    startDate = "2026.02.09",
+                    endDate = "2026.02.15",
                     summary = """
                     이번 주 상담은 타인과의 관계에서 발생하는 불안감을 다스리고 자존감을 회복하는 데 주력했습니다.
                     타인의 시선을 지나치게 의식하여 본인의 의사를 표현하지 못했던 상황들을 구체적으로 분석했습니다.

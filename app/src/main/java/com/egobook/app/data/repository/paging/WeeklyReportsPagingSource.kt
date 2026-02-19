@@ -20,15 +20,15 @@ class WeeklyReportsPagingSource(private val apiService: CounselingApiService): P
             val mockWeeklyReports = listOf(
                 WeeklyReportsContentResponse(
                     id = 1L,
-                    startDate = "2026-02-02",
-                    endDate = "2026-02-08",
+                    startDate = "2026.02.02",
+                    endDate = "2026.02.08",
                     isRead = false,
-                    isLocked = true
+                    isLocked = false
                 ),
                 WeeklyReportsContentResponse(
                     id = 2L,
-                    startDate = "2026-02-09",
-                    endDate = "2026-02-15",
+                    startDate = "2026.02.09",
+                    endDate = "2026.02.15",
                     isRead = true,
                     isLocked = false
                 )

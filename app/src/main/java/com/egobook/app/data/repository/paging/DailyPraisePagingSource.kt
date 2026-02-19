@@ -20,47 +20,47 @@ class DailyPraisePagingSource(private val apiService: CounselingApiService) :
             val mockDailyPraises = listOf(
                 DailyPraise(
                     id = 1,
-                    diaryDate = "2024-02-03",
+                    diaryDate = "2026.02.03",
                     isRead = true
                 ),
                 DailyPraise(
                     id = 2,
-                    diaryDate = "2024-02-05",
+                    diaryDate = "2026.02.05",
                     isRead = true
                 ),
                 DailyPraise(
                     id = 3,
-                    diaryDate = "2024-02-06",
+                    diaryDate = "2026.02.06",
                     isRead = true
                 ),
                 DailyPraise(
                     id = 4,
-                    diaryDate = "2024-02-09",
+                    diaryDate = "2026.02.09",
                     isRead = true
                 ),
                 DailyPraise(
                     id = 5,
-                    diaryDate = "2024-02-11",
+                    diaryDate = "2026.02.11",
                     isRead = true
                 ),
                 DailyPraise(
                     id = 6,
-                    diaryDate = "2024-02-13",
+                    diaryDate = "2026.02.13",
                     isRead = true
                 ),
                 DailyPraise(
                     id = 7,
-                    diaryDate = "2024-02-14",
+                    diaryDate = "2026.02.14",
                     isRead = false
                 ),
                 DailyPraise(
                     id = 8,
-                    diaryDate = "2024-02-16",
+                    diaryDate = "2026.02.16",
                     isRead = false
                 ),
                 DailyPraise(
                     id = 9,
-                    diaryDate = "2024-02-18",
+                    diaryDate = "2026.02.18",
                     isRead = false
                 )
             )

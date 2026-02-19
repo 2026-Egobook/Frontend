@@ -1,6 +1,10 @@
 package com.egobook.app.ui.counseling.view
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -34,8 +38,19 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentEgoRoomStatisticsBinding.bind(view)
+        initViews()
         fetchData()
         initObservers()
+    }
+
+    private fun initViews() = with(binding) {
+        initTotalCountChart()
+        initDailyStackedBarChart()
+        initMonthlyTrendLineChart()
+        // 상단 카드 텍스트 설정
+        tvCounselingStatisticsDailyRecordPeakPositiveTime.text = getPickTime(true)
+        tvCounselingStatisticsDailyRecordPeakNegativeTime.text = getPickTime(false)
+        initWordBubbleChart()
     }
 
     private fun fetchData() {
@@ -52,10 +67,6 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
                         UiState.Loading -> {}
                         is UiState.Success<StatisticsModel> -> {
                             val data = state.data
-                            initTotalCountChart(data)
-                            initDailyStackedBarChart(data)
-                            initMonthlyTrendLineChart(data)
-                            initWordBubbleChart(data)
                         }
                     }
                 }
@@ -63,12 +74,12 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
         }
     }
 
-    private fun initTotalCountChart(statisticsInfo: StatisticsModel) = with(binding) {
-        val veryGoodTotalCnt = statisticsInfo.emotions[EmotionType.VERY_GOOD]?.totalCnt ?: 0
-        val goodTotalCnt = statisticsInfo.emotions[EmotionType.GOOD]?.totalCnt ?: 0
-        val normalTotalCnt = statisticsInfo.emotions[EmotionType.NORMAL]?.totalCnt ?: 0
-        val badTotalCnt = statisticsInfo.emotions[EmotionType.BAD]?.totalCnt ?: 0
-        val veryBadTotalCnt = statisticsInfo.emotions[EmotionType.VERY_BAD]?.totalCnt ?: 0
+    private fun initTotalCountChart() = with(binding) {
+        val veryGoodTotalCnt = 584
+        val goodTotalCnt = 214
+        val normalTotalCnt = 340
+        val badTotalCnt = 148
+        val veryBadTotalCnt = 54
 
         val counts = listOf(veryGoodTotalCnt, goodTotalCnt, normalTotalCnt, badTotalCnt, veryBadTotalCnt)
         val maxCount = counts.maxOrNull()?.toFloat() ?: 0f
@@ -89,160 +100,221 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
         tvCounselingStatisticsTotalCountVerySadCount.text = "${veryBadTotalCnt}회"
     }
 
-    private fun initDailyStackedBarChart(statisticsInfo: StatisticsModel) = with(binding) {
+    private fun initDailyStackedBarChart() = with(binding) {
         val dayLabels = listOf("월", "화", "수", "목", "금", "토", "일")
 
-        val entries = (0..6).map { dayIdx ->
-            val values = EmotionType.entries.map { type ->
-                statisticsInfo.emotions[type]?.months?.sumOf { month ->
-                    month.days[dayIdx].totalCnt
-                }?.toFloat() ?: 0f
-            }.toFloatArray()
-            BarEntry(dayIdx.toFloat(), values)
+        // 1. 더미 데이터 (합계 100으로 고정)
+        val dummyData = listOf(
+            floatArrayOf(15f, 20f, 30f, 20f, 15f), // 월
+            floatArrayOf(10f, 15f, 40f, 25f, 10f), // 화
+            floatArrayOf(20f, 25f, 25f, 20f, 10f), // 수
+            floatArrayOf(5f, 10f, 35f, 30f, 20f),  // 목
+            floatArrayOf(10f, 10f, 20f, 30f, 30f), // 금
+            floatArrayOf(5f, 5f, 15f, 35f, 40f),   // 토
+            floatArrayOf(20f, 10f, 20f, 25f, 25f)  // 일
+        )
+
+        val entries = dummyData.mapIndexed { index, values ->
+            BarEntry(index.toFloat(), values)
         }
 
         val dataSet = BarDataSet(entries, "요일별 감정 분포").apply {
             colors = listOf(
-                resources.getColor(R.color.emotion_very_happy, null),
-                resources.getColor(R.color.emotion_happy, null),
-                resources.getColor(R.color.emotion_neutral, null),
+                resources.getColor(R.color.emotion_very_sad, null),
                 resources.getColor(R.color.emotion_sad, null),
-                resources.getColor(R.color.emotion_very_sad, null)
+                resources.getColor(R.color.emotion_neutral, null),
+                resources.getColor(R.color.emotion_happy, null),
+                resources.getColor(R.color.emotion_very_happy, null)
             )
-            setDrawValues(false) // 막대 위의 숫자 제거
+            setDrawValues(false)
         }
+
         with(bcCounselingStatisticsDailyRecord) {
             data = BarData(dataSet).apply {
-                barWidth = 0.5f
+                barWidth = 0.4f // 막대 두께를 조금 더 슬림하게 조정 (선택 사항)
             }
-            xAxis.valueFormatter = IndexAxisValueFormatter(dayLabels)
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.setDrawGridLines(false) // X축 세로 격자선 제거
-            xAxis.setDrawAxisLine(false) // X축 가로선 제거
-            xAxis.textColor = resources.getColor(R.color.stacked_bar_chart_text, null)
-            xAxis.textSize = 13f
+
+            // X축 설정
+            xAxis.apply {
+                valueFormatter = IndexAxisValueFormatter(dayLabels)
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                setDrawAxisLine(false)
+                textColor = resources.getColor(R.color.stacked_bar_chart_text, null)
+                textSize = 13f
+                granularity = 1f
+
+                // ★ 핵심 수정 부분: 막대와 글자 사이의 간격 (단위: dp)
+                yOffset = 12f
+            }
+
+            // Y축 및 기타 설정
+            axisLeft.apply {
+                isEnabled = false
+                axisMinimum = 0f
+                axisMaximum = 100f // 모든 막대 높이 동일하게 고정
+            }
+            axisRight.isEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
-            axisLeft.isEnabled = false
-            axisRight.isEnabled = false
-            setExtraOffsets(0f, 0f, 0f, 10f)
             setTouchEnabled(false)
+
+            // 차트 전체 하단 여백 추가 (라벨이 잘리지 않도록)
+            setExtraOffsets(0f, 0f, 0f, 15f)
+
             invalidate()
         }
 
-        tvCounselingStatisticsDailyRecordPeakPositiveTime.text = getPickTime(statisticsInfo, EmotionType.VERY_GOOD)
-        tvCounselingStatisticsDailyRecordPeakNegativeTime.text = getPickTime(statisticsInfo, EmotionType.VERY_BAD)
-
-    }
-
-    private fun getPickTime(statisticsInfo: StatisticsModel, type: EmotionType): String {
-        val dayLabels = listOf("월", "화", "수", "목", "금", "토", "일")
-        var maxCnt = -1
-        var result = "기록 없음"
-        for(dayIdx in 0..6) {
-            for(hourIdx in 0..23) {
-                val count = statisticsInfo.emotions[type]?.months?.sumOf { month ->
-                    month.days[dayIdx].hours[hourIdx]
-                } ?: 0
-                if(count > 0 && count > maxCnt) {
-                    maxCnt = count
-                    result = "${dayLabels[dayIdx]} ${hourIdx}시"
-                }
-            }
-        }
-        return result
+        // 하단 더미 텍스트
+        tvCounselingStatisticsDailyRecordPeakPositiveTime.text = "토 14시"
+        tvCounselingStatisticsDailyRecordPeakNegativeTime.text = "수 09시"
     }
 
     /**
      * 월별 평균 감정 점수를 보여주려면 감정당 가중치를 줘야한다.
      */
-    private fun initMonthlyTrendLineChart(statisticsInfo: StatisticsModel) = with(binding) {
+    private fun initMonthlyTrendLineChart() = with(binding) {
+        // 1. 하단 요약 정보 더미 데이터 (이미지 기준)
+        val lastMonthScore = 3.2f
+        val currentMonthScore = 4.3f
+        val diff = currentMonthScore - lastMonthScore
 
-        val calendar = java.util.Calendar.getInstance()
-        val currentMonthIdx = calendar.get(java.util.Calendar.MONTH)
-        val lastMonthIdx = (currentMonthIdx + 11)%12
+        tvCounselingStatisticsAverageLastMonthLabel.text = "1월 평균 점수"
+        tvCounselingStatisticsAverageLastMonthValue.text = "$lastMonthScore"
+        tvCounselingStatisticsAverageCurrentMonthLabel.text = "2월 평균 점수"
+        tvCounselingStatisticsAverageCurrentMonthValue.text = "$currentMonthScore"
 
-        fun calculateMonthlyAverage(monthIdx: Int): Float {
-            var totalScore = 0
-            var totalCount = 0
+        val boldText = "${String.format("%.1f", abs(diff))} 상승" // "1.1 상승"
+        val normalTextStart = "지난달 보다 "
+        val normalTextEnd = "했어요"
 
-            EmotionType.entries.forEach { type ->
-                val count = statisticsInfo.emotions[type]?.months[monthIdx]?.totalCnt ?: 0
-                val weight = when(type) {
-                    EmotionType.VERY_BAD -> 1
-                    EmotionType.BAD -> 2
-                    EmotionType.NORMAL -> 3
-                    EmotionType.GOOD -> 4
-                    EmotionType.VERY_GOOD -> 5
-                }
-                totalScore += count*weight
-                totalCount += count
-            }
+        // 2. SpannableStringBuilder를 사용하여 텍스트를 조합합니다.
+        val spannable = SpannableStringBuilder(normalTextStart + boldText + normalTextEnd)
 
-            return if(totalCount > 0) totalScore.toFloat()/totalCount else 0f
-        }
+        // 3. 굵게 만들 부분의 시작과 끝 인덱스를 계산합니다.
+        val start = normalTextStart.length
+        val end = start + boldText.length
 
-        val currentMonthAvg = calculateMonthlyAverage(monthIdx = currentMonthIdx)
-        val lastMonthAvg = calculateMonthlyAverage(monthIdx = lastMonthIdx)
-        val diff = currentMonthAvg - lastMonthAvg
-        val diffText = if(diff >0) "지난달보다 ${String.format("%.1f", diff)} 상승했어요" else if(diff<0) "지난달보다 ${String.format("%.1f", abs(diff))} 하락했어요" else "지난달과 점수가 동일해요"
+        // 4. StyleSpan(Typeface.BOLD)을 적용합니다.
+        spannable.setSpan(
+            StyleSpan(Typeface.BOLD),
+            start,
+            end,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
-        tvCounselingStatisticsAverageLastMonthLabel.text = "${lastMonthIdx+1}월 평균 점수"
-        tvCounselingStatisticsAverageLastMonthValue.text = String.format("%.1f", lastMonthAvg)
-        tvCounselingStatisticsAverageCurrentMonthLabel.text = "${currentMonthIdx+1}월 평균 점수"
-        tvCounselingStatisticsAverageCurrentMonthValue.text = String.format("%.1f", currentMonthAvg)
-        tvCounselingStatisticsAverageComparison.text = diffText
+        // 5. 완성된 Spannable을 TextView에 설정합니다.
+        tvCounselingStatisticsAverageComparison.text = spannable
 
-        val lastSixMonthIndices = (5 downTo 0).map { i ->
-            (currentMonthIdx + 12 - i) % 12
-        }
+        // 2. 6개월치 더미 데이터 (이미지 그래프 흐름과 유사하게)
+        // Y값은 1(매우나쁨) ~ 5(매우좋음) 사이
+        val entries = listOf(
+            Entry(0f, 2.2f), // 6월
+            Entry(1f, 3.1f), // 7월
+            Entry(2f, 4.2f), // 8월
+            Entry(3f, 3.5f), // 9월
+            Entry(4f, 4.3f), // 10월
+            Entry(5f, 4.5f)  // 11월
+        )
 
-        val monthLabels = lastSixMonthIndices.map { "${it+1}월" }
+        val monthLabels = listOf("9월", "10월", "11월", "12월", "1월", "2월")
 
-        val entries = lastSixMonthIndices.mapIndexed { chartIdx, monthIdx ->
-            Entry(chartIdx.toFloat(), calculateMonthlyAverage(monthIdx = monthIdx))
-        }
-
-        val dataSet = LineDataSet(entries, "평균 감정 점수").apply {
-            mode = LineDataSet.Mode.LINEAR
-            color = resources.getColor(R.color.brand, null)
+        val dataSet = LineDataSet(entries, "평균 점수").apply {
+            color = resources.getColor(R.color.brand, null) // 초록색 계열
             setCircleColor(resources.getColor(R.color.brand, null))
-            lineWidth = 2f
+            lineWidth = 2.5f
             circleRadius = 5f
+            setDrawCircleHole(false)
             setDrawValues(false)
+            mode = LineDataSet.Mode.LINEAR // 꺾은선
         }
+
         with(lcCounselingStatisticsTrend) {
             data = LineData(dataSet)
-            xAxis.valueFormatter = IndexAxisValueFormatter(monthLabels)
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.setDrawGridLines(false)
-            xAxis.granularity = 1f // x축 단위 간격을 1로 고정
-            axisLeft.isEnabled = false
+
+            // X축 설정
+            xAxis.apply {
+                valueFormatter = IndexAxisValueFormatter(monthLabels)
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                setDrawAxisLine(false)
+                granularity = 1f
+                // 마지막 라벨(11월)만 보이게 하거나 간격을 넓히려면 추가 설정 가능
+                yOffset = 10f
+            }
+
+            // Y축 설정 (이모지 위치와 맞추기 위해 1~5 고정)
+            axisLeft.apply {
+                axisMinimum = 1f
+                axisMaximum = 5f
+                setLabelCount(5, true) // 1, 2, 3, 4, 5 다섯 지점
+                setDrawGridLines(true) // 가로선 표시
+                gridColor = resources.getColor(R.color.neutral_stroke, null) // 연한 회색 가로선
+                setDrawAxisLine(false)
+                setDrawLabels(false) // 숫자는 숨기고 옆에 배치된 이모지로 대체
+            }
+
+            axisRight.isEnabled = false
             description.isEnabled = false
             legend.isEnabled = false
             setTouchEnabled(false)
+
+            // 차트 오른쪽 끝에 '11월' 텍스트가 잘리지 않도록 여백
+            setExtraOffsets(10f, 0f, 20f, 10f)
+
             invalidate()
         }
+    }
 
+    private fun getPickTime(isPositive: Boolean): String {
+        // 실제 로직 대신 UI 확인을 위한 더미 데이터 반환
+        return if (isPositive) "금 17시" else "월 08시"
     }
 
     // enum class로 빼기. 1~10 data class
-    private fun initWordBubbleChart(statisticsInfo: StatisticsModel) = with(binding) {
-
-        val veryGoodCnt = statisticsInfo.emotions[EmotionType.VERY_GOOD]?.totalCnt ?: 0
-        val goodCnt = statisticsInfo.emotions[EmotionType.GOOD]?.totalCnt ?: 0
-        val normalCnt = statisticsInfo.emotions[EmotionType.NORMAL]?.totalCnt ?: 0
-        val badCnt = statisticsInfo.emotions[EmotionType.BAD]?.totalCnt ?: 0
-        val veryBadCnt = statisticsInfo.emotions[EmotionType.VERY_BAD]?.totalCnt ?: 0
-
-        val data = listOf(
-            "매우 기쁨" to veryGoodCnt,
-            "기쁨" to goodCnt,
-            "보통" to normalCnt,
-            "슬픔" to badCnt,
-            "매우 슬픔" to veryBadCnt
+    private fun initWordBubbleChart() = with(binding) {
+        // 1. 색상 리스트 준비 (전부 다른 색깔로 배치)
+        // 기존 감정 색상 + 보조 색상들을 조합합니다.
+        val bubbleColors = listOf(
+            resources.getColor(R.color.emotion_very_happy, null), // 행복
+            resources.getColor(R.color.emotion_happy, null),      // 설렘
+            resources.getColor(R.color.emotion_neutral, null),    // 걱정
+            resources.getColor(R.color.emotion_sad, null),        // 불안
+            resources.getColor(R.color.emotion_very_sad, null),   // 슬픔
+            resources.getColor(R.color.brand, null)               // 실망 (초록 계열 등 다른 색)
         )
-        wbvCounselingStatisticsWordFrequency.setWords(data) // 차트 렌더링
+
+        // 2. 단어별 빈도수 및 색상 매핑
+        // 글씨가 잘 보이도록 최소 빈도수를 70 이상으로 높게 설정하고, 간격을 촘촘하게 하여 크기를 키웁니다.
+        val dummyWordsWithColors = listOf(
+            Triple("행복", 150, bubbleColors[0]),
+            Triple("설렘", 130, bubbleColors[1]),
+            Triple("걱정", 115, bubbleColors[2]),
+            Triple("불안", 100, bubbleColors[3]),
+            Triple("슬픔", 85, bubbleColors[4]),
+            Triple("실망", 75, bubbleColors[5])
+        )
+
+        // 3. 커스텀 뷰의 setWords가 색상까지 지원하도록 설계되어 있다면 아래와 같이 사용합니다.
+        // 만약 setWords가 List<Pair<String, Int>>만 받는다면,
+        // 뷰 내부 소스에서 순차적으로 bubbleColors를 적용하도록 수정해야 할 수도 있습니다.
+
+        // 여기서는 데이터의 빈도수(Int)를 더 크게 상향 조정하여 버블을 키웁니다.
+        val dummyWords = listOf(
+            "행복" to 150, // 120 -> 150으로 상향
+            "설렘" to 135,
+            "걱정" to 120,
+            "불안" to 105,
+            "슬픔" to 90,  // 글씨가 잘 보이도록 70 -> 90 상향
+            "실망" to 80   // 글씨가 잘 보이도록 60 -> 80 상향
+        )
+
+        // 4. 차트 렌더링
+        wbvCounselingStatisticsWordFrequency.setWords(dummyWords)
+
+        // 참고: 만약 뷰에서 색상 지정을 지원하지 않는다면,
+        // 뷰 객체 자체에 배경색 리스트를 전달하는 메소드가 있는지 확인해보세요.
+        // 예: wbvCounselingStatisticsWordFrequency.setBubbleColors(bubbleColors)
     }
 
     private fun initHorizontalBar(layout: HorizontalBarChart, value: Float, label: String, colorRes: Int, maxValue: Float) {
