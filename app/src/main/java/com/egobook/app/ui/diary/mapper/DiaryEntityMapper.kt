@@ -1,9 +1,13 @@
 package com.egobook.app.ui.diary.mapper
 
+import com.egobook.app.R
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiaryType
+import com.egobook.app.domain.model.diary.entity.RewardType
 import java.time.LocalDate
 import java.time.LocalDateTime
+import com.egobook.app.ui.diary.model.ToastMessage
 
 /**
  * Domain 모델과 UI 레이어 간의 데이터 변환을 담당하는 매퍼
@@ -28,9 +32,82 @@ object DiaryEntityMapper {
     }
 
     /**
-     * Domain Diary -> DiaryCheckFragment에 표시될 값..? 필요하면 정의하는 게 좋을 것 같은데..
+     * Domain RewardType -> UI displayType("잉크", "감정조절", "긍정사고")
      */
+    fun domainRewardTypeToUiDisplayType(rewardType: RewardType): String {
+        return rewardType.displayType
+    }
 
+    fun domainRewardTypesToUiDisplayTypes(types: List<RewardType>): List<String> {
+        return types.map { it.displayType }
+    }
+
+    fun createToastMessages(rewards: DiaryRewards): List<ToastMessage> {
+        // 작성한 일기 타입 중 첫 번째를 대표로 사용 (이미지 매핑용)
+        val primaryDiaryType = rewards.type.firstOrNull() ?: DiaryType.EMOTION
+        val rewardImageRes = getRewardImageResForDiaryType(primaryDiaryType)
+
+        return rewards.rewards.map { reward ->
+            when (reward.rewardType) {
+                RewardType.INK -> ToastMessage(
+                    rewardType = "INK",
+                    message = reward.message,  // 서버에서 내려준 메시지 그대로 사용
+                    amount = reward.amount,
+                    imageRes = R.drawable.ink_icon
+                )
+                else -> ToastMessage(
+                    rewardType = "REWARD",
+                    message = reward.message,  // 서버에서 내려준 메시지 그대로 사용
+                    amount = reward.amount,
+                    imageRes = rewardImageRes
+                )
+            }
+        }
+    }
+
+    /**
+     * 일기 타입에 따른 리워드 토스트 이미지 결정
+     * - 칭찬, 감사 → ic_radar_sun
+     * - 고민 → ic_radar_star
+     * - 감정 → ic_radar_sun (기본값)
+     */
+    private fun getRewardImageResForDiaryType(diaryType: DiaryType): Int {
+        return when (diaryType) {
+            DiaryType.PRAISE, DiaryType.GRATITUDE -> R.drawable.ic_radar_sun
+            DiaryType.CONCERN -> R.drawable.ic_radar_star
+            DiaryType.EMOTION -> R.drawable.ic_radar_sun
+        }
+    }
+
+    /**
+     * STAT 보상 메시지 생성
+     * "{일기타입} 일기를 작성하여\n{보상타입}[이/가] 상승했어요"
+     * - 받침 있음(감정조절) → "이"
+     * - 받침 없음(긍정사고) → "가"
+     */
+    private fun createRewardMessage(
+        diaryType: DiaryType,
+        rewardType: RewardType
+    ): String {
+        val diaryDisplay = diaryType.displayType      // "감정", "고민", "칭찬", "감사"
+        val rewardDisplay = rewardType.displayType    // "감정조절", "긍정사고"
+        
+        // 받침 여부에 따라 조사 결정
+        val particle = if (hasFinalConsonant(rewardDisplay)) "이" else "가"
+
+        return "${diaryDisplay} 일기를 작성하여\n${rewardDisplay}${particle} 상승했어요"
+    }
+    
+    /**
+     * 한글 받침(종성) 여부 확인
+     */
+    private fun hasFinalConsonant(text: String): Boolean {
+        if (text.isEmpty()) return false
+        val lastChar = text.last()
+        // 한글 완성형 범위: 0xAC00 ~ 0xD7A3
+        // 받침 있음: (code - 0xAC00) % 28 != 0
+        return lastChar.code in 0xAC00..0xD7A3 && (lastChar.code - 0xAC00) % 28 != 0
+    }
 
     // ========== UI -> Domain Entity ==========
     

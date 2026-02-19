@@ -22,6 +22,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+
+
             <TextView
                 android:id="@+id/tv_counseling_statistics_total_count_title"
                 android:layout_width="0dp"
@@ -226,6 +228,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/hbc_counseling_statistics_total_count_very_sad"
                 app:layout_constraintTop_toTopOf="@id/hbc_counseling_statistics_total_count_very_sad" />
+
+            <ImageView
+                app:layout_constraintTop_toTopOf="@id/hbc_counseling_statistics_total_count_very_happy"
+                app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_very_happy"
+                app:layout_constraintEnd_toEndOf="@id/hbc_counseling_statistics_total_count_very_happy"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginEnd="17dp"
+                android:src="@drawable/ic_crown" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

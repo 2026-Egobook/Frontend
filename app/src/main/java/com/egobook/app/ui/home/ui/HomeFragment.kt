@@ -44,6 +44,7 @@ class HomeFragment(): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: HomeViewModel by activityViewModels()
+        viewModel.fetchUser()
         lifecycleScope.launch {
             viewModel.uiState.collect { userState ->
                 binding.tvLevel.text = "Lv ${userState.level.number}"
@@ -51,6 +52,8 @@ class HomeFragment(): Fragment() {
                 binding.tvInk.text = "${userState.ink.value}"
             }
         }
+
+        viewModel.fetchEquipItems()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.equippedItems.collect { equippedList ->
@@ -89,17 +92,7 @@ class HomeFragment(): Fragment() {
         }
 
         binding.ivBottle.setOnClickListener {
-            applyScreenBlur(BlurLevel.BASE)
-            val dialog = PsychologyDialog()
-            dialog.isCancelable = false
-            dialog.show(parentFragmentManager, "DailyPsychologyDialog")
-            binding.ivDailyBottle.visibility = View.INVISIBLE
-
-            parentFragmentManager.setFragmentResultListener("psychology_key", viewLifecycleOwner) { _, _ ->
-                Log.d("jang", "다이얼로그 닫힘 감지 - 데이터 갱신")
-                viewModel.fetchUser()
-                viewModel.fetchDailyPhycologyReadState()
-            }
+            findNavController().navigate(R.id.action_homeFragment_to_psychologyFragment)
         }
 
         binding.ivAd.setOnClickListener {

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_save_psychology"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:background="@drawable/dialog_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/tv_psychology_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/arita_medium"
+            android:textColor="@color/grey"
+            android:textSize="12dp"
+            tools:text="2025.12.25" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/iv_delete"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_cancel" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_psychology_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/arita_semibold"
+        android:textAlignment="textStart"
+        android:textColor="@color/neutral"
+        android:textSize="16dp"
+        tools:text="오늘의 심리지식에 관한 글이 들어가는 자리입니다 오늘의 심리지식에 관한 글이 들어가는 자리입니다 오늘의 심리지식에 관한 글이 들어가는 자리입니다 오늘의 심리지식에 관한 글이 " />
+
+    <TextView
+        android:id="@+id/tv_psychology_source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="@font/arita_medium"
+        android:textAlignment="textStart"
+        android:textColor="@color/grey"
+        android:textSize="12dp"
+        tools:text="Strack, Martin,  Stepper, 1988, Journal of Personality and Social Psychology" />
+
+</LinearLayout>
