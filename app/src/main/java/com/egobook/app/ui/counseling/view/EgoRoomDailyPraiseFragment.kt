@@ -79,9 +79,6 @@ class EgoRoomDailyPraiseFragment : Fragment(R.layout.fragment_ego_room_daily_pra
                         counselingDailyPraiseAdapter.submitData(lifecycle, pagingData)
                     }
                 }
-                /**
-                 * isListEmpty 변수에 대한 설명 추가하기
-                 */
                 launch {
                     counselingDailyPraiseAdapter.loadStateFlow.collect { loadStates ->
                         val isListEmpty = loadStates.source.refresh is LoadState.NotLoading && loadStates.append.endOfPaginationReached && counselingDailyPraiseAdapter.itemCount == 0
