@@ -5,26 +5,29 @@ import androidx.paging.PagingState
 import com.egobook.app.data.api.QuestionApiService
 import com.egobook.app.data.model.square.question.toDomain
 import com.egobook.app.domain.model.square.question.UserTodayQuestionAnswerItem
-import kotlinx.coroutines.delay
 
 class AllUserRepliesPagingSource(private val apiService: QuestionApiService): PagingSource<Int, UserTodayQuestionAnswerItem>() {
 
     override fun getRefreshKey(state: PagingState<Int, UserTodayQuestionAnswerItem>): Int {
-        return 1
+        return FIRST_PAGE_NUM
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UserTodayQuestionAnswerItem> {
         return try {
-            val page = params.key ?: 1
+            val page = params.key ?: FIRST_PAGE_NUM
             val size = params.loadSize
             val result = apiService.fetchTodayAllUserReplies(page = page, size = size).data
             LoadResult.Page(
                 data = result.content.map { it.toDomain() },
-                prevKey = if(result.page == 1) null else result.page - 1,
-                nextKey = if(result.hasNext) result.page + 1 else null
+                prevKey = if(page == FIRST_PAGE_NUM) null else page - 1,
+                nextKey = if(result.hasNext) page + 1 else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
+    }
+
+    companion object {
+        private const val FIRST_PAGE_NUM = 1
     }
 }

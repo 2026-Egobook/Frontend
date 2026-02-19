@@ -16,12 +16,12 @@ interface CounselingRepository {
     fun getDailyPraise(size: Int): Flow<PagingData<DailyPraise>>
     suspend fun getDailyPraiseByDate(date: String): Result<DailyPraiseDetail>
     fun getWeeklyReports(size: Int): Flow<PagingData<WeeklyReport>>
+    suspend fun getWeeklyReportByDate(startDate: String): Result<WeeklyReportDetail>
     suspend fun getWeeklyReportStyle(): Result<ReportStyle>
     suspend fun updateWeeklyReportStyle(reportStyle: ReportStyle): Result<ReportStyle>
     suspend fun getStatistics(): Result<Statistics>
     suspend fun getDailyAndWeeklyNotification(): Result<DailyAndWeeklyNotification>
     suspend fun updateDailyPraiseNotification(isEnabled: Boolean): Result<Boolean>
     suspend fun updateWeeklyReportNotification(isEnabled: Boolean): Result<Boolean>
-    suspend fun getWeeklyReportByDate(startDate: String): Result<WeeklyReportDetail>
     suspend fun unlockWeeklyReport(startDate: String, unlockType: WeeklyReportUnlockType): Result<Unit>
 }

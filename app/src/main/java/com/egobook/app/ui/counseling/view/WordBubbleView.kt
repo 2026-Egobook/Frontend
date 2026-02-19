@@ -24,7 +24,7 @@ class WordBubbleView @JvmOverloads constructor(
     data class Bubble(val text: String, var radius: Float, val color: Int, var x: Float = 0f, var y: Float = 0f)
 
     fun setWords(words: List<Pair<String, Int>>) {
-        val colors = listOf("#FFEBEE", "#E3F2FD", "#FFF3E0", "#E8F5E9", "#F3E5F5")
+        val colors = listOf("#FFEBEE", "#E3F2FD", "#FFF3E0", "#E8F5E9", "#F3E5F5", "#FCF8E8")
         bubbles.clear()
         words.sortedByDescending { it.second }.forEachIndexed { i, pair ->
             val radius = pair.second * 12f + 50f

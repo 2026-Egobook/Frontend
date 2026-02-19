@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -20,11 +21,13 @@ import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentLetterWriteBinding
+import com.egobook.app.databinding.LayoutLetterTooltipPopupBinding
 import com.egobook.app.databinding.LayoutPopupFriendListBinding
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.adapter.FriendPopupListAdapter
 import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
+import com.egobook.app.ui.home.user.User
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +45,9 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
     private lateinit var friendList: FriendListModel
     private var letterColor: LetterBackgroundColor = LetterBackgroundColor.WHITE
 
+    private var userNickname: String? = null
+    private var letterMode: LetterMode = LetterMode.RANDOM
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLetterWriteBinding.bind(view)
@@ -53,6 +59,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
 
     private fun fetchData() {
         viewModel.getFriendList()
+        viewModel.getUserInfo()
     }
 
     private fun initViews() = with(binding) {
@@ -105,6 +112,23 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
             dialog.show(childFragmentManager, LetterSendDialog.TAG)
             tvLetterWriteReceiver.text = "To 낯선 고북이"
             tvLetterWriteSender.text = "From 또다른 고북이"
+            letterMode = LetterMode.RANDOM
+        }
+        ivLetterWriteTooltip.setOnClickListener {
+            val popupBinding = LayoutLetterTooltipPopupBinding.inflate(layoutInflater)
+            popupBinding.tvTooltipContent.text = if(letterMode == LetterMode.RANDOM) "익명으로 상대에게 전달돼요\n비하나 과도한 비판 대신,\n공감부터 시작하는\n따뜻한 말을 보내주세요!" else "친구에게 편지가 전달돼요\n비하나 과도한 비판 대신,\n공감부터 시작하는\n따뜻한 말을 보내주세요!"
+            val popupWindow = PopupWindow(
+                popupBinding.root,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true
+            )
+            popupBinding.root.measure(
+                View.MeasureSpec.UNSPECIFIED,
+                View.MeasureSpec.UNSPECIFIED
+            )
+            val popupWidth = popupBinding.root.measuredWidth
+            popupWindow.showAsDropDown(ivLetterWriteTooltip, 0 - popupWidth + ivLetterWriteTooltip.width, 0)
         }
     }
 
@@ -121,14 +145,14 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
      */
     private fun showFriendListPopup(anchorView: View) = with(binding) {
         val popupBinding = LayoutPopupFriendListBinding.inflate(layoutInflater)
-        val popupHeight = (200*resources.displayMetrics.density).toInt()
         val popupWindow = PopupWindow(
-            popupBinding.root, btnLetterSendFriend.width, popupHeight, true
+            popupBinding.root, btnLetterSendFriend.width, LinearLayout.LayoutParams.WRAP_CONTENT, true
         )
         with(popupBinding.rvPopupFriendList) {
             adapter = FriendPopupListAdapter { friendInfo ->
                 tvLetterWriteReceiver.text = "To ${friendInfo.name}"
-                tvLetterWriteSender.text = "From 로그인한 유저" // TODO: 나중에 유저 정보 받아오기
+                tvLetterWriteSender.text = "From $userNickname"
+                letterMode = LetterMode.FRIEND
                 popupWindow.dismiss()
                 val dialog = LetterSendDialog(mode = LetterMode.FRIEND, friendInfo = friendInfo, letterContent = etLetterWriteContent.text.toString(), letterColor = letterColor).apply { isCancelable = false }
                 dialog.show(childFragmentManager, LetterSendDialog.TAG)
@@ -154,6 +178,11 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
             })
         }
         (popupBinding.rvPopupFriendList.adapter as FriendPopupListAdapter).submitList(friendList.friends)
+        popupBinding.root.measure(
+            View.MeasureSpec.UNSPECIFIED,
+            View.MeasureSpec.UNSPECIFIED
+        )
+        val popupHeight = popupBinding.root.measuredHeight
         popupWindow.showAsDropDown(
             anchorView,
             0,
@@ -164,26 +193,40 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
     private fun initObservers() = with(binding) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.friendList.collect { state ->
-                    when(state) {
-                        is UiState.Failure -> {}
-                        UiState.Idle -> {}
-                        UiState.Loading -> {}
-                        is UiState.Success<FriendListModel> -> {
-                            val friendList = state.data
-                            if(friendList.friends.isEmpty()) {
-                                btnLetterSendFriend.isVisible = false
-                                val params = btnLetterSendAnonymous.layoutParams as ConstraintLayout.LayoutParams
-                                params.startToEnd = ConstraintLayout.LayoutParams.UNSET
-                                params.bottomToBottom = ConstraintLayout.LayoutParams.UNSET
-                                params.topToTop = ConstraintLayout.LayoutParams.UNSET
-                                params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                                params.marginStart = (16 * resources.displayMetrics.density).toInt()
-                                params.topToBottom = cvLetterContainer.id
-                                params.topMargin = (28 * resources.displayMetrics.density).toInt()
-                                btnLetterSendAnonymous.layoutParams = params
-                            } else {
-                                this@LetterWriteFragment.friendList = friendList
+                launch {
+                    viewModel.friendList.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<FriendListModel> -> {
+                                val friendList = state.data
+                                if(friendList.friends.isEmpty()) {
+                                    btnLetterSendFriend.isVisible = false
+                                    val params = btnLetterSendAnonymous.layoutParams as ConstraintLayout.LayoutParams
+                                    params.startToEnd = ConstraintLayout.LayoutParams.UNSET
+                                    params.bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+                                    params.topToTop = ConstraintLayout.LayoutParams.UNSET
+                                    params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                                    params.marginStart = (16 * resources.displayMetrics.density).toInt()
+                                    params.topToBottom = cvLetterContainer.id
+                                    params.topMargin = (28 * resources.displayMetrics.density).toInt()
+                                    btnLetterSendAnonymous.layoutParams = params
+                                } else {
+                                    this@LetterWriteFragment.friendList = friendList
+                                }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.userInfo.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<User> -> {
+                                userNickname = state.data.nickname
                             }
                         }
                     }

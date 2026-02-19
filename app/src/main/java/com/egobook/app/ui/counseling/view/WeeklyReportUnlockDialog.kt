@@ -14,7 +14,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.DialogWeeklyReportUnlockBinding
-import com.egobook.app.domain.model.counseling.WeeklyReportUnlockType
 import com.egobook.app.ui.counseling.viewmodel.WeeklyReportViewModel
 import com.egobook.app.ui.home.user.User
 import com.egobook.app.util.UiState
@@ -59,7 +58,11 @@ class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.
                                 val userInfo = state.data
                                 val currentInk = userInfo.ink.value
                                 if (currentInk >= INK_PRICE) {
-                                    viewModel.unlockWeeklyReport(startDate = startDate, unlockType = WeeklyReportUnlockType.INK)
+//                                    viewModel.unlockWeeklyReport(startDate = startDate, unlockType = WeeklyReportUnlockType.INK)
+                                    Toast.makeText(context, "잠금을 해제하였습니다.", Toast.LENGTH_SHORT).show()
+                                    val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(startDate = startDate)
+                                    findNavController().navigate(action)
+                                    dismiss()
                                 } else {
                                     Toast.makeText(context, "현재 잉크가 부족합니다!", Toast.LENGTH_SHORT).show()
                                 }

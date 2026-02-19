@@ -16,10 +16,14 @@ import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentMyLetterDetailBinding
+import com.egobook.app.domain.model.square.ReportOrigin
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.LetterMode
+import com.egobook.app.ui.square.model.letter.ReceivedReplyModel
 import com.egobook.app.ui.square.model.letter.SentLetterWithReplyModel
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
@@ -34,6 +38,8 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
     private var replyId: Long? = null
     private var threadId: Long? = null
     private var isReplyReported: Boolean? = null
+
+    private var myNickName: String? = null
     private val viewModel: LetterViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,9 +77,8 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
             }
         }
         ivMyLetterDetailReport.setOnClickListener {
-            if(isReplyReported == true) Toast.makeText(context, "답장이 이미 신고되었습니다.", Toast.LENGTH_SHORT).show()
-            else {
-                val dialog = SquareReportDialog(letterId = letterId, replyId = replyId ?: -1L).apply { isCancelable = false }
+            if(isReplyReported == true) Toast.makeText(context, "답장이 이미 신고되었습니다.", Toast.LENGTH_SHORT).show() else {
+                val dialog = SquareReportDialog(origin = ReportOrigin.LETTER_REPLY, letterId = letterId, replyId = replyId).apply { isCancelable = false }
                 dialog.show(childFragmentManager, SquareReportDialog.TAG)
                 applyScreenBlur(BlurLevel.BASE)
             }
@@ -106,19 +111,8 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                                 tvMyLetterDetailSentContent.text = data.sentContent
                                 cvMyLetterDetailSentContent.backgroundTintList = resources.getColorStateList(sentCardBackgroundColor, null)
                                 if(data.reply != null) {
-                                    replyId = data.reply.replyId
-                                    isReplyReported = data.reply.isReported
-                                    tvMyLetterDetailRepliedContent.text = data.reply.replyContent
-                                    if(data.reply.isAIGenerated) {
-                                        tvMyLetterDetailReceiver.text = "To 사용자 닉네임" // TODO: 실제 유저 닉네임으로 변경하기
-                                        tvMyLetterDetailSender.text = "FROM. 당신의 고북"
-                                        tvMyLetterDetailAiGeneratedDescription.isVisible = true
-                                        val params = tvMyLetterDetailSender.layoutParams as ConstraintLayout.LayoutParams
-                                        params.topMargin = (72 * resources.displayMetrics.density).toInt()
-                                    } else {
-                                        // TODO: 친구/익명 유무에 따라 보낸이 받는이 이름 변경하기
-                                        tvMyLetterDetailAiGeneratedDescription.isVisible = false
-                                    }
+                                    myNickName = data.fromLabel
+                                    viewModel.getReceivedReplyById(replyId = data.reply.replyId)
                                 } else {
                                     llMyLetterDetailReplied.isVisible = false
                                 }
@@ -126,6 +120,50 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                         }
                     }
                 }
+                launch {
+                    viewModel.receivedReplies.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<ReceivedReplyModel> -> {
+                                val replyItem = state.data
+
+                                replyId = replyItem.replyId
+                                isReplyReported = replyItem.isReported
+                                tvMyLetterDetailRepliedContent.text = replyItem.replyContent
+                                cvMyLetterDetailReceivedContent.backgroundTintList = when(replyItem.letterColor) {
+                                    LetterBackgroundColor.WHITE -> resources.getColorStateList(R.color.letter_bg_beige, null)
+                                    LetterBackgroundColor.PINK -> resources.getColorStateList(R.color.letter_bg_pink, null)
+                                    LetterBackgroundColor.GREEN -> resources.getColorStateList(R.color.letter_bg_green, null)
+                                    LetterBackgroundColor.BLUE -> resources.getColorStateList(R.color.letter_bg_blue, null)
+                                    LetterBackgroundColor.PURPLE -> resources.getColorStateList(R.color.letter_bg_purple, null)
+                                }
+
+                                if(replyItem.isAIGenerated) {
+                                    tvMyLetterDetailReceiver.text = "To $myNickName"
+                                    tvMyLetterDetailSender.text = "FROM. 당신의 고북"
+                                    tvMyLetterDetailAiGeneratedDescription.isVisible = true
+                                    val params = tvMyLetterDetailSender.layoutParams as ConstraintLayout.LayoutParams
+                                    params.topMargin = (72 * resources.displayMetrics.density).toInt()
+                                } else {
+                                    tvMyLetterDetailAiGeneratedDescription.isVisible = false
+                                    when(replyItem.mode) {
+                                        LetterMode.RANDOM -> {
+                                            tvMyLetterDetailReceiver.text = "To 낯선 고북이"
+                                            tvMyLetterDetailSender.text = "From 또 다른 고북이"
+                                        }
+                                        LetterMode.FRIEND -> {
+                                            tvMyLetterDetailReceiver.text = "To $myNickName"
+                                            tvMyLetterDetailSender.text = "From ${replyItem.fromLabel}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 launch {
                     viewModel.deleteLetterThreadResult.collect { state ->
                         when(state) {

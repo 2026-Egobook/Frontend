@@ -1,5 +1,7 @@
 package com.egobook.app.ui.square.view
 
+import android.graphics.Canvas
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +9,8 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,6 +19,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
@@ -22,7 +29,9 @@ import com.egobook.app.databinding.FragmentSquareBinding
 import com.egobook.app.databinding.LayoutPopupVisibilityTypeBinding
 import com.egobook.app.domain.model.square.question.AnswerVisibility
 import com.egobook.app.ui.square.adapter.MySentLettersAdapter
+import com.egobook.app.ui.square.adapter.SquareDeferredLettersAdapter
 import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
+import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterItemModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
 import com.egobook.app.ui.square.model.question.SubmitStatus
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
@@ -32,13 +41,32 @@ import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZonedDateTime
 
 class SquareFragment : Fragment(R.layout.fragment_square) {
     private lateinit var binding: FragmentSquareBinding
     private val questionViewModel: QuestionViewModel by activityViewModels()
     private val letterViewModel: LetterViewModel by activityViewModels()
 
-    private var visibilityType = AnswerVisibility.PUBLIC // 오늘의 질문 답변 제출할 때 필요한 변수
+    private var visibilityType = AnswerVisibility.PUBLIC
+
+    private val deferredLettersAdapter by lazy {
+        SquareDeferredLettersAdapter { item ->
+            val letterInfo = ArrivedPendingLetterItemModel(
+                letterId = item.letterId,
+                status = item.status,
+                mode = item.mode,
+                fromLabel = item.fromLabel,
+                backgroundColor = item.backgroundColor,
+                content = item.contentPreview,
+                arrivedAt = item.arrivedAt,
+                replyDeadlineAt = item.replyDeadlineAt
+            )
+            val dialog = ArrivedPendingLetterDialog(letterInfo = letterInfo).apply { isCancelable = false }
+            dialog.show(childFragmentManager, ArrivedPendingLetterDialog.TAG)
+        }
+    }
 
     private val todayQuestionAdapter by lazy {
         TodayQuestionFriendRepliesAdapter()
@@ -54,6 +82,13 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private var todayQuestionContent: String? = null
 
     private var submitButtonStatus: SubmitStatus = SubmitStatus.CREATE
+    private val dividerDrawable by lazy {
+        GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            color = resources.getColorStateList(R.color.green_secondary, null)
+            setSize(0, (1*resources.displayMetrics.density).toInt())
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,13 +102,33 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private fun fetchData() {
         questionViewModel.getTodayQuestion()
         questionViewModel.getTodayFriendsReplies(size = 3)
+        letterViewModel.getDeferredLetters(size = 10)
         letterViewModel.getArrivedPendingLetter()
         letterViewModel.getSentLetters(size = 4)
     }
 
     private fun initViews() = with(binding) {
+        rvSquareDeferredLetters.adapter = deferredLettersAdapter
         rvSquareTodayQuestionFriendReply.adapter = todayQuestionAdapter
+        rvSquareTodayQuestionFriendReply.addItemDecoration(object: RecyclerView.ItemDecoration() {
+            override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+                val left = parent.paddingLeft
+                val right = parent.width - parent.paddingRight
+                for(i in 0 until parent.childCount - 1) {
+                    val child = parent.getChildAt(i)
+                    val top = child.bottom
+                    val bottom = top + dividerDrawable.intrinsicHeight
+                    dividerDrawable.setBounds(left, top, right, bottom)
+                    dividerDrawable.draw(c)
+                }
+            }
+        })
         rvSquareSentLetter.adapter = sentLetterAdapter
+        val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.divider_praise)?.let {
+            dividerItemDecoration.setDrawable(it)
+        }
+        rvSquareSentLetter.addItemDecoration(dividerItemDecoration)
     }
 
     private fun initListeners() = with(binding) {
@@ -305,6 +360,13 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                     }
                 }
                 launch {
+                    letterViewModel.deferredLetters.collectLatest { pagingData ->
+                        if(pagingData != null) {
+                            deferredLettersAdapter.submitData(lifecycle, pagingData)
+                        }
+                    }
+                }
+                launch {
                     letterViewModel.sentLetters.collectLatest { pagingData ->
                         if(pagingData != null) {
                             sentLetterAdapter.submitData(lifecycle, pagingData)
@@ -313,10 +375,34 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 }
                 launch {
                     sentLetterAdapter.loadStateFlow.collectLatest { loadStates ->
-                        val isRefreshing = loadStates.refresh is LoadState.Loading
+
                         val isListEmpty = loadStates.refresh is LoadState.NotLoading && sentLetterAdapter.itemCount == 0
-                        tvSquareSentLetterPlaceholder.isVisible = isListEmpty
-                        rvSquareSentLetter.visibility = if(isListEmpty) View.INVISIBLE else View.VISIBLE
+
+                        if(!isListEmpty) {
+                            val hasSentLetterToday = (0 until sentLetterAdapter.itemCount).any { index ->
+                                val item = sentLetterAdapter.peek(index)
+                                val createdDate = ZonedDateTime.parse(item?.createdAt).toLocalDate()
+                                val today = LocalDate.now()
+                                createdDate.isEqual(today)
+                            }
+                            cvSquareWriteLetter.isEnabled = !hasSentLetterToday
+                            cvSquareWriteLetter.alpha = if(hasSentLetterToday) 0.4f else 1f
+                        }
+
+                        tvSquareSentLetterPlaceholderMain.isVisible = isListEmpty
+                        tvSquareSentLetterPlaceholderSub.isVisible = isListEmpty
+                        rvSquareSentLetter.isVisible = !isListEmpty
+
+                        val layoutParams = llSquareTodayQuestionHeader.layoutParams as ConstraintLayout.LayoutParams
+                        if(!isListEmpty) {
+                            layoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
+                            layoutParams.topToBottom = rvSquareSentLetter.id
+                            layoutParams.topMargin = (24 * resources.displayMetrics.density).toInt()
+                        } else {
+                            layoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
+                            layoutParams.topToBottom = tvSquareSentLetterPlaceholderSub.id
+                            layoutParams.topMargin = (48 * resources.displayMetrics.density).toInt()
+                        }
                     }
                 }
             }

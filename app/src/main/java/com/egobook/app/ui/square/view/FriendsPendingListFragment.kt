@@ -1,9 +1,17 @@
 package com.egobook.app.ui.square.view
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.MetricAffectingSpan
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -26,8 +34,14 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentFriendsPendingListBinding.bind(view)
+        initViews()
         fetchData()
         initObservers()
+    }
+
+    private fun initViews() = with(binding) {
+        changePlaceholderTextStyle(text = "받은 친구 신청이 없어요\n신청이 도착하면 바로 알려드릴게요", view = tvFriendsPendingListReceivedPlaceholder)
+        changePlaceholderTextStyle(text = "보낸 친구 신청이 없어요\n친구의 ID를 입력해 신청을 보내보세요", view = tvFriendsPendingListSentPlaceholder)
     }
 
     private fun fetchData() {
@@ -49,9 +63,9 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                 tvFriendsPendingListReceivedNum.text = friendRequestList.size.toString()
                                 if(friendRequestList.isEmpty()) {
                                     llFriendsPendingListReceived.removeAllViews()
-                                    tvFriendsPendingListReceivedEmpty.isVisible = true
+                                    tvFriendsPendingListReceivedPlaceholder.isVisible = true
                                 } else {
-                                    tvFriendsPendingListReceivedEmpty.isVisible = false
+                                    tvFriendsPendingListReceivedPlaceholder.isVisible = false
                                     llFriendsPendingListReceived.removeAllViews() // 기존에 추가되어 있던 뷰들 모두 제거
                                     friendRequestList.forEach { friendRequest ->
                                         val itemView = layoutInflater.inflate(
@@ -63,6 +77,7 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                         }
                                         val itemBinding = ItemSquareFriendPendingReceivedListBinding.bind(itemView)
                                         itemBinding.tvItemFriendPendingListName.text = friendRequest.nickname
+                                        itemBinding.tvItemFriendPendingListLevel.text = "LV ${friendRequest.level}"
                                         itemBinding.btnItemSquareFriendPendingListDeny.setOnClickListener {
                                             viewModel.rejectFriendRequest(requestId = friendRequest.requestId)
                                         }
@@ -86,9 +101,9 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                 val friendRequestList = state.data
                                 if(friendRequestList.isEmpty()) {
                                     llFriendsPendingListSent.removeAllViews()
-                                    tvFriendsPendingListSentEmpty.isVisible = true
+                                    tvFriendsPendingListSentPlaceholder.isVisible = true
                                 } else {
-                                    tvFriendsPendingListSentEmpty.isVisible = false
+                                    tvFriendsPendingListSentPlaceholder.isVisible = false
                                     llFriendsPendingListSent.removeAllViews() // 기존에 추가되어 있던 뷰들 모두 제거
                                     friendRequestList.forEach { friendRequest ->
                                         val itemView = layoutInflater.inflate(
@@ -100,6 +115,7 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                         }
                                         val itemBinding = ItemSquareFriendPendingSentListBinding.bind(itemView)
                                         itemBinding.tvItemFriendPendingSentListName.text = friendRequest.nickname
+                                        itemBinding.tvItemFriendPendingSentListLevel.text = "LV ${friendRequest.level}"
                                         itemBinding.btnItemSquareFriendPendingSentListCancel.setOnClickListener {
                                             viewModel.cancelFriendRequest(requestId = friendRequest.requestId)
                                         }
@@ -134,7 +150,6 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Long> -> {
-//                                viewModel.fetchIncomingFriendRequestList() 이 방법은 어떨까? (실제 연결 시 고려해보기)
                                 Toast.makeText(context, "요청된 친구 신청이 수락되었습니다.", Toast.LENGTH_SHORT).show()
                                 val requestId = state.data
                                 val viewToRemove = llFriendsPendingListReceived.findViewWithTag<View>(requestId)
@@ -151,7 +166,6 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Long> -> {
-//                                viewModel.fetchOutgoingFriendRequestList()
                                 Toast.makeText(context, "요청된 친구 신청이 취소되었습니다.", Toast.LENGTH_SHORT).show()
                                 val requestId = state.data
                                 val viewToRemove = llFriendsPendingListSent.findViewWithTag<View>(requestId)
@@ -162,5 +176,36 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                 }
             }
         }
+    }
+
+    private fun changePlaceholderTextStyle(text: String, view: TextView) {
+        val spannable = SpannableStringBuilder(text)
+        val newLineIndex = text.indexOf("\n")
+        val start = newLineIndex + 1
+        val end = text.length
+        val sizeInPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14f, resources.displayMetrics).toInt()
+        spannable.setSpan(
+            AbsoluteSizeSpan(sizeInPx),
+            start,
+            end,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        val font = ResourcesCompat.getFont(requireContext(), R.font.arita_medium)
+        font?.let { typeface ->
+            spannable.setSpan(
+                object : MetricAffectingSpan() {
+                    override fun updateDrawState(ds: TextPaint) {
+                        ds.typeface = typeface
+                    }
+                    override fun updateMeasureState(paint: TextPaint) {
+                        paint.typeface = typeface
+                    }
+                },
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        view.text = spannable
     }
 }

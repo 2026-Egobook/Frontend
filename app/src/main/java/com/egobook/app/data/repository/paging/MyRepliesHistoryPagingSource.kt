@@ -18,24 +18,28 @@ import kotlinx.coroutines.delay
 class MyRepliesHistoryPagingSource(private val apiService: QuestionApiService): PagingSource<Int, MyTodayQuestionAnswerItem>() {
 
     override fun getRefreshKey(state: PagingState<Int, MyTodayQuestionAnswerItem>): Int {
-        return 1 // 1
+        return FIRST_PAGE_NUM // 1
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MyTodayQuestionAnswerItem> {
         return try {
-            val page = params.key ?: 1 // 2
+            val page = params.key ?: FIRST_PAGE_NUM // 2
             val size = params.loadSize
 
             val result = apiService.fetchMyRepliesHistory(page = page, size = size).data
 
             LoadResult.Page(
                 data = result.content.map { it.toDomain() },
-                prevKey = if(result.page == 1) null else result.page - 1,
-                nextKey = if(result.hasNext) result.page + 1 else null
+                prevKey = if(page == FIRST_PAGE_NUM) null else page - 1,
+                nextKey = if(result.hasNext) page + 1 else null
             )
 
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
+    }
+
+    companion object {
+        private const val FIRST_PAGE_NUM = 1
     }
 }

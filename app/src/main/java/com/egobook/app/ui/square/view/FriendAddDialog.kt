@@ -8,17 +8,18 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import android.content.ClipboardManager
-import androidx.core.content.getSystemService
+import android.view.inputmethod.InputMethodManager
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.bumptech.glide.Glide
 import com.egobook.app.R
 import com.egobook.app.databinding.DialogSquareAddFriendBinding
 import com.egobook.app.removeScreenBlur
+import com.egobook.app.ui.square.adapter.FriendSearchAdapter
 import com.egobook.app.ui.square.model.friend.SearchUserModel
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 import com.egobook.app.util.UiState
@@ -28,7 +29,14 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
 
     private lateinit var binding: DialogSquareAddFriendBinding
     private val viewModel: FriendsViewModel by activityViewModels()
-    private var receiverId: Long? = null
+
+    private var lastAppliedPosition: Int? = null
+    private val adapter by lazy {
+        FriendSearchAdapter { userId, position ->
+            lastAppliedPosition = position
+            viewModel.requestFriendship(receiverId = userId)
+        }
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return Dialog(requireContext()).apply {
@@ -40,12 +48,17 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
         super.onViewCreated(view, savedInstanceState)
         binding = DialogSquareAddFriendBinding.bind(view)
         fetchData()
+        initViews()
         initListeners()
         initObservers()
     }
 
     private fun fetchData() {
         viewModel.getUserId()
+    }
+
+    private fun initViews() = with(binding) {
+        rvAddFriendSearchResultFound.adapter = adapter
     }
 
     private fun initListeners() = with(binding) {
@@ -57,12 +70,11 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
             val keyword = etAddFriendUserKeyword.text.toString()
             if(keyword.isEmpty()) {
                 Toast.makeText(context, "ID를 입력해주세요!", Toast.LENGTH_SHORT).show()
+            } else if(keyword == tvAddFriendAccountId.text.toString()) {
+                Toast.makeText(context, "자신의 ID는 검색할 수 없습니다!", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.searchUser(keyword = keyword)
+                viewModel.searchUserWithoutRequest(keyword = keyword)
             }
-        }
-        btnAddFriendSearchResultApply.setOnClickListener {
-            viewModel.requestFriendship(receiverId = receiverId ?: -1L)
         }
         btnAddFriendCopyId.setOnClickListener {
             val copyId = tvAddFriendAccountId.text.toString()
@@ -82,19 +94,20 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
                             is UiState.Failure -> {}
                             UiState.Idle -> {}
                             UiState.Loading -> {}
-                            is UiState.Success<SearchUserModel?> -> {
-                                val searchUserResult = state.data
-                                if(searchUserResult == null) {
+                            is UiState.Success<List<SearchUserModel>> -> {
+                                val searchUserList = state.data
+                                if(searchUserList.isEmpty()) {
                                     Toast.makeText(context, "검색 결과가 존재하지 않습니다!", Toast.LENGTH_SHORT).show()
-                                    clAddFriendSearchResultFound.visibility = View.GONE
-                                    tvAddFriendSearchResultEmpty.visibility = View.VISIBLE
+                                    rvAddFriendSearchResultFound.isVisible = false
+                                    tvAddFriendSearchResultEmptyMain.isVisible = true
+                                    tvAddFriendSearchResultEmptySub.isVisible = true
                                 } else {
-                                    receiverId = searchUserResult.userId
-                                    tvAddFriendSearchResultEmpty.visibility = View.GONE
-                                    clAddFriendSearchResultFound.visibility = View.VISIBLE
-                                    tvAddFriendSearchName.text = searchUserResult.nickname
-                                    tvAddFriendSearchLevel.text = "LV ${searchUserResult.level}"
-                                    Glide.with(ivAddFriendSearchLevelImage).load(searchUserResult.profileImageUrl).into(ivAddFriendSearchLevelImage)
+                                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                    imm.hideSoftInputFromWindow(etAddFriendUserKeyword.windowToken, 0) // flags = 0 → "조건 따지지 않고 무조건 키보드를 내린다"
+                                    adapter.submitList(searchUserList.toMutableList())
+                                    tvAddFriendSearchResultEmptyMain.isVisible = false
+                                    tvAddFriendSearchResultEmptySub.isVisible = false
+                                    rvAddFriendSearchResultFound.isVisible = true
                                 }
                             }
                         }
@@ -108,9 +121,15 @@ class FriendAddDialog: DialogFragment(R.layout.dialog_square_add_friend) {
                             UiState.Loading -> {}
                             is UiState.Success<Unit> -> {
                                 Toast.makeText(context, "친구 신청이 완료되었습니다", Toast.LENGTH_SHORT).show()
-                                btnAddFriendSearchResultApply.isEnabled = false
-                                btnAddFriendSearchResultApply.alpha = 0.5f
-                                btnAddFriendSearchResultApply.text = "신청완료"
+                                lastAppliedPosition?.let {
+                                    val viewHolder = rvAddFriendSearchResultFound.findViewHolderForAdapterPosition(it) as? FriendSearchAdapter.FriendSearchViewHolder
+                                    viewHolder?.binding?.apply {
+                                        btnAddFriendSearchResultApply.isEnabled = false
+                                        btnAddFriendSearchResultApply.alpha = 0.5f
+                                        btnAddFriendSearchResultApply.text = "신청완료"
+                                    }
+                                }
+                                lastAppliedPosition = null
                             }
                         }
                     }

@@ -1,5 +1,7 @@
 package com.egobook.app.ui.square.view
 
+import android.graphics.Canvas
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -11,10 +13,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentSquareAllRepliesBinding
+import com.egobook.app.domain.model.square.ReportOrigin
 import com.egobook.app.ui.square.adapter.SquareAllRepliesAdapter
 import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -23,13 +27,23 @@ import kotlinx.coroutines.launch
 class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) {
     private lateinit var binding: FragmentSquareAllRepliesBinding
     private val adapter by lazy {
-        SquareAllRepliesAdapter {
-
+        SquareAllRepliesAdapter { answerId ->
+            val dialog = SquareReportDialog(origin = ReportOrigin.TODAY_QUESTION_ANSWER, answerId = answerId).apply { isCancelable = false }
+            dialog.show(childFragmentManager, SquareReportDialog.TAG)
+            applyScreenBlur(BlurLevel.BASE)
         }
     }
     private val viewModel: QuestionViewModel by activityViewModels()
 
     private val args: SquareAllRepliesFragmentArgs by navArgs()
+
+    private val dividerDrawable by lazy {
+        GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            color = resources.getColorStateList(R.color.green_secondary, null)
+            setSize(0, (1*resources.displayMetrics.density).toInt())
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,6 +61,19 @@ class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) 
     private fun initViews() = with(binding) {
         tvSquareAllRepliesTodayQuestion.text = "Q. \n${args.todayQuestionContent}"
         rvSquareAllReplies.adapter = adapter
+        rvSquareAllReplies.addItemDecoration(object: RecyclerView.ItemDecoration() {
+            override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+                val left = parent.paddingLeft
+                val right = parent.width - parent.paddingRight
+                for(i in 0 until parent.childCount) {
+                    val child = parent.getChildAt(i)
+                    val top = child.bottom
+                    val bottom = top + dividerDrawable.intrinsicHeight
+                    dividerDrawable.setBounds(left, top, right, bottom)
+                    dividerDrawable.draw(c)
+                }
+            }
+        })
     }
 
     private fun initListeners() = with(binding) {

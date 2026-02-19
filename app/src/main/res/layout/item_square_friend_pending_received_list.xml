@@ -36,7 +36,7 @@
         android:id="@+id/tv_item_friend_pending_list_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LV 9999"
+        tools:text="LV 9999"
         android:textColor="@color/neutral"
         android:textSize="12sp"
         android:fontFamily="@font/arita_semibold"

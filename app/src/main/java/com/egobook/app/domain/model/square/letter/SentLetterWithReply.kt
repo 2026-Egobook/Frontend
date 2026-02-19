@@ -9,6 +9,7 @@ data class SentLetterWithReply(
     val backgroundColor: LetterBackgroundColor,
     val createdAt: String,
     val arrivedAt: String,
+    val fromLabel: String,
     val reply: LetterReply? = null
 )
 

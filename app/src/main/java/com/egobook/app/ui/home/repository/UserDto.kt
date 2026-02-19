@@ -14,5 +14,5 @@ data class UserDto(
     val isFirstAttendanceToday: Boolean,
     val attendanceRewardInk: Int
 ) {
-    fun toDomain(): User = User(id = userId, Level(level), Ink(ink))
+     fun toDomain(): User = User(id = userId, Level(level), Ink(ink), nickname = nickname)
 }

@@ -2,9 +2,11 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.square.letter.ArrivedPendingLetterResponse
+import com.egobook.app.data.model.square.letter.DeferredLettersResponse
+import com.egobook.app.data.model.square.letter.ReceivedRepliesResponse
 import com.egobook.app.data.model.square.letter.ReplyLetterRequest
 import com.egobook.app.data.model.square.letter.ReplyLetterResponse
-import com.egobook.app.data.model.square.letter.ReportLetterRequest
+import com.egobook.app.data.model.square.letter.ReportContentRequest
 import com.egobook.app.data.model.square.letter.SendLetterRequest
 import com.egobook.app.data.model.square.letter.SendLetterResponse
 import com.egobook.app.data.model.square.letter.SentLetterResponse
@@ -53,11 +55,29 @@ interface LetterApiService {
     @POST("/plaza/letters/{replyId}/report")
     suspend fun reportRepliedLetter(
         @Path("replyId") replyId: Long,
-        @Body request: ReportLetterRequest
+        @Body request: ReportContentRequest
+    ): ApiResponse<Unit>
+
+    @POST("/plaza/letters/{letterId}/report")
+    suspend fun reportArrivedLetter(
+        @Path("letterId") letterId: Long,
+        @Body request: ReportContentRequest
     ): ApiResponse<Unit>
 
     @DELETE("/plaza/letters/threads/{threadId}")
     suspend fun deleteLetterThread(
         @Path("threadId") threadId: Long
     ): ApiResponse<Unit>
+
+    @GET("/plaza/letters/inbox/deferred")
+    suspend fun fetchDeferredLetters(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): ApiResponse<DeferredLettersResponse>
+
+    @GET("/plaza/letters/replies/received")
+    suspend fun fetchReceivedReplies(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): ApiResponse<ReceivedRepliesResponse>
 }

@@ -1,6 +1,7 @@
 package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
+import com.egobook.app.data.model.square.letter.ReportContentRequest
 import com.egobook.app.data.model.square.question.UserTodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.MyTodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.TodayAnswerRequest
@@ -46,6 +47,12 @@ interface QuestionApiService {
     @DELETE("/questions/answers/{answerId}")
     suspend fun deleteMyQuestionAnswer(
         @Path("answerId") answerId: Long
+    ): ApiResponse<Unit>
+
+    @POST("/questions/answers/{answerId}/report")
+    suspend fun reportTodayQuestionAnswer(
+        @Path("answerId") answerId: Long,
+        @Body request: ReportContentRequest
     ): ApiResponse<Unit>
 
 }

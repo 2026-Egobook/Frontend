@@ -4,5 +4,5 @@ data class SearchUser(
     val userId: Long,
     val nickname: String,
     val level: Long,
-    val profileImageUrl: String
+    val profileImageUrl: String? = null
 )

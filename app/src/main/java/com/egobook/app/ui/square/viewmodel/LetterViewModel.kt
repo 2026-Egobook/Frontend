@@ -11,10 +11,13 @@ import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.DeleteLetterThreadUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
+import com.egobook.app.domain.usecase.letter.GetDeferredLettersUseCase
+import com.egobook.app.domain.usecase.letter.GetReceivedReplyByIdUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLetterWithReplyUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLettersUseCase
 import com.egobook.app.domain.usecase.letter.GiveUpReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReplyLetterUseCase
+import com.egobook.app.domain.usecase.letter.ReportArrivedLetterUseCase
 import com.egobook.app.domain.usecase.letter.ReportRepliedLetterUseCase
 import com.egobook.app.domain.usecase.letter.SendLetterUseCase
 import com.egobook.app.ui.home.user.User
@@ -22,8 +25,10 @@ import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.model.friend.toPresentation
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
+import com.egobook.app.ui.square.model.letter.DeferredLetterModel
+import com.egobook.app.ui.square.model.letter.ReceivedReplyModel
 import com.egobook.app.ui.square.model.letter.ReplyLetterModel
-import com.egobook.app.ui.square.model.letter.ReportLetterModel
+import com.egobook.app.ui.square.model.letter.ReportContentModel
 import com.egobook.app.ui.square.model.letter.SendLetterModel
 import com.egobook.app.ui.square.model.letter.SentLetterModel
 import com.egobook.app.ui.square.model.letter.SentLetterWithReplyModel
@@ -51,8 +56,11 @@ class LetterViewModel @Inject constructor(
     private val getSentLettersUseCase: GetSentLettersUseCase,
     private val getSentLetterWithReplyUseCase: GetSentLetterWithReplyUseCase,
     private val reportRepliedLetterUseCase: ReportRepliedLetterUseCase,
+    private val reportArrivedLetterUseCase: ReportArrivedLetterUseCase,
     private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getDeferredLettersUseCase: GetDeferredLettersUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getReceivedReplyByIdUseCase: GetReceivedReplyByIdUseCase
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<FriendListModel>>(UiState.Idle)
@@ -178,13 +186,27 @@ class LetterViewModel @Inject constructor(
         }
     }
 
+    private val _reportArrivedLetterResult = MutableSharedFlow<UiState<Unit>>()
+    val reportArrivedLetterResult = _reportArrivedLetterResult.asSharedFlow()
+
+    fun reportArrivedLetter(letterId: Long, reportLetter: ReportContentModel) {
+        viewModelScope.launch {
+            _reportArrivedLetterResult.emit(UiState.Loading)
+            reportArrivedLetterUseCase(letterId = letterId, reportContent = reportLetter.toDomain()).onSuccess {
+                _reportArrivedLetterResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _reportArrivedLetterResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
     private val _reportRepliedLetterResult = MutableSharedFlow<UiState<Unit>>()
     val reportRepliedLetterResult = _reportRepliedLetterResult.asSharedFlow()
 
-    fun reportRepliedLetter(replyId: Long, reportLetter: ReportLetterModel) {
+    fun reportRepliedLetter(replyId: Long, reportLetter: ReportContentModel) {
         viewModelScope.launch {
             _reportRepliedLetterResult.emit(UiState.Loading)
-            reportRepliedLetterUseCase(replyId = replyId, reportLetter = reportLetter.toDomain()).onSuccess {
+            reportRepliedLetterUseCase(replyId = replyId, reportContent = reportLetter.toDomain()).onSuccess {
                 _reportRepliedLetterResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _reportRepliedLetterResult.emit(UiState.Failure(error.message))
@@ -202,6 +224,31 @@ class LetterViewModel @Inject constructor(
                 _deleteLetterThreadResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _deleteLetterThreadResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _deferredLetters = MutableStateFlow<PagingData<DeferredLetterModel>?>(null)
+    val deferredLetters = _deferredLetters.asStateFlow()
+
+    fun getDeferredLetters(size: Int) {
+        viewModelScope.launch {
+            getDeferredLettersUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
+                _deferredLetters.value = pagingData.map { it.toPresentation() }
+            }
+        }
+    }
+
+    private val _receivedReplies = MutableStateFlow<UiState<ReceivedReplyModel>>(UiState.Idle)
+    val receivedReplies = _receivedReplies.asStateFlow()
+
+    fun getReceivedReplyById(replyId: Long) {
+        viewModelScope.launch {
+            _receivedReplies.value = UiState.Loading
+            getReceivedReplyByIdUseCase(replyId = replyId).onSuccess { domainItem ->
+                _receivedReplies.value = UiState.Success(domainItem.toPresentation())
+            }.onFailure { error ->
+                _receivedReplies.value = UiState.Failure(error.message)
             }
         }
     }

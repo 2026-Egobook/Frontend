@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
     private val userAdRepository: UserAdRepository,
     private val psychologyRepository: UserPsychologyRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(User(id=-1, Level(1), Ink(0)))
+    private val _uiState = MutableStateFlow(User(id=-1, Level(1),Ink(0), nickname = ""))
     val uiState: StateFlow<User> = _uiState.asStateFlow()
 
     private val _adState = MutableStateFlow(AdInfoDto(0, 0, false, 0, ""))

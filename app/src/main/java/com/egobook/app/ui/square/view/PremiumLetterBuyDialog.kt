@@ -79,8 +79,8 @@ class PremiumLetterBuyDialog(private val letterColor: LetterBackgroundColor) :
                         is UiState.Success<User> -> {
                             val userInfo = state.data
                             val currentInk = userInfo.ink.value
-                            if (currentInk >= INK_PRICE) {
-                                Toast.makeText(context, "구매 가능한 상태지만, 서버 점검 중입니다!", Toast.LENGTH_SHORT).show()
+                            if (currentInk >= LETTER_PRICE) {
+                                Toast.makeText(context, "서비스 점검 중입니다!", Toast.LENGTH_SHORT).show()
                                 // TODO: 편지 잉크 구매 API 연동하기
                             } else {
                                 Toast.makeText(context, "현재 잉크가 부족합니다!", Toast.LENGTH_SHORT).show()
@@ -95,5 +95,6 @@ class PremiumLetterBuyDialog(private val letterColor: LetterBackgroundColor) :
 
     companion object {
         const val TAG = "PremiumLetterBuyDialog"
+        private const val LETTER_PRICE = 500
     }
 }

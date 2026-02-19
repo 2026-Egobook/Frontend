@@ -11,7 +11,7 @@ data class SearchUserResponse(
     @SerializedName("level")
     val level: Long,
     @SerializedName("profileImageUrl")
-    val profileImageUrl: String
+    val profileImageUrl: String? = null
 )
 
 fun SearchUserResponse.toDomain(): SearchUser = SearchUser(

@@ -12,6 +12,9 @@ import com.egobook.app.domain.usecase.GetTodayFriendsRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayQuestionUseCase
 import com.egobook.app.domain.usecase.SubmitTodayAnswerUseCase
 import com.egobook.app.domain.usecase.UpdateTodayAnswerUseCase
+import com.egobook.app.domain.usecase.question.ReportTodayQuestionAnswerUseCase
+import com.egobook.app.ui.square.model.letter.ReportContentModel
+import com.egobook.app.ui.square.model.letter.toDomain
 import com.egobook.app.ui.square.model.question.MyTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
@@ -36,7 +39,8 @@ class QuestionViewModel @Inject constructor(
     private val getTodayFriendsRepliesUseCase: GetTodayFriendsRepliesUseCase,
     private val getTodayAllUserRepliesUseCase: GetTodayAllUserRepliesUseCase,
     private val updateTodayAnswerUseCase: UpdateTodayAnswerUseCase,
-    private val deleteMyQuestionAnswerUseCase: DeleteMyQuestionAnswerUseCase
+    private val deleteMyQuestionAnswerUseCase: DeleteMyQuestionAnswerUseCase,
+    private val reportTodayQuestionAnswerUseCase: ReportTodayQuestionAnswerUseCase
 ): ViewModel() {
 
     private val _todayQuestion = MutableStateFlow<UiState<TodayQuestionModel>>(UiState.Idle)
@@ -124,6 +128,20 @@ class QuestionViewModel @Inject constructor(
                 _deleteMyQuestionAnswerResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _deleteMyQuestionAnswerResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _reportTodayQuestionAnswerResult = MutableSharedFlow<UiState<Unit>>()
+    val reportTodayQuestionAnswerResult = _reportTodayQuestionAnswerResult.asSharedFlow()
+
+    fun reportTodayQuestionAnswer(answerId: Long, request: ReportContentModel) {
+        viewModelScope.launch {
+            _reportTodayQuestionAnswerResult.emit(UiState.Loading)
+            reportTodayQuestionAnswerUseCase(answerId = answerId, request = request.toDomain()).onSuccess {
+                _reportTodayQuestionAnswerResult.emit(UiState.Success(it))
+            }.onFailure { error ->
+                _reportTodayQuestionAnswerResult.emit(UiState.Failure(error.message))
             }
         }
     }

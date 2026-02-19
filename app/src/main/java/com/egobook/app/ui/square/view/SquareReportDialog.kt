@@ -16,17 +16,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egobook.app.R
 import com.egobook.app.databinding.DialogSquareReportBinding
+import com.egobook.app.domain.model.square.ReportOrigin
 import com.egobook.app.domain.model.square.letter.ReportLetterType
 import com.egobook.app.removeScreenBlur
-import com.egobook.app.ui.square.model.letter.ReportLetterModel
+import com.egobook.app.ui.square.model.letter.ReportContentModel
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
+import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch
 
-class SquareReportDialog(private val letterId: Long, private val replyId: Long) :
+class SquareReportDialog(private val origin: ReportOrigin, private val letterId: Long? = null, private val replyId: Long? = null, private val answerId: Long? = null) :
     DialogFragment(R.layout.dialog_square_report) {
     private lateinit var binding: DialogSquareReportBinding
-    private val viewModel: LetterViewModel by activityViewModels()
+    private val letterViewModel: LetterViewModel by activityViewModels()
+    private val questionViewModel: QuestionViewModel by activityViewModels()
     private val reportReasonsWithoutEtc by lazy {
         listOf(
             binding.tvSquareReportAbuse,
@@ -57,7 +60,6 @@ class SquareReportDialog(private val letterId: Long, private val replyId: Long) 
         reportReasonsWithoutEtc.forEach { content ->
             content.setOnClickListener {
                 reportReasonsWithoutEtc.forEach { it.isSelected = false }
-                tvSquareReportEtcNotClicked.isSelected = false
                 llSquareReportEtcClicked.isVisible = false
                 tvSquareReportEtcNotClicked.isVisible = true
                 content.isSelected = true
@@ -71,7 +73,6 @@ class SquareReportDialog(private val letterId: Long, private val replyId: Long) 
         }
         tvSquareReportEtcNotClicked.setOnClickListener {
             reportReasonsWithoutEtc.forEach { it.isSelected = false }
-            it.isSelected = true
             llSquareReportEtcClicked.isVisible = true
             tvSquareReportEtcNotClicked.isVisible = false
             btnSquareReportSubmit.isEnabled = !etSquareReportEtcReason.text.isNullOrBlank()
@@ -96,26 +97,74 @@ class SquareReportDialog(private val letterId: Long, private val replyId: Long) 
             }
         })
         btnSquareReportSubmit.setOnClickListener {
-            viewModel.reportRepliedLetter(replyId = replyId, reportLetter = ReportLetterModel(
-                reason = reportType,
-                description = if(reportType == ReportLetterType.OTHER) etSquareReportEtcReason.text.toString() else null
-            ))
+            when(origin) {
+                ReportOrigin.LETTER_ARRIVED -> {
+                    letterViewModel.reportArrivedLetter(letterId = letterId ?: -1L, reportLetter = ReportContentModel(
+                        reason = reportType,
+                        description = if(reportType == ReportLetterType.OTHER) etSquareReportEtcReason.text.toString() else null
+                    ))
+                }
+                ReportOrigin.LETTER_REPLY -> {
+                    letterViewModel.reportRepliedLetter(replyId = replyId ?: -1L, reportLetter = ReportContentModel(
+                        reason = reportType,
+                        description = if(reportType == ReportLetterType.OTHER) etSquareReportEtcReason.text.toString() else null
+                    ))
+                }
+                ReportOrigin.TODAY_QUESTION_ANSWER -> {
+                    questionViewModel.reportTodayQuestionAnswer(answerId = answerId ?: -1L, request = ReportContentModel(
+                        reason = reportType,
+                        description = if(reportType == ReportLetterType.OTHER) etSquareReportEtcReason.text.toString() else null
+                    ))
+                }
+            }
         }
     }
 
     private fun initObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.reportRepliedLetterResult.collect { state ->
-                    when(state) {
-                        is UiState.Failure -> {}
-                        UiState.Idle -> {}
-                        UiState.Loading -> {}
-                        is UiState.Success<Unit> -> {
-                            Toast.makeText(context, "답장이 신고되었습니다.", Toast.LENGTH_SHORT).show()
-                            viewModel.getSentLetterWithReply(letterId = letterId)
-                            removeScreenBlur()
-                            dismiss()
+                launch {
+                    letterViewModel.reportArrivedLetterResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                Toast.makeText(context, "편지가 신고되었습니다.", Toast.LENGTH_SHORT).show()
+                                removeScreenBlur()
+                                dismiss()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    letterViewModel.reportRepliedLetterResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {}
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                Toast.makeText(context, "답장이 신고되었습니다.", Toast.LENGTH_SHORT).show()
+                                letterViewModel.getSentLetterWithReply(letterId = letterId ?: -1L)
+                                removeScreenBlur()
+                                dismiss()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    questionViewModel.reportTodayQuestionAnswerResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {
+
+                            }
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Unit> -> {
+                                Toast.makeText(context, "답변이 신고되었습니다.", Toast.LENGTH_SHORT).show()
+                                removeScreenBlur()
+                                dismiss()
+                            }
                         }
                     }
                 }
@@ -124,6 +173,6 @@ class SquareReportDialog(private val letterId: Long, private val replyId: Long) 
     }
 
     companion object {
-        val TAG = "SquareReportDialog"
+        const val TAG = "SquareReportDialog"
     }
 }

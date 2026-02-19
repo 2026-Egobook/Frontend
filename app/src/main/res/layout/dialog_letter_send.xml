@@ -51,10 +51,10 @@
         app:cornerRadius="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_letter_send_description"
-        app:layout_constraintEnd_toStartOf="@id/btn_letter_send_apply"/>
+        app:layout_constraintEnd_toStartOf="@id/btn_letter_send"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_letter_send_apply"
+        android:id="@+id/btn_letter_send"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"

@@ -33,22 +33,17 @@ class DetectAbusiveContentSuccessDialog(private val status: LetterStatus, privat
     private fun initViews() = with(binding) {
         when(status) {
             LetterStatus.SENT -> {
-                btnDetectAbusiveSuccess.text = "잉크 1 획득!" // TODO: 조건에 따른 동적 변경 필요한 지 확인
+                btnDetectAbusiveSuccess.text = "잉크 1 획득!"
             }
             LetterStatus.REPLIED -> {
-                val rewardList = mutableListOf<String>()
+                var rewardText: String? = null
                 replyItem?.rewards?.forEach { reward ->
-                    when(reward.kind) {
-                        ReplyReward.INK -> {
-                            rewardList.add("${ReplyReward.INK.label} ${reward.amount}") // 잉크 1
-                        }
-                        ReplyReward.EMPATHY -> {
-                            rewardList.add("${ReplyReward.EMPATHY.label} ${reward.amount}") // 공감성 1
-                        }
+                    if(reward.kind == ReplyReward.INK) {
+                        rewardText = "${ReplyReward.INK.label} ${reward.amount} 획득!"
+                        return@forEach
                     }
                 }
-                val totalRewards = rewardList.joinToString(", ") // 잉크 1, 공감성 1
-                btnDetectAbusiveSuccess.text = "$totalRewards 획득!" // 잉크 1, 공감성 1 획득!
+                btnDetectAbusiveSuccess.text = rewardText ?: "확인"
             }
             else -> {}
         }
@@ -56,6 +51,7 @@ class DetectAbusiveContentSuccessDialog(private val status: LetterStatus, privat
 
     private fun initListeners() = with(binding) {
         btnDetectAbusiveSuccess.setOnClickListener {
+            dismiss()
             removeScreenBlur()
             findNavController().popBackStack()
         }
