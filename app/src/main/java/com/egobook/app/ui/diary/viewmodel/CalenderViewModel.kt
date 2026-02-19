@@ -54,7 +54,6 @@ class CalenderViewModel @Inject constructor(
     fun loadCalender(yearMonth: YearMonth) {
         viewModelScope.launch {
             Log.d("ViewModel1", "=== loadCalender START === yearMonth=$yearMonth")
-            _calenderLoadState.value = UiState.Loading
 
             // YearMonth의 첫날을 LocalDate로 변환하여 API 호출
             val firstDayOfMonth = yearMonth.atDay(1)
@@ -65,7 +64,6 @@ class CalenderViewModel @Inject constructor(
                     Log.d("ViewModel1", "API Success, dates count: ${calenderDates.size}")
                     val emotionMap = CalenderEntityMapper.toDateEmotionMap(calenderDates)
                     Log.d("ViewModel1", "Map created with keys: ${emotionMap.keys}")
-                    _calenderLoadState.value = UiState.Success(calenderDates)
                     _state.update { state ->
                         state.copy(
                             selectedYearMonth = yearMonth,
@@ -77,12 +75,10 @@ class CalenderViewModel @Inject constructor(
                 }
                 .onFailure { exception ->
                     Log.e("ViewModel1", "API Failure: ${exception.message}", exception)
-                    _calenderLoadState.value = UiState.Failure(exception.message)
+                    // 실패해도 기존 데이터 유지, selectedYearMonth만 업데이트
                     _state.update { state ->
                         state.copy(
-                            selectedYearMonth = yearMonth,
-                            calenderDates = emptyList(),
-                            dateEmotionMap = emptyMap()
+                            selectedYearMonth = yearMonth
                         )
                     }
                 }

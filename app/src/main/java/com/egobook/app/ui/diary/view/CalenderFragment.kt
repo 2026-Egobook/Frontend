@@ -66,21 +66,17 @@ class CalenderFragment : Fragment() {
             insets
         }
         
-        // 1. 먼저 초기 년월 결정 (인자 있으면 그걸로, 없으면 현재 달)
+        // 1. 초기 년월 결정 (인자 있으면 그걸로, 없으면 현재 달)
         val initialMonth = getInitialMonthFromArgs()
         
-        // 2. 캘린더를 처음에는 숨김 (깜빡임 방지)
-        binding.calendarView.visibility = View.INVISIBLE
-        binding.calendarHeaderLayout.visibility = View.INVISIBLE
-        
         setupDayOfWeekTitles()
-        setupCalendar(initialMonth)  // 초기 년월 전달
+        setupCalendar(initialMonth)
         
-        // 3. ViewModel을 초기 년월로 설정 (데이터 로드)
+        // 2. 초기 월 데이터 로드 (스와이프 시 자동 호출되지만 초기 진입 시 한 번은 직접 호출)
         viewModel.setYearMonth(initialMonth)
         
-        // 4. observing 시작
-        observeViewModel(initialMonth)  // 초기 년월 전달해서 첫 emission 검증
+        // 2. observing 시작
+        observeViewModel()
         setupMonthDialogResultListener()
 
         binding.apply {
@@ -98,15 +94,11 @@ class CalenderFragment : Fragment() {
             }
 
             btnPrevMonth.setOnClickListener {
-                viewModel.selectedYearMonth.minusMonths(1).let {
-                    viewModel.setYearMonth(it)
-                }
+                binding.calendarView.scrollToMonth(viewModel.selectedYearMonth.minusMonths(1))
             }
 
             btnNextMonth.setOnClickListener {
-                viewModel.selectedYearMonth.plusMonths(1).let {
-                    viewModel.setYearMonth(it)
-                }
+                binding.calendarView.scrollToMonth(viewModel.selectedYearMonth.plusMonths(1))
             }
             btnExport.setOnClickListener {
                 applyScreenBlur(BlurLevel.BASE)
@@ -142,59 +134,23 @@ class CalenderFragment : Fragment() {
         ) { _, bundle ->
             val year = bundle.getInt(MonthDialogFragment.BUNDLE_KEY_YEAR)
             val month = bundle.getInt(MonthDialogFragment.BUNDLE_KEY_MONTH)
-            // 다이얼로그가 닫힌 후 ViewModel 업데이트 → 캘린더 스크롤
-            viewModel.setYearMonth(YearMonth.of(year, month))
+            // 다이얼로그가 닫힌 후 스와이프로 해당 월로 이동
+            binding.calendarView.scrollToMonth(YearMonth.of(year, month))
         }
     }
     
     /**
-     * ViewModel 상태 관찰 - 스와이프 없이 해당 월 즉시 표시
+     * ViewModel 상태 관찰
      */
-    private fun observeViewModel(expectedInitialMonth: YearMonth) {
+    private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                var isCorrectMonthReceived = false
                 viewModel.state.collectLatest { state ->
-                    // 예상한 초기 달이 나올 때까지 대기 (깜빡임 방지)
-                    if (!isCorrectMonthReceived && state.selectedYearMonth != expectedInitialMonth) {
-                        return@collectLatest  // 잘못된 달은 무시
-                    }
-                    isCorrectMonthReceived = true
-                    
-                    // 애니메이션 없이 해당 월 즉시 이동
-                    binding.calendarView.scrollToMonth(state.selectedYearMonth)
                     // 상단 텍스트 업데이트
                     binding.tvYear.text = state.selectedYearMonth.year.toString()
                     binding.tvMonth.text = "${state.selectedYearMonth.monthValue}월"
-                    // 중요: 감정 데이터 변경 시 해당 월만 캘린더 뷰 갱신
+                    // 감정 데이터 변경 시 캘린더 뷰 갱신
                     binding.calendarView.notifyMonthChanged(state.selectedYearMonth)
-                    
-                    // 첫 번째 올바른 상태 업데이트 후 캘린더 표시
-                    if (binding.calendarView.isInvisible) {
-                        binding.calendarView.visibility = View.VISIBLE
-                        binding.calendarHeaderLayout.visibility = View.VISIBLE
-                    }
-                }
-            }
-        }
-        
-        // 로딩 상태 관찰 (로딩 뷰용)
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.calenderLoadState.collectLatest { loadState ->
-                    when (loadState) {
-                        is UiState.Loading -> {
-                            // TODO: 로딩 뷰 표시
-                        }
-                        is UiState.Success -> {
-                            // TODO: 로딩 뷰 숨김
-                            // notifyCalendarChanged()는 state 관찰에서 처리
-                        }
-                        is UiState.Failure -> {
-                            // TODO: 에러 처리
-                        }
-                        else -> {}
-                    }
                 }
             }
         }
@@ -236,8 +192,15 @@ class CalenderFragment : Fragment() {
         
         binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
         binding.calendarView.scrollToMonth(initialMonth)
-
-
+        
+        // 스와이프로 월 변경 시 API 호출
+        binding.calendarView.monthScrollListener = { calendarMonth ->
+            val newYearMonth = calendarMonth.yearMonth
+            // 월이 변경되었을 때만 API 호출
+            if (viewModel.selectedYearMonth != newYearMonth) {
+                viewModel.setYearMonth(newYearMonth)
+            }
+        }
     }
     
     /**
