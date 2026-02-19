@@ -209,7 +209,7 @@
             android:id="@+id/rv_square_sent_letter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="4dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="@id/ll_square_letter_mine_header"
             app:layout_constraintStart_toStartOf="@id/ll_square_letter_mine_header"

@@ -2,10 +2,12 @@ package com.egobook.app.ui.square.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemSquareLetterBinding
+import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.ui.square.model.letter.SentLetterModel
 import java.time.Instant
 import java.time.ZoneId
@@ -30,6 +32,7 @@ class MySentLettersAdapter(private val onClicked: (Long) -> Unit): PagingDataAda
     inner class MyLetterViewHolder(private val binding: ItemSquareLetterBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SentLetterModel) = with(binding) {
             tvItemSquareLetterDatetime.text = formatDate(createdDateTime = item.createdAt)
+            ivItemLetter.isVisible = item.status == LetterStatus.REPLIED || item.status == LetterStatus.AI_REPLIED
             root.setOnClickListener {
                 onClicked(item.letterId)
             }
