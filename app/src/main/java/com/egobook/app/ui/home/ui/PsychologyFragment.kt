@@ -1,62 +1,52 @@
 package com.egobook.app.ui.home.ui
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.egobook.app.R
-import com.egobook.app.databinding.DialogAdBinding
-import com.egobook.app.databinding.DialogPsychologyBinding
-import com.egobook.app.removeScreenBlur
-import com.egobook.app.ui.home.HomeViewModel
+import com.egobook.app.databinding.FragmentPsychologyBinding
 import com.egobook.app.ui.home.PsychologyViewModel
+import com.egobook.app.ui.home.repository.SavedPsychologyDto
+import com.egobook.app.ui.shop.ItemAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.math.max
 
-class PsychologyDialog() : DialogFragment() {
-
-    private var _binding: DialogPsychologyBinding? = null
-    private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
-
-    private var ink: Int = 0
-
+@AndroidEntryPoint
+class PsychologyFragment(): Fragment() {
+    private lateinit var binding: FragmentPsychologyBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        _binding = DialogPsychologyBinding.inflate(inflater, container, false)
+        binding = FragmentPsychologyBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val viewModel: PsychologyViewModel by activityViewModels()
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dailyPhycologyDto.collect { dailyPhycologyDto ->
                 binding.tvPsychologyContent.text = dailyPhycologyDto.knowledge.content
                 binding.tvPsychologySource.text = dailyPhycologyDto.knowledge.source
                 binding.tvPsychologyDate.text = dailyPhycologyDto.date
-                ink = max(ink, dailyPhycologyDto.reward?.inkGranted ?: 0)
-                binding.btnReward.text = "잉크 ${ink}개 획득!"
                 if (dailyPhycologyDto.isBookmarked) {
-                    binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_clicked)
+                   binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_clicked)
                 } else {
                     binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_unclicked)
                 }
             }
         }
-
         binding.ivBookmark.setOnClickListener {
             if (viewModel.dailyPhycologyDto.value.isBookmarked) {
                 viewModel.deletePsychology(viewModel.dailyPhycologyDto.value.knowledge.knowledgeId)
@@ -64,20 +54,25 @@ class PsychologyDialog() : DialogFragment() {
                 viewModel.savePsychology(viewModel.dailyPhycologyDto.value.knowledge.knowledgeId)
             }
         }
-
-        binding.btnReward.setOnClickListener {
-            removeScreenBlur()
-            dismiss()
+        binding.ivBackButton.setOnClickListener {
+            findNavController().navigate(R.id.action_psychologyFragment_to_homeFragment)
         }
-    }
 
-    override fun dismiss() {
-        super.dismiss()
-        setFragmentResult("psychology_key", bundleOf("isUpdated" to true))
-    }
+        val itemAdapter = SavedPsychologyAdapter { savedPsychologyDto ->
+            viewModel.deletePsychology(savedPsychologyDto.knowledgeId)
+        }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        binding.rvSavedPsychologies.apply {
+            adapter = itemAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.savedPsychologies.collect { psychologies ->
+                    itemAdapter.submitList(psychologies)
+                }
+            }
+        }
     }
 }

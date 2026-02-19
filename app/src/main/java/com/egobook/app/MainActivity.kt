@@ -3,6 +3,7 @@ package com.egobook.app
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -51,7 +52,8 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
                 R.id.diaryWriteFragment, // 일기 작성 화면
                 R.id.calenderFragment, // 달력 화면
                 R.id.storeFragment,
-                R.id.accountFragment //계정 화면
+                R.id.accountFragment, //계정 화면
+                R.id.psychologyFragment
                     -> {
                     binding.bottomNavigation.visibility = View.GONE
                 }
@@ -95,7 +97,8 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         RewardedAd.load(this, adUnitId, adRequest, object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 rewardedAd = null
-                Log.d("AdMob", "광고 로드 실패")
+                Toast.makeText(this@MainActivity, "광고를 불러오는데 실패했습니다", Toast.LENGTH_SHORT).show()
+                Log.d("AdMob", "광고 로드 실패, $adError")
             }
 
             override fun onAdLoaded(ad: RewardedAd) {

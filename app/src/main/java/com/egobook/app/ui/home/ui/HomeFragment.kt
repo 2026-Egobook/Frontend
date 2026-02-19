@@ -92,17 +92,7 @@ class HomeFragment(): Fragment() {
         }
 
         binding.ivBottle.setOnClickListener {
-            applyScreenBlur(BlurLevel.BASE)
-            val dialog = PsychologyDialog()
-            dialog.isCancelable = false
-            dialog.show(parentFragmentManager, "DailyPsychologyDialog")
-            binding.ivDailyBottle.visibility = View.INVISIBLE
-
-            parentFragmentManager.setFragmentResultListener("psychology_key", viewLifecycleOwner) { _, _ ->
-                Log.d("jang", "다이얼로그 닫힘 감지 - 데이터 갱신")
-                viewModel.fetchUser()
-                viewModel.fetchDailyPhycologyReadState()
-            }
+            findNavController().navigate(R.id.action_homeFragment_to_psychologyFragment)
         }
 
         binding.ivAd.setOnClickListener {
