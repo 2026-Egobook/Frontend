@@ -11,5 +11,4 @@ data class DiaryExportRequest (
     val startDate: String,
     @SerialName("endDate")
     val endDate: String,
-
 )

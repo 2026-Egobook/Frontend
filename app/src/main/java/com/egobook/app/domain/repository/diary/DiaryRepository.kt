@@ -45,5 +45,8 @@ interface DiaryRepository {
      */
     suspend fun getDailyCount(date: LocalDate): Result<Int>
 
-
+    /**
+     * 일기 내보내기
+     */
+    //suspend fun exportDiary
 }

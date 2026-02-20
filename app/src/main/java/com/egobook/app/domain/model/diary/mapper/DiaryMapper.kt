@@ -84,8 +84,6 @@ object DiaryMapper {
         )
     }
 
-
-
     // ========== Domain Entity → Domain Entity ==========
 
     /**
