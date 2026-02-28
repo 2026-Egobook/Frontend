@@ -193,7 +193,7 @@
 
     <fragment
         android:id="@+id/storeFragment"
-        android:name="com.egobook.app.ui.shop.StoreFragment">
+        android:name="com.egobook.app.store.ui.StoreFragment">
 
         <action
             android:id="@+id/action_storeFragment_to_homeFragment"

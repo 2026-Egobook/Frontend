@@ -1,4 +1,4 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -13,14 +13,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.egobook.app.BlurLevel
-import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentStoreBinding
-import com.egobook.app.ui.home.ui.AdDialog
+import com.egobook.app.store.data.ItemType
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -164,6 +162,3 @@ class StoreFragment: Fragment() {
         }
     }
 }
-
-
-

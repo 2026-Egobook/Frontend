@@ -1,4 +1,4 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,11 +11,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.egobook.app.R
 import com.egobook.app.databinding.DialogLeavingStoreBinding
-import com.egobook.app.databinding.DialogPurchasingItemBinding
 import com.egobook.app.removeScreenBlur
 
-class StorePurchasingItemDialog: DialogFragment() {
-    private var _binding: DialogPurchasingItemBinding? = null
+class StoreLeavingDialog: DialogFragment() {
+    private var _binding: DialogLeavingStoreBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
 
     override fun onCreateView(
@@ -24,7 +23,7 @@ class StorePurchasingItemDialog: DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        _binding = DialogPurchasingItemBinding.inflate(inflater, container, false)
+        _binding = DialogLeavingStoreBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -32,23 +31,17 @@ class StorePurchasingItemDialog: DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel: StoreViewModel by activityViewModels()
-
-        val item = viewModel.loadPurchaseItem()
-
-        binding.tvPrice.text = checkNotNull(item).price.value.toString()
-
-        binding.btnBack.setOnClickListener {
+        binding.btnRemain.setOnClickListener {
             removeScreenBlur()
             dismiss()
         }
 
 
-        binding.btnBuy.setOnClickListener {
-            if (item != null) {
-                viewModel.purchaseItem(item)
-            }
+        binding.btnLeave.setOnClickListener {
             removeScreenBlur()
             dismiss()
+            viewModel.resetEquipItems()
+            findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
         }
     }
 

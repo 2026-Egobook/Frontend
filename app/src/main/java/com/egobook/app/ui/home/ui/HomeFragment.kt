@@ -7,10 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.egobook.app.BlurLevel
@@ -19,15 +16,11 @@ import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
 import com.egobook.app.ui.home.HomeViewModel
-import com.egobook.app.ui.home.repository.UserTendencyRepository
 import com.egobook.app.ui.home.user.LevelType
-import com.egobook.app.ui.home.ui.RadarDialog
-import com.egobook.app.ui.home.ui.StreakDialog
-import com.egobook.app.ui.shop.CustomItem
-import com.egobook.app.ui.shop.ItemImage
-import com.egobook.app.ui.shop.ItemType
+import com.egobook.app.store.ui.CustomItem
+import com.egobook.app.store.ui.ItemImage
+import com.egobook.app.store.data.ItemType
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {

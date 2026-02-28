@@ -1,6 +1,12 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.data
 
+import android.util.Log
 import com.egobook.app.di.qualifier.BackendApi
+import com.egobook.app.store.ui.CustomItem
+import com.egobook.app.store.ui.ItemImage
+import com.egobook.app.store.data.ItemStatus
+import com.egobook.app.store.data.ItemType
+import com.egobook.app.store.data.Price
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
@@ -176,7 +182,7 @@ class NetworkStoreRepository @Inject constructor(
                     currentPage++
 
                 } catch (e: Exception) {
-                    android.util.Log.e(
+                    Log.e(
                         "StoreRepository",
                         "페이지 $currentPage 로드 중 에러 발생: $e"
                     )

@@ -1,4 +1,4 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.data
 
 enum class ItemStatus {
     PURCHASABLE,

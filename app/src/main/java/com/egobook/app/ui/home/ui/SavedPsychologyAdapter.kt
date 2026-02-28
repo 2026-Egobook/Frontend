@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.ui.home.repository.SavedPsychologyDto
-import com.egobook.app.ui.shop.CustomItem
 
 class SavedPsychologyAdapter(
     private val onItemClick: (SavedPsychologyDto) -> Unit

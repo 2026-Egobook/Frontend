@@ -1,4 +1,4 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.data
 
 @JvmInline
 value class Price(val value: Int) {

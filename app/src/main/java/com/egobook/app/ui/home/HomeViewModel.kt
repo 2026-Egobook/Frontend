@@ -10,13 +10,11 @@ import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.user.Ink
 import com.egobook.app.ui.home.user.Level
 import com.egobook.app.ui.home.user.User
-import com.egobook.app.ui.shop.CustomItem
-import com.egobook.app.ui.shop.StoreRepository
+import com.egobook.app.store.ui.CustomItem
+import com.egobook.app.store.data.StoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject

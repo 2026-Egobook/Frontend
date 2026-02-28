@@ -1,8 +1,9 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.egobook.app.store.ui.StoreCollectionFragment
 
 class StoreCollectionAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {

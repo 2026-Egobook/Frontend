@@ -1,6 +1,6 @@
 package com.egobook.app
 
-import com.egobook.app.ui.shop.Price
+import com.egobook.app.store.data.Price
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 

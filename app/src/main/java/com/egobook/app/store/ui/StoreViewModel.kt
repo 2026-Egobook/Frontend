@@ -1,8 +1,11 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.store.data.ItemType
+import com.egobook.app.store.data.StoreRepository
+import com.egobook.app.store.data.ItemStatus
 import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.user.Ink
 import dagger.hilt.android.lifecycle.HiltViewModel
