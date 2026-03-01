@@ -167,6 +167,11 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
 
     implementation("com.google.android.gms:play-services-ads:23.6.0")
+
+    implementation(libs.androidx.room.runtime)
+
+    ksp(libs.androidx.room.compiler)
+
 }
 
 ksp {
