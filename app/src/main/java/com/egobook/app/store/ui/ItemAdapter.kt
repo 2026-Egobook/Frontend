@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.egobook.app.R
-import com.egobook.app.store.data.ItemStatus
+import com.egobook.app.store.data.model.ItemStatus
 
 class ItemAdapter(
     private val onItemClick: (CustomItem) -> Unit

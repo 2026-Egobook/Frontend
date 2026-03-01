@@ -40,7 +40,7 @@ class StoreLeavingDialog: DialogFragment() {
         binding.btnLeave.setOnClickListener {
             removeScreenBlur()
             dismiss()
-            viewModel.resetEquipItems()
+            // viewModel.resetEquipItems()
             findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
         }
     }

@@ -1,8 +1,8 @@
 package com.egobook.app.store.ui
 
-import com.egobook.app.store.data.ItemStatus
-import com.egobook.app.store.data.ItemType
-import com.egobook.app.store.data.Price
+import com.egobook.app.store.data.model.ItemStatus
+import com.egobook.app.store.data.model.ItemType
+import com.egobook.app.store.data.model.Price
 
 data class CustomItem(
     val id: String,

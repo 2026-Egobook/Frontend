@@ -11,7 +11,6 @@ import com.egobook.app.ui.home.user.Ink
 import com.egobook.app.ui.home.user.Level
 import com.egobook.app.ui.home.user.User
 import com.egobook.app.store.ui.CustomItem
-import com.egobook.app.store.data.StoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val storeRepository: StoreRepository,
+    // private val storeRepository: StoreRepository,
     private val userAdRepository: UserAdRepository,
     private val psychologyRepository: UserPsychologyRepository
 ) : ViewModel() {
@@ -46,7 +45,7 @@ class HomeViewModel @Inject constructor(
 
     fun fetchEquipItems() {
         viewModelScope.launch {
-            _equippedItems.value = storeRepository.loadEquippedItems()
+            // _equippedItems.value = storeRepository.loadEquippedItems()
         }
     }
 

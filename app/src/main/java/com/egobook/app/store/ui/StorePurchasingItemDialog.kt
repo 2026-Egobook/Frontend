@@ -42,7 +42,7 @@ class StorePurchasingItemDialog: DialogFragment() {
 
         binding.btnBuy.setOnClickListener {
             if (item != null) {
-                viewModel.purchaseItem(item)
+                // viewModel.purchaseItem(item)
             }
             removeScreenBlur()
             dismiss()

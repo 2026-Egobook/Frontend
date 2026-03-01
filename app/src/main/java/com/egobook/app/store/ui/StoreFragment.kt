@@ -1,5 +1,6 @@
 package com.egobook.app.store.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,7 +19,7 @@ import coil.load
 import com.egobook.app.BlurLevel
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentStoreBinding
-import com.egobook.app.store.data.ItemType
+import com.egobook.app.store.data.model.ItemType
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,6 +32,13 @@ class StoreFragment: Fragment() {
     private val viewModel: StoreViewModel by activityViewModels()
 
     private var lastSelected = -1
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        lifecycleScope.launch {
+            viewModel.initialize()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,15 +65,15 @@ class StoreFragment: Fragment() {
             tab.text = ItemTab.of(position).text
         }.attach()
 
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                if (position == lastSelected) return
-                lastSelected = position
-                viewModel.loadEquippedItems()
-                Log.d("jang", "페이지 변경 감지됨: $position")
-            }
-        })
+//        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+//                if (position == lastSelected) return
+//                lastSelected = position
+//                viewModel.loadEquippedItems()
+//                Log.d("jang", "페이지 변경 감지됨: $position")
+//            }
+//        })
 
         binding.ivBack.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
@@ -83,9 +91,9 @@ class StoreFragment: Fragment() {
             }
         }
 
-        binding.ivReset.setOnClickListener {
-            viewModel.loadEquippedItems()
-        }
+//        binding.ivReset.setOnClickListener {
+//            viewModel.loadEquippedItems()
+//        }
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

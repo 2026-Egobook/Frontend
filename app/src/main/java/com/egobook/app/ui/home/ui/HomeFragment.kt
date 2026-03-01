@@ -19,7 +19,7 @@ import com.egobook.app.ui.home.HomeViewModel
 import com.egobook.app.ui.home.user.LevelType
 import com.egobook.app.store.ui.CustomItem
 import com.egobook.app.store.ui.ItemImage
-import com.egobook.app.store.data.ItemType
+import com.egobook.app.store.data.model.ItemType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 @AndroidEntryPoint

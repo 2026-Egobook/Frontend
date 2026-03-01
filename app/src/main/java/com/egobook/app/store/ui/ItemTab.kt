@@ -1,7 +1,7 @@
 package com.egobook.app.store.ui
 
 import android.os.Parcelable
-import com.egobook.app.store.data.ItemType
+import com.egobook.app.store.data.model.ItemType
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
