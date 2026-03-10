@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!-- ⭐ empty view -->
+    <!-- empty view -->
     <LinearLayout
         android:id="@+id/layout_empty"
         android:layout_width="match_parent"
@@ -44,5 +44,14 @@
             android:fontFamily="@font/arita_medium"
             android:gravity="center"/>
     </LinearLayout>
+    
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:indeterminateTint="@color/cos_black"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_gravity="center"/>
 
 </FrameLayout>

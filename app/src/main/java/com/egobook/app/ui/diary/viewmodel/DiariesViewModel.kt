@@ -9,12 +9,11 @@ import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
+import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -61,11 +60,15 @@ class DiariesViewModel @Inject constructor(
     //상태를 보지 말고 뷰모델 내부 state 기반으로만 동작
     private fun loadDiaries(selectedDate: LocalDate, types: Set<DiaryType>?) {
         val filter = DiaryFilter(selectedDate, types)
+
+        // 로딩 상태 설정
+        _state.value = state.value.copy(diaries = UiState.Loading)
+
         val diariesFlow = diaryUseCases
             .getDiaries(filter)
             .cachedIn(viewModelScope)
 
-        _state.value = state.value.copy(diaries = diariesFlow)
+        _state.value = state.value.copy(diaries = UiState.Success(diariesFlow))
 
         // dailyCount도 함께 로드
         //loadDailyCount(selectedDate)
@@ -99,7 +102,7 @@ sealed class DiariesEvent {
 }
 
 data class DiariesState(
-    val diaries: Flow<PagingData<DiarySummary>> = emptyFlow(),
+    val diaries: UiState<Flow<PagingData<DiarySummary>>> = UiState.Idle,
     val selectedTabType: Set<DiaryType>? = null,
 
     // 내부 로직용

@@ -18,6 +18,7 @@ import com.egobook.app.databinding.FragmentDiaryListBinding
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.ui.diary.adapter.DiaryRVAdapter
 import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
+import com.egobook.app.util.UiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -64,20 +65,48 @@ class DiaryListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collectLatest { state ->
-                    state.diaries.collectLatest { pagingData ->
-                        diaryRVAdapter.submitData(pagingData)
+                    when (val diariesState = state.diaries) {
+                        is UiState.Loading -> {
+                            // Paging3의 LoadState로 로딩 관리
+                        }
+                        is UiState.Success -> {
+                            // 데이터 Flow 수집
+                            launch {
+                                diariesState.data.collectLatest { pagingData ->
+                                    diaryRVAdapter.submitData(pagingData)
+                                }
+                            }
+                        }
+                        is UiState.Failure -> {
+                            // TODO: 에러 처리
+                        }
+                        is UiState.Idle -> { }
                     }
                 }
             }
         }
-        
-        // LoadState를 관찰하여 빈 상태 처리
+
+        // Paging3 LoadState로 프로그레스바 + 빈 상태 관리
         viewLifecycleOwner.lifecycleScope.launch {
             diaryRVAdapter.loadStateFlow.collectLatest { loadStates ->
-                val isEmpty = loadStates.refresh is LoadState.NotLoading && diaryRVAdapter.itemCount == 0
-                
-                binding.layoutEmpty.isVisible = isEmpty
-                binding.rvDiary.isVisible = !isEmpty
+                when (val refreshState = loadStates.refresh) {
+                    is LoadState.Loading -> {
+                        // 초기 로딩 중
+                        binding.progressBar.isVisible = true
+                        binding.rvDiary.isVisible = false
+                        binding.layoutEmpty.isVisible = false
+                    }
+                    is LoadState.NotLoading -> {
+                        binding.progressBar.isVisible = false
+                        val isEmpty = diaryRVAdapter.itemCount == 0
+                        binding.layoutEmpty.isVisible = isEmpty
+                        binding.rvDiary.isVisible = !isEmpty
+                    }
+                    is LoadState.Error -> {
+                        binding.progressBar.isVisible = false
+                        // TODO: 에러 UI 처리
+                    }
+                }
             }
         }
     }
