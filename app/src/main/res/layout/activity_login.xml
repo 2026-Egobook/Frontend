@@ -19,6 +19,18 @@
             android:layout_height="match_parent"
             android:background="@drawable/img_login_background_ver2">
 
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminateTint="@color/cos_black"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible"/>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_login"
                 style="@style/Widget.App.Button.Outlined.White"

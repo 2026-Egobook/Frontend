@@ -182,30 +182,37 @@ import javax.inject.Inject
             }
         }
         private fun observeLoginState() {
-            lifecycleScope.launch {
-                viewModel.loginState.collect { state ->
-                    when (state) {
-                        is LoginState.Success -> {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "로그인 성공!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            navigateToMain()
-                        }
-                        is LoginState.Error -> {
-                            val message = state.error.message ?: "알 수 없는 오류가 발생했습니다"
-                            Toast.makeText(
-                                this@LoginActivity,
-                                message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        else -> {}
+        lifecycleScope.launch {
+            viewModel.loginState.collect { state ->
+                when (state) {
+                    is LoginState.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is LoginState.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "로그인 성공!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToMain()
+                    }
+                    is LoginState.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        val message = state.error.message ?: "알 수 없는 오류가 발생했습니다"
+                        Toast.makeText(
+                            this@LoginActivity,
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else -> {
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
         }
+    }
 
         private fun observeFirstSignUp() {
             lifecycleScope.launch {
