@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
 import com.egobook.app.ui.diary.model.ToastMessage
+import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
-import com.egobook.app.domain.model.diary.entity.DiaryRewards
 
 
 @HiltViewModel
@@ -64,6 +64,9 @@ class DiaryWriteViewModel @Inject constructor(
      */
     private fun loadDiaryForEdit() {
         viewModelScope.launch {
+            // 로딩 상태 설정
+            _contentState.value = _contentState.value.copy(diaryLoadState = UiState.Loading)
+
             diaryUseCases.getDiary(diaryId)
                 .onSuccess { diary ->
                     if (diary != null) {
@@ -78,12 +81,20 @@ class DiaryWriteViewModel @Inject constructor(
                             selectedTypes = displayTypes,
                             selectedEmotionLevel = diary.emotionLevel ?: 3,
                             charCount = diary.content.length,
-                            isSaveButtonEnabled = true
+                            isSaveButtonEnabled = true,
+                            diaryLoadState = UiState.Success(Unit)
+                        )
+                    } else {
+                        _contentState.value = _contentState.value.copy(
+                            diaryLoadState = UiState.Failure("일기를 찾을 수 없습니다.")
                         )
                     }
                 }
-                .onFailure {
-                    // 로드 실패 시 에러 처리 (필요시 Toast 등으로 알림)
+                .onFailure { error ->
+                    // 로드 실패 시 에러 상태 설정
+                    _contentState.value = _contentState.value.copy(
+                        diaryLoadState = UiState.Failure(error.message)
+                    )
                 }
         }
     }
@@ -237,7 +248,8 @@ class DiaryWriteViewModel @Inject constructor(
         val isHintVisible: Boolean = false,
         val charCount: Int = 0,
         val maxCharCount: Int = 400,
-        val isSaveButtonEnabled: Boolean = false // 저장 버튼 활성화 유무
+        val isSaveButtonEnabled: Boolean = false, // 저장 버튼 활성화 유무
+        val diaryLoadState: UiState<Unit> = UiState.Idle // 수정 모드 데이터 로드 상태
     )
 
 }
