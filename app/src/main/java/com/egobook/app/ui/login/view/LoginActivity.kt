@@ -187,6 +187,9 @@ import javax.inject.Inject
                 when (state) {
                     is LoginState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
+                        binding.btnLogin.isEnabled = false
+                        binding.btnGoogleLogin.isEnabled = false
+                        binding.btnGuestLogin.isEnabled = false
                     }
                     is LoginState.Success -> {
                         binding.progressBar.visibility = View.GONE

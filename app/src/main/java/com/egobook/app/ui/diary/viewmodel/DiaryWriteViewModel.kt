@@ -171,6 +171,8 @@ class DiaryWriteViewModel @Inject constructor(
      * 수정 모드 저장 처리
      */
     private suspend fun saveEditMode(state: ContentState) {
+        _saveResult.emit(SaveResult.Loading)
+
         val emotionLevel = if (state.selectedTypes.contains("감정")) {
             state.selectedEmotionLevel
         } else {
@@ -202,6 +204,8 @@ class DiaryWriteViewModel @Inject constructor(
     private suspend fun saveCreateMode(state: ContentState) {
         val now = LocalDateTime.now()
 
+        _saveResult.emit(SaveResult.Loading)
+
         val newDiary = DiaryEntityMapper.createNewDiary(
             selectedTypes = state.selectedTypes,
             content = state.content,
@@ -228,6 +232,7 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     sealed class SaveResult {
+        object Loading: SaveResult()
         data class Success(val toastMessages: List<ToastMessage>) : SaveResult()
         data class Error(val message: String?) : SaveResult()
     }

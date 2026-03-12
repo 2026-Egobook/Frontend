@@ -193,7 +193,7 @@ class AccountFragment : Fragment() {
                 accountDeleteDialog1Fragment.show(childFragmentManager, "AccountDeleteDialog1Fragment")
             }
 
-            // ✅ 고객지원 클릭
+            // 고객지원 클릭
             tvSupport.setOnClickListener {
                 copySupportEmailToClipboard()
             }

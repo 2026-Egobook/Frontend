@@ -299,6 +299,11 @@ class DiaryWriteFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.saveResult.collectLatest { result ->
                     when (result) {
+                        is DiaryWriteViewModel.SaveResult.Loading -> {
+                            // 저장 중
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.btnSave.isEnabled = false
+                        }
                         is DiaryWriteViewModel.SaveResult.Success -> {
                             // 저장 성공 -> 결과를 이전 화면(DiaryFragment)에 전달하고 이동
                             val messages = result.toastMessages
