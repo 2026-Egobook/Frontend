@@ -17,8 +17,8 @@ import com.egobook.app.domain.model.auth.AuthError
 class AccountViewModel @Inject constructor(
     private val accountRepository: AccountRepository
 ) : ViewModel() {
-    private val _userIdState = MutableStateFlow<UiState<String>>(UiState.Idle)
-    val userIdState = _userIdState.asStateFlow()
+        private val _userIdState = MutableStateFlow<UiState<String>>(UiState.Idle)
+        val userIdState = _userIdState.asStateFlow()
 
     private val _linkState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
     val linkState = _linkState.asStateFlow()

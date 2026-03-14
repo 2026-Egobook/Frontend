@@ -1,6 +1,5 @@
 package com.egobook.app.ui.diary.view
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -8,11 +7,11 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -27,6 +26,7 @@ import com.egobook.app.ui.util.toDateTimeString
 import com.egobook.app.ui.util.toDayOfMonthString
 import com.egobook.app.ui.util.toMonthString
 import com.egobook.app.ui.util.toYearString
+import com.egobook.app.util.UiState
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,7 +90,8 @@ class DiaryWriteFragment : Fragment() {
         setupDiaryContentEditText()     // 일기 내용 입력 필드 설정 (글자수 제한, TextWatcher)
         observeSelectedDate()           // 선택된 날짜 관찰 및 UI 업데이트
         observeContentState()           // 컨텐츠 상태 관찰 (글자수, 감정 섹션, 저장 버튼 활성화)
-        observeSaveResult()            // 저장 성공/실패 관찰
+        observeSaveResult()             // 저장 성공/실패 관찰
+        observeDiaryLoadState()         // 수정 모드 데이터 로드 상태 관찰
     }
     
     private fun setupDiaryTypeCards() {
@@ -176,6 +177,11 @@ class DiaryWriteFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.contentState.collectLatest { state ->
+                    // 로딩 중이면 UI 업데이트 스킵 (프로그레스바 표시 중)
+                    if (state.diaryLoadState is UiState.Loading) {
+                        return@collectLatest
+                    }
+
                     // 글자수 표시 업데이트 (예: 0/400, 1/400, ...)
                     binding.tvCharCount.text = "${state.charCount}/${state.maxCharCount}"
                     
@@ -204,6 +210,42 @@ class DiaryWriteFragment : Fragment() {
                     
                     // 저장 버튼 활성화 상태 업데이트
                     binding.btnSave.isEnabled = state.isSaveButtonEnabled
+                }
+            }
+        }
+    }
+
+    private fun observeDiaryLoadState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.contentState.collectLatest { state ->
+                    when (val loadState = state.diaryLoadState) {
+                        is UiState.Loading -> {
+                            binding.progressBar.isVisible = true
+                            // 입력 UI 숨기기
+                            binding.guideLayout.isVisible = false
+                            binding.typeLayout.isVisible = false
+                            binding.tvHowIsYourFeeling.isVisible = false
+                            binding.stateLayout.isVisible = false
+                            binding.emotionLayout.isVisible = false
+                            binding.inputBoxLayout.isVisible = false
+                            binding.btnSave.isVisible = false
+                        }
+                        is UiState.Success, is UiState.Idle -> {
+                            binding.progressBar.isVisible = false
+                            // 입력 UI 표시
+                            binding.guideLayout.isVisible = true
+                            binding.typeLayout.isVisible = true
+                            // 감정 섹션은 선택 상태에 따라 표시 (observeContentState에서 처리)
+                            binding.inputBoxLayout.isVisible = true
+                            binding.btnSave.isVisible = true
+                        }
+                        is UiState.Failure -> {
+                            binding.progressBar.isVisible = false
+                            // 에러 처리 (필요시 토스트 또는 에러 UI 표시)
+                            Toast.makeText(requireContext(), loadState.message ?: "데이터 로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }
@@ -257,6 +299,11 @@ class DiaryWriteFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.saveResult.collectLatest { result ->
                     when (result) {
+                        is DiaryWriteViewModel.SaveResult.Loading -> {
+                            // 저장 중
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.btnSave.isEnabled = false
+                        }
                         is DiaryWriteViewModel.SaveResult.Success -> {
                             // 저장 성공 -> 결과를 이전 화면(DiaryFragment)에 전달하고 이동
                             val messages = result.toastMessages

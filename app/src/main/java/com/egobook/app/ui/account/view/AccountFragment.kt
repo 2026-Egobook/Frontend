@@ -86,17 +86,22 @@ class AccountFragment : Fragment() {
                 viewModel.userIdState.collect { state ->
                     when (state) {
 
-                        is UiState.Idle -> Unit
+                        is UiState.Idle -> {
+                            binding.tvRealAccountId.visibility = View.INVISIBLE
+                        }
 
                         is UiState.Loading -> {
+                            binding.tvRealAccountId.visibility = View.INVISIBLE
                             //추후 로딩뷰를 삽입하자
                         }
 
                         is UiState.Success -> {
+                            binding.tvRealAccountId.visibility = View.VISIBLE
                             binding.tvRealAccountId.text = state.data
                         }
 
                         is UiState.Failure -> {
+                            binding.tvRealAccountId.visibility = View.INVISIBLE
                             Toast.makeText(requireContext(), "유저 id를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -188,7 +193,7 @@ class AccountFragment : Fragment() {
                 accountDeleteDialog1Fragment.show(childFragmentManager, "AccountDeleteDialog1Fragment")
             }
 
-            // ✅ 고객지원 클릭
+            // 고객지원 클릭
             tvSupport.setOnClickListener {
                 copySupportEmailToClipboard()
             }
