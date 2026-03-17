@@ -65,6 +65,7 @@
                 android:layout_weight="1"
                 android:text="계정"
                 android:textSize="20sp"
+                android:textColor="@color/neutral"
                 android:fontFamily="@font/arita_semibold"
                 android:gravity="center_vertical"/>
 
