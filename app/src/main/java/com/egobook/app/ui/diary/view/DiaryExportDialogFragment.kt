@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
@@ -54,126 +55,80 @@ class DiaryExportDialogFragment : DialogFragment() {
             viewmodel.isValidDate.collect { state ->
                 when (state) {
                     TermType.InvalidBothDate -> {
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icEndDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.btnPdf.isEnabled = false
-                        binding.btnText.isEnabled = false
-                        binding.tvExportGuide.setText("유효하지 않은 날짜입니다.\n다시 입력해주세요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        setStartDateColor(R.color.critical)
+                        setEndDateColor(R.color.critical)
+                        setButtonsEnabled(false)
+                        setGuide("유효하지 않은 날짜입니다.\n다시 입력해주세요", R.color.critical)
                     }
                     TermType.InvalidStartDate -> {
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
-                        binding.icEndDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.neutral)
-                        )
-                        binding.btnPdf.isEnabled = false
-                        binding.btnText.isEnabled = false
-                        binding.tvExportGuide.setText("유효하지 않은 날짜입니다.\n다시 입력해주세요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        setStartDateColor(R.color.critical)
+                        setEndDateColor(R.color.neutral)
+                        setButtonsEnabled(false)
+                        setGuide("유효하지 않은 날짜입니다.\n다시 입력해주세요", R.color.critical)
                     }
                     TermType.InvalidEndDate -> {
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.neutral)
-                        )
-                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icEndDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.btnPdf.isEnabled = false
-                        binding.btnText.isEnabled = false
-                        binding.tvExportGuide.setText("유효하지 않은 날짜입니다.\n다시 입력해주세요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        setStartDateColor(R.color.neutral)
+                        setEndDateColor(R.color.critical)
+                        setButtonsEnabled(false)
+                        setGuide("유효하지 않은 날짜입니다.\n다시 입력해주세요", R.color.critical)
                     }
                     TermType.StartFuture -> {
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
-                        binding.icEndDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.neutral)
-                        )
-                        binding.tvExportGuide.setText("미래 날짜는 내보낼 수 없어요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        setStartDateColor(R.color.critical)
+                        setEndDateColor(R.color.neutral)
+                        setGuide("미래 날짜는 내보낼 수 없어요", R.color.critical)
                     }
                     TermType.EndFuture -> {
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.neutral)
-                        )
-                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icEndDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.tvExportGuide.setText("미래 날짜는 내보낼 수 없어요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        setStartDateColor(R.color.neutral)
+                        setEndDateColor(R.color.critical)
+                        setGuide("미래 날짜는 내보낼 수 없어요", R.color.critical)
                     }
                     TermType.Reverse -> {
-                        // 시작 날짜가 종료 날짜보다 늦을 경우 빨간색으로 표시
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.btnPdf.isEnabled = false
-                        binding.btnText.isEnabled = false
-                        binding.tvExportGuide.setText("시작 날짜가 끝 날짜보다 이전이거나\n" +
-                                "같아야 해요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        setStartDateColor(R.color.critical)
+                        setButtonsEnabled(false)
+                        setGuide("시작 날짜가 끝 날짜보다 이전이거나\n같아야 해요", R.color.critical)
                     }
                     TermType.MoreThanOneYear -> {
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
-                        binding.icEndDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.critical)
-                        )
-                        binding.tvExportGuide.setText("최대 1년 단위로 끊어서 내보낼 수 있어요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        setStartDateColor(R.color.critical)
+                        setEndDateColor(R.color.critical)
+                        setGuide("최대 1년 단위로 끊어서 내보낼 수 있어요", R.color.critical)
                     }
                     TermType.Valid -> {
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.neutral)
-                        )
-                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
-                        binding.icEndDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.neutral)
-                        )
-                        binding.btnPdf.isEnabled = true
-                        binding.btnText.isEnabled = true
-                        binding.tvExportGuide.setText("최대 1년 단위로 내보낼 수 있어요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        setStartDateColor(R.color.neutral)
+                        setEndDateColor(R.color.neutral)
+                        setButtonsEnabled(true)
+                        setGuide("최대 1년 단위로 내보낼 수 있어요", R.color.neutral)
                     }
                     TermType.None -> {
-                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
-                        binding.icStartDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.neutral)
-                        )
-                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
-                        binding.icEndDate.setColorFilter(
-                            ContextCompat.getColor(requireContext(), R.color.neutral)
-                        )
-                        binding.btnPdf.isEnabled = false
-                        binding.btnText.isEnabled = false
-                        binding.tvExportGuide.setText("최대 1년 단위로 내보낼 수 있어요")
-                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        setStartDateColor(R.color.neutral)
+                        setEndDateColor(R.color.neutral)
+                        setButtonsEnabled(false)
+                        setGuide("최대 1년 단위로 내보낼 수 있어요", R.color.neutral)
                     }
                 }
             }
         }
+    }
+
+    private fun setStartDateColor(@ColorRes colorRes: Int) {
+        val color = ContextCompat.getColor(requireContext(), colorRes)
+        binding.tvStartDate.setTextColor(color)
+        binding.icStartDate.setColorFilter(color)
+    }
+
+    private fun setEndDateColor(@ColorRes colorRes: Int) {
+        val color = ContextCompat.getColor(requireContext(), colorRes)
+        binding.tvLastDate.setTextColor(color)
+        binding.icEndDate.setColorFilter(color)
+    }
+
+    private fun setButtonsEnabled(enabled: Boolean) {
+        binding.btnPdf.isEnabled = enabled
+        binding.btnText.isEnabled = enabled
+    }
+
+    private fun setGuide(text: String, @ColorRes colorRes: Int) {
+        binding.tvExportGuide.text = text
+        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), colorRes))
     }
 
     private fun setClickListener() {
