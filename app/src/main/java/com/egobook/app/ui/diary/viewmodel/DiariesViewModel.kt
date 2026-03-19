@@ -12,10 +12,14 @@ import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import timber.log.Timber
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +28,9 @@ class DiariesViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(DiariesState())  // 뷰모델 내부 갱신용
     val state = _state.asStateFlow()    // 외부(ui) 읽기 전용
+
+    private val _isValidDate = MutableStateFlow<TermType>(TermType.None)
+    val isValidDate = _isValidDate.asStateFlow()
 
     init {
         loadDiaries(LocalDate.now(), null)
@@ -75,6 +82,66 @@ class DiariesViewModel @Inject constructor(
         //loadDailyCount(selectedDate)
     }
 
+    private fun onExport(event: ExportEvent) {
+        when(event) {
+            is ExportEvent.PDFExport -> {
+                // PDF 내보내기
+            }
+            is ExportEvent.TextExport -> {
+                // Text 내보내기
+            }
+        }
+    }
+
+    /**
+     * 날짜 유효성 검사 (시작 날짜가 종료 날짜보다 늦은지 확인)
+     */
+    fun validateDates(startDateStr: String, endDateStr: String) {
+        val datePattern = Regex("""\d{4}\.\d{2}\.\d{2}""")
+        if (!datePattern.matches(startDateStr) || !datePattern.matches(endDateStr)) {
+            _isValidDate.value = TermType.None
+            return
+        }
+
+        try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            val start = LocalDate.parse(startDateStr, formatter)
+            val end = LocalDate.parse(endDateStr, formatter)
+            val today = LocalDate.now()
+
+            // 미래 날짜 체크
+            if (start.isAfter(today)) {
+                _isValidDate.value = TermType.StartFuture
+                Timber.d("StartFuture")
+                return
+            }
+            if (end.isAfter(today)) {
+                _isValidDate.value = TermType.EndFuture
+                Timber.d("EndFuture")
+                return
+            }
+
+            // 시작 > 종료
+            if (start.isAfter(end)) {
+                _isValidDate.value = TermType.Reverse
+                Timber.d("Reverse")
+                return
+            }
+
+            // 1년 초과 체크
+            if (start.plusYears(1).isBefore(end)) {
+                _isValidDate.value = TermType.MoreThanOneYear
+                Timber.d("MoreThanOneYear")
+                return
+            }
+
+            _isValidDate.value = TermType.Valid
+
+        } catch (e: Exception) {
+            _isValidDate.value = TermType.None
+        }
+    }
+
     /**
      * 캐시 기반 dailyCount 조회 (캐시 없으면 API 호출)
      * btnAdd 클릭 시 48 체크용으로 사용
@@ -115,3 +182,18 @@ data class DiariesState(
     val monthText: String = selectedDate.monthValue.toString(),
     val dayText: String = selectedDate.dayOfMonth.toString()
 )
+
+sealed class TermType {
+    object None : TermType()
+    object StartFuture : TermType()
+    object EndFuture : TermType()
+    object Reverse : TermType()
+
+    object MoreThanOneYear: TermType()
+    object Valid: TermType()
+}
+
+sealed class ExportEvent {
+    data object PDFExport : ExportEvent()
+    data object TextExport : ExportEvent()
+}

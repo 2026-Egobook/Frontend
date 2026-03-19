@@ -39,6 +39,7 @@
             android:paddingVertical="8dp">
 
             <ImageView
+                android:id="@+id/icStartDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_calendar" />
@@ -77,6 +78,7 @@
             android:paddingVertical="8dp">
 
             <ImageView
+                android:id="@+id/icEndDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_calendar" />
@@ -103,7 +105,8 @@
             android:fontFamily="@font/arita_medium"
             android:text="최대 1년 단위로 내보낼 수 있어요"
             android:textColor="@color/neutral_subtle"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:gravity="center"/>
 
         <!-- 하단 버튼 그룹 -->
         <LinearLayout

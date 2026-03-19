@@ -37,6 +37,7 @@
                 android:layout_height="21dp"
                 android:text="2025"
                 android:textSize="14sp"
+                android:textColor="@color/neutral"
                 android:fontFamily="@font/arita_semibold"
                 android:gravity="center"/>
 
@@ -50,6 +51,7 @@
                 android:layout_height="21dp"
                 android:text="12월"
                 android:textSize="14sp"
+                android:textColor="@color/neutral"
                 android:fontFamily="@font/arita_semibold"
                 android:gravity="center"/>
         </LinearLayout>
@@ -86,6 +88,7 @@
                 android:gravity="center"
                 android:text="10"
                 android:textSize="24sp"
+                android:textColor="@color/neutral"
                 android:fontFamily="@font/arita_semibold"/>
 
             <Space

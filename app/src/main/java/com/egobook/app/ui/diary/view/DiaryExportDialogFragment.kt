@@ -1,5 +1,6 @@
 package com.egobook.app.ui.diary.view
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,16 +10,26 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.egobook.app.R
 import com.egobook.app.databinding.FragmentDiaryExportDialogBinding
 import com.egobook.app.removeScreenBlur
+import com.egobook.app.ui.diary.viewmodel.DiariesViewModel
+import com.egobook.app.ui.diary.viewmodel.TermType
+import kotlinx.coroutines.launch
 
 class DiaryExportDialogFragment : DialogFragment() {
 
     private var _binding: FragmentDiaryExportDialogBinding? = null
     private val binding get() = _binding!!
+
+    private val viewmodel: DiariesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,9 +44,94 @@ class DiaryExportDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupDateInputWatchers()
+        setupObservers()
         setClickListener()
-        updateButtonState() // 초기 버튼 상태 설정
+        updateButtonState()
+    }
 
+    private fun setupObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewmodel.isValidDate.collect { state ->
+                when (state) {
+                    TermType.StartFuture -> {
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        binding.icEndDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.neutral)
+                        )
+                        binding.tvExportGuide.setText("미래 날짜는 내보낼 수 없어요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                    }
+                    TermType.EndFuture -> {
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.neutral)
+                        )
+                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icEndDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.tvExportGuide.setText("미래 날짜는 내보낼 수 없어요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                    }
+                    TermType.Reverse -> {
+                        // 시작 날짜가 종료 날짜보다 늦을 경우 빨간색으로 표시
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.btnPdf.isEnabled = false
+                        binding.btnText.isEnabled = false
+                        binding.tvExportGuide.setText("시작 날짜가 끝 날짜보다 이전이거나\n" +
+                                "같아야 해요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                    }
+                    TermType.MoreThanOneYear -> {
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icEndDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.tvExportGuide.setText("최대 1년 단위로 끊어서 내보낼 수 있어요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                    }
+                    TermType.Valid -> {
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.neutral)
+                        )
+                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        binding.icEndDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.neutral)
+                        )
+                        binding.btnPdf.isEnabled = true
+                        binding.btnText.isEnabled = true
+                        binding.tvExportGuide.setText("최대 1년 단위로 내보낼 수 있어요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                    }
+                    TermType.None -> {
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.neutral)
+                        )
+                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        binding.icEndDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.neutral)
+                        )
+                        binding.btnPdf.isEnabled = false
+                        binding.btnText.isEnabled = false
+                        binding.tvExportGuide.setText("최대 1년 단위로 내보낼 수 있어요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                    }
+                }
+            }
+        }
     }
 
     private fun setClickListener() {
@@ -48,68 +144,73 @@ class DiaryExportDialogFragment : DialogFragment() {
     }
 
     private fun setupDateInputWatchers() {
-        // 년/월/일 입력 시 자동으로 "."을 추가해주는 TextWatcher
-        val dateWatcher = object : TextWatcher {
-            private var isFormatting = false // 무한 루프 방지 플래그
-            private var beforeTextLength = 0
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                beforeTextLength = s?.length ?: 0
-            }
+        fun createDateWatcher(editText: EditText): TextWatcher {
+            return object : TextWatcher {
+                private var isFormatting = false
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {
+                    if (isFormatting || s == null) return
 
-            override fun afterTextChanged(s: Editable?) {
-                if (isFormatting) return
+                    isFormatting = true
 
-                val currentLength = s?.length ?: 0
-                // 사용자가 글자를 추가했을 때만 동작
-                if (currentLength > beforeTextLength) {
-                    if (currentLength == 4 || currentLength == 7) {
-                        isFormatting = true
-                        s?.append('.')
-                        isFormatting = false
+                    val original = s.toString()
+                    val cursorPosition = editText.selectionStart
+
+                    val digits = original.replace(".", "").take(8)
+
+                    // 커서를 digit 기준으로 변환
+                    val digitsBeforeCursor = original
+                        .substring(0, cursorPosition)
+                        .count { it.isDigit() }
+
+                    val formatted = StringBuilder()
+                    var newCursor = 0
+
+                    for (i in digits.indices) {
+                        if (i == 4 || i == 6) {
+                            formatted.append('.')
+                        }
+                        formatted.append(digits[i])
+
+                        // cursor 위치 계산 (정확한 방식)
+                        if (i < digitsBeforeCursor) {
+                            newCursor = formatted.length
+                        }
                     }
+
+                    s.replace(0, s.length, formatted.toString())
+
+                    try {
+                        editText.setSelection(newCursor)
+                    } catch (e: Exception) {
+                        editText.setSelection(formatted.length)
+                    }
+
+                    isFormatting = false
                 }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             }
         }
 
-        // 각 EditText에 TextWatcher를 적용.
-        binding.tvStartDate.addTextChangedListener(dateWatcher)
-        binding.tvLastDate.addTextChangedListener(dateWatcher)
+        // watcher 각각 따로 붙이기
+        binding.tvStartDate.addTextChangedListener(createDateWatcher(binding.tvStartDate))
+        binding.tvLastDate.addTextChangedListener(createDateWatcher(binding.tvLastDate))
 
-        // 날짜 유효성 검사를 위한 TextWatcher
+        // validation
         binding.tvStartDate.doAfterTextChanged { updateButtonState() }
         binding.tvLastDate.doAfterTextChanged { updateButtonState() }
     }
 
-    /**
-     * 날짜 입력 유효성 검사 후 버튼 상태 업데이트
-     * YYYY.MM.DD 형식(10자리)이 모두 입력되었을 때만 버튼 활성화
-     */
     private fun updateButtonState() {
         val startDate = binding.tvStartDate.text.toString()
         val lastDate = binding.tvLastDate.text.toString()
-
-        // YYYY.MM.DD 형식 확인 (10자리)
-        val isStartDateValid = startDate.length == 10 && isValidDateFormat(startDate)
-        val isLastDateValid = lastDate.length == 10 && isValidDateFormat(lastDate)
-
-        val isBothDatesValid = isStartDateValid && isLastDateValid
-
-        binding.btnPdf.isEnabled = isBothDatesValid
-        binding.btnText.isEnabled = isBothDatesValid
+        
+        // 뷰모델에서 날짜 선후 관계 및 형식 검사 수행
+        viewmodel.validateDates(startDate, lastDate)
     }
-
-    /**
-     * 날짜 형식 유효성 검사 (YYYY.MM.DD)
-     */
-    private fun isValidDateFormat(date: String): Boolean {
-        // 정규식: YYYY.MM.DD 형식
-        val datePattern = Regex("""\d{4}\.\d{2}\.\d{2}""")
-        return datePattern.matches(date)
-    }
-
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
