@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.ResolverStyle
 import javax.inject.Inject
 
 @HiltViewModel
@@ -103,43 +104,53 @@ class DiariesViewModel @Inject constructor(
             return
         }
 
-        try {
-            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-            val start = LocalDate.parse(startDateStr, formatter)
-            val end = LocalDate.parse(endDateStr, formatter)
-            val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("uuuu.MM.dd").withResolverStyle(ResolverStyle.STRICT)
 
-            // 미래 날짜 체크
-            if (start.isAfter(today)) {
-                _isValidDate.value = TermType.StartFuture
-                Timber.d("StartFuture")
-                return
-            }
-            if (end.isAfter(today)) {
-                _isValidDate.value = TermType.EndFuture
-                Timber.d("EndFuture")
-                return
-            }
+        val start = try { LocalDate.parse(startDateStr, formatter) } catch (e: Exception) { null }
+        val end = try { LocalDate.parse(endDateStr, formatter) } catch (e: Exception) { null }
 
-            // 시작 > 종료
-            if (start.isAfter(end)) {
-                _isValidDate.value = TermType.Reverse
-                Timber.d("Reverse")
-                return
-            }
-
-            // 1년 초과 체크
-            if (start.plusYears(1).isBefore(end)) {
-                _isValidDate.value = TermType.MoreThanOneYear
-                Timber.d("MoreThanOneYear")
-                return
-            }
-
-            _isValidDate.value = TermType.Valid
-
-        } catch (e: Exception) {
-            _isValidDate.value = TermType.None
+        if (start == null && end == null) {
+            _isValidDate.value = TermType.InvalidBothDate
+            return
         }
+        if (start == null) {
+            _isValidDate.value = TermType.InvalidStartDate
+            return
+        }
+        if (end == null) {
+            _isValidDate.value = TermType.InvalidEndDate
+            return
+        }
+
+        val today = LocalDate.now()
+
+        // 미래 날짜 체크
+        if (start.isAfter(today)) {
+            _isValidDate.value = TermType.StartFuture
+            Timber.d("StartFuture")
+            return
+        }
+        if (end.isAfter(today)) {
+            _isValidDate.value = TermType.EndFuture
+            Timber.d("EndFuture")
+            return
+        }
+
+        // 시작 > 종료
+        if (start.isAfter(end)) {
+            _isValidDate.value = TermType.Reverse
+            Timber.d("Reverse")
+            return
+        }
+
+        // 1년 초과 체크
+        if (start.plusYears(1).isBefore(end)) {
+            _isValidDate.value = TermType.MoreThanOneYear
+            Timber.d("MoreThanOneYear")
+            return
+        }
+
+        _isValidDate.value = TermType.Valid
     }
 
     /**
@@ -185,10 +196,12 @@ data class DiariesState(
 
 sealed class TermType {
     object None : TermType()
+    object InvalidStartDate : TermType()
+    object InvalidEndDate : TermType()
+    object InvalidBothDate : TermType()
     object StartFuture : TermType()
     object EndFuture : TermType()
     object Reverse : TermType()
-
     object MoreThanOneYear: TermType()
     object Valid: TermType()
 }

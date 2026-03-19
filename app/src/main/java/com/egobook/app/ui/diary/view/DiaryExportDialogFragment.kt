@@ -53,6 +53,48 @@ class DiaryExportDialogFragment : DialogFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewmodel.isValidDate.collect { state ->
                 when (state) {
+                    TermType.InvalidBothDate -> {
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icEndDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.btnPdf.isEnabled = false
+                        binding.btnText.isEnabled = false
+                        binding.tvExportGuide.setText("유효하지 않은 날짜입니다.\n다시 입력해주세요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                    }
+                    TermType.InvalidStartDate -> {
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        binding.icEndDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.neutral)
+                        )
+                        binding.btnPdf.isEnabled = false
+                        binding.btnText.isEnabled = false
+                        binding.tvExportGuide.setText("유효하지 않은 날짜입니다.\n다시 입력해주세요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                    }
+                    TermType.InvalidEndDate -> {
+                        binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.neutral))
+                        binding.icStartDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.neutral)
+                        )
+                        binding.tvLastDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                        binding.icEndDate.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.critical)
+                        )
+                        binding.btnPdf.isEnabled = false
+                        binding.btnText.isEnabled = false
+                        binding.tvExportGuide.setText("유효하지 않은 날짜입니다.\n다시 입력해주세요")
+                        binding.tvExportGuide.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
+                    }
                     TermType.StartFuture -> {
                         binding.tvStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.critical))
                         binding.icStartDate.setColorFilter(
