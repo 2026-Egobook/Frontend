@@ -90,7 +90,7 @@ object DiaryMapper {
 
     fun DiaryExportResponse.toDiaryDownloadForm(): DiaryDownloadForm {
         return DiaryDownloadForm(
-            fileUrl = fileUrl
+            fileUrl = fileUrl,
         )
     }
 

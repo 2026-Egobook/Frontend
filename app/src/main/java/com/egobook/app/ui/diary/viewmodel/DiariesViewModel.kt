@@ -35,8 +35,16 @@ class DiariesViewModel @Inject constructor(
     private val _isValidDate = MutableStateFlow<TermType>(TermType.None)
     val isValidDate = _isValidDate.asStateFlow()
 
+    private val _fileLoadState = MutableStateFlow<UiState<String>>(UiState.Idle)
+    val fileLoadState = _fileLoadState.asStateFlow()
+
+
     private val _downloadUrl = MutableSharedFlow<String>()
     val downloadUrl = _downloadUrl.asSharedFlow()
+
+    private val _errorMessage = MutableSharedFlow<String>()
+    val errorMessage = _errorMessage.asSharedFlow()
+
 
     init {
         loadDiaries(LocalDate.now(), null)
@@ -95,8 +103,13 @@ class DiariesViewModel @Inject constructor(
         }
         viewModelScope.launch {
             diaryUseCases.exportDiary(form)
-                .onSuccess { _downloadUrl.emit(it.fileUrl) }
-                .onFailure { /* 에러 처리 */ }
+                .onSuccess {
+                    _fileLoadState.value = UiState.Success(it.fileUrl)
+                    _downloadUrl.emit(it.fileUrl)
+                }
+                .onFailure {
+                        e -> _errorMessage.emit(e.message ?: "내보낼 수 있는 감정 일기가 없어요")
+                }
         }
     }
 

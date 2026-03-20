@@ -85,6 +85,15 @@ class DiaryExportDialogFragment : DialogFragment() {
         updateButtonState()
         setupDownloadManager()
         observeDownloadEvent()
+        observeErrorMessage()
+    }
+
+    private fun observeErrorMessage() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewmodel.errorMessage.collect { message ->
+                setGuide("내보낼 수 있는 감정 일기가 없어요", R.color.critical)
+            }
+        }
     }
 
     private fun observeDownloadEvent() {
