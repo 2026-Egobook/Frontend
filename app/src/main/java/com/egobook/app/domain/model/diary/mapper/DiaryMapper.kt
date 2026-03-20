@@ -1,14 +1,18 @@
 package com.egobook.app.domain.model.diary.mapper
 
 import com.egobook.app.data.model.diary.request.DiaryCreateRequest
+import com.egobook.app.data.model.diary.request.DiaryExportRequest
 import com.egobook.app.data.model.diary.request.DiaryUpdateRequest
 import com.egobook.app.data.model.diary.response.DiariesResponse
 import com.egobook.app.data.model.diary.response.DiaryCreateResponse
 import com.egobook.app.data.model.diary.response.DiaryEntryResponse
+import com.egobook.app.data.model.diary.response.DiaryExportResponse
 import com.egobook.app.data.model.diary.response.DiarySlice
 import com.egobook.app.data.model.diary.response.Reward
 import com.egobook.app.domain.model.diary.entity.DayDiaries
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryDownloadForm
+import com.egobook.app.domain.model.diary.entity.DiaryExportForm
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiaryList
 import com.egobook.app.domain.model.diary.entity.DiaryReward
@@ -84,6 +88,12 @@ object DiaryMapper {
         )
     }
 
+    fun DiaryExportResponse.toDiaryDownloadForm(): DiaryDownloadForm {
+        return DiaryDownloadForm(
+            fileUrl = fileUrl
+        )
+    }
+
     // ========== Domain Entity → Domain Entity ==========
 
     /**
@@ -133,6 +143,14 @@ object DiaryMapper {
             type = types.map { it.value },
             emotionLevel = emotionLevel,
             content = content
+        )
+    }
+
+    fun DiaryExportForm.toDiaryExportRequest(): DiaryExportRequest {
+        return DiaryExportRequest(
+            format = format,
+            startDate = startDate.toString(),
+            endDate = endDate.toString()
         )
     }
 

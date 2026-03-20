@@ -2,6 +2,8 @@ package com.egobook.app.domain.usecase.diaryusecase
 
 import androidx.paging.PagingData
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryDownloadForm
+import com.egobook.app.domain.model.diary.entity.DiaryExportForm
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiarySummary
@@ -19,7 +21,8 @@ data class DiaryUseCases @Inject constructor (
     val addDiary: AddDiary,
     val updateDiary: UpdateDiary,
     val deleteDiary: DeleteDiary,
-    val getDailyCount: GetDailyCount
+    val getDailyCount: GetDailyCount,
+    val exportDiary: ExportDiary
 )
 
 // 각 유스케이스들 정의
@@ -72,5 +75,13 @@ class GetDailyCount @Inject constructor(
 ) {
     suspend operator fun invoke(date: LocalDate): Result<Int> {
         return repository.getDailyCount(date)
+    }
+}
+
+class ExportDiary @Inject constructor(
+    private val repository: DiaryRepository
+) {
+    suspend operator fun invoke(form: DiaryExportForm): Result<DiaryDownloadForm> {
+        return repository.exportDiary(form)
     }
 }

@@ -1,7 +1,10 @@
 package com.egobook.app.domain.repository.diary
 
 import androidx.paging.PagingData
+import com.egobook.app.data.model.diary.request.DiaryExportRequest
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryDownloadForm
+import com.egobook.app.domain.model.diary.entity.DiaryExportForm
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiarySummary
@@ -48,5 +51,5 @@ interface DiaryRepository {
     /**
      * 일기 내보내기
      */
-    //suspend fun exportDiary
+    suspend fun exportDiary(diaryExportForm: DiaryExportForm): Result<DiaryDownloadForm>
 }

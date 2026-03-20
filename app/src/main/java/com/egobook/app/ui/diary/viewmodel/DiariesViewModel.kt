@@ -2,6 +2,7 @@ package com.egobook.app.ui.diary.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
@@ -9,6 +10,7 @@ import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
+import com.egobook.app.ui.diary.model.DiaryExportUiForm
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +34,9 @@ class DiariesViewModel @Inject constructor(
 
     private val _isValidDate = MutableStateFlow<TermType>(TermType.None)
     val isValidDate = _isValidDate.asStateFlow()
+
+    private val _downloadUrl = MutableSharedFlow<String>()
+    val downloadUrl = _downloadUrl.asSharedFlow()
 
     init {
         loadDiaries(LocalDate.now(), null)
@@ -83,14 +88,15 @@ class DiariesViewModel @Inject constructor(
         //loadDailyCount(selectedDate)
     }
 
-    private fun onExport(event: ExportEvent) {
-        when(event) {
-            is ExportEvent.PDFExport -> {
-                // PDF 내보내기
-            }
-            is ExportEvent.TextExport -> {
-                // Text 내보내기
-            }
+    fun onExport(event: ExportEvent) {
+        val form = when (event) {
+            is ExportEvent.PDFExport -> DiaryEntityMapper.toDomainDiaryExportForm(event.diaryExportUiForm)
+            is ExportEvent.TextExport -> DiaryEntityMapper.toDomainDiaryExportForm(event.diaryExportUiForm)
+        }
+        viewModelScope.launch {
+            diaryUseCases.exportDiary(form)
+                .onSuccess { _downloadUrl.emit(it.fileUrl) }
+                .onFailure { /* 에러 처리 */ }
         }
     }
 
@@ -207,6 +213,6 @@ sealed class TermType {
 }
 
 sealed class ExportEvent {
-    data object PDFExport : ExportEvent()
-    data object TextExport : ExportEvent()
+    data class PDFExport(val diaryExportUiForm: DiaryExportUiForm) : ExportEvent()
+    data class TextExport(val diaryExportUiForm: DiaryExportUiForm) : ExportEvent()
 }

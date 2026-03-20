@@ -2,11 +2,14 @@ package com.egobook.app.ui.diary.mapper
 
 import com.egobook.app.R
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryExportForm
 import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.model.diary.entity.RewardType
+import com.egobook.app.ui.diary.model.DiaryExportUiForm
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import com.egobook.app.ui.diary.model.ToastMessage
 
 /**
@@ -201,6 +204,17 @@ object DiaryEntityMapper {
             createdAt = writtenAt,
             date = writtenAt.toLocalDate(),
             writtenAt = writtenAt
+        )
+    }
+
+    fun toDomainDiaryExportForm(
+        diaryExportUiForm: DiaryExportUiForm
+    ): DiaryExportForm {
+        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+        return DiaryExportForm(
+            format = diaryExportUiForm.format,
+            startDate = LocalDate.parse(diaryExportUiForm.startDate, formatter),
+            endDate = LocalDate.parse(diaryExportUiForm.endDate, formatter)
         )
     }
 }
