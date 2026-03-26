@@ -2,6 +2,7 @@ package com.egobook.app.ui.diary.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
@@ -9,6 +10,7 @@ import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
+import com.egobook.app.ui.diary.model.DiaryExportUiForm
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.ResolverStyle
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +34,17 @@ class DiariesViewModel @Inject constructor(
 
     private val _isValidDate = MutableStateFlow<TermType>(TermType.None)
     val isValidDate = _isValidDate.asStateFlow()
+
+    private val _fileLoadState = MutableStateFlow<UiState<String>>(UiState.Idle)
+    val fileLoadState = _fileLoadState.asStateFlow()
+
+
+    private val _downloadUrl = MutableSharedFlow<String>()
+    val downloadUrl = _downloadUrl.asSharedFlow()
+
+    private val _errorMessage = MutableSharedFlow<String>()
+    val errorMessage = _errorMessage.asSharedFlow()
+
 
     init {
         loadDiaries(LocalDate.now(), null)
@@ -82,14 +96,19 @@ class DiariesViewModel @Inject constructor(
         //loadDailyCount(selectedDate)
     }
 
-    private fun onExport(event: ExportEvent) {
-        when(event) {
-            is ExportEvent.PDFExport -> {
-                // PDF 내보내기
-            }
-            is ExportEvent.TextExport -> {
-                // Text 내보내기
-            }
+    fun onExport(event: ExportEvent) {
+        val form = when (event) {
+            is ExportEvent.PDFExport -> DiaryEntityMapper.toDomainDiaryExportForm(event.diaryExportUiForm)
+            is ExportEvent.TextExport -> DiaryEntityMapper.toDomainDiaryExportForm(event.diaryExportUiForm)
+        }
+        viewModelScope.launch {
+            diaryUseCases.exportDiary(form)
+                .onSuccess {
+                    _downloadUrl.emit(it.fileUrl)
+                }
+                .onFailure {
+                        e -> _errorMessage.emit(e.message ?: "내보낼 수 있는 감정 일기가 없어요")
+                }
         }
     }
 
@@ -103,43 +122,53 @@ class DiariesViewModel @Inject constructor(
             return
         }
 
-        try {
-            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-            val start = LocalDate.parse(startDateStr, formatter)
-            val end = LocalDate.parse(endDateStr, formatter)
-            val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("uuuu.MM.dd").withResolverStyle(ResolverStyle.STRICT)
 
-            // 미래 날짜 체크
-            if (start.isAfter(today)) {
-                _isValidDate.value = TermType.StartFuture
-                Timber.d("StartFuture")
-                return
-            }
-            if (end.isAfter(today)) {
-                _isValidDate.value = TermType.EndFuture
-                Timber.d("EndFuture")
-                return
-            }
+        val start = try { LocalDate.parse(startDateStr, formatter) } catch (e: Exception) { null }
+        val end = try { LocalDate.parse(endDateStr, formatter) } catch (e: Exception) { null }
 
-            // 시작 > 종료
-            if (start.isAfter(end)) {
-                _isValidDate.value = TermType.Reverse
-                Timber.d("Reverse")
-                return
-            }
-
-            // 1년 초과 체크
-            if (start.plusYears(1).isBefore(end)) {
-                _isValidDate.value = TermType.MoreThanOneYear
-                Timber.d("MoreThanOneYear")
-                return
-            }
-
-            _isValidDate.value = TermType.Valid
-
-        } catch (e: Exception) {
-            _isValidDate.value = TermType.None
+        if (start == null && end == null) {
+            _isValidDate.value = TermType.InvalidBothDate
+            return
         }
+        if (start == null) {
+            _isValidDate.value = TermType.InvalidStartDate
+            return
+        }
+        if (end == null) {
+            _isValidDate.value = TermType.InvalidEndDate
+            return
+        }
+
+        val today = LocalDate.now()
+
+        // 미래 날짜 체크
+        if (start.isAfter(today)) {
+            _isValidDate.value = TermType.StartFuture
+            Timber.d("StartFuture")
+            return
+        }
+        if (end.isAfter(today)) {
+            _isValidDate.value = TermType.EndFuture
+            Timber.d("EndFuture")
+            return
+        }
+
+        // 시작 > 종료
+        if (start.isAfter(end)) {
+            _isValidDate.value = TermType.Reverse
+            Timber.d("Reverse")
+            return
+        }
+
+        // 1년 초과 체크
+        if (start.plusYears(1).isBefore(end)) {
+            _isValidDate.value = TermType.MoreThanOneYear
+            Timber.d("MoreThanOneYear")
+            return
+        }
+
+        _isValidDate.value = TermType.Valid
     }
 
     /**
@@ -185,15 +214,17 @@ data class DiariesState(
 
 sealed class TermType {
     object None : TermType()
+    object InvalidStartDate : TermType()
+    object InvalidEndDate : TermType()
+    object InvalidBothDate : TermType()
     object StartFuture : TermType()
     object EndFuture : TermType()
     object Reverse : TermType()
-
     object MoreThanOneYear: TermType()
     object Valid: TermType()
 }
 
 sealed class ExportEvent {
-    data object PDFExport : ExportEvent()
-    data object TextExport : ExportEvent()
+    data class PDFExport(val diaryExportUiForm: DiaryExportUiForm) : ExportEvent()
+    data class TextExport(val diaryExportUiForm: DiaryExportUiForm) : ExportEvent()
 }

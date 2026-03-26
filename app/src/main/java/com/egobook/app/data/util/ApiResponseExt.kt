@@ -89,15 +89,15 @@ suspend fun <T> safeAuthApiCall(
 /**
  * API 호출을 안전하게 실행하는 헬퍼 함수
  */
-suspend fun <T> safeApiCall(
-    apiCall: suspend () -> ApiResponse<T>
-): Result<T> {
-    return try {
-        apiCall().toResult()
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
-}
+//suspend fun <T> safeApiCall(
+//    apiCall: suspend () -> Unit
+//): Result<T> {
+//    return try {
+//        apiCall().toResult()
+//    } catch (e: Exception) {
+//        Result.failure(e)
+//    }
+//}
 
 
 /**

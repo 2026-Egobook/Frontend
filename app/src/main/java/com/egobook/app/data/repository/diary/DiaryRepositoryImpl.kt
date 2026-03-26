@@ -4,21 +4,25 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.egobook.app.data.api.DiaryApiService
+import com.egobook.app.data.model.diary.response.DiaryExportResponse
 import com.egobook.app.data.repository.diary.paging.DiariesPagingSource
 import com.egobook.app.data.util.safeApiCall
 import com.egobook.app.domain.model.diary.entity.Diary
+import com.egobook.app.domain.model.diary.entity.DiaryDownloadForm
+import com.egobook.app.domain.model.diary.entity.DiaryExportForm
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiaryRewards
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryCreateRequest
+import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryDownloadForm
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryEntity
+import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryExportRequest
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryRewardsEntity
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toDiaryUpdateRequest
 import com.egobook.app.domain.model.diary.mapper.DiaryMapper.toRequestParams
 import com.egobook.app.domain.repository.diary.DiaryRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 import timber.log.Timber
@@ -125,6 +129,19 @@ class DiaryRepositoryImpl  @Inject constructor(
                 dailyCountCache[date] = response.dailyCount
                 Timber.d("[DailyCount] API 응답 캐시 저장: date=$date, count=${response.dailyCount}")
                 response.dailyCount
+            }
+        )
+    }
+
+    override suspend fun exportDiary(diaryExportForm: DiaryExportForm): Result<DiaryDownloadForm> {
+        return safeApiCall(
+            apiCall = {
+                apiService.exportDiary(
+                    diaryExportForm.toDiaryExportRequest()
+                )
+            },
+            transform = {
+                it.toDiaryDownloadForm()
             }
         )
     }

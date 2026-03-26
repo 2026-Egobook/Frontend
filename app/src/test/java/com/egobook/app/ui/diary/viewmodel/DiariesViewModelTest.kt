@@ -54,7 +54,8 @@ class DiariesViewModelTest {
             addDiary = mockk(),
             updateDiary = mockk(),
             deleteDiary = mockk(),
-            getDailyCount = getDailyCount
+            getDailyCount = getDailyCount,
+            exportDiary = mockk(),
         )
 
         viewModel = DiariesViewModel(diaryUseCases)
