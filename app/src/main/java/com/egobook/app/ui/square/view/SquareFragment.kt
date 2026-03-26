@@ -393,6 +393,9 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                         tvSquareSentLetterPlaceholderSub.isVisible = isListEmpty
                         rvSquareSentLetter.isVisible = !isListEmpty
 
+                        tvSquareMyLettersViewAll.isVisible = !isListEmpty
+                        ivSquareLetterMineViewAll.isVisible = !isListEmpty
+
                         val layoutParams = llSquareTodayQuestionHeader.layoutParams as ConstraintLayout.LayoutParams
                         if(!isListEmpty) {
                             layoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
