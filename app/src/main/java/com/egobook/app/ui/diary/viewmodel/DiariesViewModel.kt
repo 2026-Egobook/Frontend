@@ -104,7 +104,6 @@ class DiariesViewModel @Inject constructor(
         viewModelScope.launch {
             diaryUseCases.exportDiary(form)
                 .onSuccess {
-                    _fileLoadState.value = UiState.Success(it.fileUrl)
                     _downloadUrl.emit(it.fileUrl)
                 }
                 .onFailure {
