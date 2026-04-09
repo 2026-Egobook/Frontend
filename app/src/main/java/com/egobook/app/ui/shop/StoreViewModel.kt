@@ -28,9 +28,6 @@ class StoreViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    init {
-        loadInk()
-    }
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -59,6 +56,10 @@ class StoreViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyMap()
         )
+
+    init {
+        loadInk()
+    }
     fun loadItems(type: ItemType, forceRefresh: Boolean = false) {
         if (!forceRefresh && _items.value.containsKey(type)) return
 
