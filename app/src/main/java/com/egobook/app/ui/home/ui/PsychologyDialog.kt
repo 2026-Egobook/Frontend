@@ -43,6 +43,12 @@ class PsychologyDialog() : DialogFragment() {
         val viewModel: PsychologyViewModel by activityViewModels()
 
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isLoading.collect { isLoading ->
+                binding.pbLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dailyPhycologyDto.collect { dailyPhycologyDto ->
                 binding.tvPsychologyContent.text = dailyPhycologyDto.knowledge.content
                 binding.tvPsychologySource.text = dailyPhycologyDto.knowledge.source

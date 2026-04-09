@@ -19,10 +19,8 @@ class PsychologyViewModel @Inject constructor(
     private val psychologyRepository: UserPsychologyRepository
 ) : ViewModel() {
 
-    init {
-        loadDailyPsychology()
-        loadSavedPsychology()
-    }
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _savedPsychologies = MutableStateFlow(emptyList<SavedPsychologyDto>())
     val savedPsychologies: StateFlow<List<SavedPsychologyDto>> = _savedPsychologies.asStateFlow()
@@ -45,34 +43,81 @@ class PsychologyViewModel @Inject constructor(
             isBookmarked = false
         )
     )
-
     val dailyPhycologyDto: StateFlow<DailyPsychologyDto> = _dailyPhycologyDto.asStateFlow()
+
+    init {
+        loadInitialData()
+    }
+
+    private fun loadInitialData() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val dailyJob = launch { fetchDailyPsychologyInternal() }
+                val savedJob = launch { fetchSavedPsychologyInternal() }
+                dailyJob.join()
+                savedJob.join()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    private suspend fun fetchDailyPsychologyInternal() {
+        try {
+            _dailyPhycologyDto.value = psychologyRepository.loadDailyPsychology()
+        } catch (e: Exception) {
+            // Error handling
+        }
+    }
+
+    private suspend fun fetchSavedPsychologyInternal() {
+        try {
+            _savedPsychologies.value = psychologyRepository.loadSavedPsychology()
+        } catch (e: Exception) {
+            // Error handling
+        }
+    }
 
     fun loadDailyPsychology() {
         viewModelScope.launch {
-            _dailyPhycologyDto.value = psychologyRepository.loadDailyPsychology()
+            _isLoading.value = true
+            fetchDailyPsychologyInternal()
+            _isLoading.value = false
         }
     }
 
     fun savePsychology(knowledgeId: Int) {
         viewModelScope.launch {
-            psychologyRepository.saveDailyPsychology(knowledgeId)
-            loadDailyPsychology()
-            loadSavedPsychology()
+            _isLoading.value = true
+            try {
+                psychologyRepository.saveDailyPsychology(knowledgeId)
+                fetchDailyPsychologyInternal()
+                fetchSavedPsychologyInternal()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
     fun deletePsychology(knowledgeId: Int) {
         viewModelScope.launch {
-            psychologyRepository.deletePsychology(knowledgeId)
-            loadDailyPsychology()
-            loadSavedPsychology()
+            _isLoading.value = true
+            try {
+                psychologyRepository.deletePsychology(knowledgeId)
+                fetchDailyPsychologyInternal()
+                fetchSavedPsychologyInternal()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
     fun loadSavedPsychology() {
         viewModelScope.launch {
-            _savedPsychologies.value = psychologyRepository.loadSavedPsychology()
+            _isLoading.value = true
+            fetchSavedPsychologyInternal()
+            _isLoading.value = false
         }
     }
 }

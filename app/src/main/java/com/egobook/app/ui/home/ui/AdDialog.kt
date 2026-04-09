@@ -40,6 +40,13 @@ class AdDialog() : DialogFragment() {
 
         viewModel.loadCurrentAdInfo()
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { isLoading ->
+                    binding.pbLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.adState.collect { adState ->
