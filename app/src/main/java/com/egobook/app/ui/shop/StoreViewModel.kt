@@ -31,6 +31,9 @@ class StoreViewModel @Inject constructor(
     init {
         loadInk()
     }
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private val _ink = MutableStateFlow(Ink(0))
     val ink: StateFlow<Ink> = _ink.asStateFlow()
     private val _toastEvent = MutableSharedFlow<String>()
@@ -60,6 +63,7 @@ class StoreViewModel @Inject constructor(
         if (!forceRefresh && _items.value.containsKey(type)) return
 
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val loadedList = mutableListOf<CustomItem>()
                 storeRepository.loadStoreItems(type).collect { newItem ->
@@ -70,21 +74,37 @@ class StoreViewModel @Inject constructor(
                 }
             } catch (err: Exception) {
                 Log.e("jang", "$err")
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun loadInk() {
         viewModelScope.launch {
-            val user = userRepository.load()
-            _ink.update { user.ink }
+            _isLoading.value = true
+            try {
+                val user = userRepository.load()
+                _ink.update { user.ink }
+            } catch (err: Exception) {
+                Log.e("StoreViewModel", "잉크 로딩 실패", err)
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
     fun loadEquippedItems() {
         viewModelScope.launch {
-            _equippedItems.value = storeRepository.loadEquippedItems()
-            Log.d("jang", "load: ${_equippedItems.value}")
+            _isLoading.value = true
+            try {
+                _equippedItems.value = storeRepository.loadEquippedItems()
+                Log.d("jang", "load: ${_equippedItems.value}")
+            } catch (err: Exception) {
+                Log.e("StoreViewModel", "장착 아이템 로딩 실패", err)
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
@@ -95,6 +115,7 @@ class StoreViewModel @Inject constructor(
 
         if (item.itemStatus != ItemStatus.PURCHASABLE) {
             viewModelScope.launch {
+                _isLoading.value = true
                 try {
                     val result = storeRepository.permanentEquipItem(item)
                     if (result.isSuccess) {
@@ -105,6 +126,8 @@ class StoreViewModel @Inject constructor(
                     }
                 } catch (e: Exception) {
                     Log.e("StoreViewModel", "서버 통신 에러", e)
+                } finally {
+                    _isLoading.value = false
                 }
             }
         } else {
@@ -128,15 +151,22 @@ class StoreViewModel @Inject constructor(
         if (purchasableItems.isEmpty()) { return }
         val item = purchasableItems.first()
         viewModelScope.launch {
-            val purchaseState = storeRepository.purchaseItems(item)
-            if (purchaseState.isSuccess) {
-                loadItems(item.type, true)
-                loadInk()
-                val purchasedItem = item.copy(itemStatus = ItemStatus.PURCHASED)
-                equipItem(purchasedItem)
-                _toastEvent.emit("구매가 완료되었어요")
-            } else {
-                _toastEvent.emit("잉크가 부족해요")
+            _isLoading.value = true
+            try {
+                val purchaseState = storeRepository.purchaseItems(item)
+                if (purchaseState.isSuccess) {
+                    loadItems(item.type, true)
+                    loadInk()
+                    val purchasedItem = item.copy(itemStatus = ItemStatus.PURCHASED)
+                    equipItem(purchasedItem)
+                    _toastEvent.emit("구매가 완료되었어요")
+                } else {
+                    _toastEvent.emit("잉크가 부족해요")
+                }
+            } catch (e: Exception) {
+                Log.e("StoreViewModel", "구매 실패", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }
