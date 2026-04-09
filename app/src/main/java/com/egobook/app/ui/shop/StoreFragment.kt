@@ -109,7 +109,9 @@ class StoreFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isLoading.collect { isLoading ->
-                    binding.pbLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+                    val visibility = if (isLoading) View.VISIBLE else View.GONE
+                    binding.pbLoading.visibility = visibility
+                    binding.vLoadingOverlay.visibility = visibility
                 }
             }
         }
