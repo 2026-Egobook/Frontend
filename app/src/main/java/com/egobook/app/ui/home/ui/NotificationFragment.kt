@@ -1,6 +1,7 @@
 package com.egobook.app.ui.home.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,18 +26,14 @@ class NotificationFragment: Fragment() {
     private val viewModel: NotificationViewModel by viewModels()
     private val notificationAdapter = NotificationAdapter { notification ->
         viewModel.readNotification(notification)
+        val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
         when (notification.type) {
             is NotificationType.EgoRoom -> {
-                val bottomNav =
-                    requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
                 bottomNav.selectedItemId = R.id.menu_ego_room
             }
             is NotificationType.Letter -> {
-                val bottomNav =
-                    requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
                 bottomNav.selectedItemId = R.id.menu_square
             }
-
         }
     }
 
@@ -64,23 +61,24 @@ class NotificationFragment: Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.notifications.collect { list ->
-                    notificationAdapter.submitList(list)
-                    val isEmpty = list.isEmpty()
+                launch {
+                    viewModel.notifications.collect { list ->
+                        notificationAdapter.submitList(list)
+                        val isEmpty = list.isEmpty()
 
-                    binding.tvNoNotificationTitle.visibility = if (isEmpty) View.VISIBLE else View.GONE
-                    binding.tvNoNotificationContent.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                        binding.tvNoNotificationTitle.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                        binding.tvNoNotificationContent.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                    }
                 }
-            }
-        }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.notificationSettingState.collect { notificationSettingState ->
-                    if (notificationSettingState.enabled) {
-                        binding.ivHomeNotificationButton.setImageResource(R.drawable.ic_notification_on)
-                    } else {
-                        binding.ivHomeNotificationButton.setImageResource(R.drawable.ic_notification_off)
+                launch {
+                    viewModel.notificationSettingState.collect { notificationSettingState ->
+                        Log.d("jang", "UI에서 감지된 설정: ${notificationSettingState}")
+                        if (notificationSettingState.enabled) {
+                            binding.ivHomeNotificationButton.setImageResource(R.drawable.ic_notification_on)
+                        } else {
+                            binding.ivHomeNotificationButton.setImageResource(R.drawable.ic_notification_off)
+                        }
                     }
                 }
             }
