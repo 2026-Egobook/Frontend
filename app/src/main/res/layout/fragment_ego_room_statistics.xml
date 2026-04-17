@@ -60,16 +60,6 @@
                 app:layout_constraintStart_toEndOf="@id/iv_counseling_statistics_total_count_very_happy"
                 app:layout_constraintTop_toTopOf="@id/iv_counseling_statistics_total_count_very_happy" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_crown"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintTop_toTopOf="@id/hbc_counseling_statistics_total_count_very_happy"
-                app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_very_happy"
-                app:layout_constraintEnd_toEndOf="@id/hbc_counseling_statistics_total_count_very_happy"/>
-
-
             <TextView
                 android:id="@+id/tv_counseling_statistics_total_count_very_happy_count"
                 android:layout_width="wrap_content"
