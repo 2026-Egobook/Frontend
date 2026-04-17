@@ -8,7 +8,7 @@ import com.egobook.app.ui.home.notification.NotificationPublisher
 import com.egobook.app.ui.home.notification.NotificationStatus
 import com.egobook.app.ui.home.notification.NotificationTime
 import com.egobook.app.ui.home.notification.NotificationType
-import com.egobook.app.ui.shop.BaseResponse
+import com.egobook.app.store.data.BaseResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit

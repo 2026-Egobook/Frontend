@@ -16,7 +16,7 @@ import com.egobook.app.R
 import com.egobook.app.databinding.FragmentPsychologyBinding
 import com.egobook.app.ui.home.PsychologyViewModel
 import com.egobook.app.ui.home.repository.SavedPsychologyDto
-import com.egobook.app.ui.shop.ItemAdapter
+import com.egobook.app.store.ui.ItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

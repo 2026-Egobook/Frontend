@@ -1,7 +1,6 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.egobook.app.databinding.FragmentStoreCollectionBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 @AndroidEntryPoint
 class StoreCollectionFragment(): Fragment() {
@@ -39,7 +37,7 @@ class StoreCollectionFragment(): Fragment() {
         }
 
         val itemAdapter = ItemAdapter { customItem ->
-            viewModel.equipItem(customItem)
+            // viewModel.equipItem(customItem)
         }
 
         binding.rvItems.apply {
@@ -54,7 +52,6 @@ class StoreCollectionFragment(): Fragment() {
                 }
             }
         }
-        viewModel.loadItems(tabItem.type)
     }
 
     override fun onDestroyView() {

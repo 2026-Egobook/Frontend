@@ -10,13 +10,10 @@ import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.ui.home.user.Ink
 import com.egobook.app.ui.home.user.Level
 import com.egobook.app.ui.home.user.User
-import com.egobook.app.ui.shop.CustomItem
-import com.egobook.app.ui.shop.StoreRepository
+import com.egobook.app.store.ui.CustomItem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val storeRepository: StoreRepository,
     private val userAdRepository: UserAdRepository,
     private val psychologyRepository: UserPsychologyRepository
 ) : ViewModel() {
@@ -56,11 +52,11 @@ class HomeViewModel @Inject constructor(
             try {
                 // Fetch all initial data in parallel if possible, or sequentially
                 val userJob = launch { fetchUserInternal() }
-                val equipJob = launch { fetchEquipItemsInternal() }
+                // val equipJob = launch { fetchEquipItemsInternal() }
                 val psychJob = launch { fetchDailyPhycologyReadStateInternal() }
                 
                 userJob.join()
-                equipJob.join()
+                // equipJob.join()
                 psychJob.join()
             } finally {
                 _isLoading.value = false
@@ -77,6 +73,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /*
     private suspend fun fetchEquipItemsInternal() {
         try {
             _equippedItems.value = storeRepository.loadEquippedItems()
@@ -84,6 +81,7 @@ class HomeViewModel @Inject constructor(
             Log.e("HomeViewModel", "Failed to fetch equip items", error)
         }
     }
+    */
 
     private suspend fun fetchDailyPhycologyReadStateInternal() {
         try {
@@ -95,9 +93,9 @@ class HomeViewModel @Inject constructor(
 
     fun fetchEquipItems() {
         viewModelScope.launch {
-            _isLoading.value = true
-            fetchEquipItemsInternal()
-            _isLoading.value = false
+            // _isLoading.value = true
+            // fetchEquipItemsInternal()
+            // _isLoading.value = false
         }
     }
 
