@@ -48,31 +48,68 @@ class PsychologyViewModel @Inject constructor(
 
     val dailyPhycologyDto: StateFlow<DailyPsychologyDto> = _dailyPhycologyDto.asStateFlow()
 
+    private var loadingCount = 0
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private fun showLoading() {
+        loadingCount++
+        _isLoading.value = true
+    }
+
+    private fun hideLoading() {
+        loadingCount--
+        if (loadingCount <= 0) {
+            loadingCount = 0
+            _isLoading.value = false
+        }
+    }
+
     fun loadDailyPsychology() {
         viewModelScope.launch {
-            _dailyPhycologyDto.value = psychologyRepository.loadDailyPsychology()
+            showLoading()
+            try {
+                _dailyPhycologyDto.value = psychologyRepository.loadDailyPsychology()
+            } finally {
+                hideLoading()
+            }
         }
     }
 
     fun savePsychology(knowledgeId: Int) {
         viewModelScope.launch {
-            psychologyRepository.saveDailyPsychology(knowledgeId)
-            loadDailyPsychology()
-            loadSavedPsychology()
+            showLoading()
+            try {
+                psychologyRepository.saveDailyPsychology(knowledgeId)
+                loadDailyPsychology()
+                loadSavedPsychology()
+            } finally {
+                hideLoading()
+            }
         }
     }
 
     fun deletePsychology(knowledgeId: Int) {
         viewModelScope.launch {
-            psychologyRepository.deletePsychology(knowledgeId)
-            loadDailyPsychology()
-            loadSavedPsychology()
+            showLoading()
+            try {
+                psychologyRepository.deletePsychology(knowledgeId)
+                loadDailyPsychology()
+                loadSavedPsychology()
+            } finally {
+                hideLoading()
+            }
         }
     }
 
     fun loadSavedPsychology() {
         viewModelScope.launch {
-            _savedPsychologies.value = psychologyRepository.loadSavedPsychology()
+            showLoading()
+            try {
+                _savedPsychologies.value = psychologyRepository.loadSavedPsychology()
+            } finally {
+                hideLoading()
+            }
         }
     }
 }

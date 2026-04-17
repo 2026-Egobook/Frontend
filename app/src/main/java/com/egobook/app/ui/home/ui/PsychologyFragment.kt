@@ -69,6 +69,20 @@ class PsychologyFragment(): Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        binding.pbLoading.visibility = View.VISIBLE
+                        binding.vLoadingOverlay.visibility = View.VISIBLE
+                    } else {
+                        binding.pbLoading.visibility = View.GONE
+                        binding.vLoadingOverlay.visibility = View.GONE
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.savedPsychologies.collect { psychologies ->
                     itemAdapter.submitList(psychologies)
                 }

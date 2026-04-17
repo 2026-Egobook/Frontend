@@ -34,6 +34,9 @@ class HomeViewModel @Inject constructor(
     private val _adState = MutableStateFlow(AdInfoDto(0, 0, false, 0, ""))
     val adState: StateFlow<AdInfoDto> = _adState.asStateFlow()
 
+    private val _isLoadingAdInfo = MutableStateFlow(false)
+    val isLoadingAdInfo: StateFlow<Boolean> = _isLoadingAdInfo.asStateFlow()
+
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
     val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
 
@@ -71,8 +74,13 @@ class HomeViewModel @Inject constructor(
 
     fun loadCurrentAdInfo() {
         viewModelScope.launch {
-            val adInfo = userAdRepository.loadAdInfo()
-            _adState.value = adInfo
+            _isLoadingAdInfo.value = true
+            try {
+                val adInfo = userAdRepository.loadAdInfo()
+                _adState.value = adInfo
+            } finally {
+                _isLoadingAdInfo.value = false
+            }
         }
     }
 

@@ -45,6 +45,8 @@ class RadarDialog(): DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val radarView: RadarView = view.findViewById(R.id.custom_radar_view)
         viewLifecycleOwner.lifecycleScope.launch {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.contentLayout.visibility = View.GONE
             try {
                 val data = withContext(Dispatchers.IO) {
                     userTendencyRepository.loadTendencies()
@@ -53,6 +55,9 @@ class RadarDialog(): DialogFragment() {
                 showTendencyLevel(data)
             } catch (e: Exception) {
                 Log.d("error", e.toString())
+            } finally {
+                binding.progressBar.visibility = View.GONE
+                binding.contentLayout.visibility = View.VISIBLE
             }
         }
         binding.ivRadarClose.setOnClickListener {
