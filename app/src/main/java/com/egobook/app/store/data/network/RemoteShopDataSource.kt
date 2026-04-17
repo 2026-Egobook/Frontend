@@ -1,22 +1,14 @@
 package com.egobook.app.store.data.network
 
-import android.util.Log
 import com.egobook.app.di.qualifier.BackendApi
 import com.egobook.app.store.data.BaseResponse
 import com.egobook.app.store.data.EquipState
 import com.egobook.app.store.data.EquippedItemDto
 import com.egobook.app.store.data.PermanentEquipRequest
 import com.egobook.app.store.data.PurchaseRequest
-import com.egobook.app.store.data.PurchaseState
-import com.egobook.app.store.data.local.dao.ShopItemDao
-import com.egobook.app.store.data.model.ItemStatus
 import com.egobook.app.store.data.model.ItemType
-import com.egobook.app.store.data.model.Price
 import com.egobook.app.store.data.network.dto.ShopItemDto
 import com.egobook.app.store.ui.CustomItem
-import com.egobook.app.store.ui.ItemImage
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -63,14 +55,8 @@ class RemoteShopDataSource @Inject constructor(
         return totalShopItemDto
     }
 
-    suspend fun purchaseItems(item: CustomItem): PurchaseState {
-        try {
-            val response =
-                apiService.purchaseItem(PurchaseRequest(item.id.toInt()))
-            return PurchaseState(isSuccess = true)
-        } catch (err: Exception) {
-            return PurchaseState(isSuccess = false)
-        }
+    suspend fun purchaseItems(item: CustomItem) {
+        apiService.purchaseItem(PurchaseRequest(item.id.toInt()))
     }
 
     suspend fun loadEquippedItems(): List<CustomItem> {

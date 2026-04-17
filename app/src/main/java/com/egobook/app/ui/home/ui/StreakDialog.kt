@@ -18,7 +18,7 @@ import com.egobook.app.ui.home.repository.DayOfWeek
 import com.egobook.app.ui.home.repository.MissionType
 import com.egobook.app.ui.home.repository.UserActivityRepository
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

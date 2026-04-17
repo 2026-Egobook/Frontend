@@ -39,6 +39,9 @@ class HomeFragment(): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: HomeViewModel by activityViewModels()
+
+        viewModel.fetchUser()
+        viewModel.fetchEquipItems()
         
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

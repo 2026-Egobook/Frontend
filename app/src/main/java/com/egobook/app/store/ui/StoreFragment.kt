@@ -63,15 +63,15 @@ class StoreFragment: Fragment() {
             tab.text = ItemTab.of(position).text
         }.attach()
 
-//        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(position: Int) {
-//                super.onPageSelected(position)
-//                if (position == lastSelected) return
-//                lastSelected = position
-//                viewModel.loadEquippedItems()
-//                Log.d("jang", "페이지 변경 감지됨: $position")
-//            }
-//        })
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (position == lastSelected) return
+                lastSelected = position
+                viewModel.clearPreviewItems()
+                Log.d("StoreFragment", "페이지 변경 감지됨: $position, 임시 착용 아이템 초기화")
+            }
+        })
 
         binding.ivBack.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
@@ -89,9 +89,9 @@ class StoreFragment: Fragment() {
             }
         }
 
-//        binding.ivReset.setOnClickListener {
-//            viewModel.loadEquippedItems()
-//        }
+        binding.ivReset.setOnClickListener {
+            viewModel.clearPreviewItems()
+        }
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -104,8 +104,9 @@ class StoreFragment: Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.equippedItems.collect { equippedList ->
-                equippedList.forEach { equippedItem ->
-                    updateEquipItemUi(equippedItem)
+                val typeToItem = equippedList.associateBy { it.type }
+                ItemType.entries.forEach { type ->
+                    updateEquipItemUi(type, typeToItem[type])
                 }
             }
         }
@@ -129,40 +130,31 @@ class StoreFragment: Fragment() {
         _binding = null
     }
 
-    private fun updateEquipItemUi(item: CustomItem) {
-        when (item.type) {
+    private fun updateEquipItemUi(type: ItemType, item: CustomItem?) {
+        val imagePath = (item?.outfitImage as? ItemImage.Url)?.path
+        when (type) {
             ItemType.BACK -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivStoreTurtleBack.load(item.outfitImage.path)
-                }
+                binding.ivStoreTurtleBack.load(imagePath)
             }
             ItemType.SKIN -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivStoreTurtleSkin.load(item.outfitImage.path)
-                }
+                binding.ivStoreTurtleSkin.load(imagePath)
             }
             ItemType.DECO_1 -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    if(item.outfitImage.path.contains("Default")) {
-                        binding.ivStoreTurtleDeco1.load(null)
-                        return
-                    }
-                    binding.ivStoreTurtleDeco1.load(item.outfitImage.path)
+                if (imagePath?.contains("Default") == true) {
+                    binding.ivStoreTurtleDeco1.load(null)
+                } else {
+                    binding.ivStoreTurtleDeco1.load(imagePath)
                 }
             }
             ItemType.DECO_2 -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    if(item.outfitImage.path.contains("Default")) {
-                        binding.ivStoreTurtleDeco2.load(null)
-                        return
-                    }
-                    binding.ivStoreTurtleDeco2.load(item.outfitImage.path)
+                if (imagePath?.contains("Default") == true) {
+                    binding.ivStoreTurtleDeco2.load(null)
+                } else {
+                    binding.ivStoreTurtleDeco2.load(imagePath)
                 }
             }
             ItemType.BACKGROUND -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivStoreBackground.load(item.outfitImage.path)
-                }
+                binding.ivStoreBackground.load(imagePath)
             }
         }
     }

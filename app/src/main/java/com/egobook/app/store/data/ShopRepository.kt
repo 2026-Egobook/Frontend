@@ -10,8 +10,8 @@ import com.egobook.app.store.data.network.dto.ShopItemDto
 import com.egobook.app.store.data.network.ofName
 import com.egobook.app.store.ui.CustomItem
 import com.egobook.app.store.ui.ItemImage
-import jakarta.inject.Inject
-import jakarta.inject.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 
 private fun String.toItemType(): ItemType = when (this) {
     "BACK" -> ItemType.BACK
@@ -50,10 +50,8 @@ class ShopRepository @Inject constructor(
     }
 
     suspend fun purchaseItem(item: CustomItem) {
-        val purchaseState = remoteShopDataSource.purchaseItems(item)
-        if (purchaseState.isSuccess) {
-            equipItemPermanently(item)
-        }
+        remoteShopDataSource.purchaseItems(item)
+        equipItemPermanently(item)
     }
 
     suspend fun equipItemPermanently(item: CustomItem): List<CustomItem> {
@@ -75,10 +73,6 @@ data class BaseResponse<T>(
 
 data class PurchaseRequest(
     val itemId: Int
-)
-
-data class PurchaseState(
-    val isSuccess: Boolean
 )
 
 data class PermanentEquipRequest(

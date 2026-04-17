@@ -30,8 +30,7 @@ data class CustomItemState(
 
 @HiltViewModel
 class StoreViewModel @Inject constructor(
-    localShopDataSource: LocalShopDataSource,
-    remoteShopDataSource: RemoteShopDataSource,
+    private val shopRepository: ShopRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -52,14 +51,17 @@ class StoreViewModel @Inject constructor(
         }
     }
 
-    private val shopRepository = ShopRepository(localShopDataSource, remoteShopDataSource)
-
     private val _ink = MutableStateFlow(Ink(0))
     val ink: StateFlow<Ink> = _ink.asStateFlow()
     private val _toastEvent = MutableSharedFlow<String>()
     val toastEvent = _toastEvent.asSharedFlow()
+
+    // 서버에 실제로 장착된 아이템들
+    private val _permanentItems = MutableStateFlow<List<CustomItem>>(emptyList())
+    // 화면에 보여줄 아이템들 (미리보기 포함)
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
     val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
+
     private val _items = MutableStateFlow<Map<ItemType, List<CustomItem>>>(mutableMapOf())
     val itemStates: StateFlow<Map<ItemType, List<CustomItemState>>> =
         combine(_items, _equippedItems) { itemsMap, equippedList ->
@@ -99,7 +101,9 @@ class StoreViewModel @Inject constructor(
             loadInkInternal()
             observeItems()
             shopRepository.initialize()
-            _equippedItems.value = shopRepository.loadEquippedItems()
+            val permanent = shopRepository.loadEquippedItems()
+            _permanentItems.value = permanent
+            _equippedItems.value = permanent
         } finally {
             hideLoading()
         }
@@ -126,8 +130,10 @@ class StoreViewModel @Inject constructor(
         viewModelScope.launch {
             showLoading()
             try {
-                _equippedItems.value = shopRepository.loadEquippedItems()
-                Log.d("StoreViewModel", "load: ${_equippedItems.value}")
+                val permanent = shopRepository.loadEquippedItems()
+                _permanentItems.value = permanent
+                _equippedItems.value = permanent
+                Log.d("StoreViewModel", "load: ${permanent}")
             } catch (e: Exception) {
                 Log.e("StoreViewModel", "Load equipped items failed", e)
             } finally {
@@ -137,15 +143,19 @@ class StoreViewModel @Inject constructor(
     }
 
     fun equipItem(item: CustomItem) {
-        _equippedItems.update { currentList ->
-            currentList.filter { it.type != item.type } + item
-        }
-
-        if (item.itemStatus != ItemStatus.PURCHASABLE) {
+        if (item.itemStatus == ItemStatus.PURCHASABLE) {
+            // 미구매 아이템: 프리뷰 모드. 기존 프리뷰 제거하고 현재 아이템만 추가
+            _equippedItems.update { currentList ->
+                currentList.filter { it.itemStatus != ItemStatus.PURCHASABLE && it.type != item.type } + item
+            }
+            Log.d("StoreViewModel", "미구매 아이템 - 프리뷰 모드")
+        } else {
+            // 구매한 아이템: 서버에 장착 요청
             viewModelScope.launch {
                 showLoading()
                 try {
                     val updatedEquipped = shopRepository.equipItemPermanently(item)
+                    _permanentItems.value = updatedEquipped
                     _equippedItems.value = updatedEquipped
                     Log.d("StoreViewModel", "서버 착용 성공: ${item.id}")
                 } catch (e: Exception) {
@@ -155,9 +165,12 @@ class StoreViewModel @Inject constructor(
                     hideLoading()
                 }
             }
-        } else {
-            Log.d("StoreViewModel", "미구매 아이템 - 프리뷰 모드")
         }
+    }
+
+    fun clearPreviewItems() {
+        // 임시 착용 아이템을 벗고 서버에 저장된 원래 상태로 복구
+        _equippedItems.value = _permanentItems.value
     }
 
     fun loadPurchaseItem(): CustomItem? {
@@ -178,8 +191,8 @@ class StoreViewModel @Inject constructor(
             try {
                 shopRepository.purchaseItem(item)
                 loadInk()
-                val purchasedItem = item.copy(itemStatus = ItemStatus.PURCHASED)
-                equipItem(purchasedItem)
+                // 구매 성공 후 최신 장착 정보 다시 로드
+                loadEquippedItems()
                 _toastEvent.emit("구매가 완료되었어요")
             } catch (e: Exception) {
                 Log.e("StoreViewModel", "Purchase failed", e)
