@@ -19,10 +19,9 @@ class PsychologyViewModel @Inject constructor(
     private val psychologyRepository: UserPsychologyRepository
 ) : ViewModel() {
 
-    init {
-        loadDailyPsychology()
-        loadSavedPsychology()
-    }
+    private var loadingCount = 0
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _savedPsychologies = MutableStateFlow(emptyList<SavedPsychologyDto>())
     val savedPsychologies: StateFlow<List<SavedPsychologyDto>> = _savedPsychologies.asStateFlow()
@@ -45,12 +44,11 @@ class PsychologyViewModel @Inject constructor(
             isBookmarked = false
         )
     )
-
     val dailyPhycologyDto: StateFlow<DailyPsychologyDto> = _dailyPhycologyDto.asStateFlow()
 
-    private var loadingCount = 0
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    init {
+        loadInitialData()
+    }
 
     private fun showLoading() {
         loadingCount++
@@ -65,11 +63,41 @@ class PsychologyViewModel @Inject constructor(
         }
     }
 
+    private fun loadInitialData() {
+        viewModelScope.launch {
+            showLoading()
+            try {
+                val dailyJob = launch { fetchDailyPsychologyInternal() }
+                val savedJob = launch { fetchSavedPsychologyInternal() }
+                dailyJob.join()
+                savedJob.join()
+            } finally {
+                hideLoading()
+            }
+        }
+    }
+
+    private suspend fun fetchDailyPsychologyInternal() {
+        try {
+            _dailyPhycologyDto.value = psychologyRepository.loadDailyPsychology()
+        } catch (e: Exception) {
+            // Error handling
+        }
+    }
+
+    private suspend fun fetchSavedPsychologyInternal() {
+        try {
+            _savedPsychologies.value = psychologyRepository.loadSavedPsychology()
+        } catch (e: Exception) {
+            // Error handling
+        }
+    }
+
     fun loadDailyPsychology() {
         viewModelScope.launch {
             showLoading()
             try {
-                _dailyPhycologyDto.value = psychologyRepository.loadDailyPsychology()
+                fetchDailyPsychologyInternal()
             } finally {
                 hideLoading()
             }
@@ -81,8 +109,8 @@ class PsychologyViewModel @Inject constructor(
             showLoading()
             try {
                 psychologyRepository.saveDailyPsychology(knowledgeId)
-                loadDailyPsychology()
-                loadSavedPsychology()
+                fetchDailyPsychologyInternal()
+                fetchSavedPsychologyInternal()
             } finally {
                 hideLoading()
             }
@@ -94,8 +122,8 @@ class PsychologyViewModel @Inject constructor(
             showLoading()
             try {
                 psychologyRepository.deletePsychology(knowledgeId)
-                loadDailyPsychology()
-                loadSavedPsychology()
+                fetchDailyPsychologyInternal()
+                fetchSavedPsychologyInternal()
             } finally {
                 hideLoading()
             }
@@ -106,7 +134,7 @@ class PsychologyViewModel @Inject constructor(
         viewModelScope.launch {
             showLoading()
             try {
-                _savedPsychologies.value = psychologyRepository.loadSavedPsychology()
+                fetchSavedPsychologyInternal()
             } finally {
                 hideLoading()
             }

@@ -43,32 +43,77 @@ class HomeViewModel @Inject constructor(
     private val _dailyPhycologyReadState = MutableStateFlow(false)
     val dailyPhycologyReadState = _dailyPhycologyReadState.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     init {
-        fetchUser()
-        fetchEquipItems()
-        fetchDailyPhycologyReadState()
+        fetchInitialData()
+    }
+
+    private fun fetchInitialData() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Fetch all initial data in parallel if possible, or sequentially
+                val userJob = launch { fetchUserInternal() }
+                val equipJob = launch { fetchEquipItemsInternal() }
+                val psychJob = launch { fetchDailyPhycologyReadStateInternal() }
+                
+                userJob.join()
+                equipJob.join()
+                psychJob.join()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    private suspend fun fetchUserInternal() {
+        try {
+            val user = userRepository.load()
+            _uiState.value = user
+        } catch(error: Exception) {
+            Log.e("HomeViewModel", "Failed to fetch user", error)
+        }
+    }
+
+    private suspend fun fetchEquipItemsInternal() {
+        try {
+            _equippedItems.value = storeRepository.loadEquippedItems()
+        } catch(error: Exception) {
+            Log.e("HomeViewModel", "Failed to fetch equip items", error)
+        }
+    }
+
+    private suspend fun fetchDailyPhycologyReadStateInternal() {
+        try {
+            _dailyPhycologyReadState.value = psychologyRepository.isReadDailyPsychology()
+        } catch(error: Exception) {
+            Log.e("HomeViewModel", "Failed to fetch psychology state", error)
+        }
     }
 
     fun fetchEquipItems() {
         viewModelScope.launch {
-            _equippedItems.value = storeRepository.loadEquippedItems()
+            _isLoading.value = true
+            fetchEquipItemsInternal()
+            _isLoading.value = false
         }
     }
 
     fun fetchDailyPhycologyReadState() {
         viewModelScope.launch {
-            _dailyPhycologyReadState.value = psychologyRepository.isReadDailyPsychology()
+            _isLoading.value = true
+            fetchDailyPhycologyReadStateInternal()
+            _isLoading.value = false
         }
     }
 
     fun fetchUser() {
         viewModelScope.launch {
-            try {
-                val user = userRepository.load()
-                _uiState.value = user
-            } catch(error: Exception) {
-                Log.e("HomeViewModel", "Failed to fetch user", error)
-            }
+            _isLoading.value = true
+            fetchUserInternal()
+            _isLoading.value = false
         }
     }
 
@@ -86,9 +131,14 @@ class HomeViewModel @Inject constructor(
 
     fun watchAd() {
         viewModelScope.launch {
-            val message = userAdRepository.watchAd()
-            fetchUser()
-            Log.d("HomeViewModel", "Ad watched: $message")
+            _isLoading.value = true
+            try {
+                val message = userAdRepository.watchAd()
+                fetchUserInternal()
+                Log.d("HomeViewModel", "Ad watched: $message")
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 }

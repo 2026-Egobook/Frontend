@@ -65,7 +65,7 @@
             android:fontFamily="@font/arita_medium"
             android:textColor="@color/grey"
             android:textSize="12dp"
-            tools:text="Strack, Martin,  Stepper, 1988, Journal of Personality and Social Psychology"
+            tools:text="Strack, Martin,  Stepper, 1988, Journal of Personality and Social Psychology"
             android:textAlignment="center"
             android:layout_marginBottom="24dp"/>
 

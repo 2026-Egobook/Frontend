@@ -104,7 +104,7 @@
             android:textAlignment="textStart"
             android:textColor="@color/grey"
             android:textSize="12dp"
-            tools:text="Strack, Martin,  Stepper, 1988, Journal of Personality and Social Psychology" />
+            tools:text="Strack, Martin,  Stepper, 1988, Journal of Personality and Social Psychology" />
 
     </LinearLayout>
 

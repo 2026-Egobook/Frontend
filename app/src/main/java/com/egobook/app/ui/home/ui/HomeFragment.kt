@@ -44,21 +44,31 @@ class HomeFragment(): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: HomeViewModel by activityViewModels()
-        viewModel.fetchUser()
+        
         lifecycleScope.launch {
-            viewModel.uiState.collect { userState ->
-                binding.tvLevel.text = "Lv ${userState.level.number}"
-                binding.ivLevelType.setImageResource(userState.level.type.getResId())
-                binding.tvInk.text = "${userState.ink.value}"
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.isLoading.collect { isLoading ->
+                        binding.flLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+                    }
+                }
+                
+                launch {
+                    viewModel.uiState.collect { userState ->
+                        binding.tvLevel.text = "Lv ${userState.level.number}"
+                        binding.ivLevelType.setImageResource(userState.level.type.getResId())
+                        binding.tvInk.text = "${userState.ink.value}"
+                    }
+                }
             }
         }
 
-        viewModel.fetchEquipItems()
-
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.equippedItems.collect { equippedList ->
-                equippedList.forEach { equippedItem ->
-                    updateEquipItemUi(equippedItem)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.equippedItems.collect { equippedList ->
+                    equippedList.forEach { equippedItem ->
+                        updateEquipItemUi(equippedItem)
+                    }
                 }
             }
         }
