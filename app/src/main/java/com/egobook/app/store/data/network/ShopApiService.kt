@@ -23,7 +23,7 @@ interface ShopApiService {
     suspend fun purchaseItem(@Body request: PurchaseRequest): BaseResponse<EquippedItemDto>
 
     @GET("/shop/items/equipped")
-    fun loadEquippedItems(): BaseResponse<List<EquippedItemDto>>
+    suspend fun loadEquippedItems(): BaseResponse<List<EquippedItemDto>>
 
     @PATCH("/shop/equip")
     suspend fun equipItemPermanently(@Body request: PermanentEquipRequest): BaseResponse<EquippedItemDto>

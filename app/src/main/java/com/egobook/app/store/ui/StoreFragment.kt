@@ -33,13 +33,6 @@ class StoreFragment: Fragment() {
 
     private var lastSelected = -1
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        lifecycleScope.launch {
-            viewModel.initialize()
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,6 +50,11 @@ class StoreFragment: Fragment() {
             insets
         }
         val viewModel: StoreViewModel by activityViewModels()
+        
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.initialize()
+        }
+
         viewModel.loadInk()
         viewPager = binding.vp2StoreCollectionContainer
         viewPager.adapter = StoreCollectionAdapter(this)
@@ -132,7 +130,6 @@ class StoreFragment: Fragment() {
     }
 
     private fun updateEquipItemUi(item: CustomItem) {
-        binding.ivStoreTurtle.visibility = View.INVISIBLE
         when (item.type) {
             ItemType.BACK -> {
                 if (item.outfitImage is ItemImage.Url) {

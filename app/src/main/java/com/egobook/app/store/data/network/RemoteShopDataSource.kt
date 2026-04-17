@@ -73,12 +73,10 @@ class RemoteShopDataSource @Inject constructor(
         }
     }
 
-    fun loadEquippedItems(): Flow<List<CustomItem>> {
+    suspend fun loadEquippedItems(): List<CustomItem> {
         val equippedItemsResponse: BaseResponse<List<EquippedItemDto>> =
             apiService.loadEquippedItems()
-        return flow {
-            emit(equippedItemsResponse.data.map { it.toDomain() })
-        }
+        return equippedItemsResponse.data.map { it.toDomain() }
     }
 
     suspend fun permanentEquipItem(item: CustomItem): EquipState {

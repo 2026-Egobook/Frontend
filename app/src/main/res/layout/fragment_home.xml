@@ -164,7 +164,7 @@
         android:layout_width="304dp"
         android:layout_height="197dp"
         android:scaleType="fitXY"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:src="@drawable/default_turtle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -37,7 +37,7 @@ class StoreCollectionFragment(): Fragment() {
         }
 
         val itemAdapter = ItemAdapter { customItem ->
-            // viewModel.equipItem(customItem)
+            viewModel.equipItem(customItem)
         }
 
         binding.rvItems.apply {

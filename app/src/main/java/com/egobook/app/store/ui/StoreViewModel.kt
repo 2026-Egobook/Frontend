@@ -35,8 +35,22 @@ class StoreViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    private var loadingCount = 0
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private fun showLoading() {
+        loadingCount++
+        _isLoading.value = true
+    }
+
+    private fun hideLoading() {
+        loadingCount--
+        if (loadingCount <= 0) {
+            loadingCount = 0
+            _isLoading.value = false
+        }
+    }
 
     private val shopRepository = ShopRepository(localShopDataSource, remoteShopDataSource)
 
@@ -67,42 +81,57 @@ class StoreViewModel @Inject constructor(
         )
 
     init {
-        loadInk()
+    }
+
+    private fun observeItems() {
+        viewModelScope.launch {
+            shopRepository.itemStream.collect { entities ->
+                val domainItems = entities.map { it.toDomain() }
+                val groupedItems = domainItems.groupBy { it.type }
+                _items.update { groupedItems }
+            }
+        }
     }
 
     suspend fun initialize() {
-        _isLoading.value = true
+        showLoading()
         try {
+            loadInkInternal()
+            observeItems()
             shopRepository.initialize()
+            _equippedItems.value = shopRepository.loadEquippedItems()
         } finally {
-            _isLoading.value = false
+            hideLoading()
+        }
+    }
+
+    private suspend fun loadInkInternal() {
+        try {
+            val user = userRepository.load()
+            _ink.update { user.ink }
+        } catch (e: Exception) {
+            Log.e("StoreViewModel", "Ink loading failed", e)
         }
     }
 
     fun loadInk() {
         viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                val user = userRepository.load()
-                _ink.update { user.ink }
-            } catch (e: Exception) {
-                Log.e("StoreViewModel", "Ink loading failed", e)
-            } finally {
-                _isLoading.value = false
-            }
+            showLoading()
+            loadInkInternal()
+            hideLoading()
         }
     }
 
     fun loadEquippedItems() {
         viewModelScope.launch {
-            _isLoading.value = true
+            showLoading()
             try {
-                // Assuming shopRepository has a way to get equipped items or they are streamed
-                // For now, let's keep it consistent with the refactored architecture if possible
-                // If ShopRepository doesn't have loadEquippedItems, we might need to add it or use remoteShopDataSource
-                // remoteShopDataSource.loadEquippedItems()
+                _equippedItems.value = shopRepository.loadEquippedItems()
+                Log.d("StoreViewModel", "load: ${_equippedItems.value}")
+            } catch (e: Exception) {
+                Log.e("StoreViewModel", "Load equipped items failed", e)
             } finally {
-                _isLoading.value = false
+                hideLoading()
             }
         }
     }
@@ -114,16 +143,16 @@ class StoreViewModel @Inject constructor(
 
         if (item.itemStatus != ItemStatus.PURCHASABLE) {
             viewModelScope.launch {
-                _isLoading.value = true
+                showLoading()
                 try {
-                    shopRepository.equipItemPermanently(item)
+                    val updatedEquipped = shopRepository.equipItemPermanently(item)
+                    _equippedItems.value = updatedEquipped
                     Log.d("StoreViewModel", "서버 착용 성공: ${item.id}")
-                    // loadEquippedItems()
                 } catch (e: Exception) {
                     Log.e("StoreViewModel", "서버 통신 에러", e)
                     _toastEvent.emit("아이템(${item.id}) 착용에 실패했습니다.")
                 } finally {
-                    _isLoading.value = false
+                    hideLoading()
                 }
             }
         } else {
@@ -145,7 +174,7 @@ class StoreViewModel @Inject constructor(
 
     fun purchaseItem(item: CustomItem) {
         viewModelScope.launch {
-            _isLoading.value = true
+            showLoading()
             try {
                 shopRepository.purchaseItem(item)
                 loadInk()
@@ -156,7 +185,7 @@ class StoreViewModel @Inject constructor(
                 Log.e("StoreViewModel", "Purchase failed", e)
                 _toastEvent.emit("잉크가 부족하거나 구매에 실패했어요")
             } finally {
-                _isLoading.value = false
+                hideLoading()
             }
         }
     }

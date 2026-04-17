@@ -56,12 +56,13 @@ class ShopRepository @Inject constructor(
         }
     }
 
-    suspend fun equipItemPermanently(item: CustomItem) {
+    suspend fun equipItemPermanently(item: CustomItem): List<CustomItem> {
         remoteShopDataSource.permanentEquipItem(item)
-        ItemType.entries.forEach { itemType ->
-            remoteShopDataSource.loadItems(itemType)
-        }
-        remoteShopDataSource.loadEquippedItems()
+        return remoteShopDataSource.loadEquippedItems()
+    }
+
+    suspend fun loadEquippedItems(): List<CustomItem> {
+        return remoteShopDataSource.loadEquippedItems()
     }
 }
 

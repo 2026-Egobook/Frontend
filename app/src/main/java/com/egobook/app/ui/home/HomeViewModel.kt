@@ -7,9 +7,12 @@ import com.egobook.app.ui.home.repository.AdInfoDto
 import com.egobook.app.ui.home.repository.UserAdRepository
 import com.egobook.app.ui.home.repository.UserPsychologyRepository
 import com.egobook.app.ui.home.repository.UserRepository
+import com.egobook.app.ui.home.repository.UserTendencyRepository
 import com.egobook.app.ui.home.user.Ink
 import com.egobook.app.ui.home.user.Level
 import com.egobook.app.ui.home.user.User
+import com.egobook.app.ui.home.user.Tendency
+import com.egobook.app.store.data.ShopRepository
 import com.egobook.app.store.ui.CustomItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,10 +25,15 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val userAdRepository: UserAdRepository,
-    private val psychologyRepository: UserPsychologyRepository
+    private val psychologyRepository: UserPsychologyRepository,
+    private val shopRepository: ShopRepository,
+    private val userTendencyRepository: UserTendencyRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(User(id=-1, Level(1),Ink(0), nickname = ""))
     val uiState: StateFlow<User> = _uiState.asStateFlow()
+
+    private val _tendencies = MutableStateFlow<List<Tendency>>(emptyList())
+    val tendencies: StateFlow<List<Tendency>> = _tendencies.asStateFlow()
 
     private val _adState = MutableStateFlow(AdInfoDto(0, 0, false, 0, ""))
     val adState: StateFlow<AdInfoDto> = _adState.asStateFlow()
@@ -39,8 +47,22 @@ class HomeViewModel @Inject constructor(
     private val _dailyPhycologyReadState = MutableStateFlow(false)
     val dailyPhycologyReadState = _dailyPhycologyReadState.asStateFlow()
 
+    private var loadingCount = 0
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private fun showLoading() {
+        loadingCount++
+        _isLoading.value = true
+    }
+
+    private fun hideLoading() {
+        loadingCount--
+        if (loadingCount <= 0) {
+            loadingCount = 0
+            _isLoading.value = false
+        }
+    }
 
     init {
         fetchInitialData()
@@ -48,18 +70,20 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchInitialData() {
         viewModelScope.launch {
-            _isLoading.value = true
+            showLoading()
             try {
                 // Fetch all initial data in parallel if possible, or sequentially
                 val userJob = launch { fetchUserInternal() }
-                // val equipJob = launch { fetchEquipItemsInternal() }
+                val equipJob = launch { fetchEquipItemsInternal() }
                 val psychJob = launch { fetchDailyPhycologyReadStateInternal() }
+                val tendencyJob = launch { fetchTendenciesInternal() }
                 
                 userJob.join()
-                // equipJob.join()
+                equipJob.join()
                 psychJob.join()
+                tendencyJob.join()
             } finally {
-                _isLoading.value = false
+                hideLoading()
             }
         }
     }
@@ -73,15 +97,22 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    /*
+    private suspend fun fetchTendenciesInternal() {
+        try {
+            val tendencyList = userTendencyRepository.loadTendencies()
+            _tendencies.value = tendencyList
+        } catch (error: Exception) {
+            Log.e("HomeViewModel", "Failed to fetch tendencies", error)
+        }
+    }
+
     private suspend fun fetchEquipItemsInternal() {
         try {
-            _equippedItems.value = storeRepository.loadEquippedItems()
+            _equippedItems.value = shopRepository.loadEquippedItems()
         } catch(error: Exception) {
             Log.e("HomeViewModel", "Failed to fetch equip items", error)
         }
     }
-    */
 
     private suspend fun fetchDailyPhycologyReadStateInternal() {
         try {
@@ -93,25 +124,33 @@ class HomeViewModel @Inject constructor(
 
     fun fetchEquipItems() {
         viewModelScope.launch {
-            // _isLoading.value = true
-            // fetchEquipItemsInternal()
-            // _isLoading.value = false
+            showLoading()
+            fetchEquipItemsInternal()
+            hideLoading()
         }
     }
 
     fun fetchDailyPhycologyReadState() {
         viewModelScope.launch {
-            _isLoading.value = true
+            showLoading()
             fetchDailyPhycologyReadStateInternal()
-            _isLoading.value = false
+            hideLoading()
         }
     }
 
     fun fetchUser() {
         viewModelScope.launch {
-            _isLoading.value = true
+            showLoading()
             fetchUserInternal()
-            _isLoading.value = false
+            hideLoading()
+        }
+    }
+
+    fun fetchTendencies() {
+        viewModelScope.launch {
+            showLoading()
+            fetchTendenciesInternal()
+            hideLoading()
         }
     }
 
@@ -129,13 +168,13 @@ class HomeViewModel @Inject constructor(
 
     fun watchAd() {
         viewModelScope.launch {
-            _isLoading.value = true
+            showLoading()
             try {
                 val message = userAdRepository.watchAd()
                 fetchUserInternal()
                 Log.d("HomeViewModel", "Ad watched: $message")
             } finally {
-                _isLoading.value = false
+                hideLoading()
             }
         }
     }
