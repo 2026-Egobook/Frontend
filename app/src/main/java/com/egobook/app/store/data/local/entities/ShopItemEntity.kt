@@ -15,7 +15,8 @@ data class ShopItemEntity(
     val itemType: String,
     val price: Int,
     val thumbnailImageUrl: String,
-    val equippedImageUrl: String
+    val equippedImageUrl: String,
+    val isPurchased: Boolean
 ) {
     fun toDomain(): CustomItem {
         val type = when (itemType) {
@@ -30,7 +31,7 @@ data class ShopItemEntity(
             id = id.toString(),
             type = type,
             price = Price(price),
-            itemStatus = ItemStatus.PURCHASABLE, // Default for shop items
+            itemStatus = if (isPurchased) ItemStatus.PURCHASED else ItemStatus.PURCHASABLE,
             image = ItemImage.Url(thumbnailImageUrl),
             outfitImage = ItemImage.Url(equippedImageUrl)
         )

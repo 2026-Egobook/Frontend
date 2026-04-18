@@ -150,17 +150,18 @@ class StoreViewModel @Inject constructor(
             }
             Log.d("StoreViewModel", "미구매 아이템 - 프리뷰 모드")
         } else {
-            // 구매한 아이템: 서버에 장착 요청
+            // 구매한 아이템: 서버에 장착/해제 요청 (토글)
             viewModelScope.launch {
                 showLoading()
                 try {
-                    val updatedEquipped = shopRepository.equipItemPermanently(item)
+                    val isAlreadyEquipped = _permanentItems.value.any { it.id == item.id }
+                    val updatedEquipped = shopRepository.equipItemPermanently(item, !isAlreadyEquipped)
                     _permanentItems.value = updatedEquipped
                     _equippedItems.value = updatedEquipped
-                    Log.d("StoreViewModel", "서버 착용 성공: ${item.id}")
+                    Log.d("StoreViewModel", "서버 착용 상태 변경 성공: ${item.id}, ${!isAlreadyEquipped}")
                 } catch (e: Exception) {
                     Log.e("StoreViewModel", "서버 통신 에러", e)
-                    _toastEvent.emit("아이템(${item.id}) 착용에 실패했습니다.")
+                    _toastEvent.emit("아이템(${item.id}) 상태 변경에 실패했습니다.")
                 } finally {
                     hideLoading()
                 }
@@ -190,6 +191,7 @@ class StoreViewModel @Inject constructor(
             showLoading()
             try {
                 shopRepository.purchaseItem(item)
+                shopRepository.initialize()
                 loadInk()
                 // 구매 성공 후 최신 장착 정보 다시 로드
                 loadEquippedItems()

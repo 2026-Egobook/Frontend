@@ -15,7 +15,7 @@ class LocalShopDataSource @Inject constructor(
         applicationContext,
         ShopDatabase::class.java,
         "shop-database"
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     val itemStream = database.shopItemDao().loadAllItems()
 

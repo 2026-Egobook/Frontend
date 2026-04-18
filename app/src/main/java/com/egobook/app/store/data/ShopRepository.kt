@@ -28,7 +28,8 @@ fun ShopItemDto.toEntity(): ShopItemEntity =
         itemType = itemCategory ?: ItemType.BACKGROUND.ofName(),
         price = price,
         thumbnailImageUrl = shopImageUrl,
-        equippedImageUrl = myImageUrl
+        equippedImageUrl = myImageUrl,
+        isPurchased = isPurchased
     )
 
 
@@ -51,11 +52,11 @@ class ShopRepository @Inject constructor(
 
     suspend fun purchaseItem(item: CustomItem) {
         remoteShopDataSource.purchaseItems(item)
-        equipItemPermanently(item)
+        equipItemPermanently(item, true)
     }
 
-    suspend fun equipItemPermanently(item: CustomItem): List<CustomItem> {
-        remoteShopDataSource.permanentEquipItem(item)
+    suspend fun equipItemPermanently(item: CustomItem, isEquipped: Boolean): List<CustomItem> {
+        remoteShopDataSource.permanentEquipItem(item, isEquipped)
         return remoteShopDataSource.loadEquippedItems()
     }
 

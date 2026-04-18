@@ -65,10 +65,10 @@ class RemoteShopDataSource @Inject constructor(
         return equippedItemsResponse.data.map { it.toDomain() }
     }
 
-    suspend fun permanentEquipItem(item: CustomItem): EquipState {
+    suspend fun permanentEquipItem(item: CustomItem, isEquipped: Boolean): EquipState {
         try {
             apiService.equipItemPermanently(
-                PermanentEquipRequest(itemId = item.id.toInt(), isEquipped = true)
+                PermanentEquipRequest(itemId = item.id.toInt(), isEquipped = isEquipped)
             )
             return EquipState(isSuccess = true)
         } catch (err: Exception) {
