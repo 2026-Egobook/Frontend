@@ -100,7 +100,7 @@ data class EquippedItemDto(
             type = itemType,
             price = Price(price),
             itemStatus = if (isPurchased) ItemStatus.PURCHASED else ItemStatus.PURCHASABLE,
-            image = null,
+            image = ItemImage.Url(imageUrl),
             outfitImage = ItemImage.Url(imageUrl)
         )
     }
