@@ -59,12 +59,17 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
         }
     }
 
+    private var isSending = false
+
     private fun initListeners() = with(binding) {
         btnLetterSendBack.setOnClickListener {
             removeScreenBlur()
             dismiss()
         }
         btnLetterSend.setOnClickListener {
+            if (isSending) return@setOnClickListener
+            isSending = true
+            btnLetterSend.isEnabled = false
             root.alpha = 0.0f
             viewModel.detectAbusiveContent(text = letterContent)
         }
@@ -76,7 +81,13 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
                 launch {
                     viewModel.detectAbusiveContentResult.collect { state ->
                         when(state) {
-                            is UiState.Failure -> {}
+                            is UiState.Failure -> {
+                                isSending = false
+                                btnLetterSend.isEnabled = true
+                                root.alpha = 1.0f
+                                hideLoadingDialog()
+                                Toast.makeText(context, "오류가 발생했습니다: ${state.message}", Toast.LENGTH_SHORT).show()
+                            }
                             UiState.Idle -> {}
                             UiState.Loading -> {
                                 showLoadingDialog()
@@ -85,6 +96,9 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
                                 hideLoadingDialog()
                                 val abusiveContent = state.data
                                 if(abusiveContent.isHarmful && abusiveContent.riskScore >= 80.0f) {
+                                    isSending = false
+                                    btnLetterSend.isEnabled = true
+                                    root.alpha = 1.0f
                                     val dialog = DetectAbusiveContentFailureDialog(originalContent = abusiveContent.text, badWords = abusiveContent.detectedBadWords).apply {
                                         isCancelable = false
                                     }
@@ -107,16 +121,23 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
                 launch {
                     viewModel.sendLetterResult.collect { state ->
                         when(state) {
-                            is UiState.Failure -> {}
+                            is UiState.Failure -> {
+                                isSending = false
+                                btnLetterSend.isEnabled = true
+                                root.alpha = 1.0f
+                                Toast.makeText(context, "전송 실패: ${state.message}", Toast.LENGTH_SHORT).show()
+                            }
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Unit> -> {
-                                val dialog = DetectAbusiveContentSuccessDialog(status = LetterStatus.SENT).apply {
-                                    isCancelable = false
+                                if (isAdded) {
+                                    val dialog = DetectAbusiveContentSuccessDialog(status = LetterStatus.SENT).apply {
+                                        isCancelable = false
+                                    }
+                                    dialog.show(parentFragmentManager, DetectAbusiveContentSuccessDialog.TAG)
+                                    applyScreenBlur(BlurLevel.BASE)
+                                    dismiss()
                                 }
-                                dialog.show(parentFragmentManager, DetectAbusiveContentSuccessDialog.TAG)
-                                applyScreenBlur(BlurLevel.BASE)
-                                dismiss()
                             }
                         }
                     }
