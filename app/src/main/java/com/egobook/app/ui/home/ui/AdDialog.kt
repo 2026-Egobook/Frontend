@@ -38,7 +38,7 @@ class AdDialog() : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val userId = arguments?.getString(ARG_USER_ID) ?: "사용자가 없습니다"
 
-        viewModel.loadCurrentAdInfo()
+        // viewModel.loadCurrentAdInfo()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

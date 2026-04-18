@@ -154,6 +154,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+/*
     fun loadCurrentAdInfo() {
         viewModelScope.launch {
             _isLoadingAdInfo.value = true
@@ -165,6 +166,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+*/
 
     fun watchAd() {
         viewModelScope.launch {
