@@ -62,6 +62,24 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
                 }
             }
 
+            // 바텀 네비게이션 하이라이트 보정
+            val mappedMenuId = when (destination.id) {
+                R.id.egoRoomWeeklyReportDetailFragment,
+                R.id.egoRoomWeeklyReportFragment -> R.id.menu_ego_room
+                R.id.friendsFragment,
+                R.id.myRepliesHistoryFragment,
+                R.id.squareAllRepliesFragment,
+                R.id.myLettersFragment,
+                R.id.letterWriteFragment,
+                R.id.letterReplyFragment,
+                R.id.myLetterDetailFragment -> R.id.menu_square
+                R.id.diaryCheckFragment -> R.id.menu_diary
+                else -> null
+            }
+            mappedMenuId?.let {
+                binding.bottomNavigation.menu.findItem(it).isChecked = true
+            }
+
             if (destination.id == R.id.menu_home) {
                 binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             } else {
