@@ -130,6 +130,7 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Unit> -> {
+                                viewModel.getSentLetters(4)
                                 if (isAdded) {
                                     val dialog = DetectAbusiveContentSuccessDialog(status = LetterStatus.SENT).apply {
                                         isCancelable = false

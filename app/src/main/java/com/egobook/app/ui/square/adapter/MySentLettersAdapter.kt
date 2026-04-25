@@ -59,9 +59,17 @@ class MySentLettersAdapter(private val onClicked: (Long) -> Unit): PagingDataAda
 
     private fun formatDate(createdDateTime: String): String {
         return try {
-            val localDateTime = LocalDateTime.parse(createdDateTime)
+            val dateTime = try {
+                LocalDateTime.parse(createdDateTime)
+            } catch (e: Exception) {
+                try {
+                    java.time.OffsetDateTime.parse(createdDateTime).toLocalDateTime()
+                } catch (e2: Exception) {
+                    java.time.ZonedDateTime.parse(createdDateTime).toLocalDateTime()
+                }
+            }
             val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-            formatter.format(localDateTime)
+            formatter.format(dateTime)
         } catch (e: Exception) {
             try {
                 val instant = java.time.Instant.parse(createdDateTime)

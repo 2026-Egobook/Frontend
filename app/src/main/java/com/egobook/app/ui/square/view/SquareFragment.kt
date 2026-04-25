@@ -44,6 +44,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 
 class SquareFragment : Fragment(R.layout.fragment_square) {
@@ -353,9 +354,12 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                             is UiState.Success<ArrivedPendingLetterModel> -> {
                                 val arrivedPendingLetter = state.data.letter
                                 if(arrivedPendingLetter != null) {
-                                    val dialog = ArrivedPendingLetterPopupDialog(letterInfo = arrivedPendingLetter).apply { isCancelable = false }
-                                    dialog.show(childFragmentManager, ArrivedPendingLetterPopupDialog.TAG)
-                                    applyScreenBlur(BlurLevel.BASE)
+                                    if (childFragmentManager.findFragmentByTag(ArrivedPendingLetterPopupDialog.TAG) == null) {
+                                        val dialog = ArrivedPendingLetterPopupDialog(letterInfo = arrivedPendingLetter).apply { isCancelable = false }
+                                        dialog.show(childFragmentManager, ArrivedPendingLetterPopupDialog.TAG)
+                                        applyScreenBlur(BlurLevel.BASE)
+                                    }
+                                    letterViewModel.resetArrivedPendingLetterStatus()
                                 }
                             }
                         }
@@ -388,7 +392,11 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                         val createdDate = try {
                                             LocalDateTime.parse(item.createdAt).toLocalDate()
                                         } catch (e: Exception) {
-                                            ZonedDateTime.parse(item.createdAt).toLocalDate()
+                                            try {
+                                                ZonedDateTime.parse(item.createdAt).toLocalDate()
+                                            } catch (e2: Exception) {
+                                                OffsetDateTime.parse(item.createdAt).toLocalDate()
+                                            }
                                         }
                                         val today = LocalDate.now()
                                         createdDate.isEqual(today)
