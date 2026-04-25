@@ -65,12 +65,21 @@ data class NotificationDto(
     val createdAt: String
 ) {
     fun toDomain(): Notification {
+        val notificationType = type.toNotificationType()
+        val publisher = when (notificationType) {
+            is NotificationType.Letter -> {
+                val cleanTitle = title.replace("새로운 ", "").trim()
+                NotificationPublisher.User(targetId.toString(), cleanTitle)
+            }
+            is NotificationType.EgoRoom -> NotificationPublisher.Admin
+        }
+
         return Notification(
             id = notificationId, // Keep notificationId as the domain id
             content = content ?: "내용이 없습니다",
-            type = type.toNotificationType(),
+            type = notificationType,
             status = if (isRead) NotificationStatus.READ else NotificationStatus.UNREAD,
-            publisher = NotificationPublisher.User("admin", "운영자"),
+            publisher = publisher,
             publishedDate = NotificationTime(LocalDateTime.parse(createdAt)),
         )
     }

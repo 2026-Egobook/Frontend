@@ -46,7 +46,7 @@ class NotificationAdapter(
 
         fun bind(notification: Notification, onNotificationClick: (Notification) -> Unit) {
             val publisherName = when (notification.publisher) {
-                is NotificationPublisher.Admin -> ""
+                is NotificationPublisher.Admin -> "운영자"
                 is NotificationPublisher.User -> notification.publisher.userName
             }
 
@@ -56,8 +56,7 @@ class NotificationAdapter(
             when (notification.type) {
                 is NotificationType.Letter -> {
                     icon.setImageResource(R.drawable.ic_unread_letter_notification)
-                    title.text =
-                        if (publisherName.isNotEmpty()) "$publisherName 의 편지 답장이 도착했어요" else "편지 답장이 도착했어요"
+                    title.text = publisherName
                     content.text = notification.content
                     content.visibility = View.VISIBLE
                 }
