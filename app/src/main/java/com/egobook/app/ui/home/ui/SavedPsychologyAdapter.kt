@@ -31,12 +31,15 @@ class SavedPsychologyAdapter(
         val dateTextView: TextView = view.findViewById(R.id.tv_psychology_date)
         val contentTextView: TextView = view.findViewById(R.id.tv_psychology_content)
         val sourceTextView: TextView = view.findViewById(R.id.tv_psychology_source)
+        val deleteButton: View = view.findViewById(R.id.iv_delete)
+
         fun bind(item: SavedPsychologyDto, onItemClick: (SavedPsychologyDto) -> Unit) {
             dateTextView.text = item.savedAt
             contentTextView.text = item.title
             sourceTextView.text = item.source
             contentTextView.text = item.preview
-            itemView.setOnClickListener {
+
+            deleteButton.setOnClickListener {
                 onItemClick(item)
             }
         }

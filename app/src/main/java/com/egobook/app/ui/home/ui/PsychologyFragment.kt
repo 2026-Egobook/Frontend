@@ -67,7 +67,10 @@ class PsychologyFragment(): Fragment() {
         }
 
         val itemAdapter = SavedPsychologyAdapter { savedPsychologyDto ->
-            viewModel.deletePsychology(savedPsychologyDto.knowledgeId)
+            val dialog = PsychologyDeleteDialog {
+                viewModel.deletePsychology(savedPsychologyDto.knowledgeId)
+            }
+            dialog.show(parentFragmentManager, PsychologyDeleteDialog.TAG)
         }
 
         binding.rvSavedPsychologies.apply {
