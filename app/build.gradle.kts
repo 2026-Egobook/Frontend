@@ -46,6 +46,9 @@ android {
 
         val admobAppId = localProperties.getProperty("ADMOB_APP_ID") ?: "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
         manifestPlaceholders["ADMOB_APP_ID"] = admobAppId
+
+        println("ADMOB_APP_ID = ${localProperties.getProperty("ADMOB_APP_ID")}")
+
     }
 
     buildTypes {
