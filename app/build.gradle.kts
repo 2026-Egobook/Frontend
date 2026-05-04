@@ -11,6 +11,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("org.jlleitschuh.gradle.ktlint")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 val localProperties = Properties()
@@ -170,6 +171,8 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
 
     implementation("com.google.android.gms:play-services-ads:23.6.0")
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
 
 ksp {
