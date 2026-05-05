@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1684821662",
+    "project_id": "egobook-f0230",
+    "storage_bucket": "egobook-f0230.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1684821662:android:670662e998d06444598d8f",
+        "android_client_info": {
+          "package_name": "com.egobook.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1684821662-sm7n451ti3a9lqbenb1439ntg9tq2rga.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.egobook.app",
+            "certificate_hash": "1bd6c0ffb6c4eba82b3b71f817e1c9dda4ddfc20"
+          }
+        },
+        {
+          "client_id": "1684821662-ag2a1jov3hfoc84fups0qnao98sd5d2r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA8WaenStb0pZCilWs-NfO-FeMlFJeWzk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1684821662-ag2a1jov3hfoc84fups0qnao98sd5d2r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
