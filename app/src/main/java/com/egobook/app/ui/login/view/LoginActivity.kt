@@ -113,8 +113,9 @@ import javax.inject.Inject
 
             //게스트 로그인 버튼 클릭이벤트
             binding.btnGuestLogin.setOnClickListener {
-// 임시 주석               viewModel.onEvent(LoginEvent.TryGuestLogin)
-                navigateToOnboarding()
+             viewModel.onEvent(LoginEvent.TryGuestLogin)
+//                임시 주석
+//                navigateToOnboarding()
             }
 
             // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기
