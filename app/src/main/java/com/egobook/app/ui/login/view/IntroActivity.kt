@@ -86,14 +86,14 @@ class IntroActivity : ComponentActivity() {
     private fun isMaintenanceTime(): Boolean {
         val calendar = java.util.Calendar.getInstance()
         val hour = calendar.get(java.util.Calendar.HOUR_OF_DAY)
-        return hour in 3..8
+        return hour in 3..6
 //        return true
     }
 
     private fun showMaintenanceDialog() {
         android.app.AlertDialog.Builder(this)
             .setTitle("점검 중")
-            .setMessage("서버 점검 중입니다.\n점검 시간: 03:00 ~ 09:00")
+            .setMessage("서버 점검 중입니다.\n점검 시간: 03:00 ~ 06:00")
             .setPositiveButton("확인") { _, _ -> finishAffinity() }
             .setCancelable(false)
             .show()

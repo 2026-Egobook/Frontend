@@ -19,6 +19,8 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -37,6 +39,24 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         MobileAds.initialize(this) {}
 
         loadAd()
+        lifecycleScope.launch {
+            try {
+                // 서버 확인용 (가벼운 API)
+                // TODO: 나중에 ping API 생기면 교체
+                // 임시로 아무 API 하나 호출하는 구조 필요
+
+            } catch (e: Exception) {
+                val message = e.message ?: ""
+
+                if (
+                    message.contains("timeout", true) ||
+                    message.contains("Unable to resolve host", true) ||
+                    message.contains("Failed to connect", true)
+                ) {
+                    showMaintenanceDialog()
+                }
+            }
+        }
 
         applyDefaultInsets(binding.main)
         applyDefaultInsets(binding.fcvNotificationDrawer)
@@ -164,6 +184,17 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
 
     override fun closerDrawer() {
         binding.root.closeDrawer(binding.fcvNotificationDrawer)
+    }
+
+    private fun showMaintenanceDialog() {
+        android.app.AlertDialog.Builder(this)
+            .setTitle("점검 중")
+            .setMessage("서버 점검 중입니다.\n점검 시간: 03:00 ~ 06:00")
+            .setPositiveButton("확인") { _, _ ->
+                finishAffinity()
+            }
+            .setCancelable(false)
+            .show()
     }
 
 }
