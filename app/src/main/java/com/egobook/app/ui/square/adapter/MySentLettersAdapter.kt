@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.databinding.ItemSquareLetterBinding
 import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.ui.square.model.letter.SentLetterModel
-import java.time.Instant
-import java.time.ZoneId
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class MySentLettersAdapter(private val onClicked: (Long) -> Unit): PagingDataAdapter<SentLetterModel, MySentLettersAdapter.MyLetterViewHolder>(diffUtil) {
@@ -59,9 +58,27 @@ class MySentLettersAdapter(private val onClicked: (Long) -> Unit): PagingDataAda
     }
 
     private fun formatDate(createdDateTime: String): String {
-        val instant = Instant.parse(createdDateTime)
-        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-            .withZone(ZoneId.systemDefault())
-        return formatter.format(instant)
+        return try {
+            val dateTime = try {
+                LocalDateTime.parse(createdDateTime)
+            } catch (e: Exception) {
+                try {
+                    java.time.OffsetDateTime.parse(createdDateTime).toLocalDateTime()
+                } catch (e2: Exception) {
+                    java.time.ZonedDateTime.parse(createdDateTime).toLocalDateTime()
+                }
+            }
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            formatter.format(dateTime)
+        } catch (e: Exception) {
+            try {
+                val instant = java.time.Instant.parse(createdDateTime)
+                val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                    .withZone(java.time.ZoneId.systemDefault())
+                formatter.format(instant)
+            } catch (e2: Exception) {
+                createdDateTime
+            }
+        }
     }
 }

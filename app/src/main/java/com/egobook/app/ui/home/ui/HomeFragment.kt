@@ -5,9 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,15 +19,11 @@ import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
 import com.egobook.app.ui.home.HomeViewModel
-import com.egobook.app.ui.home.repository.UserTendencyRepository
 import com.egobook.app.ui.home.user.LevelType
-import com.egobook.app.ui.home.ui.RadarDialog
-import com.egobook.app.ui.home.ui.StreakDialog
-import com.egobook.app.ui.shop.CustomItem
-import com.egobook.app.ui.shop.ItemImage
-import com.egobook.app.ui.shop.ItemType
+import com.egobook.app.store.ui.CustomItem
+import com.egobook.app.store.ui.ItemImage
+import com.egobook.app.store.data.model.ItemType
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {
@@ -44,21 +40,34 @@ class HomeFragment(): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: HomeViewModel by activityViewModels()
+
         viewModel.fetchUser()
-        lifecycleScope.launch {
-            viewModel.uiState.collect { userState ->
-                binding.tvLevel.text = "Lv ${userState.level.number}"
-                binding.ivLevelType.setImageResource(userState.level.type.getResId())
-                binding.tvInk.text = "${userState.ink.value}"
+        viewModel.fetchEquipItems()
+        
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.isLoading.collect { isLoading ->
+                        binding.flLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+                    }
+                }
+                
+                launch {
+                    viewModel.uiState.collect { userState ->
+                        binding.tvLevel.text = "Lv ${userState.level.number}"
+                        binding.ivLevelType.setImageResource(userState.level.type.getResId())
+                        binding.tvInk.text = "${userState.ink.value}"
+                    }
+                }
             }
         }
 
-        viewModel.fetchEquipItems()
-
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.equippedItems.collect { equippedList ->
-                equippedList.forEach { equippedItem ->
-                    updateEquipItemUi(equippedItem)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.equippedItems.collect { equippedList ->
+                    equippedList.forEach { equippedItem ->
+                        updateEquipItemUi(equippedItem)
+                    }
                 }
             }
         }
@@ -96,11 +105,7 @@ class HomeFragment(): Fragment() {
         }
 
         binding.ivAd.setOnClickListener {
-            val currentUserId = viewModel.uiState.value.id
-            applyScreenBlur(BlurLevel.BASE)
-            val dialog = AdDialog.newInstance(currentUserId.toString())
-            dialog.isCancelable = false
-            dialog.show(parentFragmentManager, "ConfirmDialog")
+            Toast.makeText(requireContext(), "광고 기능이 준비중입니다.", Toast.LENGTH_SHORT).show()
         }
         binding.ivBell.setOnClickListener {
             val notificationController =

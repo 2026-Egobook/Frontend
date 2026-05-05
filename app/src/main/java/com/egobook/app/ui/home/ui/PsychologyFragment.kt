@@ -16,7 +16,7 @@ import com.egobook.app.R
 import com.egobook.app.databinding.FragmentPsychologyBinding
 import com.egobook.app.ui.home.PsychologyViewModel
 import com.egobook.app.ui.home.repository.SavedPsychologyDto
-import com.egobook.app.ui.shop.ItemAdapter
+import com.egobook.app.store.ui.ItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -35,6 +35,14 @@ class PsychologyFragment(): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel: PsychologyViewModel by activityViewModels()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { isLoading ->
+                    binding.pbLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+                }
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dailyPhycologyDto.collect { dailyPhycologyDto ->
                 binding.tvPsychologyContent.text = dailyPhycologyDto.knowledge.content
@@ -59,12 +67,29 @@ class PsychologyFragment(): Fragment() {
         }
 
         val itemAdapter = SavedPsychologyAdapter { savedPsychologyDto ->
-            viewModel.deletePsychology(savedPsychologyDto.knowledgeId)
+            val dialog = PsychologyDeleteDialog {
+                viewModel.deletePsychology(savedPsychologyDto.knowledgeId)
+            }
+            dialog.show(parentFragmentManager, PsychologyDeleteDialog.TAG)
         }
 
         binding.rvSavedPsychologies.apply {
             adapter = itemAdapter
             layoutManager = LinearLayoutManager(context)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        binding.pbLoading.visibility = View.VISIBLE
+                        binding.vLoadingOverlay.visibility = View.VISIBLE
+                    } else {
+                        binding.pbLoading.visibility = View.GONE
+                        binding.vLoadingOverlay.visibility = View.GONE
+                    }
+                }
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

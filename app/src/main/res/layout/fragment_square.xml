@@ -116,6 +116,7 @@
                             android:src="@drawable/ic_letter_new" />
 
                         <TextView
+                            android:id="@+id/tv_square_write_letter_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineHeight="21sp"

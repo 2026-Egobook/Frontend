@@ -20,8 +20,10 @@ import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch
 import java.time.Duration
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class ArrivedPendingLetterPopupDialog(private val letterInfo: ArrivedPendingLetterItemModel): DialogFragment(R.layout.dialog_arrived_pending_letter_popup) {
@@ -82,15 +84,27 @@ class ArrivedPendingLetterPopupDialog(private val letterInfo: ArrivedPendingLett
      * ★ 문서 보충 필요 ★
      */
     private fun getRemainingTime(replyDeadlineAt: String): String {
-        val deadline: OffsetDateTime = OffsetDateTime.parse(replyDeadlineAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-        val now: OffsetDateTime = OffsetDateTime.now(ZoneId.systemDefault())
-        val duration: Duration = Duration.between(now, deadline)
-        return when {
-            duration.isNegative || duration.isZero -> "답장 유효기한 만료"
-            duration.toDays() > 0 -> "${duration.toDays()}일 남음"
-            duration.toHours() > 0 -> "${duration.toHours()}시간 남음"
-            duration.toMinutes() > 0 -> "${duration.toMinutes()}분 남음"
-            else -> "잠시 후 만료"
+        return try {
+            val deadline: OffsetDateTime = try {
+                OffsetDateTime.parse(replyDeadlineAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+            } catch (e: Exception) {
+                try {
+                    ZonedDateTime.parse(replyDeadlineAt).toOffsetDateTime()
+                } catch (e2: Exception) {
+                    LocalDateTime.parse(replyDeadlineAt).atZone(ZoneId.systemDefault()).toOffsetDateTime()
+                }
+            }
+            val now: OffsetDateTime = OffsetDateTime.now(ZoneId.systemDefault())
+            val duration: Duration = Duration.between(now, deadline)
+            when {
+                duration.isNegative || duration.isZero -> "답장 유효기한 만료"
+                duration.toDays() > 0 -> "${duration.toDays()}일 남음"
+                duration.toHours() > 0 -> "${duration.toHours()}시간 남음"
+                duration.toMinutes() > 0 -> "${duration.toMinutes()}분 남음"
+                else -> "잠시 후 만료"
+            }
+        } catch (e: Exception) {
+            "유효기한 확인 불가"
         }
     }
 

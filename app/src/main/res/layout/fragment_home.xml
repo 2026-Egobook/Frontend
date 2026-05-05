@@ -232,5 +232,20 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="16dp"/>
 
+    <FrameLayout
+        android:id="@+id/fl_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#4D000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

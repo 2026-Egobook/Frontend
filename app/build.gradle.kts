@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.egobook.app"
+        applicationId = "com.egobook"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -173,6 +173,11 @@ dependencies {
     implementation("com.google.android.gms:play-services-ads:23.6.0")
     implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
     implementation("com.google.firebase:firebase-analytics")
+
+    implementation(libs.androidx.room.runtime)
+
+    ksp(libs.androidx.room.compiler)
+
 }
 
 ksp {

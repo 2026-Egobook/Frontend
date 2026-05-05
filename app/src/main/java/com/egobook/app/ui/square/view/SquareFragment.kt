@@ -39,9 +39,12 @@ import com.egobook.app.ui.square.model.question.TodayQuestionModel
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
+import android.util.Log
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 
 class SquareFragment : Fragment(R.layout.fragment_square) {
@@ -351,9 +354,12 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                             is UiState.Success<ArrivedPendingLetterModel> -> {
                                 val arrivedPendingLetter = state.data.letter
                                 if(arrivedPendingLetter != null) {
-                                    val dialog = ArrivedPendingLetterPopupDialog(letterInfo = arrivedPendingLetter).apply { isCancelable = false }
-                                    dialog.show(childFragmentManager, ArrivedPendingLetterPopupDialog.TAG)
-                                    applyScreenBlur(BlurLevel.BASE)
+                                    if (childFragmentManager.findFragmentByTag(ArrivedPendingLetterPopupDialog.TAG) == null) {
+                                        val dialog = ArrivedPendingLetterPopupDialog(letterInfo = arrivedPendingLetter).apply { isCancelable = false }
+                                        dialog.show(childFragmentManager, ArrivedPendingLetterPopupDialog.TAG)
+                                        applyScreenBlur(BlurLevel.BASE)
+                                    }
+                                    letterViewModel.resetArrivedPendingLetterStatus()
                                 }
                             }
                         }
@@ -378,16 +384,36 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
                         val isListEmpty = loadStates.refresh is LoadState.NotLoading && sentLetterAdapter.itemCount == 0
 
-                        if(!isListEmpty) {
-                            val hasSentLetterToday = (0 until sentLetterAdapter.itemCount).any { index ->
+                        val hasSentLetterToday = if(!isListEmpty) {
+                            (0 until sentLetterAdapter.itemCount).any { index ->
                                 val item = sentLetterAdapter.peek(index)
-                                val createdDate = ZonedDateTime.parse(item?.createdAt).toLocalDate()
-                                val today = LocalDate.now()
-                                createdDate.isEqual(today)
+                                if (item != null) {
+                                    try {
+                                        val createdDate = try {
+                                            LocalDateTime.parse(item.createdAt).toLocalDate()
+                                        } catch (e: Exception) {
+                                            try {
+                                                ZonedDateTime.parse(item.createdAt).toLocalDate()
+                                            } catch (e2: Exception) {
+                                                OffsetDateTime.parse(item.createdAt).toLocalDate()
+                                            }
+                                        }
+                                        val today = LocalDate.now()
+                                        createdDate.isEqual(today)
+                                    } catch (e: Exception) {
+                                        Log.e("SquareFragment", "Date parsing failed: ${item.createdAt}", e)
+                                        false
+                                    }
+                                } else {
+                                    false
+                                }
                             }
-                            cvSquareWriteLetter.isEnabled = !hasSentLetterToday
-                            cvSquareWriteLetter.alpha = if(hasSentLetterToday) 0.4f else 1f
+                        } else {
+                            false
                         }
+                        cvSquareWriteLetter.isEnabled = !hasSentLetterToday
+                        cvSquareWriteLetter.alpha = if(hasSentLetterToday) 0.4f else 1f
+                        tvSquareWriteLetterCount.text = if(hasSentLetterToday) "편지쓰기\n0/1" else "편지쓰기\n1/1"
 
                         tvSquareSentLetterPlaceholderMain.isVisible = isListEmpty
                         tvSquareSentLetterPlaceholderSub.isVisible = isListEmpty

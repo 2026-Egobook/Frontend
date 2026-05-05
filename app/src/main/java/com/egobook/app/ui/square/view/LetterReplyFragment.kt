@@ -204,6 +204,7 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<ReplyLetterModel> -> {
+                                viewModel.getSentLetters(4)
                                 val dialog = DetectAbusiveContentSuccessDialog(status = LetterStatus.REPLIED, replyItem = state.data).apply {
                                     isCancelable = false
                                 }

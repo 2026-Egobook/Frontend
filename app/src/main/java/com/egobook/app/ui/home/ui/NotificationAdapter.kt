@@ -19,7 +19,7 @@ import com.egobook.app.ui.home.notification.NotificationType
 import java.time.LocalDateTime
 
 class NotificationAdapter(
-    val onNotificationClickListener: (Notification) -> Unit
+    val onNotificationClick: (Notification) -> Unit
 ): ListAdapter<Notification, NotificationAdapter.NotificationViewHodler>(DiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -34,19 +34,19 @@ class NotificationAdapter(
         holder: NotificationViewHodler,
         position: Int
     ) {
-        holder.bind(getItem(position), onNotificationClickListener)
+        holder.bind(getItem(position), onNotificationClick)
     }
 
     class NotificationViewHodler(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView = view.findViewById(R.id.tv_notification_title)
-        val content: TextView = view.findViewById(R.id.tv_notification_content)
-        val time: TextView = view.findViewById(R.id.tv_notification_time)
-        val icon: ImageView = view.findViewById(R.id.iv_notification_icon)
-        val root: View = view.rootView
+        private val title: TextView = view.findViewById(R.id.tv_notification_title)
+        private val content: TextView = view.findViewById(R.id.tv_notification_content)
+        private val time: TextView = view.findViewById(R.id.tv_notification_time)
+        private val icon: ImageView = view.findViewById(R.id.iv_notification_icon)
+        private val root: View = view.findViewById(R.id.cl_notification_root)
 
-        fun bind(notification: Notification, onNotificationClickListener: (Notification) -> Unit) {
+        fun bind(notification: Notification, onNotificationClick: (Notification) -> Unit) {
             val publisherName = when (notification.publisher) {
-                is NotificationPublisher.Admin -> ""
+                is NotificationPublisher.Admin -> "운영자"
                 is NotificationPublisher.User -> notification.publisher.userName
             }
 
@@ -56,9 +56,9 @@ class NotificationAdapter(
             when (notification.type) {
                 is NotificationType.Letter -> {
                     icon.setImageResource(R.drawable.ic_unread_letter_notification)
-                    title.text =
-                        if (publisherName.isNotEmpty()) "$publisherName 의 편지 답장이 도착했어요" else "편지 답장이 도착했어요"
+                    title.text = publisherName
                     content.text = notification.content
+                    content.visibility = View.VISIBLE
                 }
 
                 is NotificationType.EgoRoom -> {
@@ -81,7 +81,7 @@ class NotificationAdapter(
             val timeDifferenceHours = timeDifferenceMinutes / 60
             time.text = when (timeDifferenceHours) {
                 0L -> "$timeDifferenceMinutes 분 전"
-                in 1L..24L -> "$timeDifferenceHours 시간 전"
+                in 1..24L -> "$timeDifferenceHours 시간 전"
                 else -> "$publishMonth.$publishDate"
             }
 
@@ -102,7 +102,7 @@ class NotificationAdapter(
             }
 
             root.setOnClickListener {
-                onNotificationClickListener(notification)
+                onNotificationClick(notification)
             }
         }
     }
@@ -110,7 +110,7 @@ class NotificationAdapter(
     companion object {
         private val DiffCallback = object : DiffUtil.ItemCallback<Notification>() {
             override fun areItemsTheSame(oldItem: Notification, newItem: Notification): Boolean {
-                return oldItem.content == newItem.content && oldItem.publishedDate == newItem.publishedDate
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Notification, newItem: Notification): Boolean {

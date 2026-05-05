@@ -113,9 +113,11 @@ import javax.inject.Inject
 
             //게스트 로그인 버튼 클릭이벤트
             binding.btnGuestLogin.setOnClickListener {
-             viewModel.onEvent(LoginEvent.TryGuestLogin)
-//                임시 주석
-//                navigateToOnboarding()
+                binding.blurView.visibility = View.VISIBLE
+                val dialog = GuestLoginWarningDialog {
+                    viewModel.onEvent(LoginEvent.TryGuestLogin)
+                }
+                dialog.show(supportFragmentManager, GuestLoginWarningDialog.TAG)
             }
 
             // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기

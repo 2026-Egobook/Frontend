@@ -1,9 +1,7 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.ui
 
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -14,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.egobook.app.R
+import com.egobook.app.store.data.model.ItemStatus
 
 class ItemAdapter(
     private val onItemClick: (CustomItem) -> Unit
@@ -53,17 +52,17 @@ class ItemAdapter(
                 ItemStatus.PURCHASED -> {
                     itemStatus.text = "보유중"
                     itemInfoLayout.setPadding(24,6,24,6)
-                    itemPriceIcon.visibility = GONE
+                    itemPriceIcon.visibility = View.GONE
                 }
                 ItemStatus.SUBSCRIBE_ONLY -> {
                     itemStatus.text = "구독전용"
                     itemInfoLayout.setPadding(24,6,24,6)
-                    itemPriceIcon.visibility = GONE
+                    itemPriceIcon.visibility = View.GONE
                 }
                 ItemStatus.PURCHASABLE -> {
                     itemStatus.text = item.price.toString()
                     itemInfoLayout.updatePadding(left=12, right=16)
-                    itemPriceIcon.visibility = VISIBLE
+                    itemPriceIcon.visibility = View.VISIBLE
                 }
             }
 

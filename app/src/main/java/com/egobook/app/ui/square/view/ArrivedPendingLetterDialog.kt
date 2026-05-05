@@ -22,7 +22,10 @@ import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class ArrivedPendingLetterDialog(
@@ -103,9 +106,21 @@ class ArrivedPendingLetterDialog(
      * "arrivedAt": "2026-01-04T10:00:00+09:00" → 2026.01.04 로 변환해주는 메소드
      */
     private fun formatArrivedDateTime(dateTimeStr: String): String {
-        val parsedDateTime: OffsetDateTime = OffsetDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-        return parsedDateTime.format(formatter)
+        return try {
+            val parsedDateTime: OffsetDateTime = try {
+                OffsetDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+            } catch (e: Exception) {
+                try {
+                    ZonedDateTime.parse(dateTimeStr).toOffsetDateTime()
+                } catch (e2: Exception) {
+                    LocalDateTime.parse(dateTimeStr).atZone(ZoneId.systemDefault()).toOffsetDateTime()
+                }
+            }
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            parsedDateTime.format(formatter)
+        } catch (e: Exception) {
+            "날짜 확인 불가"
+        }
     }
 
     companion object {

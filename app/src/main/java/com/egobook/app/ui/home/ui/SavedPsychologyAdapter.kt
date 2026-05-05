@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.ui.home.repository.SavedPsychologyDto
-import com.egobook.app.ui.shop.CustomItem
 
 class SavedPsychologyAdapter(
     private val onItemClick: (SavedPsychologyDto) -> Unit
@@ -32,12 +31,15 @@ class SavedPsychologyAdapter(
         val dateTextView: TextView = view.findViewById(R.id.tv_psychology_date)
         val contentTextView: TextView = view.findViewById(R.id.tv_psychology_content)
         val sourceTextView: TextView = view.findViewById(R.id.tv_psychology_source)
+        val deleteButton: View = view.findViewById(R.id.iv_delete)
+
         fun bind(item: SavedPsychologyDto, onItemClick: (SavedPsychologyDto) -> Unit) {
             dateTextView.text = item.savedAt
             contentTextView.text = item.title
             sourceTextView.text = item.source
             contentTextView.text = item.preview
-            itemView.setOnClickListener {
+
+            deleteButton.setOnClickListener {
                 onItemClick(item)
             }
         }
