@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.egobook"
+        applicationId = "com.egobook.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -74,6 +74,7 @@ android {
     
     buildFeatures {
         viewBinding = true
+        dataBinding = true
         buildConfig = true
     }
 
