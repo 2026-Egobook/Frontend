@@ -204,14 +204,39 @@ import javax.inject.Inject
                         ).show()
                         navigateToMain()
                     }
+//                    is LoginState.Error -> {
+//                        binding.progressBar.visibility = View.GONE
+//                        val message = state.error.message ?: "알 수 없는 오류가 발생했습니다"
+//                        Toast.makeText(
+//                            this@LoginActivity,
+//                            message,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                    else -> {
+//                        binding.progressBar.visibility = View.GONE
+//                    }
                     is LoginState.Error -> {
                         binding.progressBar.visibility = View.GONE
-                        val message = state.error.message ?: "알 수 없는 오류가 발생했습니다"
-                        Toast.makeText(
-                            this@LoginActivity,
-                            message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+
+                        val message = state.error.message ?: ""
+
+                        //서버 꺼짐 / 네트워크 에러
+                        if (
+                            message.contains("timeout", true) ||
+                            message.contains("Unable to resolve host", true) ||
+                            message.contains("Failed to connect", true)
+                        ) {
+                            showMaintenanceDialog()
+                        }
+                        // 일반 에러
+                        else {
+                            Toast.makeText(
+                                this@LoginActivity,
+                                message.ifEmpty { "알 수 없는 오류가 발생했습니다" },
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                     else -> {
                         binding.progressBar.visibility = View.GONE
@@ -250,6 +275,19 @@ import javax.inject.Inject
             startActivity(intent)
             finish()
         }
+
+        private fun showMaintenanceDialog() {
+            android.app.AlertDialog.Builder(this)
+                .setTitle("점검 중")
+                .setMessage("서버 점검 중입니다.\n점검 시간: 03:00 ~ 06:00")
+                .setPositiveButton("확인") { _, _ ->
+                    finishAffinity() // 앱 종료
+                }
+                .setCancelable(false)
+                .show()
+        }
+
+
 
 
     //========================================특정 char 폰트 커스텀===========================================================
