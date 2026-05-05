@@ -62,6 +62,12 @@ class IntroActivity : ComponentActivity() {
         // IntroActivity UI를 보여주는 시간
         delay(1400)
 
+        // 점검 시간 체크 (03:00 ~ 09:00)
+        if (isMaintenanceTime()) {
+            showMaintenanceDialog()
+            return
+        }
+
         //액세스 토큰 읽기
         val accessToken = userInfoStorage.getAccessToken().first()
         val hasAccessToken = !accessToken.isNullOrEmpty()
@@ -76,6 +82,21 @@ class IntroActivity : ComponentActivity() {
             Timber.d("로그인 화면으로 이동")
             navigateToLogin()
         }
+    }
+    private fun isMaintenanceTime(): Boolean {
+        val calendar = java.util.Calendar.getInstance()
+        val hour = calendar.get(java.util.Calendar.HOUR_OF_DAY)
+        return hour in 3..8
+//        return true
+    }
+
+    private fun showMaintenanceDialog() {
+        android.app.AlertDialog.Builder(this)
+            .setTitle("점검 중")
+            .setMessage("서버 점검 중입니다.\n점검 시간: 03:00 ~ 09:00")
+            .setPositiveButton("확인") { _, _ -> finishAffinity() }
+            .setCancelable(false)
+            .show()
     }
 
     private fun navigateToMain() {
