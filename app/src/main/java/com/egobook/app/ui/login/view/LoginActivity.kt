@@ -103,7 +103,7 @@ import javax.inject.Inject
                                 )
                                 handleSignIn(result, isLogin = true)
                             } catch (e: GetCredentialException) {
-                                Timber.d("로그인 실패: ${e.message}")
+                                showGoogleCredentialError("Google 로그인", e)
                             }
                         }
                     }
@@ -128,7 +128,7 @@ import javax.inject.Inject
                         )
                         handleSignIn(result, isLogin = false)
                     } catch (e: GetCredentialException) {
-                        Timber.d("회원가입 실패: ${e.message}")
+                        showGoogleCredentialError("Google 회원가입", e)
                     }
 
                 }
@@ -179,17 +179,41 @@ import javax.inject.Inject
 
             } else {
                 Timber.e("구글 로그인 credential 아님")
+                Toast.makeText(
+                    this,
+                    "Google 인증 정보 형식이 올바르지 않습니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
+
+        private fun showGoogleCredentialError(action: String, e: GetCredentialException) {
+            Timber.e(e, "$action 실패")
+
+            val detail = e.message
+                ?.takeIf { it.isNotBlank() }
+                ?: e::class.java.simpleName
+
+            Toast.makeText(
+                this,
+                "$action 실패: $detail",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        private fun setLoginButtonsEnabled(enabled: Boolean) {
+            binding.btnLogin.isEnabled = enabled
+            binding.btnGoogleLogin.isEnabled = enabled
+            binding.btnGuestLogin.isEnabled = enabled
+        }
+
         private fun observeLoginState() {
         lifecycleScope.launch {
             viewModel.loginState.collect { state ->
                 when (state) {
                     is LoginState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        binding.btnLogin.isEnabled = false
-                        binding.btnGoogleLogin.isEnabled = false
-                        binding.btnGuestLogin.isEnabled = false
+                        setLoginButtonsEnabled(false)
                     }
                     is LoginState.Success -> {
                         binding.progressBar.visibility = View.GONE
@@ -202,6 +226,7 @@ import javax.inject.Inject
                     }
                     is LoginState.Error -> {
                         binding.progressBar.visibility = View.GONE
+                        setLoginButtonsEnabled(true)
                         val message = state.error.message ?: "알 수 없는 오류가 발생했습니다"
                         Toast.makeText(
                             this@LoginActivity,
@@ -211,6 +236,7 @@ import javax.inject.Inject
                     }
                     else -> {
                         binding.progressBar.visibility = View.GONE
+                        setLoginButtonsEnabled(true)
                     }
                 }
             }

@@ -10,6 +10,9 @@ import com.egobook.app.databinding.ItemSquareLetterBinding
 import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.ui.square.model.letter.SentLetterModel
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -59,9 +62,17 @@ class MySentLettersAdapter(private val onClicked: (Long) -> Unit): PagingDataAda
     }
 
     private fun formatDate(createdDateTime: String): String {
-        val instant = Instant.parse(createdDateTime)
         val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-            .withZone(ZoneId.systemDefault())
-        return formatter.format(instant)
+        return createdDateTime.toLocalDateOrNull()?.format(formatter).orEmpty()
+    }
+
+    private fun String.toLocalDateOrNull(): LocalDate? {
+        return runCatching {
+            Instant.parse(this).atZone(ZoneId.systemDefault()).toLocalDate()
+        }.recoverCatching {
+            OffsetDateTime.parse(this).toLocalDate()
+        }.recoverCatching {
+            LocalDateTime.parse(this).toLocalDate()
+        }.getOrNull()
     }
 }

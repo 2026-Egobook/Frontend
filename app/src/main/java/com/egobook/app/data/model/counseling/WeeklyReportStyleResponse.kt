@@ -4,9 +4,9 @@ import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.model.WeeklyReportStyle
 
 data class WeeklyReportStyleResponse(
-    val type: ReportStyle
+    val tone: ReportStyle
 )
 
 fun WeeklyReportStyleResponse.toDomain(): WeeklyReportStyle = WeeklyReportStyle(
-    type = type
+    type = tone
 )

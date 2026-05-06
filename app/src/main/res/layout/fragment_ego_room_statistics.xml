@@ -26,7 +26,7 @@
 
             <TextView
                 android:id="@+id/tv_counseling_statistics_total_count_title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="24sp"
                 android:gravity="center_vertical"
@@ -35,9 +35,38 @@
                 android:textColor="@color/neutral"
                 android:textSize="16sp"
                 android:fontFamily="@font/arita_semibold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_counseling_statistics_total_count_question"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_help"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintStart_toEndOf="@id/tv_counseling_statistics_total_count_title"
+                app:layout_constraintTop_toTopOf="@id/tv_counseling_statistics_total_count_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_counseling_statistics_total_count_title" />
+
+            <TextView
+                android:id="@+id/tv_counseling_statistics_total_count_tooltip"
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:padding="12dp"
+                android:text="1년 동안 어떤 감정을 많이 느꼈나요? 가장 많이 기록한 감정이 기준(100%)이 되고, 나머지 감정은 그 비율만큼 막대 길이로 표시돼요.\n\n가장 많이 기록한 감정에 왕관이 붙어요."
+                android:textColor="#FFFEFC"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:letterSpacing="-0.02"
+                android:background="@drawable/bg_tooltip"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="@id/iv_counseling_statistics_total_count_question"
+                app:layout_constraintTop_toBottomOf="@id/iv_counseling_statistics_total_count_question"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_counseling_statistics_total_count_very_happy"
@@ -46,7 +75,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/img_emotion_very_happy"
-                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_total_count_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_total_count_tooltip"
                 app:layout_constraintEnd_toStartOf="@id/hbc_counseling_statistics_total_count_very_happy"
                 app:layout_constraintStart_toStartOf="parent"/>
 
@@ -59,16 +88,6 @@
                 app:layout_constraintEnd_toStartOf="@id/tv_counseling_statistics_total_count_very_happy_count"
                 app:layout_constraintStart_toEndOf="@id/iv_counseling_statistics_total_count_very_happy"
                 app:layout_constraintTop_toTopOf="@id/iv_counseling_statistics_total_count_very_happy" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_crown"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintTop_toTopOf="@id/hbc_counseling_statistics_total_count_very_happy"
-                app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_very_happy"
-                app:layout_constraintEnd_toEndOf="@id/hbc_counseling_statistics_total_count_very_happy"/>
-
 
             <TextView
                 android:id="@+id/tv_counseling_statistics_total_count_very_happy_count"
@@ -230,12 +249,14 @@
                 app:layout_constraintTop_toTopOf="@id/hbc_counseling_statistics_total_count_very_sad" />
 
             <ImageView
+                android:id="@+id/iv_counseling_statistics_total_count_crown"
                 app:layout_constraintTop_toTopOf="@id/hbc_counseling_statistics_total_count_very_happy"
                 app:layout_constraintBottom_toBottomOf="@id/hbc_counseling_statistics_total_count_very_happy"
                 app:layout_constraintEnd_toEndOf="@id/hbc_counseling_statistics_total_count_very_happy"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_marginEnd="17dp"
+                android:visibility="gone"
                 android:src="@drawable/ic_crown" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -251,7 +272,7 @@
 
             <TextView
                 android:id="@+id/tv_counseling_statistics_daily_record_title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="24sp"
                 android:gravity="center_vertical"
@@ -260,9 +281,38 @@
                 android:textColor="@color/neutral"
                 android:textSize="16sp"
                 android:fontFamily="@font/arita_semibold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_counseling_statistics_daily_record_question"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_help"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintStart_toEndOf="@id/tv_counseling_statistics_daily_record_title"
+                app:layout_constraintTop_toTopOf="@id/tv_counseling_statistics_daily_record_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_counseling_statistics_daily_record_title" />
+
+            <TextView
+                android:id="@+id/tv_counseling_statistics_daily_record_tooltip"
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:padding="12dp"
+                android:text="요일마다 어떤 감정을 많이 느꼈는지 보여줘요. 각 막대는 그 요일의 전체 감정 기록 중 각 감정의 비율을 나타내요."
+                android:textColor="#FFFEFC"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:letterSpacing="-0.02"
+                android:background="@drawable/bg_tooltip"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="@id/iv_counseling_statistics_daily_record_question"
+                app:layout_constraintTop_toBottomOf="@id/iv_counseling_statistics_daily_record_question"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/bc_counseling_statistics_daily_record"
@@ -271,7 +321,7 @@
                 android:layout_marginTop="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_daily_record_title" />
+                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_daily_record_tooltip" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_counseling_statistics_daily_record_peak_positive"
@@ -365,7 +415,7 @@
             app:layout_constraintTop_toBottomOf="@id/cl_counseling_statistics_daily_record">
             <TextView
                 android:id="@+id/tv_counseling_statistics_trend_title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="24sp"
                 android:gravity="center_vertical"
@@ -374,16 +424,47 @@
                 android:textColor="@color/neutral"
                 android:textSize="16sp"
                 android:fontFamily="@font/arita_semibold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_counseling_statistics_trend_question"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_help"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintStart_toEndOf="@id/tv_counseling_statistics_trend_title"
+                app:layout_constraintTop_toTopOf="@id/tv_counseling_statistics_trend_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_counseling_statistics_trend_title" />
+
+            <TextView
+                android:id="@+id/tv_counseling_statistics_trend_tooltip"
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:padding="12dp"
+                android:text="최근 6개월 동안의 월별 평균 감정 점수를 꺾은선 그래프로 보여줘요. 점수가 높을수록 긍정적인 감정을 많이 기록한 달이에요."
+                android:textColor="#FFFEFC"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:letterSpacing="-0.02"
+                android:background="@drawable/bg_tooltip"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="@id/iv_counseling_statistics_trend_question"
+                app:layout_constraintTop_toBottomOf="@id/iv_counseling_statistics_trend_question"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <ImageView
                 android:id="@+id/iv_counseling_statistics_trend_very_happy"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="12dp"
                 android:src="@drawable/img_emotion_very_happy"
                 app:layout_constraintVertical_chainStyle="spread"
-                app:layout_constraintTop_toTopOf="@id/lc_counseling_statistics_trend"
+                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_trend_tooltip"
                 app:layout_constraintStart_toStartOf="@id/tv_counseling_statistics_trend_title"
                 app:layout_constraintBottom_toTopOf="@id/iv_counseling_statistics_trend_happy"/>
             <ImageView
@@ -424,7 +505,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="24dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_trend_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_trend_tooltip"
                 app:layout_constraintStart_toEndOf="@id/iv_counseling_statistics_trend_very_happy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/cv_counseling_statistics_average_last_month"/>
@@ -553,7 +634,7 @@
             app:layout_constraintTop_toBottomOf="@id/cl_counseling_statistics_average_six_month">
             <TextView
                 android:id="@+id/tv_counseling_statistics_word_frequency_title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="24sp"
                 android:gravity="center_vertical"
@@ -562,16 +643,46 @@
                 android:textColor="@color/neutral"
                 android:textSize="16sp"
                 android:fontFamily="@font/arita_semibold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_counseling_statistics_word_frequency_question"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_help"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintStart_toEndOf="@id/tv_counseling_statistics_word_frequency_title"
+                app:layout_constraintTop_toTopOf="@id/tv_counseling_statistics_word_frequency_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_counseling_statistics_word_frequency_title" />
+
+            <TextView
+                android:id="@+id/tv_counseling_statistics_word_frequency_tooltip"
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:padding="12dp"
+                android:text="감정 일기에서 자주 사용한 단어를 버블 크기로 보여줘요. 자주 쓴 단어일수록 버블이 크게 표시돼요."
+                android:textColor="#FFFEFC"
+                android:textSize="14sp"
+                android:fontFamily="@font/arita_medium"
+                android:letterSpacing="-0.02"
+                android:background="@drawable/bg_tooltip"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="@id/iv_counseling_statistics_word_frequency_question"
+                app:layout_constraintTop_toBottomOf="@id/iv_counseling_statistics_word_frequency_question"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <com.egobook.app.ui.counseling.view.WordBubbleView
                 android:id="@+id/wbv_counseling_statistics_word_frequency"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_word_frequency_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_counseling_statistics_word_frequency_tooltip"
                 app:layout_constraintStart_toStartOf="@id/tv_counseling_statistics_word_frequency_title"
                 app:layout_constraintEnd_toEndOf="@id/tv_counseling_statistics_word_frequency_title"
                 app:layout_constraintBottom_toBottomOf="parent"/>

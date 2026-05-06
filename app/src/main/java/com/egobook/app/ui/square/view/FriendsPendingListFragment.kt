@@ -139,6 +139,7 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                 val viewToRemove = llFriendsPendingListReceived.findViewWithTag<View>(requestId)
                                 llFriendsPendingListReceived.removeView(viewToRemove)
                                 tvFriendsPendingListReceivedNum.text = (tvFriendsPendingListReceivedNum.text.toString().toInt() - 1).toString()
+                                viewModel.fetchFriendList()
                             }
                         }
                     }
