@@ -41,8 +41,11 @@ import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
 
 class SquareFragment : Fragment(R.layout.fragment_square) {
     private lateinit var binding: FragmentSquareBinding
@@ -381,9 +384,9 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                         if(!isListEmpty) {
                             val hasSentLetterToday = (0 until sentLetterAdapter.itemCount).any { index ->
                                 val item = sentLetterAdapter.peek(index)
-                                val createdDate = ZonedDateTime.parse(item?.createdAt).toLocalDate()
+                                val createdDate = item?.createdAt?.toLocalDateOrNull()
                                 val today = LocalDate.now()
-                                createdDate.isEqual(today)
+                                createdDate?.isEqual(today) == true
                             }
                             cvSquareWriteLetter.isEnabled = !hasSentLetterToday
                             cvSquareWriteLetter.alpha = if(hasSentLetterToday) 0.4f else 1f
@@ -414,5 +417,15 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
     companion object {
         private const val MAX_LENGTH = 250
+    }
+
+    private fun String.toLocalDateOrNull(): LocalDate? {
+        return runCatching {
+            Instant.parse(this).atZone(ZoneId.systemDefault()).toLocalDate()
+        }.recoverCatching {
+            OffsetDateTime.parse(this).toLocalDate()
+        }.recoverCatching {
+            LocalDateTime.parse(this).toLocalDate()
+        }.getOrNull()
     }
 }

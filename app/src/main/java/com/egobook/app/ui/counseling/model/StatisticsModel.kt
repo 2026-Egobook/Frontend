@@ -1,39 +1,30 @@
 package com.egobook.app.ui.counseling.model
 
-import com.egobook.app.domain.model.DailyData
-import com.egobook.app.domain.model.EmotionType
-import com.egobook.app.domain.model.MonthData
+import com.egobook.app.domain.model.EmotionCount
+import com.egobook.app.domain.model.EmotionPercent
+import com.egobook.app.domain.model.MonthlyAverage
+import com.egobook.app.domain.model.MoodPeak
+import com.egobook.app.domain.model.MoodPeakTime
+import com.egobook.app.domain.model.StackedStats
 import com.egobook.app.domain.model.Statistics
-import com.egobook.app.domain.model.TimeData
+import com.egobook.app.domain.model.TotalStats
+import com.egobook.app.domain.model.WeekdayStack
+import com.egobook.app.domain.model.WordCloudItem
 
 data class StatisticsModel(
-    val emotions: Map<EmotionType, MonthDataModel>
+    val totalStats: TotalStats,
+    val moodPeak: MoodPeak,
+    val stacked: StackedStats,
+    val wordCloud: List<WordCloudItem>,
+    val sixMonthAvgs: List<MonthlyAverage>,
+    val generatedAt: String?
 )
-
-data class MonthDataModel(val months: List<DailyDataModel>) {
-    val totalCnt: Int get() = months.sumOf { it.totalCnt } // 1년 데이터 합계
-}
-
-data class DailyDataModel(val days: List<TimeDataModel>) {
-    val totalCnt: Int get() = days.sumOf { it.totalCnt } // 해당 달의 전체 합계
-}
-
-data class TimeDataModel(val hours: List<Int>) {
-    val totalCnt: Int get() = hours.sum() // 해당 요일의 전체 합계
-}
 
 fun Statistics.toPresentation(): StatisticsModel = StatisticsModel(
-    emotions = emotions.mapValues { it.value.toPresentation() }
-)
-
-fun MonthData.toPresentation(): MonthDataModel = MonthDataModel(
-    months = months.map { it.toPresentation() }
-)
-
-fun DailyData.toPresentation(): DailyDataModel = DailyDataModel(
-    days = days.map { it.toPresentation() }
-)
-
-fun TimeData.toPresentation(): TimeDataModel = TimeDataModel(
-    hours = hours
+    totalStats = totalStats,
+    moodPeak = moodPeak,
+    stacked = stacked,
+    wordCloud = wordCloud,
+    sixMonthAvgs = sixMonthAvgs,
+    generatedAt = generatedAt
 )

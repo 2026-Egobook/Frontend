@@ -142,7 +142,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_counseling_weekly_report_notification">
+        app:layout_constraintTop_toBottomOf="@id/ll_counseling_weekly_report_style">
 
         <TextView
             android:layout_width="wrap_content"
@@ -155,6 +155,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:gravity="center_horizontal"
             android:text="알림을 설정하면 매주 월요일 리포트를\n받아볼 수 있어요"
             android:textColor="@color/neutral"

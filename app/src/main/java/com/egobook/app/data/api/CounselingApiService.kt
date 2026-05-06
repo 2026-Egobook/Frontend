@@ -47,8 +47,8 @@ interface CounselingApiService {
 
     @GET("/ego-room/counsel/weekly")
     suspend fun fetchWeeklyReports(
-        @Path("page") page: Int,
-        @Path("size") size: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): ApiResponse<WeeklyReportsResponse>
 
     @GET("/ego-room/counsel/weekly/{startDate}")
@@ -59,18 +59,18 @@ interface CounselingApiService {
     @PATCH("/ego-room/counsel/weekly/next-tone")
     suspend fun updateWeeklyReportStyle(
         @Body request: ReportStyleRequest
-    ): Response<Unit>
+    ): Response<WeeklyReportStyleResponse>
 
     @POST("/ego-room/counsel/weekly/{startDate}/unlock")
     suspend fun unlockWeeklyReport(
         @Path("startDate") startDate: String,
-        @Path("unlockType") unlockType: WeeklyReportUnlockType
+        @Query("unlockType") unlockType: WeeklyReportUnlockType
     ): ApiResponse<Unit>
 
 
     @GET("/ego-room/counseling-tone")
     suspend fun fetchWeeklyReportStyle(): ApiResponse<ReportStyle>
 
-    @GET("api/statistics")
+    @GET("/ego-room/stats")
     suspend fun fetchStatistics(): Response<StatisticsResponse>
 }

@@ -3,7 +3,6 @@ package com.egobook.app.data.repository.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.egobook.app.data.api.CounselingApiService
-import com.egobook.app.data.model.counseling.WeeklyReportsContentResponse
 import com.egobook.app.data.model.counseling.toDomain
 import com.egobook.app.domain.model.counseling.WeeklyReport
 
@@ -16,32 +15,11 @@ class WeeklyReportsPagingSource(private val apiService: CounselingApiService): P
         return try {
             val page = params.key ?: FIRST_PAGE_NUM
             val size = params.loadSize
-//            val data = apiService.fetchWeeklyReports(page = page, size = size).data
-            val mockWeeklyReports = listOf(
-                WeeklyReportsContentResponse(
-                    id = 1L,
-                    startDate = "2026.02.02",
-                    endDate = "2026.02.08",
-                    isRead = false,
-                    isLocked = false
-                ),
-                WeeklyReportsContentResponse(
-                    id = 2L,
-                    startDate = "2026.02.09",
-                    endDate = "2026.02.15",
-                    isRead = true,
-                    isLocked = false
-                )
-            )
-//            LoadResult.Page(
-//                data = data.content.map { it.toDomain() },
-//                prevKey = if(page == FIRST_PAGE_NUM) null else page - 1,
-//                nextKey = if(data.hasNext) page + 1 else null
-//            )
+            val data = apiService.fetchWeeklyReports(page = page, size = size).data
             LoadResult.Page(
-                data = mockWeeklyReports.map { it.toDomain() },
+                data = data.content.map { it.toDomain() },
                 prevKey = if(page == FIRST_PAGE_NUM) null else page - 1,
-                nextKey = null
+                nextKey = if(data.hasNext) page + 1 else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
