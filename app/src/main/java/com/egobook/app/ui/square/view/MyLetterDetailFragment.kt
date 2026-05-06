@@ -25,8 +25,8 @@ import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.ZoneId
+import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
@@ -182,9 +182,25 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
     }
 
     private fun formatDate(createdDateTime: String): String {
-        val instant = Instant.parse(createdDateTime)
-        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-            .withZone(ZoneId.systemDefault())
-        return formatter.format(instant)
+        return try {
+            val localDateTime = LocalDateTime.parse(createdDateTime)
+            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            formatter.format(localDateTime)
+        } catch (e: Exception) {
+            try {
+                val instant = java.time.Instant.parse(createdDateTime)
+                val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                    .withZone(java.time.ZoneId.systemDefault())
+                formatter.format(instant)
+            } catch (e2: Exception) {
+                try {
+                    val zonedDateTime = java.time.ZonedDateTime.parse(createdDateTime)
+                    val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                    formatter.format(zonedDateTime)
+                } catch (e3: Exception) {
+                    createdDateTime
+                }
+            }
+        }
     }
 }

@@ -103,7 +103,7 @@ import javax.inject.Inject
                                 )
                                 handleSignIn(result, isLogin = true)
                             } catch (e: GetCredentialException) {
-                                showGoogleCredentialError("Google 로그인", e)
+                                Timber.d("로그인 실패: ${e.message}")
                             }
                         }
                     }
@@ -113,7 +113,11 @@ import javax.inject.Inject
 
             //게스트 로그인 버튼 클릭이벤트
             binding.btnGuestLogin.setOnClickListener {
-                viewModel.onEvent(LoginEvent.TryGuestLogin)
+                binding.blurView.visibility = View.VISIBLE
+                val dialog = GuestLoginWarningDialog {
+                    viewModel.onEvent(LoginEvent.TryGuestLogin)
+                }
+                dialog.show(supportFragmentManager, GuestLoginWarningDialog.TAG)
             }
 
             // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기
@@ -128,7 +132,7 @@ import javax.inject.Inject
                         )
                         handleSignIn(result, isLogin = false)
                     } catch (e: GetCredentialException) {
-                        showGoogleCredentialError("Google 회원가입", e)
+                        Timber.d("회원가입 실패: ${e.message}")
                     }
 
                 }
@@ -179,41 +183,17 @@ import javax.inject.Inject
 
             } else {
                 Timber.e("구글 로그인 credential 아님")
-                Toast.makeText(
-                    this,
-                    "Google 인증 정보 형식이 올바르지 않습니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
-
-        private fun showGoogleCredentialError(action: String, e: GetCredentialException) {
-            Timber.e(e, "$action 실패")
-
-            val detail = e.message
-                ?.takeIf { it.isNotBlank() }
-                ?: e::class.java.simpleName
-
-            Toast.makeText(
-                this,
-                "$action 실패: $detail",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
-        private fun setLoginButtonsEnabled(enabled: Boolean) {
-            binding.btnLogin.isEnabled = enabled
-            binding.btnGoogleLogin.isEnabled = enabled
-            binding.btnGuestLogin.isEnabled = enabled
-        }
-
         private fun observeLoginState() {
         lifecycleScope.launch {
             viewModel.loginState.collect { state ->
                 when (state) {
                     is LoginState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        setLoginButtonsEnabled(false)
+                        binding.btnLogin.isEnabled = false
+                        binding.btnGoogleLogin.isEnabled = false
+                        binding.btnGuestLogin.isEnabled = false
                     }
                     is LoginState.Success -> {
                         binding.progressBar.visibility = View.GONE
@@ -224,19 +204,48 @@ import javax.inject.Inject
                         ).show()
                         navigateToMain()
                     }
+//                    is LoginState.Error -> {
+//                        binding.progressBar.visibility = View.GONE
+//                        val message = state.error.message ?: "알 수 없는 오류가 발생했습니다"
+//                        Toast.makeText(
+//                            this@LoginActivity,
+//                            message,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                    else -> {
+//                        binding.progressBar.visibility = View.GONE
+//                    }
                     is LoginState.Error -> {
                         binding.progressBar.visibility = View.GONE
-                        setLoginButtonsEnabled(true)
-                        val message = state.error.message ?: "알 수 없는 오류가 발생했습니다"
-                        Toast.makeText(
-                            this@LoginActivity,
-                            message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        binding.btnLogin.isEnabled = true
+                        binding.btnGoogleLogin.isEnabled = true
+                        binding.btnGuestLogin.isEnabled = true
+
+                        val message = state.error.message ?: ""
+
+                        //서버 꺼짐 / 네트워크 에러
+                        if (
+                            message.contains("timeout", true) ||
+                            message.contains("Unable to resolve host", true) ||
+                            message.contains("Failed to connect", true)
+                        ) {
+                            showMaintenanceDialog()
+                        }
+                        // 일반 에러
+                        else {
+                            Toast.makeText(
+                                this@LoginActivity,
+                                message.ifEmpty { "알 수 없는 오류가 발생했습니다" },
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                     else -> {
                         binding.progressBar.visibility = View.GONE
-                        setLoginButtonsEnabled(true)
+                        binding.btnLogin.isEnabled = true
+                        binding.btnGoogleLogin.isEnabled = true
+                        binding.btnGuestLogin.isEnabled = true
                     }
                 }
             }
@@ -272,6 +281,19 @@ import javax.inject.Inject
             startActivity(intent)
             finish()
         }
+
+        private fun showMaintenanceDialog() {
+            android.app.AlertDialog.Builder(this)
+                .setTitle("점검 중")
+                .setMessage("서버 점검 중입니다.\n점검 시간: 03:00 ~ 06:00")
+                .setPositiveButton("확인") { _, _ ->
+                    finishAffinity() // 앱 종료
+                }
+                .setCancelable(false)
+                .show()
+        }
+
+
 
 
     //========================================특정 char 폰트 커스텀===========================================================

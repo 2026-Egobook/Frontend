@@ -38,18 +38,33 @@ class AdDialog() : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val userId = arguments?.getString(ARG_USER_ID) ?: "사용자가 없습니다"
 
-        viewModel.loadCurrentAdInfo()
-
+        // viewModel.loadCurrentAdInfo()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.adState.collect { adState ->
-                if (adState.isAvailable) {
-                    binding.btnWatch.isEnabled = true
-                } else {
-                    binding.btnWatch.isEnabled = false
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.adState.collect { adState ->
+                        if (adState.isAvailable) {
+                            binding.btnWatch.isEnabled = true
+                        } else {
+                            binding.btnWatch.isEnabled = false
+                        }
+                        binding.btnWatch.text = "광고보기 ${adState.currentViewCount}/${adState.maxLimit}"
+                        binding.tvAdReward.text = adState.rewardPerAd.toString()
+                    }
                 }
-                binding.btnWatch.text = "광고보기 ${adState.currentViewCount}/${adState.maxLimit}"
-                binding.tvAdReward.text = adState.rewardPerAd.toString()
+
+                launch {
+                    viewModel.isLoadingAdInfo.collect { isLoading ->
+                        if (isLoading) {
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.contentLayout.visibility = View.GONE
+                        } else {
+                            binding.progressBar.visibility = View.GONE
+                            binding.contentLayout.visibility = View.VISIBLE
+                        }
+                    }
+                }
             }
         }
 

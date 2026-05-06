@@ -49,6 +49,7 @@
             android:layout_height="30dp"
             android:layout_weight="1"
             android:text=""
+            android:textColor="@color/neutral"
             android:textSize="20sp"
             android:fontFamily="@font/arita_semibold"
             android:gravity="center_vertical"/>

@@ -32,6 +32,27 @@ class LoginViewModel @Inject constructor(
     private val _autoLoginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val autoLoginState = _autoLoginState.asStateFlow()
 
+    fun checkServerAlive() {
+        viewModelScope.launch {
+            try {
+                authUseCases.guestReLogin()
+            } catch (e: Exception) {
+
+                val message = e.message ?: ""
+
+                // 네트워크 에러만 점검으로 처리
+                if (
+                    message.contains("timeout", true) ||
+                    message.contains("Unable to resolve host", true) ||
+                    message.contains("Failed to connect", true)
+                ) {
+                    val authError = AuthError.Unknown(message)
+                    _loginState.value = LoginState.Error(authError)
+                }
+
+            }
+        }
+    }
 
     //"로그인 화면" 에서의 이벤트만 처리하는 용도.
     fun onEvent(event: LoginEvent) {
@@ -130,3 +151,4 @@ class LoginViewModel @Inject constructor(
     }
 
 }
+

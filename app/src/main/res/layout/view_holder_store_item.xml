@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="142dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/store_item_selection_border"
     android:layout_marginHorizontal="4dp"
     android:layout_marginBottom="16dp"
     android:orientation="vertical">

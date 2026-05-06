@@ -67,14 +67,26 @@ class SquareDeferredLettersAdapter(
 }
 
 private fun getRemainingTime(replyDeadlineAt: String): String {
-    val deadline: OffsetDateTime = OffsetDateTime.parse(replyDeadlineAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-    val now: OffsetDateTime = OffsetDateTime.now(ZoneId.systemDefault())
-    val duration: Duration = Duration.between(now, deadline)
-    return when {
-        duration.isNegative || duration.isZero -> "답장 유효기한 만료"
-        duration.toDays() > 0 -> "${duration.toDays()}일 남음"
-        duration.toHours() > 0 -> "${duration.toHours()}시간 남음"
-        duration.toMinutes() > 0 -> "${duration.toMinutes()}분 남음"
-        else -> "잠시 후 만료"
+    return try {
+        val deadline: OffsetDateTime = try {
+            OffsetDateTime.parse(replyDeadlineAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+        } catch (e: Exception) {
+            try {
+                java.time.ZonedDateTime.parse(replyDeadlineAt).toOffsetDateTime()
+            } catch (e2: Exception) {
+                java.time.LocalDateTime.parse(replyDeadlineAt).atZone(java.time.ZoneId.systemDefault()).toOffsetDateTime()
+            }
+        }
+        val now: OffsetDateTime = OffsetDateTime.now(ZoneId.systemDefault())
+        val duration: Duration = java.time.Duration.between(now, deadline)
+        when {
+            duration.isNegative || duration.isZero -> "답장 유효기한 만료"
+            duration.toDays() > 0 -> "${duration.toDays()}일 남음"
+            duration.toHours() > 0 -> "${duration.toHours()}시간 남음"
+            duration.toMinutes() > 0 -> "${duration.toMinutes()}분 남음"
+            else -> "잠시 후 만료"
+        }
+    } catch (e: Exception) {
+        "유효기한 확인 불가"
     }
 }

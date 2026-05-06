@@ -381,16 +381,19 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
                         val isListEmpty = loadStates.refresh is LoadState.NotLoading && sentLetterAdapter.itemCount == 0
 
-                        if(!isListEmpty) {
-                            val hasSentLetterToday = (0 until sentLetterAdapter.itemCount).any { index ->
+                        val hasSentLetterToday = if(!isListEmpty) {
+                            (0 until sentLetterAdapter.itemCount).any { index ->
                                 val item = sentLetterAdapter.peek(index)
                                 val createdDate = item?.createdAt?.toLocalDateOrNull()
                                 val today = LocalDate.now()
                                 createdDate?.isEqual(today) == true
                             }
-                            cvSquareWriteLetter.isEnabled = !hasSentLetterToday
-                            cvSquareWriteLetter.alpha = if(hasSentLetterToday) 0.4f else 1f
+                        } else {
+                            false
                         }
+                        cvSquareWriteLetter.isEnabled = !hasSentLetterToday
+                        cvSquareWriteLetter.alpha = if(hasSentLetterToday) 0.4f else 1f
+                        tvSquareWriteLetterCount.text = if(hasSentLetterToday) "편지쓰기\n0/1" else "편지쓰기\n1/1"
 
                         tvSquareSentLetterPlaceholderMain.isVisible = isListEmpty
                         tvSquareSentLetterPlaceholderSub.isVisible = isListEmpty

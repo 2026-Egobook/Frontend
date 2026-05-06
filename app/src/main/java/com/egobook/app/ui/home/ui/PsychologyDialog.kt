@@ -10,12 +10,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.egobook.app.R
-import com.egobook.app.databinding.DialogAdBinding
 import com.egobook.app.databinding.DialogPsychologyBinding
 import com.egobook.app.removeScreenBlur
-import com.egobook.app.ui.home.HomeViewModel
 import com.egobook.app.ui.home.PsychologyViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -43,16 +43,32 @@ class PsychologyDialog() : DialogFragment() {
         val viewModel: PsychologyViewModel by activityViewModels()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.dailyPhycologyDto.collect { dailyPhycologyDto ->
-                binding.tvPsychologyContent.text = dailyPhycologyDto.knowledge.content
-                binding.tvPsychologySource.text = dailyPhycologyDto.knowledge.source
-                binding.tvPsychologyDate.text = dailyPhycologyDto.date
-                ink = max(ink, dailyPhycologyDto.reward?.inkGranted ?: 0)
-                binding.btnReward.text = "잉크 ${ink}개 획득!"
-                if (dailyPhycologyDto.isBookmarked) {
-                    binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_clicked)
-                } else {
-                    binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_unclicked)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.dailyPhycologyDto.collect { dailyPhycologyDto ->
+                        binding.tvPsychologyContent.text = dailyPhycologyDto.knowledge.content
+                        binding.tvPsychologySource.text = dailyPhycologyDto.knowledge.source
+                        binding.tvPsychologyDate.text = dailyPhycologyDto.date
+                        ink = max(ink, dailyPhycologyDto.reward?.inkGranted ?: 0)
+                        binding.btnReward.text = "잉크 ${ink}개 획득!"
+                        if (dailyPhycologyDto.isBookmarked) {
+                            binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_clicked)
+                        } else {
+                            binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_unclicked)
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.isLoading.collect { isLoading ->
+                        if (isLoading) {
+                            binding.pbLoading.visibility = View.VISIBLE
+                            binding.vLoadingOverlay.visibility = View.VISIBLE
+                        } else {
+                            binding.pbLoading.visibility = View.GONE
+                            binding.vLoadingOverlay.visibility = View.GONE
+                        }
+                    }
                 }
             }
         }

@@ -119,6 +119,10 @@ class LetterViewModel @Inject constructor(
         }
     }
 
+    fun resetArrivedPendingLetterStatus() {
+        _arrivedPendingLetterResult.value = UiState.Idle
+    }
+
     private val _replyLetterResult = MutableSharedFlow<UiState<ReplyLetterModel>>()
     val replyLetterResult = _replyLetterResult.asSharedFlow()
 

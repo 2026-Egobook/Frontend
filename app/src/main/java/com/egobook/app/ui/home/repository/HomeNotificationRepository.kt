@@ -8,7 +8,7 @@ import com.egobook.app.ui.home.notification.NotificationPublisher
 import com.egobook.app.ui.home.notification.NotificationStatus
 import com.egobook.app.ui.home.notification.NotificationTime
 import com.egobook.app.ui.home.notification.NotificationType
-import com.egobook.app.ui.shop.BaseResponse
+import com.egobook.app.store.data.BaseResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
@@ -25,17 +25,20 @@ interface HomeNotificationRepository {
     suspend fun loadNotifications(): Flow<Notification>
     suspend fun loadNotificationSetting(): NotificationSettingDto
     suspend fun changeNotificationSetting(): NotificationSettingDto
-
     suspend fun readNotification(notification: Notification): NotificationReadingDto
 }
+
+data class NotificationSettingDto(
+    val enabled: Boolean
+)
+
+data class NotificationChangeDto(
+    val enabled: Boolean
+)
 
 data class NotificationReadingDto(
     val notificationId: Int,
     val isRead: Boolean
-)
-
-data class NotificationSettingDto(
-    val enabled: Boolean
 )
 
 data class NotificationGroupDto(
@@ -62,19 +65,27 @@ data class NotificationDto(
     val createdAt: String
 ) {
     fun toDomain(): Notification {
+        val notificationType = type.toNotificationType()
+        val publisher = when (notificationType) {
+            is NotificationType.Letter -> {
+                val cleanTitle = title.replace("새로운 ", "").trim()
+                NotificationPublisher.User(targetId.toString(), cleanTitle)
+            }
+            is NotificationType.EgoRoom -> NotificationPublisher.Admin
+        }
+
         return Notification(
-            id = notificationId,
+            id = notificationId, // Keep notificationId as the domain id
             content = content ?: "내용이 없습니다",
-            type = type.toNotificationType(),
+            type = notificationType,
             status = if (isRead) NotificationStatus.READ else NotificationStatus.UNREAD,
-            publisher = NotificationPublisher.User("admin", "운영자"),
+            publisher = publisher,
             publishedDate = NotificationTime(LocalDateTime.parse(createdAt)),
         )
     }
-
 }
 
-interface NetworkNotificationLoadingService {
+interface NetworkNotificationService {
     @GET("/notifications")
     suspend fun loadNotificationsResponse(
         @Query("page") page: Int,
@@ -85,22 +96,21 @@ interface NetworkNotificationLoadingService {
     suspend fun loadNotificationSetting(): BaseResponse<NotificationSettingDto>
 
     @PATCH("/notifications/settings")
-    suspend fun changeNotificationSetting(): BaseResponse<NotificationSettingDto>
+    suspend fun changeNotificationSetting(): BaseResponse<NotificationChangeDto>
 
     @POST("/notifications/{notificationId}/read")
     suspend fun readNotification(
-        @Path("notificationId") notificationId: Int,
+        @Path("notificationId") notificationId: Int
     ): BaseResponse<NotificationReadingDto>
 }
-
 
 @Singleton
 class NetworkHomeNotificationRepository @Inject constructor(
     @BackendApi private val retrofit: Retrofit
 ) : HomeNotificationRepository {
 
-    private val loadingNotificationService by lazy {
-        retrofit.create(NetworkNotificationLoadingService::class.java)
+    private val notificationService by lazy {
+        retrofit.create(NetworkNotificationService::class.java)
     }
 
     override suspend fun loadNotifications(): Flow<Notification> {
@@ -108,14 +118,13 @@ class NetworkHomeNotificationRepository @Inject constructor(
             var currentPage = 1
             while (true) {
                 try {
-                    val response = loadingNotificationService.loadNotificationsResponse(
+                    val response = notificationService.loadNotificationsResponse(
                         page = currentPage,
                         size = 10
                     ).data
 
                     response.content.forEach { dto ->
                         Log.d("jang", "$dto")
-                        Log.d("jang", "${NotificationTime(LocalDateTime.parse(dto.createdAt))}")
                         emit(dto.toDomain())
                     }
 
@@ -136,14 +145,16 @@ class NetworkHomeNotificationRepository @Inject constructor(
     }
 
     override suspend fun loadNotificationSetting(): NotificationSettingDto {
-        return loadingNotificationService.loadNotificationSetting().data
+        return notificationService.loadNotificationSetting().data
     }
 
     override suspend fun changeNotificationSetting(): NotificationSettingDto {
-        return loadingNotificationService.changeNotificationSetting().data
+        val notificationChangeDto = notificationService.changeNotificationSetting().data
+        Log.d("jang2", "${notificationChangeDto}")
+        return NotificationSettingDto(notificationChangeDto.enabled)
     }
 
     override suspend fun readNotification(notification: Notification): NotificationReadingDto {
-        return loadingNotificationService.readNotification(notification.id).data
+        return notificationService.readNotification(notification.id).data
     }
 }

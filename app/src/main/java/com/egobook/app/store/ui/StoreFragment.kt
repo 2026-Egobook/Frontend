@@ -1,5 +1,6 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,14 +14,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.egobook.app.BlurLevel
-import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentStoreBinding
-import com.egobook.app.ui.home.ui.AdDialog
+import com.egobook.app.store.data.model.ItemType
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -51,6 +50,11 @@ class StoreFragment: Fragment() {
             insets
         }
         val viewModel: StoreViewModel by activityViewModels()
+        
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.initialize()
+        }
+
         viewModel.loadInk()
         viewPager = binding.vp2StoreCollectionContainer
         viewPager.adapter = StoreCollectionAdapter(this)
@@ -64,8 +68,8 @@ class StoreFragment: Fragment() {
                 super.onPageSelected(position)
                 if (position == lastSelected) return
                 lastSelected = position
-                viewModel.loadEquippedItems()
-                Log.d("jang", "페이지 변경 감지됨: $position")
+                viewModel.clearPreviewItems()
+                Log.d("StoreFragment", "페이지 변경 감지됨: $position, 임시 착용 아이템 초기화")
             }
         })
 
@@ -86,7 +90,7 @@ class StoreFragment: Fragment() {
         }
 
         binding.ivReset.setOnClickListener {
-            viewModel.loadEquippedItems()
+            viewModel.clearPreviewItems()
         }
 
         lifecycleScope.launch {
@@ -100,8 +104,19 @@ class StoreFragment: Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.equippedItems.collect { equippedList ->
-                equippedList.forEach { equippedItem ->
-                    updateEquipItemUi(equippedItem)
+                val typeToItem = equippedList.associateBy { it.type }
+                ItemType.entries.forEach { type ->
+                    updateEquipItemUi(type, typeToItem[type])
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { isLoading ->
+                    val visibility = if (isLoading) View.VISIBLE else View.GONE
+                    binding.pbLoading.visibility = visibility
+                    binding.vLoadingOverlay.visibility = visibility
                 }
             }
         }
@@ -115,41 +130,31 @@ class StoreFragment: Fragment() {
         _binding = null
     }
 
-    private fun updateEquipItemUi(item: CustomItem) {
-        binding.ivStoreTurtle.visibility = View.INVISIBLE
-        when (item.type) {
+    private fun updateEquipItemUi(type: ItemType, item: CustomItem?) {
+        val imagePath = (item?.outfitImage as? ItemImage.Url)?.path
+        when (type) {
             ItemType.BACK -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivStoreTurtleBack.load(item.outfitImage.path)
-                }
+                binding.ivStoreTurtleBack.load(imagePath)
             }
             ItemType.SKIN -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivStoreTurtleSkin.load(item.outfitImage.path)
-                }
+                binding.ivStoreTurtleSkin.load(imagePath)
             }
             ItemType.DECO_1 -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    if(item.outfitImage.path.contains("Default")) {
-                        binding.ivStoreTurtleDeco1.load(null)
-                        return
-                    }
-                    binding.ivStoreTurtleDeco1.load(item.outfitImage.path)
+                if (imagePath?.contains("Default") == true) {
+                    binding.ivStoreTurtleDeco1.load(null)
+                } else {
+                    binding.ivStoreTurtleDeco1.load(imagePath)
                 }
             }
             ItemType.DECO_2 -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    if(item.outfitImage.path.contains("Default")) {
-                        binding.ivStoreTurtleDeco2.load(null)
-                        return
-                    }
-                    binding.ivStoreTurtleDeco2.load(item.outfitImage.path)
+                if (imagePath?.contains("Default") == true) {
+                    binding.ivStoreTurtleDeco2.load(null)
+                } else {
+                    binding.ivStoreTurtleDeco2.load(imagePath)
                 }
             }
             ItemType.BACKGROUND -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivStoreBackground.load(item.outfitImage.path)
-                }
+                binding.ivStoreBackground.load(imagePath)
             }
         }
     }
@@ -164,6 +169,3 @@ class StoreFragment: Fragment() {
         }
     }
 }
-
-
-

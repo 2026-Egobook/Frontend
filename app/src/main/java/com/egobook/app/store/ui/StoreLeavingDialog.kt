@@ -1,4 +1,4 @@
-package com.egobook.app.ui.shop
+package com.egobook.app.store.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -40,7 +40,7 @@ class StoreLeavingDialog: DialogFragment() {
         binding.btnLeave.setOnClickListener {
             removeScreenBlur()
             dismiss()
-            viewModel.resetEquipItems()
+            // viewModel.resetEquipItems()
             findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
         }
     }
