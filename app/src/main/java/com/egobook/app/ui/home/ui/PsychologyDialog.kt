@@ -32,7 +32,10 @@ class PsychologyDialog() : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setWindowAnimations(0)
+        }
         _binding = DialogPsychologyBinding.inflate(inflater, container, false)
         return binding.root
     }

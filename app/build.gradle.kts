@@ -47,6 +47,9 @@ android {
 
         val admobAppId = localProperties.getProperty("ADMOB_APP_ID") ?: "ca-app-pub-3940256099942544~3347511713"
         manifestPlaceholders["ADMOB_APP_ID"] = admobAppId
+        val admobRewardedAdUnitId =
+            localProperties.getProperty("ADMOB_REWARDED_AD_INK_UNIT_ID") ?: "ca-app-pub-3940256099942544/5224354917"
+        buildConfigField("String", "ADMOB_REWARDED_AD_INK_UNIT_ID", "\"$admobRewardedAdUnitId\"")
 
         println("ADMOB_APP_ID = ${localProperties.getProperty("ADMOB_APP_ID")}")
 

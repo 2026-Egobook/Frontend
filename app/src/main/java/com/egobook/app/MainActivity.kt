@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
     }
 
     private var rewardedAd: RewardedAd? = null
-    private val adUnitId = "ca-app-pub-3940256099942544/5224354917"
+    private val adUnitId = BuildConfig.ADMOB_REWARDED_AD_INK_UNIT_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
