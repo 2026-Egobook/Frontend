@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.egobook.app.MainActivity
 import com.egobook.app.databinding.DialogAdBinding
 import com.egobook.app.removeScreenBlur
@@ -38,7 +37,7 @@ class AdDialog() : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val userId = arguments?.getString(ARG_USER_ID) ?: "사용자가 없습니다"
 
-        // viewModel.loadCurrentAdInfo()
+        viewModel.loadCurrentAdInfo()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

@@ -154,19 +154,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-/*
     fun loadCurrentAdInfo() {
         viewModelScope.launch {
             _isLoadingAdInfo.value = true
             try {
                 val adInfo = userAdRepository.loadAdInfo()
                 _adState.value = adInfo
+            } catch (error: Exception) {
+                Log.e("HomeViewModel", "Failed to load ad info", error)
             } finally {
                 _isLoadingAdInfo.value = false
             }
         }
     }
-*/
 
     fun watchAd() {
         viewModelScope.launch {

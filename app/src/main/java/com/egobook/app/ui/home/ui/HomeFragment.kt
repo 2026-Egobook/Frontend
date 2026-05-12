@@ -105,7 +105,16 @@ class HomeFragment(): Fragment() {
         }
 
         binding.ivAd.setOnClickListener {
-            Toast.makeText(requireContext(), "광고 기능이 준비중입니다.", Toast.LENGTH_SHORT).show()
+            val userId = viewModel.uiState.value.id
+            if (userId <= 0) {
+                Toast.makeText(requireContext(), "사용자 정보를 불러오는 중입니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            applyScreenBlur(BlurLevel.BASE)
+            val dialog = AdDialog.newInstance(userId.toString())
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "AdDialog")
         }
         binding.ivBell.setOnClickListener {
             val notificationController =

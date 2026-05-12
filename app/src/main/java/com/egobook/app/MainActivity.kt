@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        MobileAds.initialize(this) {}
+        MobileAds.initialize(this)
 
         loadAd()
         lifecycleScope.launch {
@@ -158,8 +158,8 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
                 val rewardAmount = rewardItem.amount
                 val rewardType = rewardItem.type
                 Log.d("jang", "보상 지급! (서버로 콜백 날아감), $rewardType, rewardAmout: $rewardAmount")
+                onAdClosed()
             }
-            onAdClosed()
             rewardedAd = null
             loadAd()
         } else {
