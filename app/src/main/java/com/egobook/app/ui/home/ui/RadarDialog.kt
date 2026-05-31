@@ -52,27 +52,23 @@ class RadarDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val radarView: RadarView = view.findViewById(R.id.custom_radar_view)
 
-        viewModel.fetchTendencies()
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.tendencies.collect { data ->
                         if (data.isNotEmpty()) {
+                            binding.progressBar.visibility = View.GONE
+                            binding.contentLayout.visibility = View.VISIBLE
                             radarView.setRadarData(data.sortedBy { it.type.order() }.map { it.experiencePoint })
                             showTendencyLevel(data)
                         }
                     }
                 }
-
                 launch {
                     viewModel.isLoading.collect { isLoading ->
-                        if (isLoading) {
+                        if (isLoading && viewModel.tendencies.value.isEmpty()) {
                             binding.progressBar.visibility = View.VISIBLE
                             binding.contentLayout.visibility = View.GONE
-                        } else {
-                            binding.progressBar.visibility = View.GONE
-                            binding.contentLayout.visibility = View.VISIBLE
                         }
                     }
                 }
