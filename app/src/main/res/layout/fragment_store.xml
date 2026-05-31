@@ -125,6 +125,7 @@
         app:layout_constraintStart_toStartOf="@id/vp2_store_collection_container"/>
 
     <View
+        android:id="@+id/v_tab_divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/neutral_stroke"
@@ -191,6 +192,19 @@
         android:textColor="@color/neutral_contrast"
         android:fontFamily="@font/arita_semibold"
         android:text="구매하기" />
+
+    <ImageView
+        android:id="@+id/iv_expand"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:src="@drawable/arrow_out_icon"
+        android:background="@drawable/bg_store_expand_button"
+        android:padding="10dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:elevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/iv_tab_layout_background" />
 
     <ProgressBar
         android:id="@+id/pb_loading"

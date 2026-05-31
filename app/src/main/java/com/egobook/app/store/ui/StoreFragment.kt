@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -17,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.egobook.app.BlurLevel
+import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentStoreBinding
 import com.egobook.app.store.data.model.ItemType
@@ -32,6 +34,7 @@ class StoreFragment: Fragment() {
     private val viewModel: StoreViewModel by activityViewModels()
 
     private var lastSelected = -1
+    private var previewState = PreviewExpansionState.COLLAPSED
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,15 +45,22 @@ class StoreFragment: Fragment() {
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_PREVIEW_STATE, previewState.name)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        savedInstanceState?.getString(KEY_PREVIEW_STATE)?.let { name ->
+            previewState = PreviewExpansionState.valueOf(name)
+            if (previewState.isExpanded) togglePreviewExpanded(expanded = true)
+        }
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(0, 0, 0, systemBars.bottom)
             insets
         }
-        val viewModel: StoreViewModel by activityViewModels()
-        
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.initialize()
         }
@@ -91,6 +101,11 @@ class StoreFragment: Fragment() {
 
         binding.ivReset.setOnClickListener {
             viewModel.clearPreviewItems()
+        }
+
+        binding.ivExpand.setOnClickListener {
+            previewState = previewState.toggle()
+            togglePreviewExpanded(previewState.isExpanded)
         }
 
         lifecycleScope.launch {
@@ -157,6 +172,49 @@ class StoreFragment: Fragment() {
                 binding.ivStoreBackground.load(imagePath)
             }
         }
+    }
+
+    private fun togglePreviewExpanded(expanded: Boolean) {
+        applyConstraints(expanded)
+        val visibility = if (expanded) View.GONE else View.VISIBLE
+        listOf(
+            binding.ivTabLayoutBackground,
+            binding.tlTabs,
+            binding.vp2StoreCollectionContainer,
+            binding.llCollectionController,
+            binding.ivReset,
+            binding.tvPurchase
+        ).forEach { it.visibility = visibility }
+        binding.ivExpand.setImageResource(
+            if (expanded) R.drawable.arrow_in_icon else R.drawable.arrow_out_icon
+        )
+    }
+
+    private fun applyConstraints(expanded: Boolean) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.root)
+
+        if (expanded) {
+            constraintSet.connect(R.id.iv_store_default_background, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+            constraintSet.connect(R.id.iv_store_background, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+            constraintSet.connect(R.id.iv_store_turtle, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+            constraintSet.connect(R.id.iv_store_turtle, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+            constraintSet.setMargin(R.id.iv_store_turtle, ConstraintSet.BOTTOM, 0)
+            constraintSet.connect(R.id.iv_expand, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        } else {
+            constraintSet.connect(R.id.iv_store_default_background, ConstraintSet.BOTTOM, R.id.vp2_store_collection_container, ConstraintSet.BOTTOM)
+            constraintSet.connect(R.id.iv_store_background, ConstraintSet.BOTTOM, R.id.vp2_store_collection_container, ConstraintSet.BOTTOM)
+            constraintSet.clear(R.id.iv_store_turtle, ConstraintSet.TOP)
+            constraintSet.connect(R.id.iv_store_turtle, ConstraintSet.BOTTOM, R.id.iv_tab_layout_background, ConstraintSet.TOP)
+            constraintSet.setMargin(R.id.iv_store_turtle, ConstraintSet.BOTTOM, 0)
+            constraintSet.connect(R.id.iv_expand, ConstraintSet.BOTTOM, R.id.iv_tab_layout_background, ConstraintSet.TOP)
+        }
+
+        constraintSet.applyTo(binding.root)
+    }
+
+    companion object {
+        private const val KEY_PREVIEW_STATE = "preview_state"
     }
 
     private fun observeViewModel() {
