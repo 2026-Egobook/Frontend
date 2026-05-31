@@ -78,6 +78,8 @@ class AccountFragment : Fragment() {
         observeUserIdState()
         observeLinkState()
         observeLinkToastEvent()
+        observeNicknameState()
+        observeNicknameToastEvent()
     }
 
     private fun observeUserIdState() {
@@ -144,6 +146,26 @@ class AccountFragment : Fragment() {
         }
     }
 
+    private fun observeNicknameState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.nickname.collect { nickname ->
+                    binding.tvNickname.text = nickname ?: "기본닉네임"
+                }
+            }
+        }
+    }
+
+    private fun observeNicknameToastEvent() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.nicknameToastEvent.collect { message ->
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     private fun observeLinkToastEvent() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -158,6 +180,13 @@ class AccountFragment : Fragment() {
         binding.apply {
             btnBack.setOnClickListener {
                 findNavController().navigate(R.id.action_accountFragment_to_homeFragment)
+            }
+
+            btnEditNickname.setOnClickListener {
+                applyScreenBlur(BlurLevel.BASE)
+                val dialog = NicknameEditDialogFragment()
+                dialog.isCancelable = true
+                dialog.show(childFragmentManager, NicknameEditDialogFragment.TAG)
             }
 
             btnIntegrate.setOnClickListener {

@@ -3,6 +3,7 @@ package com.egobook.app.data.repository.account
 import com.egobook.app.data.api.AccountApiService
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.account.LinkRequest
+import com.egobook.app.data.model.account.NicknameRequest
 import com.egobook.app.data.util.safeApiCall
 import com.egobook.app.data.util.safeAuthApiCall
 import com.egobook.app.domain.repository.account.AccountRepository
@@ -109,5 +110,11 @@ class AccountRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateNickname(nickname: String): Result<Unit> {
+        return safeApiCall(
+            apiCall = { apiService.updateNickname(NicknameRequest(nickname)) },
+            transform = { Unit }
+        )
+    }
 
 }

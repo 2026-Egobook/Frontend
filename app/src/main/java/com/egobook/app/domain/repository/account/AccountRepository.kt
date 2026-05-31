@@ -22,6 +22,11 @@ interface AccountRepository {
      */
     suspend fun deleteAccount(): Result<Unit>
 
+    /**
+     * 닉네임 변경
+     */
+    suspend fun updateNickname(nickname: String): Result<Unit>
+
 }
 
 data class LinkedAccountInfo(

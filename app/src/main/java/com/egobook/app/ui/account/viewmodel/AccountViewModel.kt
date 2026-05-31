@@ -2,7 +2,10 @@ package com.egobook.app.ui.account.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.domain.model.account.NicknameValidationResult
+import com.egobook.app.domain.model.account.NicknameValidator
 import com.egobook.app.domain.repository.account.AccountRepository
+import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +18,8 @@ import com.egobook.app.domain.model.auth.AuthError
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
         private val _userIdState = MutableStateFlow<UiState<String>>(UiState.Idle)
         val userIdState = _userIdState.asStateFlow()
@@ -23,7 +27,7 @@ class AccountViewModel @Inject constructor(
     private val _linkState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
     val linkState = _linkState.asStateFlow()
 
-    private val _linkToastEvent = MutableSharedFlow<String>(replay = 1)
+    private val _linkToastEvent = MutableSharedFlow<String>(replay = 0)
     val linkToastEvent = _linkToastEvent.asSharedFlow()
 
     private val _userEmail = MutableStateFlow<String?>(null)
@@ -32,10 +36,19 @@ class AccountViewModel @Inject constructor(
     private val _deleteAccountState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
     val deleteAccountState = _deleteAccountState.asStateFlow()
 
+    private val _nickname = MutableStateFlow<String?>(null)
+    val nickname = _nickname.asStateFlow()
+
+    private val _nicknameUpdateState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
+    val nicknameUpdateState = _nicknameUpdateState.asStateFlow()
+
+    private val _nicknameToastEvent = MutableSharedFlow<String>(replay = 0)
+    val nicknameToastEvent = _nicknameToastEvent.asSharedFlow()
 
     init {
         loadLinkedAccountInfo()
         getUserId()
+        loadNickname()
     }
 
     private fun loadLinkedAccountInfo() {
@@ -97,6 +110,45 @@ class AccountViewModel @Inject constructor(
                     _linkToastEvent.emit(errorMessage)
                 }
         }
+    }
+
+    private fun loadNickname() {
+        viewModelScope.launch {
+            try {
+                _nickname.value = userRepository.load().nickname
+            } catch (e: Exception) {
+                // 네트워크 실패 시 닉네임 미표시
+            }
+        }
+    }
+
+    fun updateNickname(nickname: String) {
+        val validationResult = NicknameValidator.validate(nickname)
+        if (validationResult != NicknameValidationResult.Valid) {
+            viewModelScope.launch {
+                _nicknameToastEvent.emit("닉네임은 2~8자 한글/영문/숫자만 사용 가능합니다.")
+            }
+            return
+        }
+
+        viewModelScope.launch {
+            _nicknameUpdateState.value = UiState.Loading
+
+            accountRepository.updateNickname(nickname)
+                .onSuccess {
+                    _nickname.value = nickname
+                    _nicknameUpdateState.value = UiState.Success(Unit)
+                    _nicknameToastEvent.emit("닉네임이 변경되었습니다.")
+                }
+                .onFailure { e ->
+                    _nicknameUpdateState.value = UiState.Failure(e.message ?: "닉네임 변경에 실패했습니다.")
+                    _nicknameToastEvent.emit(e.message ?: "닉네임 변경에 실패했습니다.")
+                }
+        }
+    }
+
+    fun resetNicknameUpdateState() {
+        _nicknameUpdateState.value = UiState.Idle
     }
 
     fun deleteAccount() {

@@ -85,17 +85,68 @@
 
         </LinearLayout>
 
+        <!-- 닉네임 -->
+        <LinearLayout
+            android:id="@+id/ly_nickname"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="32dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="12dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_account_id"
+            app:layout_constraintTop_toBottomOf="@id/ly_top"
+            app:layout_constraintStart_toStartOf="@id/gd_start"
+            app:layout_constraintEnd_toEndOf="@id/gd_end">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닉네임"
+                android:textSize="14sp"
+                android:textColor="@color/neutral"
+                android:fontFamily="@font/arita_semibold"/>
+
+            <android.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="기본닉네임"
+                android:textSize="15sp"
+                android:textColor="@color/neutral"
+                android:fontFamily="@font/arita_medium"
+                android:layout_marginEnd="12dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_edit_nickname"
+                style="@style/GreenButtonStyle"
+                android:layout_width="64dp"
+                android:layout_height="36dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="수정"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+
         <!-- 계정id -->
         <LinearLayout
             android:id="@+id/ly_account_id"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="52dp"
             android:orientation="horizontal"
-            android:layout_marginTop="32dp"
-            android:paddingVertical="8dp"
-            android:paddingHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:gravity="center_vertical"
             android:background="@drawable/bg_account_id"
-            app:layout_constraintTop_toBottomOf="@id/ly_top"
+            app:layout_constraintTop_toBottomOf="@id/ly_nickname"
             app:layout_constraintStart_toStartOf="@id/gd_start"
             app:layout_constraintEnd_toEndOf="@id/gd_end">
 
@@ -116,13 +167,13 @@
 
             <TextView
                 android:id="@+id/tv_real_account_id"
-                android:layout_width="229dp"
-                android:layout_height="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="ABC123456789"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/neutral"
-                android:fontFamily="@font/arita_semibold"
-                android:gravity="center" />
+                android:fontFamily="@font/arita_medium"
+                android:gravity="center_vertical" />
 
         </LinearLayout>
 
