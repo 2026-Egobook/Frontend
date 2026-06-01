@@ -14,6 +14,12 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="Theme.App.Dialog.NoAnimation" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowAnimationStyle">@style/DialogNoAnimation</item>
+        <item name="android:backgroundDimAmount">0</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
     <style name="AppTheme.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_color</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/empty_splash</item>  <!-- 투명 -->

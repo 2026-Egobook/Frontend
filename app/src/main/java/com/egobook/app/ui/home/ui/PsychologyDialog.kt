@@ -1,7 +1,5 @@
 package com.egobook.app.ui.home.ui
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,17 +25,23 @@ class PsychologyDialog() : DialogFragment() {
 
     private var ink: Int = 0
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.Theme_App_Dialog_NoAnimation)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.apply {
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            setWindowAnimations(0)
-        }
         _binding = DialogPsychologyBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,7 +89,6 @@ class PsychologyDialog() : DialogFragment() {
         }
 
         binding.btnReward.setOnClickListener {
-            removeScreenBlur()
             dismiss()
         }
     }
@@ -97,6 +100,7 @@ class PsychologyDialog() : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        removeScreenBlur()
         _binding = null
     }
 }
