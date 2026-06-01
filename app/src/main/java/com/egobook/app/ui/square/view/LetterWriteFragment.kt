@@ -23,10 +23,11 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentLetterWriteBinding
 import com.egobook.app.databinding.LayoutLetterTooltipPopupBinding
 import com.egobook.app.databinding.LayoutPopupFriendListBinding
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.adapter.FriendPopupListAdapter
 import com.egobook.app.ui.square.model.friend.FriendListModel
-import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
+import com.egobook.app.domain.model.square.letter.LetterPaperItem
 import com.egobook.app.ui.home.user.User
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
@@ -67,19 +68,51 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
         cvLetterColorBeige.getChildAt(0).isVisible = true
     }
 
+    private fun selectColor(color: LetterBackgroundColor) = with(binding) {
+        letterColor = color
+        val allColorViews = premiumLetterColorList + cvLetterColorBeige
+        allColorViews.forEach { it.isSelected = false; it.getChildAt(0)?.isVisible = false }
+        val selectedView = when (color) {
+            LetterBackgroundColor.WHITE -> cvLetterColorBeige
+            LetterBackgroundColor.PINK -> cvLetterWriteColorPink
+            LetterBackgroundColor.GREEN -> cvLetterWriteColorGreen
+            LetterBackgroundColor.BLUE -> cvLetterWriteColorBlue
+            LetterBackgroundColor.PURPLE -> cvLetterWriteColorPurple
+        }
+        selectedView.isSelected = true
+        selectedView.getChildAt(0)?.isVisible = true
+        val bgColorRes = when (color) {
+            LetterBackgroundColor.WHITE -> R.color.letter_bg_beige
+            LetterBackgroundColor.PINK -> R.color.letter_bg_pink
+            LetterBackgroundColor.GREEN -> R.color.letter_bg_green
+            LetterBackgroundColor.BLUE -> R.color.letter_bg_blue
+            LetterBackgroundColor.PURPLE -> R.color.letter_bg_purple
+        }
+        cvLetterContainer.setCardBackgroundColor(resources.getColor(bgColorRes, null))
+    }
+
     private fun initListeners() = with(binding) {
         ivLetterWriteBack.setOnClickListener { findNavController().popBackStack() }
-        premiumLetterColorList.forEach { letterColor ->
-            letterColor.setOnClickListener { clickedView ->
-                val letterColor = when(clickedView.id) {
+        cvLetterColorBeige.setOnClickListener {
+            selectColor(LetterBackgroundColor.WHITE)
+        }
+        premiumLetterColorList.forEach { colorView ->
+            colorView.setOnClickListener { clickedView ->
+                val color = when (clickedView.id) {
                     R.id.cv_letter_write_color_pink -> LetterBackgroundColor.PINK
                     R.id.cv_letter_write_color_green -> LetterBackgroundColor.GREEN
                     R.id.cv_letter_write_color_blue -> LetterBackgroundColor.BLUE
                     else -> LetterBackgroundColor.PURPLE
                 }
-                val dialog = PremiumLetterBuyDialog(letterColor = letterColor).apply { isCancelable = false }
-                dialog.show(childFragmentManager, PremiumLetterBuyDialog.TAG)
-                applyScreenBlur(BlurLevel.BASE)
+                val items = (viewModel.letterPaperItems.value as? UiState.Success)?.data
+                val item = items?.find { it.color == color }
+                if (item == null || item.isPurchased) {
+                    selectColor(color)
+                } else {
+                    val dialog = PremiumLetterBuyDialog(letterColor = color, letterPaperItem = item).apply { isCancelable = false }
+                    dialog.show(childFragmentManager, PremiumLetterBuyDialog.TAG)
+                    applyScreenBlur(BlurLevel.BASE)
+                }
             }
         }
         etLetterWriteContent.addTextChangedListener(object: TextWatcher {

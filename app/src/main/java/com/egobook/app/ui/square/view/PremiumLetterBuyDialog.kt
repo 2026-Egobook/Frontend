@@ -13,17 +13,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egobook.app.R
 import com.egobook.app.databinding.DialogPremiumLetterBuyBinding
-import com.egobook.app.domain.model.counseling.WeeklyReportUnlockType
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import com.egobook.app.removeScreenBlur
-import com.egobook.app.ui.counseling.view.WeeklyReportUnlockDialog.Companion.INK_PRICE
-import com.egobook.app.ui.home.user.User
+import com.egobook.app.domain.model.square.letter.LetterPaperItem
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch
 
-class PremiumLetterBuyDialog(private val letterColor: LetterBackgroundColor) :
-    DialogFragment(R.layout.dialog_premium_letter_buy) {
+class PremiumLetterBuyDialog(
+    private val letterColor: LetterBackgroundColor,
+    private val letterPaperItem: LetterPaperItem
+) : DialogFragment(R.layout.dialog_premium_letter_buy) {
     private lateinit var binding: DialogPremiumLetterBuyBinding
     private val viewModel: LetterViewModel by activityViewModels()
 
@@ -56,6 +56,7 @@ class PremiumLetterBuyDialog(private val letterColor: LetterBackgroundColor) :
         }
         cvPremiumLetterColor.backgroundTintList = resources.getColorStateList(backgroundColor, null)
         ivPremiumLetterBanner.setImageResource(letterBanner)
+        tvPremiumLetterPrice.text = letterPaperItem.price.toString()
     }
 
     private fun initListeners() = with(binding) {
@@ -64,37 +65,33 @@ class PremiumLetterBuyDialog(private val letterColor: LetterBackgroundColor) :
             removeScreenBlur()
         }
         btnPremiumLetterBuy.setOnClickListener {
-            viewModel.getUserInfo()
+            viewModel.purchaseLetterPaper(letterPaperItem)
         }
     }
 
     private fun initObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userInfo.collect { state ->
+                viewModel.purchaseLetterPaperResult.collect { state ->
                     when (state) {
-                        is UiState.Failure -> {}
+                        is UiState.Failure -> {
+                            Toast.makeText(context, "구매에 실패했습니다. 잉크가 부족할 수 있어요.", Toast.LENGTH_SHORT).show()
+                        }
                         UiState.Idle -> {}
                         UiState.Loading -> {}
-                        is UiState.Success<User> -> {
-                            val userInfo = state.data
-                            val currentInk = userInfo.ink.value
-                            if (currentInk >= LETTER_PRICE) {
-                                Toast.makeText(context, "서비스 점검 중입니다!", Toast.LENGTH_SHORT).show()
-                                // TODO: 편지 잉크 구매 API 연동하기
-                            } else {
-                                Toast.makeText(context, "현재 잉크가 부족합니다!", Toast.LENGTH_SHORT).show()
-                            }
+                        is UiState.Success -> {
+                            viewModel.resetPurchaseLetterPaperResult()
+                            Toast.makeText(context, "구매가 완료되었습니다!", Toast.LENGTH_SHORT).show()
+                            dismiss()
+                            removeScreenBlur()
                         }
                     }
                 }
-
             }
         }
     }
 
     companion object {
         const val TAG = "PremiumLetterBuyDialog"
-        private const val LETTER_PRICE = 500
     }
 }

@@ -171,6 +171,7 @@ class StoreFragment: Fragment() {
             ItemType.BACKGROUND -> {
                 binding.ivStoreBackground.load(imagePath)
             }
+            ItemType.LETTER_PAPER -> {}
         }
     }
 

@@ -10,6 +10,7 @@ import com.egobook.app.store.data.network.dto.ShopItemDto
 import com.egobook.app.store.data.network.ofName
 import com.egobook.app.store.ui.CustomItem
 import com.egobook.app.store.ui.ItemImage
+import com.egobook.app.domain.model.square.letter.LetterPaperItem
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +20,7 @@ private fun String.toItemType(): ItemType = when (this) {
     "DECOR_ONE" -> ItemType.DECO_1
     "DECOR_TWO" -> ItemType.DECO_2
     "BACKGROUND" -> ItemType.BACKGROUND
+    "LETTER_PAPER" -> ItemType.LETTER_PAPER
     else -> throw IllegalArgumentException("${this}은 알 수 없는 아이템 타입 이름입니다")
 }
 
@@ -62,6 +64,27 @@ class ShopRepository @Inject constructor(
 
     suspend fun loadEquippedItems(): List<CustomItem> {
         return remoteShopDataSource.loadEquippedItems()
+    }
+
+    suspend fun loadLetterPaperItems(): List<LetterPaperItem> {
+        return remoteShopDataSource.loadItems(ItemType.LETTER_PAPER).map { dto ->
+            LetterPaperItem.fromDto(
+                id = dto.itemId,
+                price = dto.price,
+                isPurchased = dto.isPurchased,
+                imageUrl = dto.shopImageUrl
+            )
+        }
+    }
+
+    suspend fun purchaseLetterPaperItem(item: LetterPaperItem) {
+        val customItem = CustomItem(
+            id = item.id.toString(),
+            type = ItemType.LETTER_PAPER,
+            price = Price(item.price),
+            itemStatus = ItemStatus.PURCHASABLE
+        )
+        remoteShopDataSource.purchaseItems(customItem)
     }
 }
 

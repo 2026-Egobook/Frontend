@@ -25,6 +25,7 @@ data class ShopItemEntity(
             "DECOR_ONE" -> ItemType.DECO_1
             "DECOR_TWO" -> ItemType.DECO_2
             "BACKGROUND" -> ItemType.BACKGROUND
+            "LETTER_PAPER" -> ItemType.LETTER_PAPER
             else -> ItemType.BACKGROUND
         }
         return CustomItem(

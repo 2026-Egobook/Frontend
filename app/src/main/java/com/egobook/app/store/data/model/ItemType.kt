@@ -1,5 +1,5 @@
 package com.egobook.app.store.data.model
 
 enum class ItemType {
-    BACK, SKIN, DECO_1, DECO_2, BACKGROUND;
+    BACK, SKIN, DECO_1, DECO_2, BACKGROUND, LETTER_PAPER;
 }

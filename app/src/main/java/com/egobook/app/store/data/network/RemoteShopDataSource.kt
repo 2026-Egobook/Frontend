@@ -84,4 +84,5 @@ fun ItemType.ofName(): String =
         ItemType.DECO_1 -> "DECOR_ONE"
         ItemType.DECO_2 -> "DECOR_TWO"
         ItemType.BACKGROUND -> "BACKGROUND"
+        ItemType.LETTER_PAPER -> "LETTER_PAPER"
     }

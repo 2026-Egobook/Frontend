@@ -177,6 +177,7 @@ class HomeFragment(): Fragment() {
                     binding.ivHomeBackground.load(item.outfitImage.path)
                 }
             }
+            ItemType.LETTER_PAPER -> {}
         }
     }
 

@@ -7,6 +7,8 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.GetUserInfoUseCase
+import com.egobook.app.store.data.ShopRepository
+import com.egobook.app.domain.model.square.letter.LetterPaperItem
 import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.DeleteLetterThreadUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
@@ -46,6 +48,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LetterViewModel @Inject constructor(
+    private val shopRepository: ShopRepository,
     private val getFriendListUseCase: GetFriendListUseCase,
     private val sendLetterUseCase: SendLetterUseCase,
     private val detectAbusiveContentUseCase: DetectAbusiveContentUseCase,
@@ -62,6 +65,25 @@ class LetterViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getReceivedReplyByIdUseCase: GetReceivedReplyByIdUseCase
 ): ViewModel() {
+
+    private val _letterPaperItems = MutableStateFlow<UiState<List<LetterPaperItem>>>(UiState.Idle)
+    val letterPaperItems = _letterPaperItems.asStateFlow()
+
+    private val _purchaseLetterPaperResult = MutableStateFlow<UiState<Unit>>(UiState.Idle)
+    val purchaseLetterPaperResult = _purchaseLetterPaperResult.asStateFlow()
+
+    fun loadLetterPaperItems() {
+        viewModelScope.launch {
+            _letterPaperItems.value = UiState.Loading
+            runCatching { shopRepository.loadLetterPaperItems() }
+                .onSuccess { items -> _letterPaperItems.value = UiState.Success(items) }
+                .onFailure { error -> _letterPaperItems.value = UiState.Failure(error.message) }
+        }
+    }
+
+    init {
+        loadLetterPaperItems()
+    }
 
     private val _friendList = MutableStateFlow<UiState<FriendListModel>>(UiState.Idle)
     val friendList = _friendList.asStateFlow()
@@ -269,5 +291,25 @@ class LetterViewModel @Inject constructor(
                 _userInfo.emit(UiState.Failure(error.message))
             }
         }
+    }
+
+    fun purchaseLetterPaper(item: LetterPaperItem) {
+        viewModelScope.launch {
+            _purchaseLetterPaperResult.value = UiState.Loading
+            runCatching { shopRepository.purchaseLetterPaperItem(item) }
+                .onSuccess {
+                    _letterPaperItems.value = UiState.Success(
+                        (_letterPaperItems.value as? UiState.Success)?.data?.map {
+                            if (it.id == item.id) it.copy(isPurchased = true) else it
+                        } ?: emptyList()
+                    )
+                    _purchaseLetterPaperResult.value = UiState.Success(Unit)
+                }
+                .onFailure { error -> _purchaseLetterPaperResult.value = UiState.Failure(error.message) }
+        }
+    }
+
+    fun resetPurchaseLetterPaperResult() {
+        _purchaseLetterPaperResult.value = UiState.Idle
     }
 }

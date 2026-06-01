@@ -24,6 +24,7 @@ import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.square.model.letter.AbusiveContentModel
+import com.egobook.app.domain.model.square.letter.LetterPaperItem
 import com.egobook.app.ui.square.model.letter.ReplyLetterModel
 import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.util.UiState
@@ -46,6 +47,7 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
     }
 
     private var loadingDialog: DetectAbusiveContentLoadingDialog? = null
+    private var replyLetterColor: LetterBackgroundColor = LetterBackgroundColor.WHITE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,6 +68,29 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
         cvLetterReplyColorBeige.getChildAt(0).isVisible = true
     }
 
+    private fun selectReplyColor(color: LetterBackgroundColor) = with(binding) {
+        replyLetterColor = color
+        val allColorViews = premiumLetterColorList + cvLetterReplyColorBeige
+        allColorViews.forEach { it.isSelected = false; it.getChildAt(0)?.isVisible = false }
+        val selectedView = when (color) {
+            LetterBackgroundColor.WHITE -> cvLetterReplyColorBeige
+            LetterBackgroundColor.PINK -> cvLetterReplyColorPink
+            LetterBackgroundColor.GREEN -> cvLetterReplyColorGreen
+            LetterBackgroundColor.BLUE -> cvLetterReplyColorBlue
+            LetterBackgroundColor.PURPLE -> cvLetterReplyColorPurple
+        }
+        selectedView.isSelected = true
+        selectedView.getChildAt(0)?.isVisible = true
+        val bgColorRes = when (color) {
+            LetterBackgroundColor.WHITE -> R.color.letter_bg_beige
+            LetterBackgroundColor.PINK -> R.color.letter_bg_pink
+            LetterBackgroundColor.GREEN -> R.color.letter_bg_green
+            LetterBackgroundColor.BLUE -> R.color.letter_bg_blue
+            LetterBackgroundColor.PURPLE -> R.color.letter_bg_purple
+        }
+        cvLetterReplyContainer.setCardBackgroundColor(resources.getColor(bgColorRes, null))
+    }
+
     private fun initListeners() = with(binding) {
         ivLetterReplyChevron.setOnClickListener {
             tvLetterReplyReceivedContent.isVisible = !tvLetterReplyReceivedContent.isVisible
@@ -73,18 +98,26 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
                 if (tvLetterReplyReceivedContent.isVisible) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
             ivLetterReplyChevron.setImageResource(chevron)
         }
-        premiumLetterColorList.forEach { letterColor ->
-            letterColor.setOnClickListener { clickedView ->
-                val letterColor = when (clickedView.id) {
+        cvLetterReplyColorBeige.setOnClickListener {
+            selectReplyColor(LetterBackgroundColor.WHITE)
+        }
+        premiumLetterColorList.forEach { colorView ->
+            colorView.setOnClickListener { clickedView ->
+                val color = when (clickedView.id) {
                     R.id.cv_letter_reply_color_pink -> LetterBackgroundColor.PINK
                     R.id.cv_letter_reply_color_green -> LetterBackgroundColor.GREEN
                     R.id.cv_letter_reply_color_blue -> LetterBackgroundColor.BLUE
                     else -> LetterBackgroundColor.PURPLE
                 }
-                val dialog =
-                    PremiumLetterBuyDialog(letterColor = letterColor).apply { isCancelable = false }
-                dialog.show(childFragmentManager, PremiumLetterBuyDialog.TAG)
-                applyScreenBlur(BlurLevel.BASE)
+                val items = (viewModel.letterPaperItems.value as? UiState.Success)?.data
+                val item = items?.find { it.color == color }
+                if (item == null || item.isPurchased) {
+                    selectReplyColor(color)
+                } else {
+                    val dialog = PremiumLetterBuyDialog(letterColor = color, letterPaperItem = item).apply { isCancelable = false }
+                    dialog.show(childFragmentManager, PremiumLetterBuyDialog.TAG)
+                    applyScreenBlur(BlurLevel.BASE)
+                }
             }
         }
         etLetterReplyContent.addTextChangedListener(object : TextWatcher {
@@ -192,6 +225,7 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
                                         letterId = letterItem.letterId,
                                         text = etLetterReplyContent.text.toString()
                                     )
+                                    // TODO: replyLetterColor를 replyLetter API에 전달 (백엔드 지원 시)
                                 }
                             }
                         }
