@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.egobook.app"
+        applicationId = "com.egobook"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

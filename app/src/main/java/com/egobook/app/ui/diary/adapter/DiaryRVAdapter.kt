@@ -1,5 +1,6 @@
 package com.egobook.app.ui.diary.adapter
 
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.egobook.app.ui.util.toTimeString
 
 class DiaryRVAdapter :
     PagingDataAdapter<DiarySummary, DiaryRVAdapter.ViewHolder>(DiaryDiffCallback()) {
+    private val expandedDiaryIds = mutableSetOf<Long>()
 
     interface MyItemClickListener {
         fun onItemClick(diary: DiarySummary)
@@ -51,6 +53,11 @@ class DiaryRVAdapter :
         fun bind(diary: DiarySummary) {
             binding.tvDiaryContent.text = diary.content
             binding.tvTime.text = diary.writtenAt.toTimeString()
+            applyContentExpandedState(expandedDiaryIds.contains(diary.diaryId))
+
+            binding.tvDiaryContent.setOnClickListener {
+                toggleContentExpandedState(diary.diaryId)
+            }
 
             // 감정 레벨이 있으면 이미지 표시, 없으면 숨김
             if (diary.emotionLevel != null) {
@@ -82,7 +89,23 @@ class DiaryRVAdapter :
                 }
             }
         }
-        
+
+        private fun applyContentExpandedState(isExpanded: Boolean) = with(binding.tvDiaryContent) {
+            maxLines = if (isExpanded) Int.MAX_VALUE else COLLAPSED_CONTENT_MAX_LINES
+            ellipsize = if (isExpanded) null else TextUtils.TruncateAt.END
+        }
+
+        private fun toggleContentExpandedState(diaryId: Long) {
+            val isExpanded = if (expandedDiaryIds.contains(diaryId)) {
+                expandedDiaryIds.remove(diaryId)
+                false
+            } else {
+                expandedDiaryIds.add(diaryId)
+                true
+            }
+            applyContentExpandedState(isExpanded)
+        }
+
         /**
          * 감정 레벨 (1~5)을 UI 이미지 리소스로 변환
          */
@@ -107,5 +130,9 @@ class DiaryRVAdapter :
         override fun areContentsTheSame(oldItem: DiarySummary, newItem: DiarySummary): Boolean {
             return oldItem == newItem // 내용까지 동일한지 판단
         }
+    }
+
+    companion object {
+        private const val COLLAPSED_CONTENT_MAX_LINES = 3
     }
 }

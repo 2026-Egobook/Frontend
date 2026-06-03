@@ -13,12 +13,22 @@
         android:layout_height="0dp"
         app:strokeWidth="0dp"
         app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/layer_white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_background" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/default_turtle"/>
     </com.google.android.material.card.MaterialCardView>
 

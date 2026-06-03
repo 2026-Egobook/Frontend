@@ -25,7 +25,13 @@ import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch
 
-class SquareReportDialog(private val origin: ReportOrigin, private val letterId: Long? = null, private val replyId: Long? = null, private val answerId: Long? = null) :
+class SquareReportDialog(
+    private val origin: ReportOrigin,
+    private val letterId: Long? = null,
+    private val replyId: Long? = null,
+    private val answerId: Long? = null,
+    private val onReportSuccess: (() -> Unit)? = null
+) :
     DialogFragment(R.layout.dialog_square_report) {
     private lateinit var binding: DialogSquareReportBinding
     private val letterViewModel: LetterViewModel by activityViewModels()
@@ -97,6 +103,7 @@ class SquareReportDialog(private val origin: ReportOrigin, private val letterId:
             }
         })
         btnSquareReportSubmit.setOnClickListener {
+            btnSquareReportSubmit.isEnabled = false
             when(origin) {
                 ReportOrigin.LETTER_ARRIVED -> {
                     letterViewModel.reportArrivedLetter(letterId = letterId ?: -1L, reportLetter = ReportContentModel(
@@ -126,11 +133,12 @@ class SquareReportDialog(private val origin: ReportOrigin, private val letterId:
                 launch {
                     letterViewModel.reportArrivedLetterResult.collect { state ->
                         when(state) {
-                            is UiState.Failure -> {}
+                            is UiState.Failure -> handleReportFailure(state.message)
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Unit> -> {
                                 Toast.makeText(context, "편지가 신고되었습니다.", Toast.LENGTH_SHORT).show()
+                                onReportSuccess?.invoke()
                                 removeScreenBlur()
                                 dismiss()
                             }
@@ -140,11 +148,12 @@ class SquareReportDialog(private val origin: ReportOrigin, private val letterId:
                 launch {
                     letterViewModel.reportRepliedLetterResult.collect { state ->
                         when(state) {
-                            is UiState.Failure -> {}
+                            is UiState.Failure -> handleReportFailure(state.message)
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Unit> -> {
                                 Toast.makeText(context, "답장이 신고되었습니다.", Toast.LENGTH_SHORT).show()
+                                onReportSuccess?.invoke()
                                 letterViewModel.getSentLetterWithReply(letterId = letterId ?: -1L)
                                 removeScreenBlur()
                                 dismiss()
@@ -155,13 +164,12 @@ class SquareReportDialog(private val origin: ReportOrigin, private val letterId:
                 launch {
                     questionViewModel.reportTodayQuestionAnswerResult.collect { state ->
                         when(state) {
-                            is UiState.Failure -> {
-
-                            }
+                            is UiState.Failure -> handleReportFailure(state.message)
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Unit> -> {
                                 Toast.makeText(context, "답변이 신고되었습니다.", Toast.LENGTH_SHORT).show()
+                                onReportSuccess?.invoke()
                                 removeScreenBlur()
                                 dismiss()
                             }
@@ -170,6 +178,23 @@ class SquareReportDialog(private val origin: ReportOrigin, private val letterId:
                 }
             }
         }
+    }
+
+    private fun handleReportFailure(message: String?) {
+        if (isAlreadyReported(message)) {
+            Toast.makeText(context, "이미 신고한 항목입니다.", Toast.LENGTH_SHORT).show()
+            onReportSuccess?.invoke()
+            removeScreenBlur()
+            dismiss()
+            return
+        }
+
+        binding.btnSquareReportSubmit.isEnabled = true
+        Toast.makeText(context, message ?: "신고에 실패했습니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun isAlreadyReported(message: String?): Boolean {
+        return message?.contains("409") == true || message?.contains("이미 신고") == true
     }
 
     companion object {

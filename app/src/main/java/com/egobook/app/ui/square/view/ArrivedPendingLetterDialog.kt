@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.graphics.Color
 import android.view.View
+import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -33,6 +34,7 @@ class ArrivedPendingLetterDialog(
 ): DialogFragment(R.layout.dialog_arrived_pending_letter) {
     private lateinit var binding: DialogArrivedPendingLetterBinding
     private val viewModel: LetterViewModel by activityViewModels()
+    private var isLetterReported = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return Dialog(requireContext()).apply {
@@ -67,7 +69,17 @@ class ArrivedPendingLetterDialog(
             viewModel.deferReplyLetter(letterId = letterInfo.letterId)
         }
         ivArrivedPendingLetterReport.setOnClickListener {
-            val dialog = SquareReportDialog(origin = ReportOrigin.LETTER_ARRIVED, letterId = letterInfo.letterId).apply { isCancelable = false }
+            if (isLetterReported) {
+                Toast.makeText(context, "이미 신고한 편지입니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val dialog = SquareReportDialog(
+                origin = ReportOrigin.LETTER_ARRIVED,
+                letterId = letterInfo.letterId,
+                onReportSuccess = {
+                    isLetterReported = true
+                }
+            ).apply { isCancelable = false }
             dialog.show(childFragmentManager, SquareReportDialog.TAG)
             applyScreenBlur(BlurLevel.BASE)
         }

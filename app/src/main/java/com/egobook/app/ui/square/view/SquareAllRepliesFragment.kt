@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -26,9 +27,20 @@ import kotlinx.coroutines.launch
 
 class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) {
     private lateinit var binding: FragmentSquareAllRepliesBinding
+    private val reportedAnswerIds = mutableSetOf<Long>()
     private val adapter by lazy {
         SquareAllRepliesAdapter { answerId ->
-            val dialog = SquareReportDialog(origin = ReportOrigin.TODAY_QUESTION_ANSWER, answerId = answerId).apply { isCancelable = false }
+            if (reportedAnswerIds.contains(answerId)) {
+                Toast.makeText(context, "이미 신고한 답변입니다.", Toast.LENGTH_SHORT).show()
+                return@SquareAllRepliesAdapter
+            }
+            val dialog = SquareReportDialog(
+                origin = ReportOrigin.TODAY_QUESTION_ANSWER,
+                answerId = answerId,
+                onReportSuccess = {
+                    reportedAnswerIds.add(answerId)
+                }
+            ).apply { isCancelable = false }
             dialog.show(childFragmentManager, SquareReportDialog.TAG)
             applyScreenBlur(BlurLevel.BASE)
         }

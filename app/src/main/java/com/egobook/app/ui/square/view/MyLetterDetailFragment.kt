@@ -78,7 +78,14 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
         }
         ivMyLetterDetailReport.setOnClickListener {
             if(isReplyReported == true) Toast.makeText(context, "답장이 이미 신고되었습니다.", Toast.LENGTH_SHORT).show() else {
-                val dialog = SquareReportDialog(origin = ReportOrigin.LETTER_REPLY, letterId = letterId, replyId = replyId).apply { isCancelable = false }
+                val dialog = SquareReportDialog(
+                    origin = ReportOrigin.LETTER_REPLY,
+                    letterId = letterId,
+                    replyId = replyId,
+                    onReportSuccess = {
+                        isReplyReported = true
+                    }
+                ).apply { isCancelable = false }
                 dialog.show(childFragmentManager, SquareReportDialog.TAG)
                 applyScreenBlur(BlurLevel.BASE)
             }
