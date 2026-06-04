@@ -65,8 +65,9 @@ class HomeFragment(): Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.equippedItems.collect { equippedList ->
-                    equippedList.forEach { equippedItem ->
-                        updateEquipItemUi(equippedItem)
+                    val typeToItem = equippedList.associateBy { it.type }
+                    ItemType.entries.forEach { type ->
+                        updateEquipItemUi(type, typeToItem[type])
                     }
                 }
             }
@@ -142,41 +143,20 @@ class HomeFragment(): Fragment() {
         }
     }
 
-    private fun updateEquipItemUi(item: CustomItem) {
-        when (item.type) {
-            ItemType.BACK -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivHomeTurtleBack.load(item.outfitImage.path)
-                }
-            }
-            ItemType.SKIN -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivHomeTurtleSkin.load(item.outfitImage.path)
-                }
-            }
+    private fun updateEquipItemUi(type: ItemType, item: CustomItem?) {
+        val imagePath = (item?.outfitImage as? ItemImage.Url)?.path
+        when (type) {
+            ItemType.BACK -> binding.ivHomeTurtleBack.load(imagePath)
+            ItemType.SKIN -> binding.ivHomeTurtleSkin.load(imagePath)
             ItemType.DECO_1 -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    if(item.outfitImage.path.contains("Default")) {
-                        binding.ivHomeTurtleDeco1.load(null)
-                        return
-                    }
-                    binding.ivHomeTurtleDeco1.load(item.outfitImage.path)
-                }
+                if (imagePath?.contains("Default") == true) binding.ivHomeTurtleDeco1.load(null)
+                else binding.ivHomeTurtleDeco1.load(imagePath)
             }
             ItemType.DECO_2 -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    if(item.outfitImage.path.contains("Default")) {
-                        binding.ivHomeTurtleDeco2.load(null)
-                        return
-                    }
-                    binding.ivHomeTurtleDeco2.load(item.outfitImage.path)
-                }
+                if (imagePath?.contains("Default") == true) binding.ivHomeTurtleDeco2.load(null)
+                else binding.ivHomeTurtleDeco2.load(imagePath)
             }
-            ItemType.BACKGROUND -> {
-                if (item.outfitImage is ItemImage.Url) {
-                    binding.ivHomeBackground.load(item.outfitImage.path)
-                }
-            }
+            ItemType.BACKGROUND -> binding.ivHomeBackground.load(imagePath)
             ItemType.LETTER_PAPER -> {}
         }
     }

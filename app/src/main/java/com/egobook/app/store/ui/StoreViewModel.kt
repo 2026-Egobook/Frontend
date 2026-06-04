@@ -144,9 +144,9 @@ class StoreViewModel @Inject constructor(
 
     fun equipItem(item: CustomItem) {
         if (item.itemStatus == ItemStatus.PURCHASABLE) {
-            // 미구매 아이템: 프리뷰 모드. 기존 프리뷰 제거하고 현재 아이템만 추가
+            // 미구매 아이템: 프리뷰 모드. 같은 타입의 기존 아이템만 제거하고 현재 아이템 추가
             _equippedItems.update { currentList ->
-                currentList.filter { it.itemStatus != ItemStatus.PURCHASABLE && it.type != item.type } + item
+                currentList.filter { it.type != item.type } + item
             }
             Log.d("StoreViewModel", "미구매 아이템 - 프리뷰 모드")
         } else {
