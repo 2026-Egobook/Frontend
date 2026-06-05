@@ -72,7 +72,8 @@ class ShopRepository @Inject constructor(
                 id = dto.itemId,
                 price = dto.price,
                 isPurchased = dto.isPurchased,
-                imageUrl = dto.shopImageUrl
+                shopImageUrl = dto.shopImageUrl,
+                myImageUrl = dto.myImageUrl
             )
         }
     }

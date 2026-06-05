@@ -24,6 +24,7 @@ import com.egobook.app.databinding.FragmentLetterWriteBinding
 import com.egobook.app.databinding.LayoutLetterTooltipPopupBinding
 import com.egobook.app.databinding.LayoutPopupFriendListBinding
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
+import coil.load
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.ui.square.adapter.FriendPopupListAdapter
 import com.egobook.app.ui.square.model.friend.FriendListModel
@@ -81,6 +82,7 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
         }
         selectedView.isSelected = true
         selectedView.getChildAt(0)?.isVisible = true
+
         val bgColorRes = when (color) {
             LetterBackgroundColor.WHITE -> R.color.letter_bg_beige
             LetterBackgroundColor.PINK -> R.color.letter_bg_pink
@@ -89,6 +91,14 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
             LetterBackgroundColor.PURPLE -> R.color.letter_bg_purple
         }
         cvLetterContainer.setCardBackgroundColor(resources.getColor(bgColorRes, null))
+
+        val items = (viewModel.letterPaperItems.value as? UiState.Success)?.data
+        val imageUrl = items?.find { it.color == color }?.imageUrl
+        if (color != LetterBackgroundColor.WHITE && !imageUrl.isNullOrEmpty()) {
+            ivLetterBg.load(imageUrl)
+        } else {
+            ivLetterBg.load(null as String?)
+        }
     }
 
     private fun initListeners() = with(binding) {

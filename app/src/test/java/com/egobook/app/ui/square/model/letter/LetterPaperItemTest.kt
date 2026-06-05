@@ -14,7 +14,7 @@ class LetterPaperItemTest {
             id = 39,
             price = 75,
             isPurchased = false,
-            imageUrl = "https://dev-img.egobook.site/letter/letter/Pink.png"
+            shopImageUrl ="https://dev-img.egobook.site/letter/letter/Pink.png"
         )
         assertThat(item.color).isEqualTo(LetterBackgroundColor.PINK)
     }
@@ -25,7 +25,7 @@ class LetterPaperItemTest {
             id = 38,
             price = 100,
             isPurchased = false,
-            imageUrl = "https://dev-img.egobook.site/letter/letter/Green.png"
+            shopImageUrl ="https://dev-img.egobook.site/letter/letter/Green.png"
         )
         assertThat(item.color).isEqualTo(LetterBackgroundColor.GREEN)
     }
@@ -36,7 +36,7 @@ class LetterPaperItemTest {
             id = 37,
             price = 150,
             isPurchased = false,
-            imageUrl = "https://dev-img.egobook.site/letter/letter/Blue.png"
+            shopImageUrl ="https://dev-img.egobook.site/letter/letter/Blue.png"
         )
         assertThat(item.color).isEqualTo(LetterBackgroundColor.BLUE)
     }
@@ -47,7 +47,7 @@ class LetterPaperItemTest {
             id = 40,
             price = 175,
             isPurchased = false,
-            imageUrl = "https://dev-img.egobook.site/letter/letter/Purple.png"
+            shopImageUrl ="https://dev-img.egobook.site/letter/letter/Purple.png"
         )
         assertThat(item.color).isEqualTo(LetterBackgroundColor.PURPLE)
     }
@@ -58,7 +58,7 @@ class LetterPaperItemTest {
             id = 39,
             price = 75,
             isPurchased = true,
-            imageUrl = "https://dev-img.egobook.site/letter/letter/Pink.png"
+            shopImageUrl ="https://dev-img.egobook.site/letter/letter/Pink.png"
         )
         assertThat(item.isPurchased).isTrue()
     }
@@ -70,7 +70,7 @@ class LetterPaperItemTest {
                 id = 99,
                 price = 100,
                 isPurchased = false,
-                imageUrl = "https://dev-img.egobook.site/letter/letter/Unknown.png"
+                shopImageUrl ="https://dev-img.egobook.site/letter/letter/Unknown.png"
             )
         }.isInstanceOf(IllegalArgumentException::class.java)
     }

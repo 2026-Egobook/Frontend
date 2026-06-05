@@ -20,6 +20,7 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentLetterReplyBinding
 import com.egobook.app.databinding.LayoutLetterTooltipPopupBinding
 import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
+import coil.load
 import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.model.square.letter.LetterStatus
 import com.egobook.app.removeScreenBlur
@@ -81,6 +82,7 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
         }
         selectedView.isSelected = true
         selectedView.getChildAt(0)?.isVisible = true
+
         val bgColorRes = when (color) {
             LetterBackgroundColor.WHITE -> R.color.letter_bg_beige
             LetterBackgroundColor.PINK -> R.color.letter_bg_pink
@@ -89,6 +91,14 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
             LetterBackgroundColor.PURPLE -> R.color.letter_bg_purple
         }
         cvLetterReplyContainer.setCardBackgroundColor(resources.getColor(bgColorRes, null))
+
+        val items = (viewModel.letterPaperItems.value as? UiState.Success)?.data
+        val imageUrl = items?.find { it.color == color }?.imageUrl
+        if (color != LetterBackgroundColor.WHITE && !imageUrl.isNullOrEmpty()) {
+            ivLetterReplyBg.load(imageUrl)
+        } else {
+            ivLetterReplyBg.load(null as String?)
+        }
     }
 
     private fun initListeners() = with(binding) {
