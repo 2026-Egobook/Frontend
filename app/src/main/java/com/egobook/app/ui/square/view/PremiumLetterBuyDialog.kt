@@ -75,6 +75,7 @@ class PremiumLetterBuyDialog(
                 viewModel.purchaseLetterPaperResult.collect { state ->
                     when (state) {
                         is UiState.Failure -> {
+                            viewModel.resetPurchaseLetterPaperResult()
                             Toast.makeText(context, "구매에 실패했습니다. 잉크가 부족할 수 있어요.", Toast.LENGTH_SHORT).show()
                         }
                         UiState.Idle -> {}
