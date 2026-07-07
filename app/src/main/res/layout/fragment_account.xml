@@ -462,6 +462,21 @@
                     android:background="@drawable/bg_coffee_card">
 
                     <TextView
+                        android:id="@+id/tv_coffee_descs"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/arita_medium"
+                        android:lineHeight="18sp"
+                        android:text="커피 한 잔이 에고북에게 큰 힘이 됩니다!"
+                        android:textColor="@color/neutral"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_coffee_desc" />
+
+                    <TextView
                         android:id="@+id/tv_coffee_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -486,19 +501,18 @@
                         app:layout_constraintTop_toBottomOf="@id/tv_coffee_title"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
-                    <TextView
-                        android:id="@+id/tv_coffee_descs"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="13dp"
-                        android:text="커피 한 잔이 에고북에게 큰 힘이 됩니다!"
-                        android:textSize="14sp"
-                        android:textColor="@color/neutral"
-                        android:fontFamily="@font/arita_medium"
-                        android:lineHeight="18sp"
-                        app:layout_constraintTop_toBottomOf="@id/tv_coffee_desc"
+
+                    <ImageView
+                        android:id="@+id/iv_coffee"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:layout_marginTop="16dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_coffee_cup"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintTop_toBottomOf="@id/tv_coffee_descs" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_send_coffee"
@@ -509,7 +523,7 @@
                         android:text="커피 한 잔 보내기"
                         android:textSize="12sp"
                         android:fontFamily="@font/arita_semibold"
-                        app:layout_constraintTop_toBottomOf="@id/tv_coffee_descs"
+                        app:layout_constraintTop_toBottomOf="@id/iv_coffee"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
