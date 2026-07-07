@@ -450,13 +450,77 @@
 
             
         </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/ly_coffee_support"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ly_introduce_features"
+                    app:layout_constraintStart_toStartOf="@id/gd_start"
+                    app:layout_constraintEnd_toEndOf="@id/gd_end"
+                    android:layout_marginTop="12dp"
+                    android:padding="20dp"
+                    android:background="@drawable/bg_coffee_card">
+
+                    <TextView
+                        android:id="@+id/tv_coffee_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="고북이에게 커피한잔"
+                        android:textSize="20sp"
+                        android:textColor="@color/neutral"
+                        android:fontFamily="@font/arita_semibold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tv_coffee_desc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="후원금은 서버유지와 운영비로 사용돼요"
+                        android:textSize="16sp"
+                        android:textColor="@color/neutral"
+                        android:fontFamily="@font/arita_semibold"
+                        android:lineHeight="18sp"
+                        app:layout_constraintTop_toBottomOf="@id/tv_coffee_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                    <TextView
+                        android:id="@+id/tv_coffee_descs"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="13dp"
+                        android:text="커피 한 잔이 에고북에게 큰 힘이 됩니다!"
+                        android:textSize="14sp"
+                        android:textColor="@color/neutral"
+                        android:fontFamily="@font/arita_medium"
+                        android:lineHeight="18sp"
+                        app:layout_constraintTop_toBottomOf="@id/tv_coffee_desc"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_send_coffee"
+                        style="@style/GreenButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="16dp"
+                        android:text="커피 한 잔 보내기"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/arita_semibold"
+                        app:layout_constraintTop_toBottomOf="@id/tv_coffee_descs"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
         
         <LinearLayout
             android:id="@+id/ly_bottom_texts"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/ly_introduce_features"
+            app:layout_constraintTop_toBottomOf="@id/ly_coffee_support"
             app:layout_constraintStart_toStartOf="@id/gd_start"
             app:layout_constraintEnd_toEndOf="@id/gd_end">
             
