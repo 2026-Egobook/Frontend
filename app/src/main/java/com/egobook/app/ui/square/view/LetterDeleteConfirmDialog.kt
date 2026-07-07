@@ -1,0 +1,47 @@
+package com.egobook.app.ui.square.view
+
+import android.app.Dialog
+import android.graphics.Color
+import android.os.Bundle
+import android.view.View
+import androidx.core.graphics.drawable.toDrawable
+import androidx.fragment.app.DialogFragment
+import com.egobook.app.R
+import com.egobook.app.databinding.DialogLetterDeleteConfirmBinding
+import com.egobook.app.removeScreenBlur
+
+class LetterDeleteConfirmDialog(
+    private val inkAmount: Int,
+    private val onConfirmDelete: () -> Unit
+) : DialogFragment(R.layout.dialog_letter_delete_confirm) {
+
+    private lateinit var binding: DialogLetterDeleteConfirmBinding
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return Dialog(requireContext()).apply {
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = DialogLetterDeleteConfirmBinding.bind(view)
+
+        binding.tvLetterDeleteInkAmount.text = inkAmount.toString()
+
+        binding.btnLetterDeleteCancel.setOnClickListener {
+            dismiss()
+            removeScreenBlur()
+        }
+
+        binding.btnLetterDeleteConfirm.setOnClickListener {
+            onConfirmDelete()
+            dismiss()
+            removeScreenBlur()
+        }
+    }
+
+    companion object {
+        const val TAG = "LetterDeleteConfirmDialog"
+    }
+}

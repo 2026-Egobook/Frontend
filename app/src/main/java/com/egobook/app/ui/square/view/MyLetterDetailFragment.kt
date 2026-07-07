@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import com.egobook.app.ui.home.HomeViewModel
 
 class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
     private lateinit var binding: FragmentMyLetterDetailBinding
@@ -40,7 +41,9 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
     private var isReplyReported: Boolean? = null
 
     private var myNickName: String? = null
+
     private val viewModel: LetterViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,7 +63,7 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
         }
         ivMyLetterDetailSentChevron.setOnClickListener {
             cvMyLetterDetailSentContent.isVisible = !cvMyLetterDetailSentContent.isVisible
-            if(cvMyLetterDetailSentContent.isVisible) {
+            if (cvMyLetterDetailSentContent.isVisible) {
                 ivMyLetterDetailSentChevron.setImageResource(R.drawable.ic_chevron_up)
                 val params = llMyLetterDetailReplied.layoutParams as ConstraintLayout.LayoutParams
                 with(params) {
@@ -77,7 +80,11 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
             }
         }
         ivMyLetterDetailReport.setOnClickListener {
-            if(isReplyReported == true) Toast.makeText(context, "답장이 이미 신고되었습니다.", Toast.LENGTH_SHORT).show() else {
+            if (isReplyReported == true) Toast.makeText(
+                context,
+                "답장이 이미 신고되었습니다.",
+                Toast.LENGTH_SHORT
+            ).show() else {
                 val dialog = SquareReportDialog(
                     origin = ReportOrigin.LETTER_REPLY,
                     letterId = letterId,
@@ -90,8 +97,19 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                 applyScreenBlur(BlurLevel.BASE)
             }
         }
+//        btnDeleteLetterThread.setOnClickListener {
+//            viewModel.deleteLetterThread(threadId = threadId ?: -1L)
+//        }
         btnDeleteLetterThread.setOnClickListener {
-            viewModel.deleteLetterThread(threadId = threadId ?: -1L)
+            val currentInk = homeViewModel.uiState.value.ink.value
+            val dialog = LetterDeleteConfirmDialog(
+                inkAmount = currentInk,
+                onConfirmDelete = {
+                    viewModel.deleteLetterThread(threadId = threadId ?: -1L)
+                }
+            ).apply { isCancelable = true }
+            dialog.show(childFragmentManager, LetterDeleteConfirmDialog.TAG)
+            applyScreenBlur(BlurLevel.BASE)
         }
     }
 
