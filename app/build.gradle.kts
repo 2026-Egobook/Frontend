@@ -11,7 +11,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("org.jlleitschuh.gradle.ktlint")
     id("com.google.devtools.ksp")
-//    id("com.google.gms.google-services")
+    id("com.google.gms.google-services")
 }
 
 val localProperties = Properties()
