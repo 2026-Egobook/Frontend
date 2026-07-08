@@ -19,16 +19,33 @@ import com.egobook.app.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.egobook.app.BlurLevel
+import com.egobook.app.applyScreenBlur
+import com.egobook.app.ui.home.HomeViewModel
 
 @AndroidEntryPoint
 class MyRepliesHistoryFragment : Fragment(R.layout.fragment_my_replies_history) {
     private lateinit var binding: FragmentMyRepliesHistoryBinding
     private val viewModel: QuestionViewModel by activityViewModels()
-    private val adapter by lazy {
-        MyRepliesHistoryAdapter { answerId ->
-            viewModel.deleteMyQuestionAnswer(answerId = answerId)
-        }
+    private val homeViewModel: HomeViewModel by activityViewModels()
+//    private val adapter by lazy {
+//        MyRepliesHistoryAdapter { answerId ->
+//            viewModel.deleteMyQuestionAnswer(answerId = answerId)
+//        }
+//    }
+private val adapter by lazy {
+    MyRepliesHistoryAdapter { answerId ->
+        val currentInk = homeViewModel.uiState.value.ink.value
+        val dialog = ReplyDeleteConfirmDialog(
+            inkAmount = currentInk,
+            onConfirmDelete = {
+                viewModel.deleteMyQuestionAnswer(answerId = answerId)
+            }
+        ).apply { isCancelable = true }
+        dialog.show(childFragmentManager, ReplyDeleteConfirmDialog.TAG)
+        applyScreenBlur(BlurLevel.BASE)
     }
+}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
