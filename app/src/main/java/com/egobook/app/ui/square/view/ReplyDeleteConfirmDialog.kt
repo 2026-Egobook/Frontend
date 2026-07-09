@@ -11,7 +11,6 @@ import com.egobook.app.databinding.DialogReplyDeleteConfirmBinding
 import com.egobook.app.removeScreenBlur
 
 class ReplyDeleteConfirmDialog(
-    private val inkAmount: Int,
     private val onConfirmDelete: () -> Unit
 ) : DialogFragment(R.layout.dialog_reply_delete_confirm) {
 
@@ -26,8 +25,6 @@ class ReplyDeleteConfirmDialog(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DialogReplyDeleteConfirmBinding.bind(view)
-
-        binding.tvReplyDeleteInkAmount.text = inkAmount.toString()
 
         binding.btnReplyDeleteCancel.setOnClickListener {
             dismiss()
