@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        MobileAds.initialize(this)
-
-        loadAd()
+        MobileAds.initialize(this) {
+            loadAd()
+        }
         lifecycleScope.launch {
             try {
                 // 서버 확인용 (가벼운 API)
