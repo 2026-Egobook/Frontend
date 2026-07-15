@@ -224,22 +224,22 @@ import javax.inject.Inject
 
                         val message = state.error.message ?: ""
 
-                        //서버 꺼짐 / 네트워크 에러
-                        if (
-                            message.contains("timeout", true) ||
-                            message.contains("Unable to resolve host", true) ||
-                            message.contains("Failed to connect", true)
-                        ) {
-                            showMaintenanceDialog()
-                        }
-                        // 일반 에러
-                        else {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                message.ifEmpty { "알 수 없는 오류가 발생했습니다" },
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        // 점검 취소로 인한 주석 처리 (서버 꺼짐 / 네트워크 에러 시 점검 다이얼로그)
+//                        if (
+//                            message.contains("timeout", true) ||
+//                            message.contains("Unable to resolve host", true) ||
+//                            message.contains("Failed to connect", true)
+//                        ) {
+//                            showMaintenanceDialog()
+//                        }
+//                        // 일반 에러
+//                        else {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            message.ifEmpty { "알 수 없는 오류가 발생했습니다" },
+                            Toast.LENGTH_SHORT
+                        ).show()
+//                        }
                     }
                     else -> {
                         binding.progressBar.visibility = View.GONE
@@ -282,16 +282,17 @@ import javax.inject.Inject
             finish()
         }
 
-        private fun showMaintenanceDialog() {
-            android.app.AlertDialog.Builder(this)
-                .setTitle("점검 중")
-                .setMessage("서버 점검 중입니다.\n점검 시간: 03:00 ~ 06:00")
-                .setPositiveButton("확인") { _, _ ->
-                    finishAffinity() // 앱 종료
-                }
-                .setCancelable(false)
-                .show()
-        }
+        // 점검 취소로 인한 주석 처리
+//        private fun showMaintenanceDialog() {
+//            android.app.AlertDialog.Builder(this)
+//                .setTitle("점검 중")
+//                .setMessage("서버 점검 중입니다.\n점검 시간: 03:00 ~ 06:00")
+//                .setPositiveButton("확인") { _, _ ->
+//                    finishAffinity() // 앱 종료
+//                }
+//                .setCancelable(false)
+//                .show()
+//        }
 
 
 
