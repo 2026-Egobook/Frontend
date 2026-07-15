@@ -62,7 +62,7 @@ class IntroActivity : ComponentActivity() {
         // IntroActivity UI를 보여주는 시간
         delay(1400)
 
-        // 점검 시간 체크 (03:00 ~ 09:00)
+        // 점검 시간 체크 (03:00 ~ 06:00)
         if (isMaintenanceTime()) {
             showMaintenanceDialog()
             return
@@ -86,7 +86,7 @@ class IntroActivity : ComponentActivity() {
     private fun isMaintenanceTime(): Boolean {
         val calendar = java.util.Calendar.getInstance()
         val hour = calendar.get(java.util.Calendar.HOUR_OF_DAY)
-        return hour in 3..6
+        return hour in 3..5
 //        return true
     }
 
