@@ -557,7 +557,7 @@
                 android:gravity="center"
                 android:text="회원 탈퇴"
                 android:textSize="14sp"
-                android:textColor="@color/neutral"
+                android:textColor="@color/neutral_subtle"
                 android:fontFamily="@font/arita_semibold"/>
 
             <TextView
@@ -568,7 +568,7 @@
                 android:gravity="center"
                 android:text="이용약관 및 개인정보처리"
                 android:textSize="14sp"
-                android:textColor="@color/neutral"
+                android:textColor="@color/neutral_subtle"
                 android:fontFamily="@font/arita_semibold"/>
             
             <Space
