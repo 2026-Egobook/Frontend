@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Spannable
+import android.util.Log
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
@@ -20,6 +21,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.egobook.app.BuildConfig
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentEgoRoomStatisticsBinding
 import com.egobook.app.domain.model.MonthlyAverage
@@ -36,6 +38,12 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -45,13 +53,54 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
     private lateinit var binding: FragmentEgoRoomStatisticsBinding
     private val viewModel: StatisticsViewModel by activityViewModels()
     private var tooltipPopup: PopupWindow? = null
+    private var interstitialAd: InterstitialAd? = null
+    private var hasShownInterstitialAd = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentEgoRoomStatisticsBinding.bind(view)
+        loadInterstitialAd()
         initViews()
         initObservers()
         fetchData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showInterstitialAdIfReady()
+    }
+
+    private fun loadInterstitialAd() {
+        InterstitialAd.load(
+            requireContext(),
+            BuildConfig.ADMOB_INTERSTITIAL_STATISTICS_UNIT_ID,
+            AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    interstitialAd = ad
+                    Log.d("AdMob", "통계 전면 광고 로드 성공")
+                    if (isResumed) showInterstitialAdIfReady()
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    interstitialAd = null
+                    Log.d("AdMob", "통계 전면 광고 로드 실패, $adError")
+                }
+            }
+        )
+    }
+
+    private fun showInterstitialAdIfReady() {
+        if (hasShownInterstitialAd) return
+        val ad = interstitialAd ?: return
+        hasShownInterstitialAd = true
+        interstitialAd = null
+        ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                Log.d("AdMob", "통계 전면 광고 표시 실패, $adError")
+            }
+        }
+        ad.show(requireActivity())
     }
 
     private fun initViews() {

@@ -50,6 +50,9 @@ android {
         val admobRewardedAdUnitId =
             localProperties.getProperty("ADMOB_REWARDED_AD_INK_UNIT_ID") ?: "ca-app-pub-3940256099942544/5224354917"
         buildConfigField("String", "ADMOB_REWARDED_AD_INK_UNIT_ID", "\"$admobRewardedAdUnitId\"")
+        val admobInterstitialStatisticsUnitId =
+            localProperties.getProperty("ADMOB_INTERSTITIAL_STATISTICS_UNIT_ID") ?: "ca-app-pub-3940256099942544/1033173712"
+        buildConfigField("String", "ADMOB_INTERSTITIAL_STATISTICS_UNIT_ID", "\"$admobInterstitialStatisticsUnitId\"")
 
         println("ADMOB_APP_ID = ${localProperties.getProperty("ADMOB_APP_ID")}")
 
