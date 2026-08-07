@@ -193,7 +193,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 }
             }
         }
-        ivSquareMarketingConsentCheckbox.setOnClickListener {
+        val onMarketingConsentToggleClick = View.OnClickListener {
             if (MarketingConsentPolicy.requiresConfirmation(currentlyEnabled = isMarketingConsentEnabled, requestedEnabled = true)) {
                 marketingConsentDialog = MarketingConsentDialog().also {
                     it.show(childFragmentManager, MarketingConsentDialog.TAG)
@@ -202,6 +202,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 questionViewModel.updateMarketingConsent(enabled = false)
             }
         }
+        ivSquareMarketingConsentCheckbox.setOnClickListener(onMarketingConsentToggleClick)
+        tvSquareMarketingConsentLabel.setOnClickListener(onMarketingConsentToggleClick)
         tvSquareMarketingConsentDetail.setOnClickListener {
             marketingConsentDialog = MarketingConsentDialog().also {
                 it.show(childFragmentManager, MarketingConsentDialog.TAG)
