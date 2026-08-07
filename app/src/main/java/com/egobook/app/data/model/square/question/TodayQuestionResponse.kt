@@ -15,7 +15,9 @@ data class TodayQuestionResponse(
     @SerializedName("answered")
     val isUserAnswered: Boolean,
     @SerializedName("myAnswer")
-    val myAnswer: TodayQuestionAnswerResponse? = null
+    val myAnswer: TodayQuestionAnswerResponse? = null,
+    @SerializedName("marketingEnabled")
+    val marketingEnabled: Boolean = false
 )
 
 data class TodayQuestionAnswerResponse(
@@ -34,7 +36,8 @@ fun TodayQuestionResponse.toDomain(): TodayQuestion = TodayQuestion(
     content = content,
     date = date,
     isUserAnswered = isUserAnswered,
-    myAnswer = myAnswer?.toDomain()
+    myAnswer = myAnswer?.toDomain(),
+    marketingEnabled = marketingEnabled
 )
 
 fun TodayQuestionAnswerResponse.toDomain(): TodayQuestionAnswer = TodayQuestionAnswer(

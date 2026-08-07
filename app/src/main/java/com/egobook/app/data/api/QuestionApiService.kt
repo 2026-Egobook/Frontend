@@ -9,6 +9,7 @@ import com.egobook.app.data.model.square.question.TodayQuestionResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -53,6 +54,11 @@ interface QuestionApiService {
     suspend fun reportTodayQuestionAnswer(
         @Path("answerId") answerId: Long,
         @Body request: ReportContentRequest
+    ): ApiResponse<Unit>
+
+    @PATCH("/questions/marketing-consent")
+    suspend fun updateMarketingConsent(
+        @Query("enabled") enabled: Boolean
     ): ApiResponse<Unit>
 
 }

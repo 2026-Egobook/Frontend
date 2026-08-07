@@ -11,6 +11,7 @@ import com.egobook.app.domain.usecase.GetTodayAllUserRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayFriendsRepliesUseCase
 import com.egobook.app.domain.usecase.GetTodayQuestionUseCase
 import com.egobook.app.domain.usecase.SubmitTodayAnswerUseCase
+import com.egobook.app.domain.usecase.UpdateMarketingConsentUseCase
 import com.egobook.app.domain.usecase.UpdateTodayAnswerUseCase
 import com.egobook.app.domain.usecase.question.ReportTodayQuestionAnswerUseCase
 import com.egobook.app.ui.square.model.letter.ReportContentModel
@@ -40,7 +41,8 @@ class QuestionViewModel @Inject constructor(
     private val getTodayAllUserRepliesUseCase: GetTodayAllUserRepliesUseCase,
     private val updateTodayAnswerUseCase: UpdateTodayAnswerUseCase,
     private val deleteMyQuestionAnswerUseCase: DeleteMyQuestionAnswerUseCase,
-    private val reportTodayQuestionAnswerUseCase: ReportTodayQuestionAnswerUseCase
+    private val reportTodayQuestionAnswerUseCase: ReportTodayQuestionAnswerUseCase,
+    private val updateMarketingConsentUseCase: UpdateMarketingConsentUseCase
 ): ViewModel() {
 
     private val _todayQuestion = MutableStateFlow<UiState<TodayQuestionModel>>(UiState.Idle)
@@ -142,6 +144,20 @@ class QuestionViewModel @Inject constructor(
                 _reportTodayQuestionAnswerResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _reportTodayQuestionAnswerResult.emit(UiState.Failure(error.message))
+            }
+        }
+    }
+
+    private val _updateMarketingConsentResult = MutableSharedFlow<UiState<Boolean>>()
+    val updateMarketingConsentResult = _updateMarketingConsentResult.asSharedFlow()
+
+    fun updateMarketingConsent(enabled: Boolean) {
+        viewModelScope.launch {
+            _updateMarketingConsentResult.emit(UiState.Loading)
+            updateMarketingConsentUseCase(enabled = enabled).onSuccess {
+                _updateMarketingConsentResult.emit(UiState.Success(enabled))
+            }.onFailure { error ->
+                _updateMarketingConsentResult.emit(UiState.Failure(error.message))
             }
         }
     }

@@ -130,4 +130,15 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    override suspend fun updateMarketingConsent(enabled: Boolean): Result<Unit> = try {
+        val response = apiService.updateMarketingConsent(enabled = enabled)
+        if(response.status == 200) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

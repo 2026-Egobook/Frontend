@@ -9,7 +9,8 @@ data class TodayQuestionModel(
     val content: String,
     val date: String,
     val isUserAnswered: Boolean,
-    val myAnswer: TodayQuestionAnswerModel? = null
+    val myAnswer: TodayQuestionAnswerModel? = null,
+    val marketingEnabled: Boolean = false
 )
 
 data class TodayQuestionAnswerModel(
@@ -24,7 +25,8 @@ fun TodayQuestion.toPresentation(): TodayQuestionModel = TodayQuestionModel(
     content = content,
     date = date,
     isUserAnswered = isUserAnswered,
-    myAnswer = myAnswer?.toPresentation()
+    myAnswer = myAnswer?.toPresentation(),
+    marketingEnabled = marketingEnabled
 )
 
 fun TodayQuestionAnswer.toPresentation(): TodayQuestionAnswerModel = TodayQuestionAnswerModel(
