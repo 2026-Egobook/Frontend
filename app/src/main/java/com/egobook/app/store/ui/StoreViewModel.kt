@@ -104,6 +104,9 @@ class StoreViewModel @Inject constructor(
             val permanent = shopRepository.loadEquippedItems()
             _permanentItems.value = permanent
             _equippedItems.value = permanent
+        } catch (e: Exception) {
+            Log.e("StoreViewModel", "Store initialize failed", e)
+            _toastEvent.emit("상점 정보를 불러오지 못했습니다.")
         } finally {
             hideLoading()
         }
