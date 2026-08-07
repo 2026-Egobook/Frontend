@@ -537,12 +537,11 @@
                         android:id="@+id/ll_square_today_question_visibility_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="24dp"
+                        android:layout_marginTop="24dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="6.5dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@id/cv_square_today_question_input"
                         app:layout_constraintTop_toBottomOf="@id/cv_square_today_question_input">
 
@@ -585,6 +584,45 @@
                         app:layout_constraintEnd_toEndOf="@id/cv_square_today_question_input"
                         app:layout_constraintStart_toEndOf="@id/ll_square_today_question_visibility_type"
                         app:layout_constraintTop_toTopOf="@id/ll_square_today_question_visibility_type" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/ll_square_marketing_consent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/ll_square_today_question_visibility_type"
+                        app:layout_constraintTop_toBottomOf="@id/ll_square_today_question_visibility_type">
+
+                        <ImageView
+                            android:id="@+id/iv_square_marketing_consent_checkbox"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_checkbox_unchecked" />
+
+                        <TextView
+                            android:id="@+id/tv_square_marketing_consent_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:fontFamily="@font/arita_semibold"
+                            android:text="SNS 마케팅 이용 동의 "
+                            android:textColor="@color/neutral_subtle"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_square_marketing_consent_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/arita_semibold"
+                            android:text="[자세히 보기]"
+                            android:textColor="@color/neutral_subtle"
+                            android:textSize="14sp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
         </FrameLayout>

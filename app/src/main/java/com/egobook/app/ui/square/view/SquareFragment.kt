@@ -28,6 +28,7 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentSquareBinding
 import com.egobook.app.databinding.LayoutPopupVisibilityTypeBinding
 import com.egobook.app.domain.model.square.question.AnswerVisibility
+import com.egobook.app.domain.model.square.question.MarketingConsentPolicy
 import com.egobook.app.ui.square.adapter.MySentLettersAdapter
 import com.egobook.app.ui.square.adapter.SquareDeferredLettersAdapter
 import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
@@ -85,6 +86,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private var todayQuestionContent: String? = null
 
     private var submitButtonStatus: SubmitStatus = SubmitStatus.CREATE
+    private var isMarketingConsentEnabled: Boolean = false
+    private var marketingConsentDialog: MarketingConsentDialog? = null
     private val dividerDrawable by lazy {
         GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
@@ -190,6 +193,20 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 }
             }
         }
+        ivSquareMarketingConsentCheckbox.setOnClickListener {
+            if (MarketingConsentPolicy.requiresConfirmation(currentlyEnabled = isMarketingConsentEnabled, requestedEnabled = true)) {
+                marketingConsentDialog = MarketingConsentDialog().also {
+                    it.show(childFragmentManager, MarketingConsentDialog.TAG)
+                }
+            } else {
+                questionViewModel.updateMarketingConsent(enabled = false)
+            }
+        }
+        tvSquareMarketingConsentDetail.setOnClickListener {
+            marketingConsentDialog = MarketingConsentDialog().also {
+                it.show(childFragmentManager, MarketingConsentDialog.TAG)
+            }
+        }
         cvSquareTodayQuestionAnswered.setOnClickListener {
             cvSquareTodayQuestionAnswered.isVisible = false
             cvSquareTodayQuestionWriting.isVisible = true
@@ -220,6 +237,12 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
      * showAsDropDown은 기본적으로 기준점의 아래쪽에서 팝업을 띄운다
      * 위쪽으로 갈수록 값이 작아지고, 아래쪽으로 갈수록 값이 커진다.
      */
+    private fun updateMarketingConsentCheckboxIcon() = with(binding) {
+        ivSquareMarketingConsentCheckbox.setImageResource(
+            if (isMarketingConsentEnabled) R.drawable.ic_checkbox_checked else R.drawable.ic_checkbox_unchecked
+        )
+    }
+
     private fun showVisibilityTypePopup(anchorView: View) = with(binding) {
         val popupBinding = LayoutPopupVisibilityTypeBinding.inflate(layoutInflater)
 
@@ -272,6 +295,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                             is UiState.Success<TodayQuestionModel> -> {
                                 val todayQuestion = state.data
                                 todayQuestionContent = todayQuestion.content
+                                isMarketingConsentEnabled = todayQuestion.marketingEnabled
+                                updateMarketingConsentCheckboxIcon()
                                 if(todayQuestion.isUserAnswered) {
                                     cvSquareTodayQuestionAnswered.isVisible = true
                                     tvSquareTodayQuestionContentAnswered.text = "Q. ${todayQuestion.content}"
@@ -341,6 +366,23 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                                 Toast.makeText(context, "답변 업데이트가 되었습니다.", Toast.LENGTH_SHORT).show()
                                 cvSquareTodayQuestionWriting.isVisible = false
                                 questionViewModel.getTodayQuestion()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    questionViewModel.updateMarketingConsentResult.collect { state ->
+                        when(state) {
+                            is UiState.Failure -> {
+                                Toast.makeText(context, "잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                            }
+                            UiState.Idle -> {}
+                            UiState.Loading -> {}
+                            is UiState.Success<Boolean> -> {
+                                isMarketingConsentEnabled = state.data
+                                updateMarketingConsentCheckboxIcon()
+                                marketingConsentDialog?.dismiss()
+                                marketingConsentDialog = null
                             }
                         }
                     }
