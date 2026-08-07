@@ -87,7 +87,6 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
     private var submitButtonStatus: SubmitStatus = SubmitStatus.CREATE
     private var isMarketingConsentEnabled: Boolean = false
-    private var marketingConsentDialog: MarketingConsentDialog? = null
     private val dividerDrawable by lazy {
         GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
@@ -195,9 +194,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
         }
         val onMarketingConsentToggleClick = View.OnClickListener {
             if (MarketingConsentPolicy.requiresConfirmation(currentlyEnabled = isMarketingConsentEnabled, requestedEnabled = true)) {
-                marketingConsentDialog = MarketingConsentDialog().also {
-                    it.show(childFragmentManager, MarketingConsentDialog.TAG)
-                }
+                showMarketingConsentDialog()
             } else {
                 questionViewModel.updateMarketingConsent(enabled = false)
             }
@@ -205,9 +202,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
         ivSquareMarketingConsentCheckbox.setOnClickListener(onMarketingConsentToggleClick)
         tvSquareMarketingConsentLabel.setOnClickListener(onMarketingConsentToggleClick)
         tvSquareMarketingConsentDetail.setOnClickListener {
-            marketingConsentDialog = MarketingConsentDialog().also {
-                it.show(childFragmentManager, MarketingConsentDialog.TAG)
-            }
+            showMarketingConsentDialog()
         }
         cvSquareTodayQuestionAnswered.setOnClickListener {
             cvSquareTodayQuestionAnswered.isVisible = false
@@ -243,6 +238,13 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
         ivSquareMarketingConsentCheckbox.setImageResource(
             if (isMarketingConsentEnabled) R.drawable.ic_checkbox_checked else R.drawable.ic_checkbox_unchecked
         )
+        ivSquareMarketingConsentCheckbox.contentDescription =
+            if (isMarketingConsentEnabled) "SNS 마케팅 이용 동의함" else "SNS 마케팅 이용 동의 안 함"
+    }
+
+    private fun showMarketingConsentDialog() {
+        if (childFragmentManager.findFragmentByTag(MarketingConsentDialog.TAG) != null) return
+        MarketingConsentDialog().show(childFragmentManager, MarketingConsentDialog.TAG)
     }
 
     private fun showVisibilityTypePopup(anchorView: View) = with(binding) {
@@ -383,8 +385,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                             is UiState.Success<Boolean> -> {
                                 isMarketingConsentEnabled = state.data
                                 updateMarketingConsentCheckboxIcon()
-                                marketingConsentDialog?.dismiss()
-                                marketingConsentDialog = null
+                                (childFragmentManager.findFragmentByTag(MarketingConsentDialog.TAG) as? MarketingConsentDialog)?.dismiss()
                             }
                         }
                     }
