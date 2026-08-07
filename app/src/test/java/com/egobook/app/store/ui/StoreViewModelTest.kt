@@ -3,6 +3,9 @@ package com.egobook.app.store.ui
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.egobook.app.store.data.ShopRepository
+import com.egobook.app.store.data.model.ItemStatus
+import com.egobook.app.store.data.model.ItemType
+import com.egobook.app.store.data.model.Price
 import com.egobook.app.ui.home.repository.UserRepository
 import io.mockk.coEvery
 import io.mockk.every
@@ -75,14 +78,22 @@ class StoreViewModelTest {
     @Test
     fun `initialize 성공 시 장착 아이템 목록을 반영한다`() = runTest {
         // Given
+        val expectedItems = listOf(
+            CustomItem(
+                id = "1",
+                type = ItemType.SKIN,
+                price = Price(100),
+                itemStatus = ItemStatus.PURCHASED
+            )
+        )
         coEvery { userRepository.load() } throws RuntimeException("ink load skipped for this test")
         coEvery { shopRepository.initialize() } returns Unit
-        coEvery { shopRepository.loadEquippedItems() } returns emptyList()
+        coEvery { shopRepository.loadEquippedItems() } returns expectedItems
 
         // When
         viewModel.initialize()
 
         // Then
-        assertEquals(emptyList<CustomItem>(), viewModel.equippedItems.value)
+        assertEquals(expectedItems, viewModel.equippedItems.value)
     }
 }

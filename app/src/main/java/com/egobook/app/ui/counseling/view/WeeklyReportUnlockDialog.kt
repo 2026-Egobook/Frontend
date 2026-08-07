@@ -35,6 +35,7 @@ class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.
     private val viewModel: WeeklyReportViewModel by activityViewModels()
     private var rewardedAd: RewardedAd? = null
     private var isLoadingRewardedAd = false
+    private var isUnlockRequestInFlight = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return Dialog(requireContext()).apply {
@@ -76,6 +77,8 @@ class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.
 
     private fun initListeners() = with(binding) {
         btnWeeklyReportUnlockUseInk.setOnClickListener {
+            if (isUnlockRequestInFlight) return@setOnClickListener
+            isUnlockRequestInFlight = true
             viewModel.getUserInfo()
         }
         btnWeeklyReportUnlockWatchAdd.setOnClickListener {
@@ -121,6 +124,7 @@ class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 rewardedAd = null
+                loadRewardedAd()
                 showCustomToast("광고를 표시하지 못했어요. 잠시 후 다시 시도해주세요.")
             }
         }
@@ -135,7 +139,9 @@ class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.
                 launch {
                     viewModel.userInfo.collect { state ->
                         when(state) {
-                            is UiState.Failure -> {}
+                            is UiState.Failure -> {
+                                isUnlockRequestInFlight = false
+                            }
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<User> -> {
@@ -144,6 +150,7 @@ class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.
                                 if (currentInk >= INK_PRICE) {
                                     viewModel.unlockWeeklyReport(startDate = startDate, unlockType = WeeklyReportUnlockType.INK)
                                 } else {
+                                    isUnlockRequestInFlight = false
                                     showCustomToast("현재 잉크가 부족합니다!")
                                 }
                             }
@@ -154,11 +161,13 @@ class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.
                     viewModel.unlockWeeklyReportResult.collect { state ->
                         when(state) {
                             is UiState.Failure -> {
+                                isUnlockRequestInFlight = false
                                 showCustomToast("잠금 해제에 실패했습니다. 잠시 후 다시 시도해주세요.")
                             }
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<Unit> -> {
+                                isUnlockRequestInFlight = false
                                 showCustomToast("주간 보고서 잠금이 해제 되었습니다!")
                                 val action = EgoRoomFragmentDirections.actionMenuEgoRoomToCounselingWeeklyReportDetailFragment(startDate = startDate)
                                 findNavController().navigate(action)
