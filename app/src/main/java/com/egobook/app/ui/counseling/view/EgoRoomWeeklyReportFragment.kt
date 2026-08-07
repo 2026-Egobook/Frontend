@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_report) {
     private lateinit var binding: FragmentEgoRoomWeeklyReportBinding
-    private val viewModel: WeeklyReportViewModel by viewModels()
+    private val viewModel: WeeklyReportViewModel by activityViewModels()
     private val counselingWeeklyReportAdapter = CounselingWeeklyReportAdapter { item ->
         if(item.isLocked) {
             val dialog = WeeklyReportUnlockDialog(startDate = item.startDate)
@@ -85,6 +85,13 @@ class EgoRoomWeeklyReportFragment : Fragment(R.layout.fragment_ego_room_weekly_r
                 launch {
                     viewModel.weeklyReportList.collectLatest { pagingData ->
                         counselingWeeklyReportAdapter.submitData(lifecycle, pagingData)
+                    }
+                }
+                launch {
+                    viewModel.unlockWeeklyReportResult.collect { state ->
+                        if (state is UiState.Success<Unit>) {
+                            counselingWeeklyReportAdapter.refresh()
+                        }
                     }
                 }
                 launch {
