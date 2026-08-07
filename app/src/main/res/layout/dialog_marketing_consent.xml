@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.square.view.MarketingConsentDialog"
+    android:background="@color/transparent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        android:gravity="center"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SNS 마케팅 이용 동의"
+            android:textSize="18sp"
+            android:textColor="@color/neutral"
+            android:fontFamily="@font/arita_semibold" />
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="작성하신 답변이 에고북 공식\n인스타그램에 소개될 수 있어요.\n언제든 동의를 취소할 수 있어요"
+            android:textSize="14sp"
+            android:textColor="@color/neutral"
+            android:fontFamily="@font/arita_medium"
+            android:lineHeight="21sp"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="•  계정 정보 없이 답변 내용만 사용"
+            android:textSize="14sp"
+            android:textColor="@color/neutral"
+            android:fontFamily="@font/arita_medium" />
+
+        <TextView
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="•  선정되면 쿠폰 지급"
+            android:textSize="14sp"
+            android:textColor="@color/neutral"
+            android:fontFamily="@font/arita_medium" />
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_marketing_consent_disagree"
+                style="@style/DeleteButtonStyle"
+                android:layout_width="104dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="12dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textSize="14sp"
+                app:cornerRadius="8dp"
+                android:text="비동의" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_marketing_consent_agree"
+                style="@style/GreenButtonStyle"
+                android:layout_width="104dp"
+                android:layout_height="42dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textSize="14sp"
+                android:text="동의" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
