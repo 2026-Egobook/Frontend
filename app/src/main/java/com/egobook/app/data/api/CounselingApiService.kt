@@ -65,7 +65,7 @@ interface CounselingApiService {
     suspend fun unlockWeeklyReport(
         @Path("startDate") startDate: String,
         @Query("unlockType") unlockType: WeeklyReportUnlockType
-    ): ApiResponse<Unit>
+    ): ApiResponse<String?>
 
 
     @GET("/ego-room/counseling-tone")
