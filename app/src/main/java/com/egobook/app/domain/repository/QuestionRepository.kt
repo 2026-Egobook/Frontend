@@ -17,5 +17,6 @@ interface QuestionRepository {
     suspend fun updateTodayAnswer(updatedAnswer: TodayAnswer): Result<Unit>
     suspend fun deleteMyQuestionAnswer(answerId: Long): Result<Unit>
     suspend fun reportTodayQuestionAnswer(answerId: Long, request: ReportContent): Result<Unit>
+    suspend fun updateMarketingConsent(enabled: Boolean): Result<Unit>
 }
 

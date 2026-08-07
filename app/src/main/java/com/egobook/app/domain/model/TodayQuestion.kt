@@ -7,7 +7,8 @@ data class TodayQuestion(
     val content: String,
     val date: String,
     val isUserAnswered: Boolean,
-    val myAnswer: TodayQuestionAnswer? = null
+    val myAnswer: TodayQuestionAnswer? = null,
+    val marketingEnabled: Boolean = false
 )
 
 data class TodayQuestionAnswer(
