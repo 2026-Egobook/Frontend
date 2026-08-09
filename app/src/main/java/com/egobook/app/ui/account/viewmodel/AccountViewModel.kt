@@ -2,6 +2,8 @@ package com.egobook.app.ui.account.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.domain.model.account.NicknameValidationResult
 import com.egobook.app.domain.model.account.NicknameValidator
 import com.egobook.app.domain.repository.account.AccountRepository
@@ -19,7 +21,8 @@ import com.egobook.app.domain.model.auth.AuthError
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val accountRepository: AccountRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
         private val _userIdState = MutableStateFlow<UiState<String>>(UiState.Idle)
         val userIdState = _userIdState.asStateFlow()
@@ -80,10 +83,12 @@ class AccountViewModel @Inject constructor(
     fun linkToGoogle(idToken: String) {
         viewModelScope.launch {
             _linkState.value = UiState.Loading
+            analyticsLogger.logEvent(AnalyticsEvent.ACCOUNT_LINK_START)
 
             accountRepository.linkToGoogle(idToken)
                 .onSuccess {
                     _linkState.value = UiState.Success(Unit)
+                    analyticsLogger.logEvent(AnalyticsEvent.ACCOUNT_LINK_COMPLETE)
                     _linkToastEvent.emit("Google 계정 연동이 완료되었습니다!")
 
                     // 연동 성공 후 userId 갱신
@@ -138,6 +143,7 @@ class AccountViewModel @Inject constructor(
                 .onSuccess {
                     _nickname.value = nickname
                     _nicknameUpdateState.value = UiState.Success(Unit)
+                    analyticsLogger.logEvent(AnalyticsEvent.NICKNAME_CHANGE)
                     _nicknameToastEvent.emit("닉네임이 변경되었습니다.")
                 }
                 .onFailure { e ->
@@ -154,10 +160,12 @@ class AccountViewModel @Inject constructor(
     fun deleteAccount() {
         viewModelScope.launch {
             _deleteAccountState.value = UiState.Loading
+            analyticsLogger.logEvent(AnalyticsEvent.ACCOUNT_WITHDRAW_REQUEST)
 
             accountRepository.deleteAccount()
                 .onSuccess {
                     _deleteAccountState.value = UiState.Success(Unit)
+                    analyticsLogger.logEvent(AnalyticsEvent.ACCOUNT_WITHDRAW_CONFIRM)
                 }
                 .onFailure { e ->
                     _deleteAccountState.value =

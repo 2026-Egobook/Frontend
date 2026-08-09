@@ -74,6 +74,7 @@ class CalenderFragment : Fragment() {
         
         // 2. 초기 월 데이터 로드 (스와이프 시 자동 호출되지만 초기 진입 시 한 번은 직접 호출)
         viewModel.setYearMonth(initialMonth)
+        viewModel.logCalendarView()
         
         // 2. observing 시작
         observeViewModel()

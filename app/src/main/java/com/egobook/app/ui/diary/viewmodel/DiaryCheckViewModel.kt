@@ -3,6 +3,8 @@ package com.egobook.app.ui.diary.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.util.UiState
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryCheckViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
 
     private val _diaryState = MutableStateFlow<UiState<Diary>>(UiState.Loading)
@@ -61,6 +64,7 @@ class DiaryCheckViewModel @Inject constructor(
         viewModelScope.launch {
             diaryUseCases.deleteDiary(diaryId)
                 .onSuccess {
+                    analyticsLogger.logEvent(AnalyticsEvent.DIARY_DELETE)
                     _deleteSuccess.value = true
                 }
                 .onFailure {

@@ -5,6 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
+import com.egobook.app.domain.model.square.letter.LetterMode
 import com.egobook.app.domain.usecase.GetFriendListUseCase
 import com.egobook.app.domain.usecase.GetUserInfoUseCase
 import com.egobook.app.store.data.ShopRepository
@@ -63,7 +67,8 @@ class LetterViewModel @Inject constructor(
     private val deleteLetterThreadUseCase: DeleteLetterThreadUseCase,
     private val getDeferredLettersUseCase: GetDeferredLettersUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getReceivedReplyByIdUseCase: GetReceivedReplyByIdUseCase
+    private val getReceivedReplyByIdUseCase: GetReceivedReplyByIdUseCase,
+    private val analyticsLogger: AnalyticsLogger
 ): ViewModel() {
 
     private val _letterPaperItems = MutableStateFlow<UiState<List<LetterPaperItem>>>(UiState.Idle)
@@ -106,6 +111,10 @@ class LetterViewModel @Inject constructor(
         viewModelScope.launch {
             _sendLetterResult.emit(UiState.Loading)
             sendLetterUseCase(letter = letter.toDomain()).onSuccess {
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.LETTER_SEND,
+                    mapOf(AnalyticsParam.TARGET_TYPE to letter.mode.value.lowercase())
+                )
                 _sendLetterResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _sendLetterResult.emit(UiState.Failure(error.message))
@@ -130,11 +139,28 @@ class LetterViewModel @Inject constructor(
     private val _arrivedPendingLetterResult = MutableStateFlow<UiState<ArrivedPendingLetterModel>>(UiState.Idle) // stateflow vs sharedflow
     val arrivedPendingLetterResult = _arrivedPendingLetterResult.asStateFlow()
 
+    // 화면 재진입마다 같은 편지를 다시 폴링해도 letter_receive가 중복 집계되지 않도록 마지막으로 집계한 편지 ID를 기억한다.
+    private var lastNotifiedArrivedLetterId: Long? = null
+
     fun getArrivedPendingLetter() {
         viewModelScope.launch {
             _arrivedPendingLetterResult.value = UiState.Loading
             getArrivedPendingLetterUseCase().onSuccess { domain ->
-                _arrivedPendingLetterResult.value = UiState.Success(domain.toPresentation())
+                val presentation = domain.toPresentation()
+                presentation.letter?.let { letter ->
+                    if (letter.letterId != lastNotifiedArrivedLetterId) {
+                        lastNotifiedArrivedLetterId = letter.letterId
+                        val fromType = when (letter.mode) {
+                            LetterMode.RANDOM -> "stranger"
+                            LetterMode.FRIEND -> "friend"
+                        }
+                        analyticsLogger.logEvent(
+                            AnalyticsEvent.LETTER_RECEIVE,
+                            mapOf(AnalyticsParam.FROM_TYPE to fromType)
+                        )
+                    }
+                }
+                _arrivedPendingLetterResult.value = UiState.Success(presentation)
             }.onFailure { error ->
                 _arrivedPendingLetterResult.value = UiState.Failure(error.message)
             }
@@ -152,6 +178,7 @@ class LetterViewModel @Inject constructor(
         viewModelScope.launch {
             _replyLetterResult.emit(UiState.Loading)
             replyLetterUseCase(letterId = letterId, text = text).onSuccess { domain ->
+                analyticsLogger.logEvent(AnalyticsEvent.LETTER_REPLY_SEND)
                 _replyLetterResult.emit(UiState.Success(domain.toPresentation()))
             }.onFailure { error ->
                 _replyLetterResult.emit(UiState.Failure(error.message))
@@ -180,6 +207,7 @@ class LetterViewModel @Inject constructor(
         viewModelScope.launch {
             _giveUpReplyLetterResult.emit(UiState.Loading)
             giveUpReplyLetterUseCase(letterId = letterId).onSuccess {
+                analyticsLogger.logEvent(AnalyticsEvent.LETTER_GIVE_UP)
                 _giveUpReplyLetterResult.emit(UiState.Success(Unit))
             }.onFailure { error ->
                 _giveUpReplyLetterResult.emit(UiState.Failure(error.message))
@@ -219,6 +247,10 @@ class LetterViewModel @Inject constructor(
         viewModelScope.launch {
             _reportArrivedLetterResult.emit(UiState.Loading)
             reportArrivedLetterUseCase(letterId = letterId, reportContent = reportLetter.toDomain()).onSuccess {
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.LETTER_REPORT,
+                    mapOf(AnalyticsParam.REASON to reportLetter.reason.value.lowercase())
+                )
                 _reportArrivedLetterResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _reportArrivedLetterResult.emit(UiState.Failure(error.message))
@@ -233,6 +265,10 @@ class LetterViewModel @Inject constructor(
         viewModelScope.launch {
             _reportRepliedLetterResult.emit(UiState.Loading)
             reportRepliedLetterUseCase(replyId = replyId, reportContent = reportLetter.toDomain()).onSuccess {
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.LETTER_REPORT,
+                    mapOf(AnalyticsParam.REASON to reportLetter.reason.value.lowercase())
+                )
                 _reportRepliedLetterResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _reportRepliedLetterResult.emit(UiState.Failure(error.message))
@@ -247,6 +283,7 @@ class LetterViewModel @Inject constructor(
         viewModelScope.launch {
             _deleteLetterThreadResult.emit(UiState.Loading)
             deleteLetterThreadUseCase(threadId = threadId).onSuccess {
+                analyticsLogger.logEvent(AnalyticsEvent.LETTER_DELETE)
                 _deleteLetterThreadResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _deleteLetterThreadResult.emit(UiState.Failure(error.message))

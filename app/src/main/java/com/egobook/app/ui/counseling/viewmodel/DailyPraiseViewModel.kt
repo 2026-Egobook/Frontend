@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
 import com.egobook.app.domain.usecase.egoroom.GetDailyAndWeeklyNotificationUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyPraiseByDateUseCase
 import com.egobook.app.domain.usecase.egoroom.GetDailyPraiseUseCase
@@ -28,7 +31,8 @@ class DailyPraiseViewModel @Inject constructor(
     private val getDailyPraiseUseCase: GetDailyPraiseUseCase,
     private val getDailyPraiseByDateUseCase: GetDailyPraiseByDateUseCase,
     private val getDailyAndWeeklyNotificationUseCase: GetDailyAndWeeklyNotificationUseCase,
-    private val updateDailyPraiseNotificationUseCase: UpdateDailyPraiseNotificationUseCase
+    private val updateDailyPraiseNotificationUseCase: UpdateDailyPraiseNotificationUseCase,
+    private val analyticsLogger: AnalyticsLogger
 ): ViewModel() {
 
     private val _dailyPraiseList = MutableStateFlow<PagingData<PraiseDailyModel>>(PagingData.empty())
@@ -49,6 +53,7 @@ class DailyPraiseViewModel @Inject constructor(
         viewModelScope.launch {
             _dailyPraiseByDate.emit(UiState.Loading)
             getDailyPraiseByDateUseCase(date = date).onSuccess { domain ->
+                analyticsLogger.logEvent(AnalyticsEvent.PRAISE_LETTER_VIEW)
                 _dailyPraiseByDate.emit(UiState.Success(domain.toPresentation()))
             }.onFailure { error ->
                 _dailyPraiseByDate.emit(UiState.Failure(error.message))
@@ -77,6 +82,10 @@ class DailyPraiseViewModel @Inject constructor(
         viewModelScope.launch {
             _updateNotificationStatus.emit(UiState.Loading)
             updateDailyPraiseNotificationUseCase(isEnabled = isEnabled).onSuccess { isEnabled ->
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.PRAISE_LETTER_TOGGLE,
+                    mapOf(AnalyticsParam.ENABLED to isEnabled)
+                )
                 _updateNotificationStatus.emit(UiState.Success(isEnabled))
             }.onFailure { error ->
                 _updateNotificationStatus.emit(UiState.Failure(error.message))

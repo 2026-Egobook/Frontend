@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
 import com.egobook.app.domain.usecase.DeleteMyQuestionAnswerUseCase
 import com.egobook.app.domain.usecase.GetMyRepliesHistoryUseCase
 import com.egobook.app.domain.usecase.GetTodayAllUserRepliesUseCase
@@ -42,7 +45,8 @@ class QuestionViewModel @Inject constructor(
     private val updateTodayAnswerUseCase: UpdateTodayAnswerUseCase,
     private val deleteMyQuestionAnswerUseCase: DeleteMyQuestionAnswerUseCase,
     private val reportTodayQuestionAnswerUseCase: ReportTodayQuestionAnswerUseCase,
-    private val updateMarketingConsentUseCase: UpdateMarketingConsentUseCase
+    private val updateMarketingConsentUseCase: UpdateMarketingConsentUseCase,
+    private val analyticsLogger: AnalyticsLogger
 ): ViewModel() {
 
     private val _todayQuestion = MutableStateFlow<UiState<TodayQuestionModel>>(UiState.Idle)
@@ -66,6 +70,10 @@ class QuestionViewModel @Inject constructor(
         viewModelScope.launch {
             _submitTodayAnswerResult.emit(UiState.Loading)
             submitTodayAnswerUseCase(answer = answer.toDomain()).onSuccess {
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.QUESTION_ANSWER_WRITE,
+                    mapOf(AnalyticsParam.VISIBILITY to answer.visibilityType.value.lowercase())
+                )
                 _submitTodayAnswerResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _submitTodayAnswerResult.emit(UiState.Failure(error.message))
@@ -100,6 +108,7 @@ class QuestionViewModel @Inject constructor(
 
     fun getTodayAllUserReplies(size: Int) {
         viewModelScope.launch {
+            analyticsLogger.logEvent(AnalyticsEvent.QUESTION_VIEW_ALL)
             getTodayAllUserRepliesUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
                 _todayAllUserReplies.value = pagingData.map { it.toPresentation() }
             }
@@ -113,6 +122,7 @@ class QuestionViewModel @Inject constructor(
         viewModelScope.launch {
             _updateTodayAnswerResult.emit(UiState.Loading)
             updateTodayAnswerUseCase(updatedAnswer = updatedAnswer.toDomain()).onSuccess {
+                analyticsLogger.logEvent(AnalyticsEvent.QUESTION_ANSWER_EDIT)
                 _updateTodayAnswerResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _updateTodayAnswerResult.emit(UiState.Failure(error.message))
@@ -127,6 +137,7 @@ class QuestionViewModel @Inject constructor(
         viewModelScope.launch {
             _deleteMyQuestionAnswerResult.emit(UiState.Loading)
             deleteMyQuestionAnswerUseCase(answerId = answerId).onSuccess {
+                analyticsLogger.logEvent(AnalyticsEvent.QUESTION_ANSWER_DELETE)
                 _deleteMyQuestionAnswerResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _deleteMyQuestionAnswerResult.emit(UiState.Failure(error.message))
@@ -141,6 +152,10 @@ class QuestionViewModel @Inject constructor(
         viewModelScope.launch {
             _reportTodayQuestionAnswerResult.emit(UiState.Loading)
             reportTodayQuestionAnswerUseCase(answerId = answerId, request = request.toDomain()).onSuccess {
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.QUESTION_ANSWER_REPORT,
+                    mapOf(AnalyticsParam.REASON to request.reason.value.lowercase())
+                )
                 _reportTodayQuestionAnswerResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _reportTodayQuestionAnswerResult.emit(UiState.Failure(error.message))

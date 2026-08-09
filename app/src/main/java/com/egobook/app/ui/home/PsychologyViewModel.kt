@@ -2,6 +2,8 @@ package com.egobook.app.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.ui.home.repository.DailyPsychologyDto
 import com.egobook.app.ui.home.repository.PsychologyKnowledge
 import com.egobook.app.ui.home.repository.PsychologyReward
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PsychologyViewModel @Inject constructor(
-    private val psychologyRepository: UserPsychologyRepository
+    private val psychologyRepository: UserPsychologyRepository,
+    private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
 
     private var loadingCount = 0
@@ -109,6 +112,7 @@ class PsychologyViewModel @Inject constructor(
             showLoading()
             try {
                 psychologyRepository.saveDailyPsychology(knowledgeId)
+                analyticsLogger.logEvent(AnalyticsEvent.PSYCH_KNOWLEDGE_SAVE)
                 fetchDailyPsychologyInternal()
                 fetchSavedPsychologyInternal()
             } finally {
@@ -122,6 +126,7 @@ class PsychologyViewModel @Inject constructor(
             showLoading()
             try {
                 psychologyRepository.deletePsychology(knowledgeId)
+                analyticsLogger.logEvent(AnalyticsEvent.PSYCH_KNOWLEDGE_UNSAVE)
                 fetchDailyPsychologyInternal()
                 fetchSavedPsychologyInternal()
             } finally {

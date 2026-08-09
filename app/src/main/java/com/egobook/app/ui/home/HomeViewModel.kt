@@ -3,6 +3,9 @@ package com.egobook.app.ui.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
 import com.egobook.app.ui.home.repository.AdInfoDto
 import com.egobook.app.ui.home.repository.UserAdRepository
 import com.egobook.app.ui.home.repository.UserPsychologyRepository
@@ -27,7 +30,8 @@ class HomeViewModel @Inject constructor(
     private val userAdRepository: UserAdRepository,
     private val psychologyRepository: UserPsychologyRepository,
     private val shopRepository: ShopRepository,
-    private val userTendencyRepository: UserTendencyRepository
+    private val userTendencyRepository: UserTendencyRepository,
+    private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(User(id=-1, Level(1),Ink(0), nickname = ""))
     val uiState: StateFlow<User> = _uiState.asStateFlow()
@@ -99,8 +103,21 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun fetchTendenciesInternal() {
         try {
+            val previousTendencies = _tendencies.value
             val tendencyList = userTendencyRepository.loadTendencies()
             _tendencies.value = tendencyList
+            tendencyList.forEach { updated ->
+                val previous = previousTendencies.find { it.type == updated.type }
+                if (previous != null && updated.level > previous.level) {
+                    analyticsLogger.logEvent(
+                        AnalyticsEvent.LEVEL_UP,
+                        mapOf(
+                            AnalyticsParam.STAT_TYPE to updated.type.name,
+                            AnalyticsParam.NEW_LEVEL to updated.level
+                        )
+                    )
+                }
+            }
         } catch (error: Exception) {
             Log.e("HomeViewModel", "Failed to fetch tendencies", error)
         }
@@ -168,12 +185,26 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun logPsychKnowledgeOpen() {
+        // 이 진입점(홈의 오늘의 병 아이콘)은 당일 미열람 상태일 때만 노출되므로 항상 최초 오픈이다.
+        analyticsLogger.logEvent(
+            AnalyticsEvent.PSYCH_KNOWLEDGE_OPEN,
+            mapOf(AnalyticsParam.IS_FIRST_TODAY to true)
+        )
+    }
+
     fun watchAd() {
         viewModelScope.launch {
             showLoading()
             try {
                 val message = userAdRepository.watchAd()
                 fetchUserInternal()
+                val freshAdCount = runCatching { userAdRepository.loadAdInfo().currentViewCount }
+                    .getOrDefault(_adState.value.currentViewCount + 1)
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.AD_REWARD_WATCH,
+                    mapOf(AnalyticsParam.AD_COUNT_TODAY to freshAdCount)
+                )
                 Log.d("HomeViewModel", "Ad watched: $message")
             } finally {
                 hideLoading()
