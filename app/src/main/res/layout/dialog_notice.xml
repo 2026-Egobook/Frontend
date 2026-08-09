@@ -12,12 +12,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp"
         android:contentDescription="@string/notice_close_description"
-        android:padding="4dp"
-        android:src="@drawable/ic_cancel"
+        android:src="@drawable/ic_notice_close"
         app:layout_constraintBottom_toTopOf="@id/cv_notice"
         app:layout_constraintEnd_toEndOf="@id/cv_notice" />
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_notice"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -25,6 +24,8 @@
         app:cardBackgroundColor="@color/layer_white"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
+        app:strokeColor="@color/brand"
+        app:strokeWidth="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.75"
@@ -42,6 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
