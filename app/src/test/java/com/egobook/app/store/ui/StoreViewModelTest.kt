@@ -2,6 +2,7 @@ package com.egobook.app.store.ui
 
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.store.data.ShopRepository
 import com.egobook.app.store.data.model.ItemStatus
 import com.egobook.app.store.data.model.ItemType
@@ -36,6 +37,7 @@ class StoreViewModelTest {
 
     private lateinit var shopRepository: ShopRepository
     private lateinit var userRepository: UserRepository
+    private lateinit var analyticsLogger: AnalyticsLogger
     private lateinit var viewModel: StoreViewModel
     private val testDispatcher = StandardTestDispatcher()
 
@@ -47,8 +49,13 @@ class StoreViewModelTest {
         every { Log.d(any(), any()) } returns 0
         shopRepository = mockk()
         userRepository = mockk()
+        analyticsLogger = mockk(relaxed = true)
         every { shopRepository.itemStream } returns flowOf(emptyList())
-        viewModel = StoreViewModel(shopRepository = shopRepository, userRepository = userRepository)
+        viewModel = StoreViewModel(
+            shopRepository = shopRepository,
+            userRepository = userRepository,
+            analyticsLogger = analyticsLogger
+        )
     }
 
     @After

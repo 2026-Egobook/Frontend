@@ -65,6 +65,9 @@ class StoreFragment: Fragment() {
             viewModel.initialize()
         }
 
+        if (savedInstanceState == null) {
+            viewModel.logShopOpen()
+        }
         viewModel.loadInk()
         viewPager = binding.vp2StoreCollectionContainer
         viewPager.adapter = StoreCollectionAdapter(this)

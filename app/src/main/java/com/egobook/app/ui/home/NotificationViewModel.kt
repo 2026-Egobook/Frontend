@@ -3,6 +3,9 @@ package com.egobook.app.ui.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
 import com.egobook.app.ui.home.notification.Notification
 import com.egobook.app.ui.home.repository.HomeNotificationRepository
 import com.egobook.app.ui.home.repository.NotificationSettingDto
@@ -15,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
-    private val repository: HomeNotificationRepository
+    private val repository: HomeNotificationRepository,
+    private val analyticsLogger: AnalyticsLogger
 ): ViewModel() {
 
     private val _notifications = MutableStateFlow<List<Notification>>(emptyList())
@@ -57,6 +61,10 @@ class NotificationViewModel @Inject constructor(
             val notificationSetting = repository.changeNotificationSetting()
             Log.d("jang", "${notificationSetting}")
             _notificationSettingState.value = notificationSetting
+            analyticsLogger.logEvent(
+                AnalyticsEvent.NOTIFICATION_TOGGLE,
+                mapOf(AnalyticsParam.ENABLED to notificationSetting.enabled)
+            )
         }
     }
 
@@ -64,6 +72,10 @@ class NotificationViewModel @Inject constructor(
         viewModelScope.launch {
             val notificationReadingDto = repository.readNotification(notification)
             Log.d("jang", "${notificationReadingDto}")
+            analyticsLogger.logEvent(
+                AnalyticsEvent.NOTIFICATION_OPEN,
+                mapOf(AnalyticsParam.NOTIFICATION_TYPE to (notification.type::class.simpleName ?: "unknown"))
+            )
             loadNotifications()
         }
     }

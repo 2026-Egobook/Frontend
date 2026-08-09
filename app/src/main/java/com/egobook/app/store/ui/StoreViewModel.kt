@@ -3,6 +3,9 @@ package com.egobook.app.store.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
 import com.egobook.app.store.data.ShopRepository
 import com.egobook.app.store.data.local.LocalShopDataSource
 import com.egobook.app.store.data.model.ItemStatus
@@ -31,8 +34,17 @@ data class CustomItemState(
 @HiltViewModel
 class StoreViewModel @Inject constructor(
     private val shopRepository: ShopRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
+
+    fun logShopOpen() {
+        analyticsLogger.logEvent(AnalyticsEvent.SHOP_OPEN)
+    }
+
+    fun logShopExit() {
+        analyticsLogger.logEvent(AnalyticsEvent.SHOP_EXIT)
+    }
 
     private var loadingCount = 0
     private val _isLoading = MutableStateFlow(false)
@@ -161,6 +173,13 @@ class StoreViewModel @Inject constructor(
                     val updatedEquipped = shopRepository.equipItemPermanently(item, !isAlreadyEquipped)
                     _permanentItems.value = updatedEquipped
                     _equippedItems.value = updatedEquipped
+                    analyticsLogger.logEvent(
+                        AnalyticsEvent.ITEM_EQUIP,
+                        mapOf(
+                            AnalyticsParam.ITEM_ID to item.id,
+                            AnalyticsParam.ITEM_TYPE to item.type.name
+                        )
+                    )
                     Log.d("StoreViewModel", "서버 착용 상태 변경 성공: ${item.id}, ${!isAlreadyEquipped}")
                 } catch (e: Exception) {
                     Log.e("StoreViewModel", "서버 통신 에러", e)
@@ -198,6 +217,14 @@ class StoreViewModel @Inject constructor(
                 loadInk()
                 // 구매 성공 후 최신 장착 정보 다시 로드
                 loadEquippedItems()
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.ITEM_PURCHASE,
+                    mapOf(
+                        AnalyticsParam.ITEM_ID to item.id,
+                        AnalyticsParam.ITEM_TYPE to item.type.name,
+                        AnalyticsParam.PRICE to item.price.value
+                    )
+                )
                 _toastEvent.emit("구매가 완료되었어요")
             } catch (e: Exception) {
                 Log.e("StoreViewModel", "Purchase failed", e)
