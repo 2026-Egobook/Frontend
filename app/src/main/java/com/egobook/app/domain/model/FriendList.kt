@@ -8,5 +8,7 @@ data class FriendList(
 data class Friend(
     val id: Long,
     val name: String,
-    val level: Long
+    val level: Long,
+    val turtleImageUrl: String? = null,
+    val backgroundImageUrl: String? = null
 )

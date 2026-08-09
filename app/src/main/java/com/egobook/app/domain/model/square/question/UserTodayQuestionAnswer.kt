@@ -12,5 +12,7 @@ data class UserTodayQuestionAnswerItem(
     val userId: Long,
     val nickname: String,
     val content: String,
-    val createdAt: String
+    val createdAt: String,
+    val turtleImageUrl: String? = null,
+    val backgroundImageUrl: String? = null
 )

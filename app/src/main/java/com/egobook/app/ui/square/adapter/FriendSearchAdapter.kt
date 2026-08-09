@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.egobook.app.R
 import com.egobook.app.databinding.ItemSearchFriendBinding
 import com.egobook.app.ui.square.model.friend.SearchUserModel
@@ -27,8 +26,8 @@ class FriendSearchAdapter(
             btnAddFriendSearchResultApply.text = "신청하기"
             tvAddFriendSearchLevel.text = "LV ${item.level}"
             tvAddFriendSearchNickname.text = item.nickname
-            Glide.with(ivAddFriendSearchImage).load(item.profileImageUrl)
-                .fallback(R.drawable.default_turtle).into(ivAddFriendSearchImage) // 1
+            ivAddFriendSearchBackground.loadProfileBackground(item.backgroundImageUrl)
+            ivAddFriendSearchImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle)
             btnAddFriendSearchResultApply.setOnClickListener { onApply(item.userId, bindingAdapterPosition) }
         }
     }

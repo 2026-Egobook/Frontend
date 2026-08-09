@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.egobook.app.R
 import com.egobook.app.databinding.ItemSquareFriendListBinding
 import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.model.friend.FriendModel
@@ -30,6 +31,8 @@ class FriendsListAdapter(private val onDeleted: (FriendModel) -> Unit): ListAdap
         fun bind(item: FriendModel) = with(binding) {
             tvItemFriendListName.text = item.name
             tvItemFriendListLevel.text = "LV ${item.level}"
+            ivItemFriendListBackground.loadProfileBackground(item.backgroundImageUrl)
+            ivItemFriendListImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle)
             ivItemSquareFriendListDelete.setOnClickListener { onDeleted(item) }
         }
     }

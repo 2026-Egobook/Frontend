@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.egobook.app.R
 import com.egobook.app.databinding.ItemSquareFriendAnswerBinding
 import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
 
@@ -14,6 +15,11 @@ class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnsw
         fun bind(item: UserTodayQuestionAnswerItemModel) = with(binding) {
             tvItemSquareFriendAnswerUserName.text = item.nickname
             tvItemSquareFriendAnswerUserContent.text = item.content
+            ivItemSquareFriendAnswerUserBackground.loadProfileBackground(item.backgroundImageUrl)
+            ivItemSquareFriendAnswerUserImage.loadProfileTurtle(
+                item.turtleImageUrl,
+                R.drawable.img_temp_square_user_thumbnail
+            )
         }
     }
 

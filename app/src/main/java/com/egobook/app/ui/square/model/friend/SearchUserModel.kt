@@ -6,13 +6,15 @@ data class SearchUserModel(
     val userId: Long,
     val nickname: String,
     val level: Long,
-    val profileImageUrl: String? = null
+    val turtleImageUrl: String? = null,
+    val backgroundImageUrl: String? = null
 )
 
 fun SearchUser.toPresentation(): SearchUserModel = SearchUserModel(
     userId = userId,
     nickname = nickname,
     level = level,
-    profileImageUrl = profileImageUrl
+    turtleImageUrl = turtleImageUrl,
+    backgroundImageUrl = backgroundImageUrl
 )
 
