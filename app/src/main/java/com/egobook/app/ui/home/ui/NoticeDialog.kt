@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,10 +64,13 @@ class NoticeDialog : DialogFragment() {
                     error: WebResourceError?
                 ) {
                     if (request?.isForMainFrame != true) return
+                    Log.e(TAG, "공지 로드 실패: url=${request.url}, error=$error")
                     notifyLoadFailed()
                 }
             }
-            loadUrl(requireNoticeUrl())
+            val noticeUrl = requireNoticeUrl()
+            Log.d(TAG, "공지 로드 시작: url=$noticeUrl")
+            loadUrl(noticeUrl)
         }
     }
 
@@ -92,6 +96,7 @@ class NoticeDialog : DialogFragment() {
     }
 
     companion object {
+        private const val TAG = "NoticeDialog"
         const val RESULT_KEY = "notice_result"
         const val RESULT_LOAD_FAILED = "notice_load_failed"
         private const val ARG_NOTICE_URL = "notice_url"
