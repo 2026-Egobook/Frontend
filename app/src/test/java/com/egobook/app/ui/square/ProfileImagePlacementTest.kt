@@ -29,12 +29,12 @@ class ProfileImagePlacementTest {
     }
 
     @Test
-    fun `plaza turtle is scaled from fit center and aligned start bottom`() {
+    fun `plaza turtle is scaled from original and aligned start bottom`() {
         val result = calculateProfileImageTransform(100, 100, 200, 100, ProfileImagePlacement.PLAZA_TURTLE)
 
-        assertThat(result.scale).isCloseTo(0.15f, offset(0.0001f))
+        assertThat(result.scale).isCloseTo(0.3f, offset(0.0001f))
         assertThat(result.translateX).isCloseTo(0f, offset(0.0001f))
-        assertThat(result.translateY).isCloseTo(85f, offset(0.0001f))
+        assertThat(result.translateY).isCloseTo(70f, offset(0.0001f))
     }
 
     @Test
@@ -47,12 +47,12 @@ class ProfileImagePlacementTest {
     }
 
     @Test
-    fun `friend turtle keeps fit size and aligns start bottom`() {
+    fun `friend turtle keeps original size and aligns start bottom`() {
         val result = calculateProfileImageTransform(100, 100, 200, 100, ProfileImagePlacement.FRIEND_TURTLE)
 
-        assertThat(result.scale).isCloseTo(0.5f, offset(0.0001f))
+        assertThat(result.scale).isCloseTo(1f, offset(0.0001f))
         assertThat(result.translateX).isCloseTo(0f, offset(0.0001f))
-        assertThat(result.translateY).isCloseTo(50f, offset(0.0001f))
+        assertThat(result.translateY).isCloseTo(0f, offset(0.0001f))
     }
 
     @Test

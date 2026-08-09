@@ -34,11 +34,7 @@ fun calculateProfileImageTransform(
     require(frameWidth > 0 && frameHeight > 0)
     require(imageWidth > 0 && imageHeight > 0)
 
-    val fitScale = minOf(
-        frameWidth.toFloat() / imageWidth,
-        frameHeight.toFloat() / imageHeight
-    )
-    val scale = fitScale * placement.scale
+    val scale = placement.scale
     val scaledWidth = imageWidth * scale
     val scaledHeight = imageHeight * scale
     return ProfileImageTransform(
