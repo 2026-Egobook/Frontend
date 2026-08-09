@@ -97,12 +97,12 @@
             android:id="@+id/v_bell_red_dot"
             android:layout_width="8dp"
             android:layout_height="8dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
             android:background="@drawable/ic_notification_red_dot"
             android:contentDescription="@string/home_bell_red_dot_description"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/iv_bell"
+            app:layout_constraintStart_toStartOf="@id/iv_bell"
             app:layout_constraintTop_toTopOf="@id/iv_bell"
             tools:visibility="visible" />
 
