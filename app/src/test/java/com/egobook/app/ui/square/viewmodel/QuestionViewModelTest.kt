@@ -1,6 +1,7 @@
 package com.egobook.app.ui.square.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.domain.usecase.UpdateMarketingConsentUseCase
 import com.egobook.app.util.UiState
 import io.mockk.coEvery
@@ -30,6 +31,7 @@ class QuestionViewModelTest {
 
     private lateinit var viewModel: QuestionViewModel
     private lateinit var updateMarketingConsentUseCase: UpdateMarketingConsentUseCase
+    private lateinit var analyticsLogger: AnalyticsLogger
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -37,6 +39,7 @@ class QuestionViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         updateMarketingConsentUseCase = mockk()
+        analyticsLogger = mockk(relaxed = true)
 
         viewModel = QuestionViewModel(
             getTodayQuestionUseCase = mockk(),
@@ -47,7 +50,8 @@ class QuestionViewModelTest {
             updateTodayAnswerUseCase = mockk(),
             deleteMyQuestionAnswerUseCase = mockk(),
             reportTodayQuestionAnswerUseCase = mockk(),
-            updateMarketingConsentUseCase = updateMarketingConsentUseCase
+            updateMarketingConsentUseCase = updateMarketingConsentUseCase,
+            analyticsLogger = analyticsLogger
         )
     }
 

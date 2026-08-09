@@ -2,6 +2,8 @@ package com.egobook.app.ui.square.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.domain.usecase.AcceptFriendRequestUseCase
 import com.egobook.app.domain.usecase.CancelFriendRequestUseCase
 import com.egobook.app.domain.usecase.DeleteFriendUseCase
@@ -36,7 +38,8 @@ class FriendsViewModel @Inject constructor(
     private val rejectFriendRequestUseCase: RejectFriendRequestUseCase,
     private val acceptFriendRequestUseCase: AcceptFriendRequestUseCase,
     private val cancelFriendRequestUseCase: CancelFriendRequestUseCase,
-    private val getUserIdUseCase: GetUserIdUseCase
+    private val getUserIdUseCase: GetUserIdUseCase,
+    private val analyticsLogger: AnalyticsLogger
 ): ViewModel() {
 
     private val _friendList = MutableStateFlow<UiState<FriendListModel>>(UiState.Idle)
@@ -59,6 +62,7 @@ class FriendsViewModel @Inject constructor(
         viewModelScope.launch {
             _deleteFriendResult.emit(UiState.Loading)
             deleteFriendUseCase(deleteId = deleteId).onSuccess {
+                analyticsLogger.logEvent(AnalyticsEvent.FRIEND_DELETE)
                 _deleteFriendResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _deleteFriendResult.emit(UiState.Failure(error.message))
@@ -123,6 +127,7 @@ class FriendsViewModel @Inject constructor(
         viewModelScope.launch {
             _requestFriendshipResult.emit(UiState.Loading)
             requestFriendshipUseCase(receiverId = receiverId).onSuccess {
+                analyticsLogger.logEvent(AnalyticsEvent.FRIEND_REQUEST_SEND)
                 _requestFriendshipResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _requestFriendshipResult.emit(UiState.Failure(error.message))
@@ -137,6 +142,7 @@ class FriendsViewModel @Inject constructor(
         viewModelScope.launch {
             _rejectFriendRequestResult.emit(UiState.Loading)
             rejectFriendRequestUseCase(requestId = requestId).onSuccess { requestId ->
+                analyticsLogger.logEvent(AnalyticsEvent.FRIEND_REQUEST_REJECT)
                 _rejectFriendRequestResult.emit(UiState.Success(requestId))
             }.onFailure { error ->
                 _rejectFriendRequestResult.emit(UiState.Failure(error.message))
@@ -151,6 +157,7 @@ class FriendsViewModel @Inject constructor(
         viewModelScope.launch {
             _acceptFriendRequestResult.emit(UiState.Loading)
             acceptFriendRequestUseCase(requestId = requestId).onSuccess { requestId ->
+                analyticsLogger.logEvent(AnalyticsEvent.FRIEND_REQUEST_ACCEPT)
                 _acceptFriendRequestResult.emit(UiState.Success(requestId))
             }.onFailure { error ->
                 _acceptFriendRequestResult.emit(UiState.Failure(error.message))
