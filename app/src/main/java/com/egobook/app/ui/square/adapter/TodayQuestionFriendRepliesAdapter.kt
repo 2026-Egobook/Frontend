@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.R
 import com.egobook.app.databinding.ItemSquareFriendAnswerBinding
 import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
+import com.egobook.app.ui.square.levelBadgeDrawable
 
 class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnswerItemModel, TodayQuestionFriendRepliesAdapter.TodayQuestionFriendRepliesViewHolder>(diffUtil) {
 
@@ -15,6 +16,8 @@ class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnsw
         fun bind(item: UserTodayQuestionAnswerItemModel) = with(binding) {
             tvItemSquareFriendAnswerUserName.text = item.nickname
             tvItemSquareFriendAnswerUserContent.text = item.content
+            tvItemSquareFriendAnswerUserLevel.text = "LV ${item.level}"
+            ivItemSquareFriendAnswerUserLevel.setImageResource(levelBadgeDrawable(item.level))
             ivItemSquareFriendAnswerUserBackground.loadProfileBackground(item.backgroundImageUrl)
             ivItemSquareFriendAnswerUserImage.loadProfileTurtle(
                 item.turtleImageUrl,

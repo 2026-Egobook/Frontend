@@ -1,6 +1,7 @@
 package com.egobook.app.ui.square
 
 import com.egobook.app.data.model.square.friend.FriendResponse
+import com.egobook.app.data.model.square.friend.FriendRequestResponse
 import com.egobook.app.data.model.square.friend.SearchUserResponse
 import com.egobook.app.data.model.square.friend.toDomain
 import com.egobook.app.data.model.square.question.UserTodayQuestionAnswerItemResponse
@@ -47,8 +48,26 @@ class ProfileImageMappingTest {
             nickname = "friend",
             content = "answer",
             createdAt = "2026-08-06T00:00:00Z",
+            level = 321L,
             turtleImageUrl = TURTLE_IMAGE_URL,
             backgroundImageUrl = BACKGROUND_IMAGE_URL
+        ).toDomain().toPresentation()
+
+        assertThat(model.turtleImageUrl).isEqualTo(TURTLE_IMAGE_URL)
+        assertThat(model.backgroundImageUrl).isEqualTo(BACKGROUND_IMAGE_URL)
+        assertThat(model.level).isEqualTo(321L)
+    }
+
+    @Test
+    fun `pending friend profile image urls are preserved through presentation mapping`() {
+        val model = FriendRequestResponse(
+            requestId = 1L,
+            userId = 2L,
+            nickname = "friend",
+            level = 10L,
+            turtleImageUrl = TURTLE_IMAGE_URL,
+            backgroundImageUrl = BACKGROUND_IMAGE_URL,
+            requestedAt = "2026-08-06T00:00:00Z"
         ).toDomain().toPresentation()
 
         assertThat(model.turtleImageUrl).isEqualTo(TURTLE_IMAGE_URL)

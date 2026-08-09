@@ -12,6 +12,10 @@ data class FriendRequestResponse(
     val nickname: String,
     @SerializedName("level")
     val level: Long,
+    @SerializedName("turtleImageUrl")
+    val turtleImageUrl: String? = null,
+    @SerializedName("backgroundImageUrl")
+    val backgroundImageUrl: String? = null,
     @SerializedName("requestedAt")
     val requestedAt: String
 )
@@ -21,5 +25,7 @@ fun FriendRequestResponse.toDomain(): FriendRequest = FriendRequest(
     userId = userId,
     nickname = nickname,
     level = level,
+    turtleImageUrl = turtleImageUrl,
+    backgroundImageUrl = backgroundImageUrl,
     requestedAt = requestedAt
 )

@@ -75,6 +75,10 @@ class RemoteShopDataSource @Inject constructor(
             return EquipState(isSuccess = false)
         }
     }
+
+    suspend fun confirmProfile() {
+        apiService.confirmProfile()
+    }
 }
 
 fun ItemType.ofName(): String =

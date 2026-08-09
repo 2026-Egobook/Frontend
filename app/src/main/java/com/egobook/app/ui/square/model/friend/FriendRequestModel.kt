@@ -7,11 +7,15 @@ data class FriendRequestModel(
     val userId: Long,
     val nickname: String,
     val level: Long,
+    val turtleImageUrl: String? = null,
+    val backgroundImageUrl: String? = null,
 )
 
 fun FriendRequest.toPresentation(): FriendRequestModel = FriendRequestModel(
     requestId = requestId,
     userId = userId,
     nickname = nickname,
-    level = level
+    level = level,
+    turtleImageUrl = turtleImageUrl,
+    backgroundImageUrl = backgroundImageUrl
 )
