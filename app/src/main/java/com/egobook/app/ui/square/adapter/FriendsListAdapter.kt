@@ -10,6 +10,7 @@ import com.egobook.app.databinding.ItemSquareFriendListBinding
 import com.egobook.app.ui.square.model.friend.FriendListModel
 import com.egobook.app.ui.square.model.friend.FriendModel
 import com.egobook.app.ui.square.levelBadgeDrawable
+import com.egobook.app.ui.square.ProfileImagePlacement
 
 class FriendsListAdapter(private val onDeleted: (FriendModel) -> Unit): ListAdapter<FriendModel, FriendsListAdapter.FriendsListViewHolder>(diffUtil) {
 
@@ -33,8 +34,8 @@ class FriendsListAdapter(private val onDeleted: (FriendModel) -> Unit): ListAdap
             tvItemFriendListName.text = item.name
             tvItemFriendListLevel.text = "LV ${item.level}"
             ivItemFriendListLevel.setImageResource(levelBadgeDrawable(item.level))
-            ivItemFriendListBackground.loadProfileBackground(item.backgroundImageUrl)
-            ivItemFriendListImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle)
+            ivItemFriendListBackground.loadProfileBackground(item.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
+            ivItemFriendListImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE)
             ivItemSquareFriendListDelete.setOnClickListener { onDeleted(item) }
         }
     }

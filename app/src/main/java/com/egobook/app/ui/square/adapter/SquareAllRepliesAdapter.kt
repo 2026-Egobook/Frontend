@@ -10,6 +10,7 @@ import com.egobook.app.R
 import com.egobook.app.databinding.ItemSquareQuestionReplyBinding
 import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.levelBadgeDrawable
+import com.egobook.app.ui.square.ProfileImagePlacement
 
 class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): PagingDataAdapter<UserTodayQuestionAnswerItemModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
     private val expandedAnswerIds = mutableSetOf<Long>()
@@ -41,10 +42,14 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
             tvItemSquareQuestionReplyUserContent.text = item.content
             tvItemSquareQuestionReplyUserLevel.text = "LV ${item.level}"
             ivItemSquareQuestionReplyUserLevel.setImageResource(levelBadgeDrawable(item.level))
-            ivItemSquareQuestionReplyUserBackground.loadProfileBackground(item.backgroundImageUrl)
+            ivItemSquareQuestionReplyUserBackground.loadProfileBackground(
+                item.backgroundImageUrl,
+                ProfileImagePlacement.PLAZA_BACKGROUND
+            )
             ivItemSquareQuestionReplyUserImage.loadProfileTurtle(
                 item.turtleImageUrl,
-                R.drawable.img_temp_square_user_thumbnail
+                R.drawable.img_temp_square_user_thumbnail,
+                ProfileImagePlacement.PLAZA_TURTLE
             )
             applyContentExpandedState(expandedAnswerIds.contains(item.answerId))
 

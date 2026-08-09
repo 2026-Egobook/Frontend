@@ -25,6 +25,7 @@ import com.egobook.app.ui.square.model.friend.FriendRequestModel
 import com.egobook.app.ui.square.adapter.loadProfileBackground
 import com.egobook.app.ui.square.adapter.loadProfileTurtle
 import com.egobook.app.ui.square.levelBadgeDrawable
+import com.egobook.app.ui.square.ProfileImagePlacement
 import com.egobook.app.ui.square.viewmodel.FriendsViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.launch
@@ -82,8 +83,8 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                         itemBinding.tvItemFriendPendingListName.text = friendRequest.nickname
                                         itemBinding.tvItemFriendPendingListLevel.text = "LV ${friendRequest.level}"
                                         itemBinding.ivItemFriendPendingListLevel.setImageResource(levelBadgeDrawable(friendRequest.level))
-                                        itemBinding.ivItemFriendPendingListBackground.loadProfileBackground(friendRequest.backgroundImageUrl)
-                                        itemBinding.ivItemFriendPendingListImage.loadProfileTurtle(friendRequest.turtleImageUrl, R.drawable.default_turtle)
+                                        itemBinding.ivItemFriendPendingListBackground.loadProfileBackground(friendRequest.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
+                                        itemBinding.ivItemFriendPendingListImage.loadProfileTurtle(friendRequest.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE)
                                         itemBinding.btnItemSquareFriendPendingListDeny.setOnClickListener {
                                             viewModel.rejectFriendRequest(requestId = friendRequest.requestId)
                                         }
@@ -123,8 +124,8 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                         itemBinding.tvItemFriendPendingSentListName.text = friendRequest.nickname
                                         itemBinding.tvItemFriendPendingSentListLevel.text = "LV ${friendRequest.level}"
                                         itemBinding.ivItemFriendPendingSentListLevel.setImageResource(levelBadgeDrawable(friendRequest.level))
-                                        itemBinding.ivItemFriendPendingSentListBackground.loadProfileBackground(friendRequest.backgroundImageUrl)
-                                        itemBinding.ivItemFriendPendingSentListImage.loadProfileTurtle(friendRequest.turtleImageUrl, R.drawable.default_turtle)
+                                        itemBinding.ivItemFriendPendingSentListBackground.loadProfileBackground(friendRequest.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
+                                        itemBinding.ivItemFriendPendingSentListImage.loadProfileTurtle(friendRequest.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE)
                                         itemBinding.btnItemSquareFriendPendingSentListCancel.setOnClickListener {
                                             viewModel.cancelFriendRequest(requestId = friendRequest.requestId)
                                         }

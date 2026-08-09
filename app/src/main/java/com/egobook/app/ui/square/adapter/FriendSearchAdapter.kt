@@ -9,6 +9,7 @@ import com.egobook.app.R
 import com.egobook.app.databinding.ItemSearchFriendBinding
 import com.egobook.app.ui.square.model.friend.SearchUserModel
 import com.egobook.app.ui.square.levelBadgeDrawable
+import com.egobook.app.ui.square.ProfileImagePlacement
 
 /**
  * 1. fallback(R.drawable.default_turtle) → null일 때 보여주는 기본 이미지 지정
@@ -28,8 +29,8 @@ class FriendSearchAdapter(
             tvAddFriendSearchLevel.text = "LV ${item.level}"
             ivAddFriendSearchLevel.setImageResource(levelBadgeDrawable(item.level))
             tvAddFriendSearchNickname.text = item.nickname
-            ivAddFriendSearchBackground.loadProfileBackground(item.backgroundImageUrl)
-            ivAddFriendSearchImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle)
+            ivAddFriendSearchBackground.loadProfileBackground(item.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
+            ivAddFriendSearchImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE)
             btnAddFriendSearchResultApply.setOnClickListener { onApply(item.userId, bindingAdapterPosition) }
         }
     }
