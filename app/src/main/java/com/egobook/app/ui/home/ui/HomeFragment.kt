@@ -18,6 +18,9 @@ import com.egobook.app.NotificationController
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
+import com.egobook.app.domain.model.notice.NoticeOpenResult
+import com.egobook.app.domain.model.notice.NoticePolicy
+import com.egobook.app.domain.model.notice.NoticeUrlProvider
 import com.egobook.app.ui.home.HomeViewModel
 import com.egobook.app.ui.home.user.LevelType
 import com.egobook.app.store.ui.CustomItem
@@ -141,6 +144,33 @@ class HomeFragment(): Fragment() {
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "SteakDialog")
         }
+
+        binding.ivNotice.setOnClickListener {
+            applyScreenBlur(BlurLevel.BASE)
+            when (val result = NoticePolicy.resolve(NoticeUrlProvider.noticeUrl())) {
+                is NoticeOpenResult.Success -> showNoticeDialog(result.url)
+                NoticeOpenResult.Failure -> showNoticeErrorDialog()
+            }
+        }
+
+        parentFragmentManager.setFragmentResultListener(
+            NoticeDialog.RESULT_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean(NoticeDialog.RESULT_LOAD_FAILED)) showNoticeErrorDialog()
+        }
+    }
+
+    private fun showNoticeDialog(url: String) {
+        val dialog = NoticeDialog.newInstance(url)
+        dialog.isCancelable = false
+        dialog.show(parentFragmentManager, "NoticeDialog")
+    }
+
+    private fun showNoticeErrorDialog() {
+        val dialog = NoticeErrorDialog()
+        dialog.isCancelable = false
+        dialog.show(parentFragmentManager, "NoticeErrorDialog")
     }
 
     private fun updateEquipItemUi(type: ItemType, item: CustomItem?) {

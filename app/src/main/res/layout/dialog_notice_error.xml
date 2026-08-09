@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        android:gravity="center"
+        android:minWidth="280dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/arita_semibold"
+            android:text="@string/notice_error_title"
+            android:textColor="@color/neutral"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/arita_medium"
+            android:text="@string/notice_error_message"
+            android:textColor="@color/neutral_subtle"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/btn_notice_error_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/neutral_weak_radius_border_dialog_button"
+            android:fontFamily="@font/arita_semibold"
+            android:paddingVertical="12dp"
+            android:text="@string/notice_error_confirm"
+            android:textAlignment="center"
+            android:textColor="@color/neutral"
+            android:textSize="12dp" />
+    </LinearLayout>
+
+</FrameLayout>

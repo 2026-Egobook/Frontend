@@ -131,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:constraint_referenced_ids="iv_radar,iv_calendar"
+            app:constraint_referenced_ids="iv_radar,iv_calendar,iv_notice"
             app:flow_verticalGap="12dp"
             app:layout_constraintStart_toStartOf="@id/gl_start"
             app:layout_constraintTop_toTopOf="@id/iv_store" />
@@ -147,6 +147,13 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/calendar_icon" />
+
+    <ImageView
+        android:id="@+id/iv_notice"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@string/notice_icon_description"
+        android:src="@drawable/megaphone_icon" />
 
     <ImageView
         android:id="@+id/iv_daily_bottle"
