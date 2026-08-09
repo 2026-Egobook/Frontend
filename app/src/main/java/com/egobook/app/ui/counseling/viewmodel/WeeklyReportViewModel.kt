@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
 import com.egobook.app.domain.model.ReportStyle
 import com.egobook.app.domain.model.counseling.WeeklyReportUnlockType
 import com.egobook.app.domain.usecase.GetUserInfoUseCase
@@ -22,6 +25,7 @@ import com.egobook.app.ui.counseling.model.WeeklyReportStyleModel
 import com.egobook.app.ui.counseling.model.toPresentation
 import com.egobook.app.ui.home.user.User
 import com.egobook.app.util.UiState
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +44,8 @@ class WeeklyReportViewModel @Inject constructor(
     private val updateWeeklyReportNotificationUseCase: UpdateWeeklyReportNotificationUseCase,
     private val getWeeklyReportByDateUseCase: GetWeeklyReportByDateUseCase,
     private val unlockWeeklyReportUseCase: UnlockWeeklyReportUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val analyticsLogger: AnalyticsLogger
 ): ViewModel() {
 
     private val _weeklyReportList = MutableStateFlow<PagingData<WeeklyReportModel>>(PagingData.empty())
@@ -74,6 +79,10 @@ class WeeklyReportViewModel @Inject constructor(
     fun updateWeeklyReportNotification(isEnabled: Boolean) {
         viewModelScope.launch {
             updateWeeklyReportNotificationUseCase(isEnabled = isEnabled).onSuccess { isEnabled ->
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.WEEKLY_REPORT_TOGGLE,
+                    mapOf(AnalyticsParam.ENABLED to isEnabled)
+                )
                 _updateNotificationStatus.emit(UiState.Success(isEnabled))
             }.onFailure { error ->
                 _updateNotificationStatus.emit(UiState.Failure(error.message))
@@ -115,6 +124,10 @@ class WeeklyReportViewModel @Inject constructor(
         viewModelScope.launch {
             _updateReportStyleResult.emit(UiState.Loading)
             updateWeeklyReportStyleUseCase(reportStyle = reportStyle).onSuccess { reportStyle ->
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.WEEKLY_REPORT_TONE_SELECT,
+                    mapOf(AnalyticsParam.TONE to reportStyle.value)
+                )
                 _updateReportStyleResult.emit( UiState.Success(reportStyle))
             }.onFailure { error ->
                 _updateReportStyleResult.emit( UiState.Failure(error.message))
@@ -129,6 +142,10 @@ class WeeklyReportViewModel @Inject constructor(
         viewModelScope.launch {
             _unlockWeeklyReportResult.emit(UiState.Loading)
             unlockWeeklyReportUseCase(startDate = startDate, unlockType = unlockType).onSuccess {
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.WEEKLY_REPORT_UNLOCK,
+                    mapOf(FirebaseAnalytics.Param.METHOD to unlockType.value.lowercase())
+                )
                 _unlockWeeklyReportResult.emit(UiState.Success(it))
             }.onFailure { error ->
                 _unlockWeeklyReportResult.emit(UiState.Failure(error.message))
