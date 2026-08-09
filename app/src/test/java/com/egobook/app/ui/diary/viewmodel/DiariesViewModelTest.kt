@@ -2,6 +2,7 @@ package com.egobook.app.ui.diary.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.domain.usecase.diaryusecase.GetDailyCount
@@ -35,6 +36,7 @@ class DiariesViewModelTest {
     private lateinit var diaryUseCases: DiaryUseCases
     private lateinit var getDailyCount: GetDailyCount
     private lateinit var getDiaries: GetDiaries
+    private lateinit var analyticsLogger: AnalyticsLogger
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -58,7 +60,8 @@ class DiariesViewModelTest {
             exportDiary = mockk(),
         )
 
-        viewModel = DiariesViewModel(diaryUseCases)
+        analyticsLogger = mockk(relaxed = true)
+        viewModel = DiariesViewModel(diaryUseCases, analyticsLogger)
     }
 
     @After

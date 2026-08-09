@@ -2,6 +2,8 @@ package com.egobook.app.ui.diary.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.domain.model.calender.CalenderDate
 import com.egobook.app.domain.usecase.CalenderUseCases
 import com.egobook.app.ui.diary.mapper.CalenderEntityMapper
@@ -19,8 +21,13 @@ import android.util.Log
 
 @HiltViewModel
 class CalenderViewModel @Inject constructor(
-    private val calenderUseCases: CalenderUseCases
+    private val calenderUseCases: CalenderUseCases,
+    private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
+
+    fun logCalendarView() {
+        analyticsLogger.logEvent(AnalyticsEvent.DIARY_CALENDAR_VIEW)
+    }
 
     private val _state = MutableStateFlow(CalenderState())
     val state: StateFlow<CalenderState> = _state.asStateFlow()

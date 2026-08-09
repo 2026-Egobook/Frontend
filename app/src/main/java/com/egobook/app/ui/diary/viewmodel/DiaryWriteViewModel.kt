@@ -4,6 +4,9 @@ import androidx.compose.ui.focus.FocusState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
 import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.ui.diary.mapper.DiaryEntityMapper
 import com.egobook.app.ui.diary.model.ToastMessage
@@ -22,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
     private val diaryUseCases: DiaryUseCases,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
     
     private val _selectedDate = MutableStateFlow<LocalDate>(LocalDate.now())
@@ -192,6 +196,7 @@ class DiaryWriteViewModel @Inject constructor(
             diaryId = diaryId,
             diary = updatedDiary
         ).onSuccess {
+            analyticsLogger.logEvent(AnalyticsEvent.DIARY_EDIT)
             _saveResult.emit(SaveResult.Success(emptyList()))
         }.onFailure { error ->
             _saveResult.emit(SaveResult.Error(error.message))
@@ -216,6 +221,15 @@ class DiaryWriteViewModel @Inject constructor(
 
         diaryUseCases.addDiary(newDiary)
             .onSuccess { rewards ->
+                analyticsLogger.logEvent(
+                    AnalyticsEvent.DIARY_WRITE,
+                    mapOf(
+                        AnalyticsParam.MOOD_LEVEL to newDiary.emotionLevel,
+                        AnalyticsParam.HAS_WORRY to state.selectedTypes.contains("고민"),
+                        AnalyticsParam.HAS_GRATITUDE to state.selectedTypes.contains("감사"),
+                        AnalyticsParam.HAS_PRAISE to state.selectedTypes.contains("칭찬")
+                    )
+                )
                 val messages = DiaryEntityMapper.createToastMessages(rewards)
                 _saveResult.emit(SaveResult.Success(messages))
             }.onFailure { error ->

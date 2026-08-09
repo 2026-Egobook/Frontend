@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
+import com.egobook.app.analytics.AnalyticsParam
 import com.egobook.app.domain.model.diary.entity.DiaryFilter
 import com.egobook.app.domain.model.diary.entity.DiarySummary
 import com.egobook.app.domain.model.diary.entity.DiaryType
@@ -27,7 +30,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiariesViewModel @Inject constructor(
-    private val diaryUseCases: DiaryUseCases
+    private val diaryUseCases: DiaryUseCases,
+    private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
     private val _state = MutableStateFlow(DiariesState())  // 뷰모델 내부 갱신용
     val state = _state.asStateFlow()    // 외부(ui) 읽기 전용
@@ -104,6 +108,14 @@ class DiariesViewModel @Inject constructor(
         viewModelScope.launch {
             diaryUseCases.exportDiary(form)
                 .onSuccess {
+                    analyticsLogger.logEvent(
+                        AnalyticsEvent.DIARY_EXPORT,
+                        mapOf(
+                            AnalyticsParam.FORMAT to form.format,
+                            AnalyticsParam.DATE_RANGE_DAYS to
+                                (java.time.temporal.ChronoUnit.DAYS.between(form.startDate, form.endDate) + 1)
+                        )
+                    )
                     _downloadUrl.emit(it.fileUrl)
                 }
                 .onFailure {
