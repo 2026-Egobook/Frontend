@@ -37,10 +37,4 @@ class NoticePolicyTest {
     fun `http 계열이 아닌 주소는 공지를 열 수 없다`() {
         assertThat(NoticePolicy.resolve("javascript:alert(1)")).isEqualTo(NoticeOpenResult.Failure)
     }
-
-    @Test
-    fun `공지 API가 연결되기 전에는 공지를 열 수 없다`() {
-        assertThat(NoticePolicy.resolve(NoticeUrlProvider.noticeUrl()))
-            .isEqualTo(NoticeOpenResult.Failure)
-    }
 }

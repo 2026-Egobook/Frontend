@@ -61,6 +61,12 @@ class NotificationAdapter(
                     content.visibility = View.VISIBLE
                 }
 
+                is NotificationType.Notice -> {
+                    icon.setImageResource(R.drawable.megaphone_icon)
+                    title.text = notification.content
+                    content.visibility = View.GONE
+                }
+
                 is NotificationType.EgoRoom -> {
                     icon.setImageResource(R.drawable.ic_unread_ego_notification)
                     content.visibility = View.GONE

@@ -6,13 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egobook.app.R
 import com.egobook.app.databinding.FragmentNotificationBinding
+import com.egobook.app.domain.model.notice.NoticeOpenResult
+import com.egobook.app.domain.model.notice.NoticePolicy
 import com.egobook.app.ui.home.NotificationViewModel
 import com.egobook.app.ui.home.notification.NotificationType
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,7 +25,7 @@ import kotlinx.coroutines.launch
 class NotificationFragment: Fragment() {
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = checkNotNull(_binding) { "Fragment가 제거되었습니다." }
-    private val viewModel: NotificationViewModel by viewModels()
+    private val viewModel: NotificationViewModel by activityViewModels()
     private val notificationAdapter = NotificationAdapter { notification ->
         viewModel.readNotification(notification)
         val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
@@ -34,7 +36,19 @@ class NotificationFragment: Fragment() {
             is NotificationType.Letter -> {
                 bottomNav.selectedItemId = R.id.menu_square
             }
+            is NotificationType.Notice -> {
+                showNotice(notification.linkUrl)
+            }
         }
+    }
+
+    private fun showNotice(linkUrl: String?) {
+        val dialog = when (val result = NoticePolicy.resolve(linkUrl)) {
+            is NoticeOpenResult.Success -> NoticeDialog.newInstance(result.url)
+            NoticeOpenResult.Failure -> NoticeErrorDialog()
+        }
+        dialog.isCancelable = false
+        dialog.show(parentFragmentManager, "NoticeDialog")
     }
 
     override fun onCreateView(

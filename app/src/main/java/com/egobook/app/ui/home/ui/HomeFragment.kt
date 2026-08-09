@@ -20,8 +20,10 @@ import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
 import com.egobook.app.domain.model.notice.NoticeOpenResult
 import com.egobook.app.domain.model.notice.NoticePolicy
-import com.egobook.app.domain.model.notice.NoticeUrlProvider
 import com.egobook.app.ui.home.HomeViewModel
+import com.egobook.app.ui.home.NotificationViewModel
+import com.egobook.app.ui.home.notification.NoticeNotificationPolicy
+import com.egobook.app.ui.home.notification.Notification
 import com.egobook.app.ui.home.user.LevelType
 import com.egobook.app.store.ui.CustomItem
 import com.egobook.app.store.ui.ItemImage
@@ -31,6 +33,9 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {
     private lateinit var binding: FragmentHomeBinding
+    private val notificationViewModel: NotificationViewModel by activityViewModels()
+    private var latestNotice: Notification? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,6 +77,16 @@ class HomeFragment(): Fragment() {
                     ItemType.entries.forEach { type ->
                         updateEquipItemUi(type, typeToItem[type])
                     }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                notificationViewModel.notifications.collect { notifications ->
+                    latestNotice = NoticeNotificationPolicy.latestNotice(notifications)
+                    binding.vNoticeRedDot.visibility =
+                        if (NoticeNotificationPolicy.hasUnreadNotice(notifications)) View.VISIBLE else View.GONE
                 }
             }
         }
@@ -147,8 +162,13 @@ class HomeFragment(): Fragment() {
 
         binding.ivNotice.setOnClickListener {
             applyScreenBlur(BlurLevel.BASE)
-            when (val result = NoticePolicy.resolve(NoticeUrlProvider.noticeUrl())) {
-                is NoticeOpenResult.Success -> showNoticeDialog(result.url)
+            val notice = latestNotice
+            when (val result = NoticePolicy.resolve(notice?.linkUrl)) {
+                is NoticeOpenResult.Success -> {
+                    showNoticeDialog(result.url)
+                    if (notice != null) notificationViewModel.readNotification(notice)
+                }
+
                 NoticeOpenResult.Failure -> showNoticeErrorDialog()
             }
         }
@@ -159,6 +179,11 @@ class HomeFragment(): Fragment() {
         ) { _, bundle ->
             if (bundle.getBoolean(NoticeDialog.RESULT_LOAD_FAILED)) showNoticeErrorDialog()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        notificationViewModel.loadNotifications()
     }
 
     private fun showNoticeDialog(url: String) {

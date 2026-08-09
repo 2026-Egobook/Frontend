@@ -7,4 +7,5 @@ enum class EgoRoomType {
 sealed class NotificationType {
     object Letter: NotificationType()
     data class EgoRoom(val type: EgoRoomType): NotificationType()
+    object Notice: NotificationType()
 }

@@ -52,6 +52,7 @@ fun String.toNotificationType(): NotificationType = when (this) {
     "LETTER_REPLY", "LETTER_REPLY_FRIEND", "LETTER_NEW", "LETTER_NEW_FRIEND" -> NotificationType.Letter
     "PRAISE" -> NotificationType.EgoRoom(EgoRoomType.DAILY_PRAISE)
     "REPORT" -> NotificationType.EgoRoom(EgoRoomType.WEAKLY_REPORT)
+    "NOTICE" -> NotificationType.Notice
     else -> throw IllegalArgumentException("${this}은 알 수 없는 알림 타입 이름입니다")
 }
 
@@ -62,7 +63,8 @@ data class NotificationDto(
     val content: String?,
     val isRead: Boolean,
     val targetId: Int,
-    val createdAt: String
+    val createdAt: String,
+    val linkUrl: String?
 ) {
     fun toDomain(): Notification {
         val notificationType = type.toNotificationType()
@@ -71,16 +73,21 @@ data class NotificationDto(
                 val cleanTitle = title.replace("새로운 ", "").trim()
                 NotificationPublisher.User(targetId.toString(), cleanTitle)
             }
-            is NotificationType.EgoRoom -> NotificationPublisher.Admin
+            is NotificationType.EgoRoom, is NotificationType.Notice -> NotificationPublisher.Admin
+        }
+        val notificationContent = when (notificationType) {
+            is NotificationType.Notice -> content ?: title
+            else -> content ?: "내용이 없습니다"
         }
 
         return Notification(
             id = notificationId, // Keep notificationId as the domain id
-            content = content ?: "내용이 없습니다",
+            content = notificationContent,
             type = notificationType,
             status = if (isRead) NotificationStatus.READ else NotificationStatus.UNREAD,
             publisher = publisher,
             publishedDate = NotificationTime(LocalDateTime.parse(createdAt)),
+            linkUrl = linkUrl,
         )
     }
 }

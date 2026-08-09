@@ -6,5 +6,6 @@ data class Notification(
     val type: NotificationType,
     val status: NotificationStatus,
     val publisher: NotificationPublisher,
-    val publishedDate: NotificationTime
+    val publishedDate: NotificationTime,
+    val linkUrl: String? = null
 )
