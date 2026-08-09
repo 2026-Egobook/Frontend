@@ -22,7 +22,6 @@ internal fun ImageView.loadProfileBackground(url: String?, placement: ProfileIma
     observeProfileFrameChanges(placement)
     Glide.with(this)
         .load(url)
-        .override(Target.SIZE_ORIGINAL)
         .listener(profilePlacementListener(placement))
         .into(this)
 }
@@ -36,7 +35,6 @@ internal fun ImageView.loadProfileTurtle(
     observeProfileFrameChanges(placement)
     Glide.with(this)
         .load(url)
-        .override(Target.SIZE_ORIGINAL)
         .fallback(fallback)
         .error(fallback)
         .listener(profilePlacementListener(placement))

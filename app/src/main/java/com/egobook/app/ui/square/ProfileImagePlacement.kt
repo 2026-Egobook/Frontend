@@ -1,21 +1,23 @@
 package com.egobook.app.ui.square
 
-enum class ProfileAlignment {
-    START,
-    CENTER,
-    END
+const val TURTLE_HEAD_CENTER_X_FRACTION = 0.19f
+const val TURTLE_HEAD_CENTER_Y_FRACTION = 0.66f
+const val TURTLE_HEAD_WIDTH_FRACTION = 0.30f
+
+enum class ProfileScaleMode {
+    HEAD_CENTERED,
+    CENTER_CROP
 }
 
 enum class ProfileImagePlacement(
-    val scale: Float,
-    val horizontal: ProfileAlignment,
-    val vertical: ProfileAlignment,
+    val scaleMode: ProfileScaleMode,
+    val targetHeadWidthFraction: Float = 0f,
     val verticalOffsetFraction: Float = 0f
 ) {
-    PLAZA_TURTLE(0.3f, ProfileAlignment.START, ProfileAlignment.END),
-    PLAZA_BACKGROUND(0.1f, ProfileAlignment.CENTER, ProfileAlignment.CENTER),
-    FRIEND_TURTLE(1f, ProfileAlignment.START, ProfileAlignment.END),
-    FRIEND_BACKGROUND(0.5f, ProfileAlignment.CENTER, ProfileAlignment.CENTER, -0.131f)
+    PLAZA_TURTLE(ProfileScaleMode.HEAD_CENTERED, targetHeadWidthFraction = 0.65f),
+    PLAZA_BACKGROUND(ProfileScaleMode.CENTER_CROP),
+    FRIEND_TURTLE(ProfileScaleMode.HEAD_CENTERED, targetHeadWidthFraction = 0.85f),
+    FRIEND_BACKGROUND(ProfileScaleMode.CENTER_CROP, verticalOffsetFraction = -0.131f)
 }
 
 data class ProfileImageTransform(
@@ -34,20 +36,28 @@ fun calculateProfileImageTransform(
     require(frameWidth > 0 && frameHeight > 0)
     require(imageWidth > 0 && imageHeight > 0)
 
-    val scale = placement.scale
-    val scaledWidth = imageWidth * scale
-    val scaledHeight = imageHeight * scale
-    return ProfileImageTransform(
-        scale = scale,
-        translateX = alignedOffset(frameWidth.toFloat(), scaledWidth, placement.horizontal),
-        translateY = alignedOffset(frameHeight.toFloat(), scaledHeight, placement.vertical) +
-            frameHeight * placement.verticalOffsetFraction
-    )
-}
+    return when (placement.scaleMode) {
+        ProfileScaleMode.HEAD_CENTERED -> {
+            val scale = frameWidth * placement.targetHeadWidthFraction /
+                (imageWidth * TURTLE_HEAD_WIDTH_FRACTION)
+            ProfileImageTransform(
+                scale = scale,
+                translateX = frameWidth / 2f - imageWidth * TURTLE_HEAD_CENTER_X_FRACTION * scale,
+                translateY = frameHeight / 2f - imageHeight * TURTLE_HEAD_CENTER_Y_FRACTION * scale
+            )
+        }
 
-private fun alignedOffset(container: Float, content: Float, alignment: ProfileAlignment): Float =
-    when (alignment) {
-        ProfileAlignment.START -> 0f
-        ProfileAlignment.CENTER -> (container - content) / 2f
-        ProfileAlignment.END -> container - content
+        ProfileScaleMode.CENTER_CROP -> {
+            val scale = maxOf(
+                frameWidth.toFloat() / imageWidth,
+                frameHeight.toFloat() / imageHeight
+            )
+            ProfileImageTransform(
+                scale = scale,
+                translateX = (frameWidth - imageWidth * scale) / 2f,
+                translateY = (frameHeight - imageHeight * scale) / 2f +
+                    frameHeight * placement.verticalOffsetFraction
+            )
+        }
     }
+}
