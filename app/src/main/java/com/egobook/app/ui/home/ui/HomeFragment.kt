@@ -169,10 +169,7 @@ class HomeFragment(): Fragment() {
                     if (notice != null) notificationViewModel.readNotification(notice)
                 }
 
-                NoticeOpenResult.Failure -> {
-                    Log.w("jang", "공지를 열 수 없습니다: notice=$notice")
-                    showNoticeErrorDialog()
-                }
+                NoticeOpenResult.Failure -> showNoticeErrorDialog()
             }
         }
 
