@@ -92,6 +92,13 @@ data class NotificationDto(
     }
 }
 
+/**
+ * 알 수 없는 타입의 알림은 null을 반환한다.
+ *
+ * 서버에 새 알림 타입이 추가되어도 해당 항목만 건너뛰고 나머지 알림 목록은 정상적으로 보여주기 위함이다.
+ */
+fun NotificationDto.toDomainOrNull(): Notification? = runCatching { toDomain() }.getOrNull()
+
 interface NetworkNotificationService {
     @GET("/notifications")
     suspend fun loadNotificationsResponse(
@@ -132,7 +139,12 @@ class NetworkHomeNotificationRepository @Inject constructor(
 
                     response.content.forEach { dto ->
                         Log.d("jang", "$dto")
-                        emit(dto.toDomain())
+                        val notification = dto.toDomainOrNull()
+                        if (notification == null) {
+                            Log.w("jang", "알 수 없는 알림이라 목록에서 제외합니다: $dto")
+                        } else {
+                            emit(notification)
+                        }
                     }
 
                     if (!response.hasNext) {
