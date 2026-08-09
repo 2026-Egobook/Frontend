@@ -32,4 +32,7 @@
     <string name="get_ink">잉크를 1 획득했어요</string>
     <string name="get_thinking_reward">칭찬 일기를 작성하여\n긍정사고가 상승했어요</string>
     <string name="psychology_disclaimer">학술적 근거에 기반하는 심리 지식이지만,\n재미용으로만 읽어주세요</string>
+
+    <!--  Home  -->
+    <string name="home_bell_red_dot_description">읽지 않은 알림 있음</string>
 </resources>
