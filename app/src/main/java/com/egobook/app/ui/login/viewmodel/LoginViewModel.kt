@@ -2,9 +2,11 @@ package com.egobook.app.ui.login.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.domain.model.auth.AuthError
 import com.egobook.app.domain.usecase.authusecase.AuthUseCases
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
     private val userInfoStorage: UserInfoStorage,
+    private val analyticsLogger: AnalyticsLogger,
 ) : ViewModel()  {
     private val _isFirstSignUp = MutableSharedFlow<Unit>()
     val isFirstSignUp = _isFirstSignUp.asSharedFlow()
@@ -65,6 +68,10 @@ class LoginViewModel @Inject constructor(
                     authUseCases.googleSignUp(event.idToken)
                         .fold(
                             onSuccess = {
+                                analyticsLogger.logEvent(
+                                    FirebaseAnalytics.Event.SIGN_UP,
+                                    mapOf(FirebaseAnalytics.Param.METHOD to "google")
+                                )
                                 _isFirstSignUp.emit(Unit)
                                 _loginState.value = LoginState.Idle
                             },
@@ -85,6 +92,10 @@ class LoginViewModel @Inject constructor(
 
                     result.fold(
                         onSuccess = {
+                            analyticsLogger.logEvent(
+                                FirebaseAnalytics.Event.LOGIN,
+                                mapOf(FirebaseAnalytics.Param.METHOD to "google")
+                            )
                             _loginState.value = LoginState.Success
 
                         },
@@ -116,9 +127,17 @@ class LoginViewModel @Inject constructor(
                     result.fold(
                         onSuccess = {
                             if (loginType == UserInfoStorage.LoginType.GUEST) {
+                                analyticsLogger.logEvent(
+                                    FirebaseAnalytics.Event.LOGIN,
+                                    mapOf(FirebaseAnalytics.Param.METHOD to "guest")
+                                )
                                 _loginState.value = LoginState.Success  // 재로그인 성공 -> 메인으로
                                 Timber.d("재로그인 성공, 토큰 재발급")
                             } else {
+                                analyticsLogger.logEvent(
+                                    FirebaseAnalytics.Event.SIGN_UP,
+                                    mapOf(FirebaseAnalytics.Param.METHOD to "guest")
+                                )
                                 _isGuestSignUp.emit(Unit)  // 최초 로그인 -> 온보딩으로
                                 _loginState.value = LoginState.Idle
                                 Timber.d("회원가입 성공, 토큰 발급")

@@ -7,12 +7,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.egobook.app.MainActivity
+import com.egobook.app.analytics.AnalyticsEvent
+import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.databinding.ActivityOnboardingBinding
 import com.egobook.app.ui.onboarding.adapter.OnboardingVPAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OnboardingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOnboardingBinding
+
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +47,7 @@ class OnboardingActivity : AppCompatActivity() {
 
     // OnboardingFifthFragment에서 호출할 메서드
     fun navigateToMainActivity() {
+        analyticsLogger.logEvent(AnalyticsEvent.ONBOARDING_COMPLETE)
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish() // 온보딩 액티비티 종료
