@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +20,7 @@ import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
 import com.egobook.app.ui.home.HomeViewModel
+import com.egobook.app.ui.home.NotificationRedDotViewModel
 import com.egobook.app.ui.home.user.LevelType
 import com.egobook.app.store.ui.CustomItem
 import com.egobook.app.store.ui.ItemImage
@@ -28,6 +30,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {
     private lateinit var binding: FragmentHomeBinding
+    private val redDotViewModel: NotificationRedDotViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,6 +55,12 @@ class HomeFragment(): Fragment() {
                     }
                 }
                 
+                launch {
+                    redDotViewModel.redDotState.collect { redDotState ->
+                        binding.vBellRedDot.isVisible = redDotState.isVisible
+                    }
+                }
+
                 launch {
                     viewModel.uiState.collect { userState ->
                         binding.tvLevel.text = "Lv ${userState.level.number}"
@@ -119,6 +128,7 @@ class HomeFragment(): Fragment() {
             dialog.show(parentFragmentManager, "AdDialog")
         }
         binding.ivBell.setOnClickListener {
+            redDotViewModel.dismiss()
             val notificationController =
                 checkNotNull(activity as? NotificationController) { "해당 액티비티는 notification controller를 구현하지 않았습니다" }
             notificationController.openDrawer()
@@ -142,6 +152,11 @@ class HomeFragment(): Fragment() {
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "SteakDialog")
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        redDotViewModel.refresh()
     }
 
     private fun updateEquipItemUi(type: ItemType, item: CustomItem?) {
