@@ -13,10 +13,13 @@ class ProfileImageSourcePolicyTest {
     }
 
     @Test
-    fun `only the default turtle is mirrored horizontally`() {
-        assertThat(profileTurtleScaleX(null)).isEqualTo(-1f)
-        assertThat(profileTurtleScaleX("https://example.com/profile.png")).isEqualTo(1f)
-        assertThat(profileTurtleScaleX("https://example.com/profile.png", isFallbackDisplayed = true))
+    fun `only the plaza default turtle is mirrored horizontally`() {
+        assertThat(profileTurtleScaleX(null, mirrorFallback = true)).isEqualTo(-1f)
+        assertThat(profileTurtleScaleX(null, mirrorFallback = false)).isEqualTo(1f)
+        assertThat(profileTurtleScaleX("https://example.com/profile.png", mirrorFallback = true)).isEqualTo(1f)
+        assertThat(profileTurtleScaleX("https://example.com/profile.png", mirrorFallback = true, isFallbackDisplayed = true))
             .isEqualTo(-1f)
+        assertThat(profileTurtleScaleX("https://example.com/profile.png", mirrorFallback = false, isFallbackDisplayed = true))
+            .isEqualTo(1f)
     }
 }

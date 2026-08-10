@@ -28,7 +28,8 @@ class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnsw
             ivItemSquareFriendAnswerUserImage.loadProfileTurtle(
                 item.turtleImageUrl,
                 R.drawable.img_temp_square_user_thumbnail,
-                ProfileImagePlacement.PLAZA_TURTLE
+                ProfileImagePlacement.PLAZA_TURTLE,
+                mirrorFallback = true
             )
         }
     }

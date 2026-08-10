@@ -39,9 +39,10 @@ internal fun ImageView.loadProfileBackground(url: String?, placement: ProfileIma
 internal fun ImageView.loadProfileTurtle(
     url: String?,
     @DrawableRes fallback: Int,
-    placement: ProfileImagePlacement
+    placement: ProfileImagePlacement,
+    mirrorFallback: Boolean = false
 ) {
-    scaleX = profileTurtleScaleX(url)
+    scaleX = profileTurtleScaleX(url, mirrorFallback)
     if (!hasRemoteProfileImage(url)) {
         Glide.with(this).clear(this)
         stopObservingProfileFrameChanges()
@@ -55,13 +56,22 @@ internal fun ImageView.loadProfileTurtle(
         .load(url)
         .fallback(fallback)
         .error(fallback)
-        .listener(profilePlacementListener(placement, mirrorFallback = true))
+        .listener(
+            profilePlacementListener(
+                placement,
+                turtleFallbackScaleX = profileTurtleScaleX(
+                    url,
+                    mirrorFallback,
+                    isFallbackDisplayed = true
+                )
+            )
+        )
         .into(this)
 }
 
 private fun ImageView.profilePlacementListener(
     placement: ProfileImagePlacement,
-    mirrorFallback: Boolean = false
+    turtleFallbackScaleX: Float? = null
 ) =
     object : RequestListener<Drawable> {
         override fun onLoadFailed(
@@ -70,8 +80,8 @@ private fun ImageView.profilePlacementListener(
             target: Target<Drawable>,
             isFirstResource: Boolean
         ): Boolean {
-            if (mirrorFallback) {
-                scaleX = -1f
+            if (turtleFallbackScaleX != null) {
+                scaleX = turtleFallbackScaleX
                 stopObservingProfileFrameChanges()
                 scaleType = ImageView.ScaleType.FIT_CENTER
             } else {
@@ -87,7 +97,7 @@ private fun ImageView.profilePlacementListener(
             dataSource: DataSource,
             isFirstResource: Boolean
         ): Boolean {
-            if (mirrorFallback) {
+            if (turtleFallbackScaleX != null) {
                 scaleX = 1f
                 scaleType = ImageView.ScaleType.MATRIX
             }

@@ -51,7 +51,8 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
             ivItemSquareQuestionReplyUserImage.loadProfileTurtle(
                 item.turtleImageUrl,
                 R.drawable.img_temp_square_user_thumbnail,
-                ProfileImagePlacement.PLAZA_TURTLE
+                ProfileImagePlacement.PLAZA_TURTLE,
+                mirrorFallback = true
             )
             applyContentExpandedState(expandedAnswerIds.contains(item.answerId))
 
