@@ -35,7 +35,7 @@ class FriendsListAdapter(private val onDeleted: (FriendModel) -> Unit): ListAdap
             tvItemFriendListLevel.text = "LV ${item.level}"
             ivItemFriendListLevel.setImageResource(levelBadgeDrawable(item.level))
             ivItemFriendListBackground.loadProfileBackground(item.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
-            ivItemFriendListImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE)
+            ivItemFriendListImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE, placeFallback = true)
             ivItemSquareFriendListDelete.setOnClickListener { onDeleted(item) }
         }
     }

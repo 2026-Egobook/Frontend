@@ -30,7 +30,7 @@ class FriendSearchAdapter(
             ivAddFriendSearchLevel.setImageResource(levelBadgeDrawable(item.level))
             tvAddFriendSearchNickname.text = item.nickname
             ivAddFriendSearchBackground.loadProfileBackground(item.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
-            ivAddFriendSearchImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE)
+            ivAddFriendSearchImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE, placeFallback = true)
             btnAddFriendSearchResultApply.setOnClickListener { onApply(item.userId, bindingAdapterPosition) }
         }
     }

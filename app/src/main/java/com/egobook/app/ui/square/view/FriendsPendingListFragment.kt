@@ -84,7 +84,7 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                         itemBinding.tvItemFriendPendingListLevel.text = "LV ${friendRequest.level}"
                                         itemBinding.ivItemFriendPendingListLevel.setImageResource(levelBadgeDrawable(friendRequest.level))
                                         itemBinding.ivItemFriendPendingListBackground.loadProfileBackground(friendRequest.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
-                                        itemBinding.ivItemFriendPendingListImage.loadProfileTurtle(friendRequest.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE)
+                                        itemBinding.ivItemFriendPendingListImage.loadProfileTurtle(friendRequest.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE, placeFallback = true)
                                         itemBinding.btnItemSquareFriendPendingListDeny.setOnClickListener {
                                             viewModel.rejectFriendRequest(requestId = friendRequest.requestId)
                                         }
@@ -125,7 +125,7 @@ class FriendsPendingListFragment : Fragment(R.layout.fragment_friends_pending_li
                                         itemBinding.tvItemFriendPendingSentListLevel.text = "LV ${friendRequest.level}"
                                         itemBinding.ivItemFriendPendingSentListLevel.setImageResource(levelBadgeDrawable(friendRequest.level))
                                         itemBinding.ivItemFriendPendingSentListBackground.loadProfileBackground(friendRequest.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
-                                        itemBinding.ivItemFriendPendingSentListImage.loadProfileTurtle(friendRequest.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE)
+                                        itemBinding.ivItemFriendPendingSentListImage.loadProfileTurtle(friendRequest.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE, placeFallback = true)
                                         itemBinding.btnItemSquareFriendPendingSentListCancel.setOnClickListener {
                                             viewModel.cancelFriendRequest(requestId = friendRequest.requestId)
                                         }

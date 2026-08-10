@@ -40,14 +40,21 @@ internal fun ImageView.loadProfileTurtle(
     url: String?,
     @DrawableRes fallback: Int,
     placement: ProfileImagePlacement,
-    mirrorFallback: Boolean = false
+    mirrorFallback: Boolean = false,
+    placeFallback: Boolean = false
 ) {
     scaleX = profileTurtleScaleX(url, mirrorFallback)
     if (!hasRemoteProfileImage(url)) {
         Glide.with(this).clear(this)
         stopObservingProfileFrameChanges()
-        scaleType = ImageView.ScaleType.FIT_CENTER
         setImageResource(fallback)
+        if (placeFallback) {
+            scaleType = ImageView.ScaleType.MATRIX
+            observeProfileFrameChanges(placement)
+            applyProfilePlacementWhenLaidOut(placement)
+        } else {
+            scaleType = ImageView.ScaleType.FIT_CENTER
+        }
         return
     }
     scaleType = ImageView.ScaleType.MATRIX
@@ -63,7 +70,8 @@ internal fun ImageView.loadProfileTurtle(
                     url,
                     mirrorFallback,
                     isFallbackDisplayed = true
-                )
+                ),
+                placeTurtleFallback = placeFallback
             )
         )
         .into(this)
@@ -71,7 +79,8 @@ internal fun ImageView.loadProfileTurtle(
 
 private fun ImageView.profilePlacementListener(
     placement: ProfileImagePlacement,
-    turtleFallbackScaleX: Float? = null
+    turtleFallbackScaleX: Float? = null,
+    placeTurtleFallback: Boolean = false
 ) =
     object : RequestListener<Drawable> {
         override fun onLoadFailed(
@@ -83,7 +92,13 @@ private fun ImageView.profilePlacementListener(
             if (turtleFallbackScaleX != null) {
                 scaleX = turtleFallbackScaleX
                 stopObservingProfileFrameChanges()
-                scaleType = ImageView.ScaleType.FIT_CENTER
+                if (placeTurtleFallback) {
+                    scaleType = ImageView.ScaleType.MATRIX
+                    observeProfileFrameChanges(placement)
+                    post { applyProfilePlacementWhenLaidOut(placement) }
+                } else {
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                }
             } else {
                 post { applyProfilePlacementWhenLaidOut(placement) }
             }
