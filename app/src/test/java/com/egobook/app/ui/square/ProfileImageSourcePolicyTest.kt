@@ -11,4 +11,12 @@ class ProfileImageSourcePolicyTest {
         assertThat(hasRemoteProfileImage("   ")).isFalse()
         assertThat(hasRemoteProfileImage("https://example.com/profile.png")).isTrue()
     }
+
+    @Test
+    fun `only the default turtle is mirrored horizontally`() {
+        assertThat(profileTurtleScaleX(null)).isEqualTo(-1f)
+        assertThat(profileTurtleScaleX("https://example.com/profile.png")).isEqualTo(1f)
+        assertThat(profileTurtleScaleX("https://example.com/profile.png", isFallbackDisplayed = true))
+            .isEqualTo(-1f)
+    }
 }

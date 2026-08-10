@@ -14,6 +14,7 @@ import com.bumptech.glide.request.target.Target
 import com.egobook.app.ui.square.ProfileImagePlacement
 import com.egobook.app.ui.square.calculateProfileImageTransform
 import com.egobook.app.ui.square.hasRemoteProfileImage
+import com.egobook.app.ui.square.profileTurtleScaleX
 import com.egobook.app.R
 import java.util.WeakHashMap
 
@@ -40,6 +41,7 @@ internal fun ImageView.loadProfileTurtle(
     @DrawableRes fallback: Int,
     placement: ProfileImagePlacement
 ) {
+    scaleX = profileTurtleScaleX(url)
     if (!hasRemoteProfileImage(url)) {
         Glide.with(this).clear(this)
         stopObservingProfileFrameChanges()
@@ -53,11 +55,14 @@ internal fun ImageView.loadProfileTurtle(
         .load(url)
         .fallback(fallback)
         .error(fallback)
-        .listener(profilePlacementListener(placement))
+        .listener(profilePlacementListener(placement, mirrorFallback = true))
         .into(this)
 }
 
-private fun ImageView.profilePlacementListener(placement: ProfileImagePlacement) =
+private fun ImageView.profilePlacementListener(
+    placement: ProfileImagePlacement,
+    mirrorFallback: Boolean = false
+) =
     object : RequestListener<Drawable> {
         override fun onLoadFailed(
             error: GlideException?,
@@ -65,7 +70,13 @@ private fun ImageView.profilePlacementListener(placement: ProfileImagePlacement)
             target: Target<Drawable>,
             isFirstResource: Boolean
         ): Boolean {
-            post { applyProfilePlacementWhenLaidOut(placement) }
+            if (mirrorFallback) {
+                scaleX = -1f
+                stopObservingProfileFrameChanges()
+                scaleType = ImageView.ScaleType.FIT_CENTER
+            } else {
+                post { applyProfilePlacementWhenLaidOut(placement) }
+            }
             return false
         }
 
@@ -76,6 +87,10 @@ private fun ImageView.profilePlacementListener(placement: ProfileImagePlacement)
             dataSource: DataSource,
             isFirstResource: Boolean
         ): Boolean {
+            if (mirrorFallback) {
+                scaleX = 1f
+                scaleType = ImageView.ScaleType.MATRIX
+            }
             post { applyProfilePlacementWhenLaidOut(placement) }
             return false
         }
