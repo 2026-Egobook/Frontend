@@ -16,7 +16,7 @@ enum class ProfileImagePlacement(
 ) {
     PLAZA_TURTLE(ProfileScaleMode.HEAD_CENTERED, targetHeadWidthFraction = 0.65f),
     PLAZA_BACKGROUND(ProfileScaleMode.CENTER_CROP),
-    FRIEND_TURTLE(ProfileScaleMode.HEAD_CENTERED, targetHeadWidthFraction = 0.85f),
+    FRIEND_TURTLE(ProfileScaleMode.HEAD_CENTERED, targetHeadWidthFraction = 0.70f),
     FRIEND_BACKGROUND(ProfileScaleMode.CENTER_CROP, verticalOffsetFraction = -0.131f)
 }
 
