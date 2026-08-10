@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
@@ -54,6 +55,19 @@ class AccountDeleteReasonDialogFragment : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         _binding = FragmentAccountDeleteReasonDialogBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // DialogFragment 기본 창 폭이 좁아 항목 텍스트가 눌리므로 화면 폭에 맞춰 넓힌다
+        val horizontalMarginPx = (DIALOG_HORIZONTAL_MARGIN_DP * resources.displayMetrics.density).toInt()
+        dialog?.window?.apply {
+            val screenWidth = context.resources.displayMetrics.widthPixels
+            setLayout(
+                screenWidth - horizontalMarginPx * 2,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -165,5 +179,9 @@ class AccountDeleteReasonDialogFragment : DialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val DIALOG_HORIZONTAL_MARGIN_DP = 24
     }
 }
