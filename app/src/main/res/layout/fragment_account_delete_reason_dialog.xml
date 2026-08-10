@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:gravity="center"
+    tools:context=".ui.account.view.AccountDeleteReasonDialogFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/arita_semibold"
+            android:gravity="center"
+            android:lineHeight="24dp"
+            android:text="탈퇴 이유를 알려주세요"
+            android:textColor="@color/neutral"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/arita_medium"
+            android:gravity="center"
+            android:lineHeight="18sp"
+            android:text="소중한 의견을 반영해\n더 좋은 에고북을 만들겠습니다"
+            android:textColor="@color/neutral"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/tv_reason_not_used_often"
+            style="@style/WithdrawReasonItemStyle"
+            android:layout_marginTop="20dp"
+            android:text="자주 사용하지 않아요" />
+
+        <View style="@style/WithdrawReasonDividerStyle" />
+
+        <TextView
+            android:id="@+id/tv_reason_lack_of_content"
+            style="@style/WithdrawReasonItemStyle"
+            android:text="콘텐츠나 기능이 부족해요" />
+
+        <View style="@style/WithdrawReasonDividerStyle" />
+
+        <TextView
+            android:id="@+id/tv_reason_inconvenient_ui"
+            style="@style/WithdrawReasonItemStyle"
+            android:text="앱 사용이 불편해요" />
+
+        <View style="@style/WithdrawReasonDividerStyle" />
+
+        <TextView
+            android:id="@+id/tv_reason_difficult_to_collect_ink"
+            style="@style/WithdrawReasonItemStyle"
+            android:text="잉크를 모으기 어려워요" />
+
+        <View
+            android:id="@+id/divider_other"
+            style="@style/WithdrawReasonDividerStyle" />
+
+        <TextView
+            android:id="@+id/tv_reason_other"
+            style="@style/WithdrawReasonItemStyle"
+            android:text="기타 (직접 작성)" />
+
+        <!-- 기타 선택 시에만 노출되는 상세 사유 입력 영역 -->
+        <LinearLayout
+            android:id="@+id/layout_other_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_withdraw_reason_other"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/arita_semibold"
+                android:gravity="center"
+                android:text="탈퇴 사유를 작성해 주세요"
+                android:textColor="@color/neutral"
+                android:textSize="14dp" />
+
+            <EditText
+                android:id="@+id/et_other_reason"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_withdraw_reason_input"
+                android:fontFamily="@font/arita_medium"
+                android:gravity="top|start"
+                android:hint="탈퇴 사유를 작성해 주세요"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:maxLength="500"
+                android:padding="10dp"
+                android:textColor="@color/neutral"
+                android:textColorHint="@color/neutral_subtle"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_back"
+                style="@style/DeleteButtonStyle"
+                android:layout_width="94.5dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="12dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="돌아가기" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_real_delete"
+                style="@style/RedButtonStyle"
+                android:layout_width="94.5dp"
+                android:layout_height="42dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="탈퇴하기"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

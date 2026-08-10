@@ -177,6 +177,27 @@
 
     </style>
 
+    <!-- 회원탈퇴 사유 선택 항목 -->
+    <style name="WithdrawReasonItemStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_withdraw_reason_item</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/arita_semibold</item>
+        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:letterSpacing">-0.03</item>
+    </style>
+
+    <!-- 회원탈퇴 사유 항목 구분선 -->
+    <style name="WithdrawReasonDividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/neutral_stroke</item>
+    </style>
+
     <!-- 날짜 입력 EditText 스타일 -->
     <style name="DatePickerEditTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:layout_height">wrap_content</item>

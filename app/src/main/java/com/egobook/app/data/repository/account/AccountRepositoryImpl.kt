@@ -5,6 +5,8 @@ import com.egobook.app.data.local.PushPreferenceStorage
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.account.LinkRequest
 import com.egobook.app.data.model.account.NicknameRequest
+import com.egobook.app.data.model.account.WithdrawReasonRequest
+import com.egobook.app.domain.model.account.WithdrawReasonType
 import com.egobook.app.data.util.safeApiCall
 import com.egobook.app.data.util.safeAuthApiCall
 import com.egobook.app.domain.repository.account.AccountRepository
@@ -85,6 +87,24 @@ class AccountRepositoryImpl @Inject constructor(
                 email = email,
                 isGoogleLinked = isGoogleLinked
             )
+        )
+    }
+
+    override suspend fun submitWithdrawReason(
+        reasonType: WithdrawReasonType,
+        text: String?
+    ): Result<Unit> {
+        return safeApiCall(
+            apiCall = {
+                apiService.submitWithdrawReason(
+                    WithdrawReasonRequest(
+                        reasonType = reasonType.value,
+                        // 기타가 아닌 경우 상세 사유를 보내지 않는다
+                        text = if (reasonType == WithdrawReasonType.OTHER) text?.trim() else null
+                    )
+                )
+            },
+            transform = { Unit }
         )
     }
 

@@ -6,15 +6,20 @@ import com.egobook.app.analytics.AnalyticsEvent
 import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.domain.model.account.NicknameValidationResult
 import com.egobook.app.domain.model.account.NicknameValidator
+import com.egobook.app.domain.model.account.WithdrawReasonType
 import com.egobook.app.domain.repository.account.AccountRepository
 import com.egobook.app.ui.home.repository.UserRepository
 import com.egobook.app.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import com.egobook.app.domain.model.auth.AuthError
 
@@ -38,6 +43,34 @@ class AccountViewModel @Inject constructor(
 
     private val _deleteAccountState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
     val deleteAccountState = _deleteAccountState.asStateFlow()
+
+    private val _selectedWithdrawReason = MutableStateFlow<WithdrawReasonType?>(null)
+    val selectedWithdrawReason = _selectedWithdrawReason.asStateFlow()
+
+    private val _withdrawReasonText = MutableStateFlow("")
+    val withdrawReasonText = _withdrawReasonText.asStateFlow()
+
+    private val _withdrawToastEvent = MutableSharedFlow<String>(replay = 0)
+    val withdrawToastEvent = _withdrawToastEvent.asSharedFlow()
+
+    /**
+     * 사유를 골랐고, 기타인 경우 상세 사유까지 입력했는지
+     *
+     * 구독자가 없는 동안에도 [deleteAccount]가 최신 값을 읽어야 하므로 Eagerly로 공유한다.
+     */
+    val isWithdrawReasonValid = combine(
+        _selectedWithdrawReason,
+        _withdrawReasonText
+    ) { reason, text ->
+        isReasonValid(reason, text)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    private fun isReasonValid(reason: WithdrawReasonType?, text: String): Boolean =
+        when (reason) {
+            null -> false
+            WithdrawReasonType.OTHER -> text.isNotBlank()
+            else -> true
+        }
 
     private val _nickname = MutableStateFlow<String?>(null)
     val nickname = _nickname.asStateFlow()
@@ -157,21 +190,69 @@ class AccountViewModel @Inject constructor(
         _nicknameUpdateState.value = UiState.Idle
     }
 
+    fun selectWithdrawReason(reason: WithdrawReasonType) {
+        _selectedWithdrawReason.value = reason
+        // 기타 외의 사유로 바꾸면 입력해 둔 상세 사유는 버린다
+        if (reason != WithdrawReasonType.OTHER) {
+            _withdrawReasonText.value = ""
+        }
+    }
+
+    fun updateWithdrawReasonText(text: String) {
+        _withdrawReasonText.value = text.take(WithdrawReasonType.MAX_TEXT_LENGTH)
+    }
+
+    fun resetWithdrawReason() {
+        _selectedWithdrawReason.value = null
+        _withdrawReasonText.value = ""
+        _deleteAccountState.value = UiState.Idle
+    }
+
+    /**
+     * 선택한 사유를 저장한 뒤 회원 탈퇴를 진행한다.
+     *
+     * 탈퇴 API를 먼저 호출하면 사유가 저장되지 않으므로 순서를 바꾸면 안 된다.
+     * 사유 저장 실패는 탈퇴 자체를 막지 않는다.
+     */
     fun deleteAccount() {
+        val reason = _selectedWithdrawReason.value
+        if (reason == null || !isReasonValid(reason, _withdrawReasonText.value)) {
+            viewModelScope.launch {
+                _withdrawToastEvent.emit(
+                    if (reason == WithdrawReasonType.OTHER) "탈퇴 사유를 작성해 주세요"
+                    else "탈퇴 이유를 선택해 주세요"
+                )
+            }
+            return
+        }
+
         viewModelScope.launch {
             _deleteAccountState.value = UiState.Loading
             analyticsLogger.logEvent(AnalyticsEvent.ACCOUNT_WITHDRAW_REQUEST)
 
+            accountRepository.submitWithdrawReason(reason, _withdrawReasonText.value)
+                .onFailure { e ->
+                    Timber.w(e, "탈퇴 사유 저장 실패, 탈퇴는 계속 진행합니다")
+                }
+
             accountRepository.deleteAccount()
                 .onSuccess {
                     _deleteAccountState.value = UiState.Success(Unit)
-                    analyticsLogger.logEvent(AnalyticsEvent.ACCOUNT_WITHDRAW_CONFIRM)
+                    analyticsLogger.logEvent(
+                        AnalyticsEvent.ACCOUNT_WITHDRAW_CONFIRM,
+                        mapOf(ANALYTICS_PARAM_REASON_TYPE to reason.value)
+                    )
                 }
                 .onFailure { e ->
-                    _deleteAccountState.value =
-                        UiState.Failure(e.message ?: "회원 탈퇴에 실패했습니다")
+                    val message = e.message ?: "회원 탈퇴에 실패했습니다"
+                    _deleteAccountState.value = UiState.Failure(message)
+                    _withdrawToastEvent.emit(message)
                 }
         }
+    }
+
+    companion object {
+        private const val ANALYTICS_PARAM_REASON_TYPE = "reason_type"
     }
 
 }
