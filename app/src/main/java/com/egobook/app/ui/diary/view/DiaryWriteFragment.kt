@@ -221,7 +221,7 @@ class DiaryWriteFragment : Fragment() {
                 viewModel.contentState.collectLatest { state ->
                     when (val loadState = state.diaryLoadState) {
                         is UiState.Loading -> {
-                            binding.progressBar.isVisible = true
+                            binding.pbLoading.isVisible = true
                             // 입력 UI 숨기기
                             binding.guideLayout.isVisible = false
                             binding.typeLayout.isVisible = false
@@ -232,7 +232,7 @@ class DiaryWriteFragment : Fragment() {
                             binding.btnSave.isVisible = false
                         }
                         is UiState.Success, is UiState.Idle -> {
-                            binding.progressBar.isVisible = false
+                            binding.pbLoading.isVisible = false
                             // 입력 UI 표시
                             binding.guideLayout.isVisible = true
                             binding.typeLayout.isVisible = true
@@ -241,7 +241,7 @@ class DiaryWriteFragment : Fragment() {
                             binding.btnSave.isVisible = true
                         }
                         is UiState.Failure -> {
-                            binding.progressBar.isVisible = false
+                            binding.pbLoading.isVisible = false
                             // 에러 처리 (필요시 토스트 또는 에러 UI 표시)
                             Toast.makeText(requireContext(), loadState.message ?: "데이터 로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
                         }
@@ -301,7 +301,7 @@ class DiaryWriteFragment : Fragment() {
                     when (result) {
                         is DiaryWriteViewModel.SaveResult.Loading -> {
                             // 저장 중
-                            binding.progressBar.visibility = View.VISIBLE
+                            binding.pbLoading.visibility = View.VISIBLE
                             binding.btnSave.isEnabled = false
                         }
                         is DiaryWriteViewModel.SaveResult.Success -> {

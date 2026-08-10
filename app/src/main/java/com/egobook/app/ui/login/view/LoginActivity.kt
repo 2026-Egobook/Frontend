@@ -190,13 +190,13 @@ import javax.inject.Inject
             viewModel.loginState.collect { state ->
                 when (state) {
                     is LoginState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
+                        binding.pbLoading.visibility = View.VISIBLE
                         binding.btnLogin.isEnabled = false
                         binding.btnGoogleLogin.isEnabled = false
                         binding.btnGuestLogin.isEnabled = false
                     }
                     is LoginState.Success -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.pbLoading.visibility = View.GONE
                         Toast.makeText(
                             this@LoginActivity,
                             "로그인 성공!",
@@ -205,7 +205,7 @@ import javax.inject.Inject
                         navigateToMain()
                     }
 //                    is LoginState.Error -> {
-//                        binding.progressBar.visibility = View.GONE
+//                        binding.pbLoading.visibility = View.GONE
 //                        val message = state.error.message ?: "알 수 없는 오류가 발생했습니다"
 //                        Toast.makeText(
 //                            this@LoginActivity,
@@ -214,10 +214,10 @@ import javax.inject.Inject
 //                        ).show()
 //                    }
 //                    else -> {
-//                        binding.progressBar.visibility = View.GONE
+//                        binding.pbLoading.visibility = View.GONE
 //                    }
                     is LoginState.Error -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.pbLoading.visibility = View.GONE
                         binding.btnLogin.isEnabled = true
                         binding.btnGoogleLogin.isEnabled = true
                         binding.btnGuestLogin.isEnabled = true
@@ -242,7 +242,7 @@ import javax.inject.Inject
 //                        }
                     }
                     else -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.pbLoading.visibility = View.GONE
                         binding.btnLogin.isEnabled = true
                         binding.btnGoogleLogin.isEnabled = true
                         binding.btnGuestLogin.isEnabled = true

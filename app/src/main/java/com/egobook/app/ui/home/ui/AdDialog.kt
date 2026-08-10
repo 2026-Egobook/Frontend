@@ -56,10 +56,10 @@ class AdDialog() : DialogFragment() {
                 launch {
                     viewModel.isLoadingAdInfo.collect { isLoading ->
                         if (isLoading) {
-                            binding.progressBar.visibility = View.VISIBLE
+                            binding.pbLoading.visibility = View.VISIBLE
                             binding.contentLayout.visibility = View.GONE
                         } else {
-                            binding.progressBar.visibility = View.GONE
+                            binding.pbLoading.visibility = View.GONE
                             binding.contentLayout.visibility = View.VISIBLE
                         }
                     }

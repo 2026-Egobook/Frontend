@@ -92,18 +92,18 @@ class DiaryListFragment : Fragment() {
                 when (val refreshState = loadStates.refresh) {
                     is LoadState.Loading -> {
                         // 초기 로딩 중
-                        binding.progressBar.isVisible = true
+                        binding.pbLoading.isVisible = true
                         binding.rvDiary.isVisible = false
                         binding.layoutEmpty.isVisible = false
                     }
                     is LoadState.NotLoading -> {
-                        binding.progressBar.isVisible = false
+                        binding.pbLoading.isVisible = false
                         val isEmpty = diaryRVAdapter.itemCount == 0
                         binding.layoutEmpty.isVisible = isEmpty
                         binding.rvDiary.isVisible = !isEmpty
                     }
                     is LoadState.Error -> {
-                        binding.progressBar.isVisible = false
+                        binding.pbLoading.isVisible = false
                         // TODO: 에러 UI 처리
                     }
                 }

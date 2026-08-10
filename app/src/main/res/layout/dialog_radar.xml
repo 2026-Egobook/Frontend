@@ -14,7 +14,7 @@
         android:paddingVertical="24dp">
 
         <ProgressBar
-            android:id="@+id/progress_bar"
+            android:id="@+id/pb_loading"
             style="@style/LoadingProgressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
