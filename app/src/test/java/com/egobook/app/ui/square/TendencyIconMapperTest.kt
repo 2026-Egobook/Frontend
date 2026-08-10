@@ -11,6 +11,7 @@ class TendencyIconMapperTest {
         assertThat(tendencyIconDrawable("공감성")).isEqualTo(R.drawable.ic_radar_heart)
         assertThat(tendencyIconDrawable("자존감")).isEqualTo(R.drawable.ic_radar_diamond)
         assertThat(tendencyIconDrawable("성실성")).isEqualTo(R.drawable.ic_radar_clover)
+        assertThat(tendencyIconDrawable("성실함")).isEqualTo(R.drawable.ic_radar_clover)
         assertThat(tendencyIconDrawable("긍정사고")).isEqualTo(R.drawable.ic_radar_sun)
         assertThat(tendencyIconDrawable("감정조절")).isEqualTo(R.drawable.ic_radar_star)
     }

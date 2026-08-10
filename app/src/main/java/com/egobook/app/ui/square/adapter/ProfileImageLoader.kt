@@ -13,11 +13,20 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.egobook.app.ui.square.ProfileImagePlacement
 import com.egobook.app.ui.square.calculateProfileImageTransform
+import com.egobook.app.ui.square.hasRemoteProfileImage
+import com.egobook.app.R
 import java.util.WeakHashMap
 
 private val profileLayoutListeners = WeakHashMap<ImageView, View.OnLayoutChangeListener>()
 
 internal fun ImageView.loadProfileBackground(url: String?, placement: ProfileImagePlacement) {
+    if (!hasRemoteProfileImage(url)) {
+        Glide.with(this).clear(this)
+        stopObservingProfileFrameChanges()
+        scaleType = ImageView.ScaleType.CENTER_CROP
+        setImageResource(R.drawable.default_background)
+        return
+    }
     scaleType = ImageView.ScaleType.MATRIX
     observeProfileFrameChanges(placement)
     Glide.with(this)
@@ -31,6 +40,13 @@ internal fun ImageView.loadProfileTurtle(
     @DrawableRes fallback: Int,
     placement: ProfileImagePlacement
 ) {
+    if (!hasRemoteProfileImage(url)) {
+        Glide.with(this).clear(this)
+        stopObservingProfileFrameChanges()
+        scaleType = ImageView.ScaleType.FIT_CENTER
+        setImageResource(fallback)
+        return
+    }
     scaleType = ImageView.ScaleType.MATRIX
     observeProfileFrameChanges(placement)
     Glide.with(this)
@@ -66,7 +82,7 @@ private fun ImageView.profilePlacementListener(placement: ProfileImagePlacement)
     }
 
 private fun ImageView.observeProfileFrameChanges(placement: ProfileImagePlacement) {
-    profileLayoutListeners.remove(this)?.let(::removeOnLayoutChangeListener)
+    stopObservingProfileFrameChanges()
     val listener = View.OnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
         if (right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop) {
             (view as ImageView).applyProfilePlacement(placement)
@@ -74,6 +90,10 @@ private fun ImageView.observeProfileFrameChanges(placement: ProfileImagePlacemen
     }
     profileLayoutListeners[this] = listener
     addOnLayoutChangeListener(listener)
+}
+
+private fun ImageView.stopObservingProfileFrameChanges() {
+    profileLayoutListeners.remove(this)?.let(::removeOnLayoutChangeListener)
 }
 
 private fun ImageView.applyProfilePlacementWhenLaidOut(placement: ProfileImagePlacement) {
