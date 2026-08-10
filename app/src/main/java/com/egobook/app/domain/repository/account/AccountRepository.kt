@@ -1,5 +1,7 @@
 package com.egobook.app.domain.repository.account
 
+import com.egobook.app.domain.model.account.WithdrawReasonType
+
 interface AccountRepository {
 
     /**
@@ -16,6 +18,18 @@ interface AccountRepository {
      * 로컬에서 게스트타입과 GOOGLE이면 email을 읽어오는 로직
      */
     suspend fun getLinkedAccountInfo(): Result<LinkedAccountInfo>
+
+    /**
+     * 탈퇴 사유 저장
+     *
+     * 서버 정책상 [deleteAccount] 호출 이전에 먼저 호출해야 저장된다.
+     *
+     * @param text 기타(OTHER) 선택 시 입력한 상세 사유
+     */
+    suspend fun submitWithdrawReason(
+        reasonType: WithdrawReasonType,
+        text: String? = null
+    ): Result<Unit>
 
     /**
      * 계정 탈퇴

@@ -5,6 +5,7 @@ import com.egobook.app.data.model.account.AccountResponse
 import com.egobook.app.data.model.account.DeleteAccountResponse
 import com.egobook.app.data.model.account.LinkRequest
 import com.egobook.app.data.model.account.LinkResponse
+import com.egobook.app.data.model.account.WithdrawReasonRequest
 import com.google.gson.JsonElement
 import retrofit2.http.GET
 import retrofit2.http.Body
@@ -25,6 +26,12 @@ interface AccountApiService {
 
     @DELETE("/users/withdraw")
     suspend fun deleteAccount(): ApiResponse<DeleteAccountResponse>
+
+    // 탈퇴 사유 저장. 반드시 deleteAccount() 호출 이전에 호출해야 저장된다.
+    @POST("/users/withdraw/reason")
+    suspend fun submitWithdrawReason(
+        @Body request: WithdrawReasonRequest
+    ): ApiResponse<JsonElement?>
 
     // data 필드가 문자열/객체/null 어느 것이든 Gson이 파싱 가능하도록 JsonElement? 사용
     @PATCH("/users/nickname")
