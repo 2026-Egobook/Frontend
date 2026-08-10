@@ -9,6 +9,7 @@ import com.egobook.app.data.api.DiaryApiService
 import com.egobook.app.data.api.FriendsApiService
 import com.egobook.app.data.api.LetterApiService
 import com.egobook.app.data.api.NotificationApiService
+import com.egobook.app.data.api.PushApiService
 import com.egobook.app.data.api.QuestionApiService
 import com.egobook.app.di.qualifier.AIApi
 import com.egobook.app.di.qualifier.AuthRetrofit
@@ -79,4 +80,9 @@ object ServiceModule {
     @Singleton
     fun provideCalenderService(@BackendApi retrofit: Retrofit): CalenderApiService =
         retrofit.create(CalenderApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun providePushService(@BackendApi retrofit: Retrofit): PushApiService =
+        retrofit.create(PushApiService::class.java)
 }

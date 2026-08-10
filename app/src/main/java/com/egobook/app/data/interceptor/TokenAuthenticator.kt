@@ -3,6 +3,7 @@ package com.egobook.app.data.interceptor
 import android.content.Context
 import android.content.Intent
 import com.egobook.app.data.api.AuthApiService
+import com.egobook.app.data.local.PushPreferenceStorage
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.auth.AccessTokenRequest
 import com.egobook.app.di.qualifier.AuthRetrofit
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class TokenAuthenticator @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val userInfoStorage: UserInfoStorage,
+    private val pushPreferenceStorage: PushPreferenceStorage,
     private val authApiService: AuthApiService
 ) : Authenticator {
 
@@ -102,6 +104,8 @@ class TokenAuthenticator @Inject constructor(
 
         runBlocking {
             userInfoStorage.clearAll()   // 토큰, id, 이메일 등등 싹다 삭제
+            // 다른 계정으로 재로그인했을 때 같은 토큰이라는 이유로 등록이 생략되지 않도록 이력 삭제
+            pushPreferenceStorage.clearLastRegisteredToken()
         }
 
         val intent = Intent(context, LoginActivity::class.java).apply {

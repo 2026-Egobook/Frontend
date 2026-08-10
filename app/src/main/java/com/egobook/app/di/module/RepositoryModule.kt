@@ -9,6 +9,7 @@ import com.egobook.app.data.repository.account.AccountRepositoryImpl
 import com.egobook.app.data.repository.auth.AuthRepositoryImpl
 import com.egobook.app.data.repository.diary.CalenderRepositoryImpl
 import com.egobook.app.data.repository.diary.DiaryRepositoryImpl
+import com.egobook.app.data.repository.push.PushTokenRepositoryImpl
 import com.egobook.app.domain.repository.CounselingRepository
 import com.egobook.app.domain.repository.FriendsRepository
 import com.egobook.app.domain.repository.LetterRepository
@@ -18,6 +19,7 @@ import com.egobook.app.domain.repository.account.AccountRepository
 import com.egobook.app.domain.repository.auth.AuthRepository
 import com.egobook.app.domain.repository.diary.CalenderRepository
 import com.egobook.app.domain.repository.diary.DiaryRepository
+import com.egobook.app.domain.repository.push.PushTokenRepository
 import com.egobook.app.ui.home.repository.HomeNotificationRepository
 import com.egobook.app.ui.home.repository.NetworkHomeNotificationRepository
 import com.egobook.app.ui.home.repository.NetworkUserRepository
@@ -58,6 +60,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAccountRepository(impl: AccountRepositoryImpl): AccountRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPushTokenRepository(impl: PushTokenRepositoryImpl): PushTokenRepository
 
     @Binds
     @Singleton
