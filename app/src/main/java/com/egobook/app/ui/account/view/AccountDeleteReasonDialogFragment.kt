@@ -20,6 +20,7 @@ import com.egobook.app.domain.model.account.WithdrawReasonType
 import com.egobook.app.removeScreenBlur
 import com.egobook.app.ui.account.viewmodel.AccountViewModel
 import com.egobook.app.util.UiState
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /**
@@ -115,8 +116,21 @@ class AccountDeleteReasonDialogFragment : DialogFragment() {
     private fun observeDeleteAccountState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // 사유를 다 고르고 탈퇴 요청 중이 아닐 때만 탈퇴하기를 누를 수 있다
+                combine(
+                    viewModel.isWithdrawReasonValid,
+                    viewModel.deleteAccountState
+                ) { isValid, state ->
+                    isValid && state !is UiState.Loading
+                }.collect { isEnabled ->
+                    binding.btnRealDelete.isEnabled = isEnabled
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.deleteAccountState.collect { state ->
-                    binding.btnRealDelete.isEnabled = state !is UiState.Loading
                     if (state is UiState.Success) {
                         navigateToDeleteDialog2()
                     }

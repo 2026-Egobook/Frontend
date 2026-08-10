@@ -53,17 +53,24 @@ class AccountViewModel @Inject constructor(
     private val _withdrawToastEvent = MutableSharedFlow<String>(replay = 0)
     val withdrawToastEvent = _withdrawToastEvent.asSharedFlow()
 
-    /** 사유를 골랐고, 기타인 경우 상세 사유까지 입력했는지 */
+    /**
+     * 사유를 골랐고, 기타인 경우 상세 사유까지 입력했는지
+     *
+     * 구독자가 없는 동안에도 [deleteAccount]가 최신 값을 읽어야 하므로 Eagerly로 공유한다.
+     */
     val isWithdrawReasonValid = combine(
         _selectedWithdrawReason,
         _withdrawReasonText
     ) { reason, text ->
+        isReasonValid(reason, text)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    private fun isReasonValid(reason: WithdrawReasonType?, text: String): Boolean =
         when (reason) {
             null -> false
             WithdrawReasonType.OTHER -> text.isNotBlank()
             else -> true
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     private val _nickname = MutableStateFlow<String?>(null)
     val nickname = _nickname.asStateFlow()
@@ -209,7 +216,7 @@ class AccountViewModel @Inject constructor(
      */
     fun deleteAccount() {
         val reason = _selectedWithdrawReason.value
-        if (reason == null || !isWithdrawReasonValid.value) {
+        if (reason == null || !isReasonValid(reason, _withdrawReasonText.value)) {
             viewModelScope.launch {
                 _withdrawToastEvent.emit(
                     if (reason == WithdrawReasonType.OTHER) "탈퇴 사유를 작성해 주세요"
