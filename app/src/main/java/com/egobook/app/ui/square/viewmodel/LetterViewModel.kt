@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -124,9 +125,11 @@ class LetterViewModel @Inject constructor(
 
     private val _detectAbusiveContentResult = MutableSharedFlow<UiState<AbusiveContentModel>>()
     val detectAbusiveContentResult = _detectAbusiveContentResult.asSharedFlow()
+    private var detectAbusiveContentJob: Job? = null
 
     fun detectAbusiveContent(text: String) {
-        viewModelScope.launch {
+        detectAbusiveContentJob?.cancel()
+        detectAbusiveContentJob = viewModelScope.launch {
             _detectAbusiveContentResult.emit(UiState.Loading)
             detectAbusiveContentUseCase(text = text).onSuccess { domain ->
                 _detectAbusiveContentResult.emit(UiState.Success(domain.toPresentation()))
@@ -134,6 +137,11 @@ class LetterViewModel @Inject constructor(
                 _detectAbusiveContentResult.emit(UiState.Failure(error.message))
             }
         }
+    }
+
+    fun cancelDetectAbusiveContent() {
+        detectAbusiveContentJob?.cancel()
+        detectAbusiveContentJob = null
     }
 
     private val _arrivedPendingLetterResult = MutableStateFlow<UiState<ArrivedPendingLetterModel>>(UiState.Idle) // stateflow vs sharedflow
