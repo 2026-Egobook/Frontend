@@ -1,7 +1,6 @@
 package com.egobook.app
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +20,7 @@ import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -137,12 +137,12 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 rewardedAd = null
                 Toast.makeText(this@MainActivity, "광고를 불러오는데 실패했습니다", Toast.LENGTH_SHORT).show()
-                Log.d("AdMob", "광고 로드 실패, $adError")
+                Timber.d("광고 로드 실패, $adError")
             }
 
             override fun onAdLoaded(ad: RewardedAd) {
                 rewardedAd = ad
-                Log.d("AdMob", "광고 로드 성공!")
+                Timber.d("광고 로드 성공!")
             }
         })
     }
@@ -158,13 +158,13 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
             rewardedAd?.show(this) { rewardItem ->
                 val rewardAmount = rewardItem.amount
                 val rewardType = rewardItem.type
-                Log.d("jang", "보상 지급! (서버로 콜백 날아감), $rewardType, rewardAmout: $rewardAmount")
+                Timber.d("보상 지급! (서버로 콜백 날아감), $rewardType, rewardAmout: $rewardAmount")
                 onAdClosed()
             }
             rewardedAd = null
             loadAd()
         } else {
-            Log.d("jang", "아직 광고가 준비 안 됐어요. 잠시 후 다시 시도해주세요.")
+            Timber.d("아직 광고가 준비 안 됐어요. 잠시 후 다시 시도해주세요.")
         }
     }
 

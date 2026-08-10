@@ -3,7 +3,6 @@ package com.egobook.app.ui.home.ui
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import timber.log.Timber
 
 @AndroidEntryPoint
 class StreakDialog : DialogFragment() {
@@ -144,7 +144,7 @@ class StreakDialog : DialogFragment() {
                 }
 
             } catch (e: Exception) {
-                Log.d("error", e.toString())
+                Timber.e(e, "스트릭 정보 조회 실패")
             }
         }
         binding.ivClose.setOnClickListener {

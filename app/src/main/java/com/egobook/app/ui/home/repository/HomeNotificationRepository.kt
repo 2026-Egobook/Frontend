@@ -1,6 +1,5 @@
 package com.egobook.app.ui.home.repository
 
-import android.util.Log
 import com.egobook.app.di.qualifier.BackendApi
 import com.egobook.app.ui.home.notification.EgoRoomType
 import com.egobook.app.ui.home.notification.Notification
@@ -20,6 +19,7 @@ import retrofit2.http.Query
 import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
+import timber.log.Timber
 
 interface HomeNotificationRepository {
     suspend fun loadNotifications(): Flow<Notification>
@@ -124,7 +124,6 @@ class NetworkHomeNotificationRepository @Inject constructor(
                     ).data
 
                     response.content.forEach { dto ->
-                        Log.d("jang", "$dto")
                         emit(dto.toDomain())
                     }
 
@@ -134,10 +133,7 @@ class NetworkHomeNotificationRepository @Inject constructor(
                     currentPage++
 
                 } catch (e: Exception) {
-                    Log.e(
-                        "jang",
-                        "페이지 $currentPage 로드 중 에러 발생: $e"
-                    )
+                    Timber.e(e, "페이지 $currentPage 로드 중 에러 발생")
                     break
                 }
             }
@@ -150,7 +146,7 @@ class NetworkHomeNotificationRepository @Inject constructor(
 
     override suspend fun changeNotificationSetting(): NotificationSettingDto {
         val notificationChangeDto = notificationService.changeNotificationSetting().data
-        Log.d("jang2", "${notificationChangeDto}")
+        Timber.d("알림 설정 변경 응답: enabled=${notificationChangeDto.enabled}")
         return NotificationSettingDto(notificationChangeDto.enabled)
     }
 

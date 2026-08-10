@@ -1,6 +1,5 @@
 package com.egobook.app.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.analytics.AnalyticsEvent
@@ -23,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import timber.log.Timber
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -97,7 +97,7 @@ class HomeViewModel @Inject constructor(
             val user = userRepository.load()
             _uiState.value = user
         } catch(error: Exception) {
-            Log.e("HomeViewModel", "Failed to fetch user", error)
+            Timber.e(error, "Failed to fetch user")
         }
     }
 
@@ -119,7 +119,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
         } catch (error: Exception) {
-            Log.e("HomeViewModel", "Failed to fetch tendencies", error)
+            Timber.e(error, "Failed to fetch tendencies")
         }
     }
 
@@ -127,7 +127,7 @@ class HomeViewModel @Inject constructor(
         try {
             _equippedItems.value = shopRepository.loadEquippedItems()
         } catch(error: Exception) {
-            Log.e("HomeViewModel", "Failed to fetch equip items", error)
+            Timber.e(error, "Failed to fetch equip items")
         }
     }
 
@@ -135,7 +135,7 @@ class HomeViewModel @Inject constructor(
         try {
             _dailyPhycologyReadState.value = psychologyRepository.isReadDailyPsychology()
         } catch(error: Exception) {
-            Log.e("HomeViewModel", "Failed to fetch psychology state", error)
+            Timber.e(error, "Failed to fetch psychology state")
         }
     }
 
@@ -178,7 +178,7 @@ class HomeViewModel @Inject constructor(
                 val adInfo = userAdRepository.loadAdInfo()
                 _adState.value = adInfo
             } catch (error: Exception) {
-                Log.e("HomeViewModel", "Failed to load ad info", error)
+                Timber.e(error, "Failed to load ad info")
             } finally {
                 _isLoadingAdInfo.value = false
             }
@@ -205,7 +205,7 @@ class HomeViewModel @Inject constructor(
                     AnalyticsEvent.AD_REWARD_WATCH,
                     mapOf(AnalyticsParam.AD_COUNT_TODAY to freshAdCount)
                 )
-                Log.d("HomeViewModel", "Ad watched: $message")
+                Timber.d("Ad watched: $message")
             } finally {
                 hideLoading()
             }

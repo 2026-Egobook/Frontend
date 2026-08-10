@@ -1,6 +1,5 @@
 package com.egobook.app.ui.home.repository
 
-import android.util.Log
 import com.egobook.app.di.qualifier.BackendApi
 import com.egobook.app.ui.home.user.Tendency
 import com.egobook.app.ui.home.user.User
@@ -192,7 +191,6 @@ class NetworkUserRepository @Inject constructor(
     override suspend fun isReadDailyPsychology(): Boolean {
         val psychologyResponse: BaseResponse<PsychologyStateDto> =
             psychologyService.isReadDailyPsychology()
-        Log.d("jang", "isReadDailyPsychology: ${psychologyResponse.data.isBottleVisible}")
         return psychologyResponse.data.isBottleVisible
     }
 

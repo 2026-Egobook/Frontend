@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Spannable
-import android.util.Log
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
@@ -47,6 +46,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import timber.log.Timber
 
 @AndroidEntryPoint
 class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics) {
@@ -78,13 +78,13 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
-                    Log.d("AdMob", "통계 전면 광고 로드 성공")
+                    Timber.d("통계 전면 광고 로드 성공")
                     if (isResumed) showInterstitialAdIfReady()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     interstitialAd = null
-                    Log.d("AdMob", "통계 전면 광고 로드 실패, $adError")
+                    Timber.d("통계 전면 광고 로드 실패, $adError")
                 }
             }
         )
@@ -97,7 +97,7 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
         interstitialAd = null
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                Log.d("AdMob", "통계 전면 광고 표시 실패, $adError")
+                Timber.d("통계 전면 광고 표시 실패, $adError")
             }
         }
         ad.show(requireActivity())

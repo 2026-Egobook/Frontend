@@ -2,7 +2,6 @@ package com.egobook.app.store.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +24,7 @@ import com.egobook.app.store.data.model.ItemType
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class StoreFragment: Fragment() {
@@ -82,7 +82,7 @@ class StoreFragment: Fragment() {
                 if (position == lastSelected) return
                 lastSelected = position
                 viewModel.clearPreviewItems()
-                Log.d("StoreFragment", "페이지 변경 감지됨: $position, 임시 착용 아이템 초기화")
+                Timber.d("페이지 변경 감지됨: $position, 임시 착용 아이템 초기화")
             }
         })
 

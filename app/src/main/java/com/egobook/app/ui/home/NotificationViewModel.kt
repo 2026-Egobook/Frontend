@@ -1,6 +1,5 @@
 package com.egobook.app.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.analytics.AnalyticsEvent
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import timber.log.Timber
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
@@ -33,7 +33,6 @@ class NotificationViewModel @Inject constructor(
     }
 
     fun loadNotifications() {
-        Log.d("jang", "loadNotifications")
         viewModelScope.launch {
             val updatedList = mutableListOf<Notification>()
             repository.loadNotifications()
@@ -42,8 +41,6 @@ class NotificationViewModel @Inject constructor(
                     updatedList.add(notification)
                     _notifications.value = updatedList.toList()
 
-                    // 디버깅용 로그: 데이터가 실제로 오는지 확인
-                    Log.d("NotificationViewModel", "새 알림 수신: ${notification.content}")
                 }
         }
     }
@@ -51,7 +48,7 @@ class NotificationViewModel @Inject constructor(
     fun loadNotificationSetting() {
         viewModelScope.launch {
             val notificationSetting = repository.loadNotificationSetting()
-            Log.d("jang", "${notificationSetting}")
+            Timber.d("알림 설정 조회: enabled=${notificationSetting.enabled}")
             _notificationSettingState.value = notificationSetting
         }
     }
@@ -59,7 +56,7 @@ class NotificationViewModel @Inject constructor(
     fun changeNotificationSetting() {
         viewModelScope.launch {
             val notificationSetting = repository.changeNotificationSetting()
-            Log.d("jang", "${notificationSetting}")
+            Timber.d("알림 설정 변경: enabled=${notificationSetting.enabled}")
             _notificationSettingState.value = notificationSetting
             analyticsLogger.logEvent(
                 AnalyticsEvent.NOTIFICATION_TOGGLE,
@@ -71,7 +68,7 @@ class NotificationViewModel @Inject constructor(
     fun readNotification(notification: Notification) {
         viewModelScope.launch {
             val notificationReadingDto = repository.readNotification(notification)
-            Log.d("jang", "${notificationReadingDto}")
+            Timber.d("알림 읽음 처리 완료: id=${notification.id}")
             analyticsLogger.logEvent(
                 AnalyticsEvent.NOTIFICATION_OPEN,
                 mapOf(AnalyticsParam.NOTIFICATION_TYPE to (notification.type::class.simpleName ?: "unknown"))

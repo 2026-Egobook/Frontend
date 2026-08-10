@@ -1,7 +1,6 @@
 package com.egobook.app.ui.home.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +17,7 @@ import com.egobook.app.ui.home.notification.NotificationType
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class NotificationFragment: Fragment() {
@@ -73,7 +73,7 @@ class NotificationFragment: Fragment() {
 
                 launch {
                     viewModel.notificationSettingState.collect { notificationSettingState ->
-                        Log.d("jang", "UI에서 감지된 설정: ${notificationSettingState}")
+                        Timber.d("UI에서 감지된 설정: ${notificationSettingState}")
                         if (notificationSettingState.enabled) {
                             binding.ivHomeNotificationButton.setImageResource(R.drawable.ic_notification_on)
                         } else {

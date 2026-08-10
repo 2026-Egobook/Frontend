@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +35,7 @@ import com.egobook.app.push.NotificationPermissionDecision
 import com.egobook.app.push.NotificationPermissionPolicy
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -51,7 +51,7 @@ class HomeFragment(): Fragment() {
 
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            Log.d("HomeFragment", "알림 권한 요청 결과: $isGranted")
+            Timber.d("알림 권한 요청 결과: $isGranted")
         }
 
     override fun onCreateView(
@@ -130,7 +130,7 @@ class HomeFragment(): Fragment() {
             viewModel.logPsychKnowledgeOpen()
 
             parentFragmentManager.setFragmentResultListener("psychology_key", viewLifecycleOwner) { _, _ ->
-                Log.d("jang", "다이얼로그 닫힘 감지 - 데이터 갱신")
+                Timber.d("다이얼로그 닫힘 감지 - 데이터 갱신")
                 viewModel.fetchUser()
                 viewModel.fetchDailyPhycologyReadState()
             }

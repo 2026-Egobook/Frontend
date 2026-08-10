@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
-import android.util.Log
+import timber.log.Timber
 
 @HiltViewModel
 class CalenderViewModel @Inject constructor(
@@ -44,7 +44,7 @@ class CalenderViewModel @Inject constructor(
      * 초기 로드 - 외부에서 명시적으로 호출 필요
      */
     init {
-        Log.d("ViewModel1", "=== ViewModel INIT === selectedYearMonth=${_state.value.selectedYearMonth}")
+        Timber.d("=== ViewModel INIT === selectedYearMonth=${_state.value.selectedYearMonth}")
         // init에서 자동 로드하지 않음 - Fragment에서 초기 년월 설정 후 명시적 호출
     }
 
@@ -60,17 +60,17 @@ class CalenderViewModel @Inject constructor(
      */
     fun loadCalender(yearMonth: YearMonth) {
         viewModelScope.launch {
-            Log.d("ViewModel1", "=== loadCalender START === yearMonth=$yearMonth")
+            Timber.d("=== loadCalender START === yearMonth=$yearMonth")
 
             // YearMonth의 첫날을 LocalDate로 변환하여 API 호출
             val firstDayOfMonth = yearMonth.atDay(1)
-            Log.d("ViewModel1", "firstDayOfMonth=$firstDayOfMonth, calling API...")
+            Timber.d("firstDayOfMonth=$firstDayOfMonth, calling API...")
 
             calenderUseCases.getCalender(firstDayOfMonth)
                 .onSuccess { calenderDates ->
-                    Log.d("ViewModel1", "API Success, dates count: ${calenderDates.size}")
+                    Timber.d("API Success, dates count: ${calenderDates.size}")
                     val emotionMap = CalenderEntityMapper.toDateEmotionMap(calenderDates)
-                    Log.d("ViewModel1", "Map created with keys: ${emotionMap.keys}")
+                    Timber.d("Map created with keys: ${emotionMap.keys}")
                     _state.update { state ->
                         state.copy(
                             selectedYearMonth = yearMonth,
@@ -78,10 +78,10 @@ class CalenderViewModel @Inject constructor(
                             dateEmotionMap = emotionMap
                         )
                     }
-                    Log.d("ViewModel1", "State updated, current map keys: ${_state.value.dateEmotionMap.keys}")
+                    Timber.d("State updated, current map keys: ${_state.value.dateEmotionMap.keys}")
                 }
                 .onFailure { exception ->
-                    Log.e("ViewModel1", "API Failure: ${exception.message}", exception)
+                    Timber.e(exception, "API Failure: ${exception.message}")
                     // 실패해도 기존 데이터 유지, selectedYearMonth만 업데이트
                     _state.update { state ->
                         state.copy(
@@ -89,7 +89,7 @@ class CalenderViewModel @Inject constructor(
                         )
                     }
                 }
-            Log.d("ViewModel1", "=== loadCalender END ===")
+            Timber.d("=== loadCalender END ===")
         }
     }
 
