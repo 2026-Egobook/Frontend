@@ -28,6 +28,8 @@ data class UserTodayQuestionAnswerItemResponse(
     val createdAt: String,
     @SerializedName("level")
     val level: Long,
+    @SerializedName("topAbilityName")
+    val topAbilityName: String? = null,
     @SerializedName("turtleImageUrl")
     val turtleImageUrl: String? = null,
     @SerializedName("backgroundImageUrl")
@@ -50,6 +52,7 @@ fun UserTodayQuestionAnswerItemResponse.toDomain(): UserTodayQuestionAnswerItem 
         content = content,
         createdAt = createdAt,
         level = level,
+        topAbilityName = topAbilityName,
         turtleImageUrl = turtleImageUrl,
         backgroundImageUrl = backgroundImageUrl
     )

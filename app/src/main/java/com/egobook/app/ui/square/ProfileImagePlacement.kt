@@ -12,11 +12,18 @@ enum class ProfileScaleMode {
 enum class ProfileImagePlacement(
     val scaleMode: ProfileScaleMode,
     val targetHeadWidthFraction: Float = 0f,
+    val targetCenterXFraction: Float = 0.5f,
+    val targetCenterYFraction: Float = 0.5f,
     val verticalOffsetFraction: Float = 0f
 ) {
     PLAZA_TURTLE(ProfileScaleMode.HEAD_CENTERED, targetHeadWidthFraction = 0.65f),
     PLAZA_BACKGROUND(ProfileScaleMode.CENTER_CROP),
-    FRIEND_TURTLE(ProfileScaleMode.HEAD_CENTERED, targetHeadWidthFraction = 0.70f),
+    FRIEND_TURTLE(
+        ProfileScaleMode.HEAD_CENTERED,
+        targetHeadWidthFraction = 0.60f,
+        targetCenterXFraction = 0.38f,
+        targetCenterYFraction = 0.62f
+    ),
     FRIEND_BACKGROUND(ProfileScaleMode.CENTER_CROP, verticalOffsetFraction = -0.131f)
 }
 
@@ -42,8 +49,10 @@ fun calculateProfileImageTransform(
                 (imageWidth * TURTLE_HEAD_WIDTH_FRACTION)
             ProfileImageTransform(
                 scale = scale,
-                translateX = frameWidth / 2f - imageWidth * TURTLE_HEAD_CENTER_X_FRACTION * scale,
-                translateY = frameHeight / 2f - imageHeight * TURTLE_HEAD_CENTER_Y_FRACTION * scale
+                translateX = frameWidth * placement.targetCenterXFraction -
+                    imageWidth * TURTLE_HEAD_CENTER_X_FRACTION * scale,
+                translateY = frameHeight * placement.targetCenterYFraction -
+                    imageHeight * TURTLE_HEAD_CENTER_Y_FRACTION * scale
             )
         }
 

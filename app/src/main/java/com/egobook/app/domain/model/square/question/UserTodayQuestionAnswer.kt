@@ -14,6 +14,7 @@ data class UserTodayQuestionAnswerItem(
     val content: String,
     val createdAt: String,
     val level: Long,
+    val topAbilityName: String? = null,
     val turtleImageUrl: String? = null,
     val backgroundImageUrl: String? = null
 )

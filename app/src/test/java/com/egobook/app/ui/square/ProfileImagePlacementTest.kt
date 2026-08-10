@@ -18,15 +18,15 @@ class ProfileImagePlacementTest {
     }
 
     @Test
-    fun `friend turtle centers its head at seventy percent of frame width`() {
+    fun `friend turtle places a smaller head toward the lower left`() {
         val result = calculateProfileImageTransform(100, 100, 304, 197, ProfileImagePlacement.FRIEND_TURTLE)
 
         assertThat(304f * TURTLE_HEAD_WIDTH_FRACTION * result.scale)
-            .isCloseTo(70f, offset(0.01f))
+            .isCloseTo(60f, offset(0.01f))
         assertThat(304f * TURTLE_HEAD_CENTER_X_FRACTION * result.scale + result.translateX)
-            .isCloseTo(50f, offset(0.01f))
+            .isCloseTo(38f, offset(0.01f))
         assertThat(197f * TURTLE_HEAD_CENTER_Y_FRACTION * result.scale + result.translateY)
-            .isCloseTo(50f, offset(0.01f))
+            .isCloseTo(62f, offset(0.01f))
     }
 
     @Test

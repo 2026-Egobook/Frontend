@@ -17,6 +17,7 @@ data class UserTodayQuestionAnswerItemModel(
     val content: String,
     val createdAt: String,
     val level: Long,
+    val topAbilityName: String? = null,
     val turtleImageUrl: String? = null,
     val backgroundImageUrl: String? = null
 )
@@ -28,6 +29,7 @@ fun UserTodayQuestionAnswerItem.toPresentation() = UserTodayQuestionAnswerItemMo
     content = content,
     createdAt = createdAt,
     level = level,
+    topAbilityName = topAbilityName,
     turtleImageUrl = turtleImageUrl,
     backgroundImageUrl = backgroundImageUrl
 )

@@ -10,6 +10,7 @@ import com.egobook.app.databinding.ItemSquareFriendAnswerBinding
 import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.levelBadgeDrawable
 import com.egobook.app.ui.square.ProfileImagePlacement
+import com.egobook.app.ui.square.tendencyIconDrawable
 
 class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnswerItemModel, TodayQuestionFriendRepliesAdapter.TodayQuestionFriendRepliesViewHolder>(diffUtil) {
 
@@ -19,6 +20,7 @@ class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnsw
             tvItemSquareFriendAnswerUserContent.text = item.content
             tvItemSquareFriendAnswerUserLevel.text = "LV ${item.level}"
             ivItemSquareFriendAnswerUserLevel.setImageResource(levelBadgeDrawable(item.level))
+            ivItemSquareFriendAnswerSymbol.setImageResource(tendencyIconDrawable(item.topAbilityName))
             ivItemSquareFriendAnswerUserBackground.loadProfileBackground(
                 item.backgroundImageUrl,
                 ProfileImagePlacement.PLAZA_BACKGROUND

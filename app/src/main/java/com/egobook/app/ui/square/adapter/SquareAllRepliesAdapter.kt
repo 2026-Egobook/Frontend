@@ -11,6 +11,7 @@ import com.egobook.app.databinding.ItemSquareQuestionReplyBinding
 import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
 import com.egobook.app.ui.square.levelBadgeDrawable
 import com.egobook.app.ui.square.ProfileImagePlacement
+import com.egobook.app.ui.square.tendencyIconDrawable
 
 class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): PagingDataAdapter<UserTodayQuestionAnswerItemModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
     private val expandedAnswerIds = mutableSetOf<Long>()
@@ -42,6 +43,7 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
             tvItemSquareQuestionReplyUserContent.text = item.content
             tvItemSquareQuestionReplyUserLevel.text = "LV ${item.level}"
             ivItemSquareQuestionReplyUserLevel.setImageResource(levelBadgeDrawable(item.level))
+            ivItemSquareQuestionReplySymbol.setImageResource(tendencyIconDrawable(item.topAbilityName))
             ivItemSquareQuestionReplyUserBackground.loadProfileBackground(
                 item.backgroundImageUrl,
                 ProfileImagePlacement.PLAZA_BACKGROUND

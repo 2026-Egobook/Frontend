@@ -49,6 +49,7 @@ class ProfileImageMappingTest {
             content = "answer",
             createdAt = "2026-08-06T00:00:00Z",
             level = 321L,
+            topAbilityName = "긍정사고",
             turtleImageUrl = TURTLE_IMAGE_URL,
             backgroundImageUrl = BACKGROUND_IMAGE_URL
         ).toDomain().toPresentation()
@@ -56,6 +57,7 @@ class ProfileImageMappingTest {
         assertThat(model.turtleImageUrl).isEqualTo(TURTLE_IMAGE_URL)
         assertThat(model.backgroundImageUrl).isEqualTo(BACKGROUND_IMAGE_URL)
         assertThat(model.level).isEqualTo(321L)
+        assertThat(model.topAbilityName).isEqualTo("긍정사고")
     }
 
     @Test

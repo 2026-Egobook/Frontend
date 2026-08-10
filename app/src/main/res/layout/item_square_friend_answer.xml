@@ -75,8 +75,10 @@
         app:layout_constraintStart_toEndOf="@id/cv_item_square_friend_answer_user_image"/>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/iv_item_square_friend_answer_symbol"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_square_friend_answer_star"
         android:layout_marginStart="4dp"
         app:layout_constraintStart_toEndOf="@id/tv_item_square_friend_answer_user_name"
