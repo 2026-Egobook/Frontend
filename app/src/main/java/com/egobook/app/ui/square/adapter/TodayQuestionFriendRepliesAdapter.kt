@@ -5,8 +5,12 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.egobook.app.R
 import com.egobook.app.databinding.ItemSquareFriendAnswerBinding
 import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
+import com.egobook.app.ui.square.levelBadgeDrawable
+import com.egobook.app.ui.square.ProfileImagePlacement
+import com.egobook.app.ui.square.tendencyIconDrawable
 
 class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnswerItemModel, TodayQuestionFriendRepliesAdapter.TodayQuestionFriendRepliesViewHolder>(diffUtil) {
 
@@ -14,6 +18,19 @@ class TodayQuestionFriendRepliesAdapter: PagingDataAdapter<UserTodayQuestionAnsw
         fun bind(item: UserTodayQuestionAnswerItemModel) = with(binding) {
             tvItemSquareFriendAnswerUserName.text = item.nickname
             tvItemSquareFriendAnswerUserContent.text = item.content
+            tvItemSquareFriendAnswerUserLevel.text = "LV ${item.level}"
+            ivItemSquareFriendAnswerUserLevel.setImageResource(levelBadgeDrawable(item.level))
+            ivItemSquareFriendAnswerSymbol.setImageResource(tendencyIconDrawable(item.topAbilityName))
+            ivItemSquareFriendAnswerUserBackground.loadProfileBackground(
+                item.backgroundImageUrl,
+                ProfileImagePlacement.PLAZA_BACKGROUND
+            )
+            ivItemSquareFriendAnswerUserImage.loadProfileTurtle(
+                item.turtleImageUrl,
+                R.drawable.img_temp_square_user_thumbnail,
+                ProfileImagePlacement.PLAZA_TURTLE,
+                mirrorFallback = true
+            )
         }
     }
 

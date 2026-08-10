@@ -6,8 +6,12 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.egobook.app.R
 import com.egobook.app.databinding.ItemSquareQuestionReplyBinding
 import com.egobook.app.ui.square.model.question.UserTodayQuestionAnswerItemModel
+import com.egobook.app.ui.square.levelBadgeDrawable
+import com.egobook.app.ui.square.ProfileImagePlacement
+import com.egobook.app.ui.square.tendencyIconDrawable
 
 class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): PagingDataAdapter<UserTodayQuestionAnswerItemModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
     private val expandedAnswerIds = mutableSetOf<Long>()
@@ -37,6 +41,19 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
     ): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: UserTodayQuestionAnswerItemModel) = with(binding) {
             tvItemSquareQuestionReplyUserContent.text = item.content
+            tvItemSquareQuestionReplyUserLevel.text = "LV ${item.level}"
+            ivItemSquareQuestionReplyUserLevel.setImageResource(levelBadgeDrawable(item.level))
+            ivItemSquareQuestionReplySymbol.setImageResource(tendencyIconDrawable(item.topAbilityName))
+            ivItemSquareQuestionReplyUserBackground.loadProfileBackground(
+                item.backgroundImageUrl,
+                ProfileImagePlacement.PLAZA_BACKGROUND
+            )
+            ivItemSquareQuestionReplyUserImage.loadProfileTurtle(
+                item.turtleImageUrl,
+                R.drawable.img_temp_square_user_thumbnail,
+                ProfileImagePlacement.PLAZA_TURTLE,
+                mirrorFallback = true
+            )
             applyContentExpandedState(expandedAnswerIds.contains(item.answerId))
 
             root.setOnClickListener {

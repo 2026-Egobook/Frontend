@@ -10,6 +10,7 @@ import com.egobook.app.store.data.model.ItemType
 import com.egobook.app.store.data.network.dto.ShopItemDto
 import com.egobook.app.store.ui.CustomItem
 import retrofit2.Retrofit
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -71,9 +72,15 @@ class RemoteShopDataSource @Inject constructor(
                 PermanentEquipRequest(itemId = item.id.toInt(), isEquipped = isEquipped)
             )
             return EquipState(isSuccess = true)
+        } catch (err: CancellationException) {
+            throw err
         } catch (err: Exception) {
             return EquipState(isSuccess = false)
         }
+    }
+
+    suspend fun confirmProfile() {
+        apiService.confirmProfile()
     }
 }
 

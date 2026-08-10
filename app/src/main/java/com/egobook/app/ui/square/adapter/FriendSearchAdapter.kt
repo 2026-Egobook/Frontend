@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.egobook.app.R
 import com.egobook.app.databinding.ItemSearchFriendBinding
 import com.egobook.app.ui.square.model.friend.SearchUserModel
+import com.egobook.app.ui.square.levelBadgeDrawable
+import com.egobook.app.ui.square.ProfileImagePlacement
 
 /**
  * 1. fallback(R.drawable.default_turtle) → null일 때 보여주는 기본 이미지 지정
@@ -26,9 +27,10 @@ class FriendSearchAdapter(
             btnAddFriendSearchResultApply.alpha = 1f
             btnAddFriendSearchResultApply.text = "신청하기"
             tvAddFriendSearchLevel.text = "LV ${item.level}"
+            ivAddFriendSearchLevel.setImageResource(levelBadgeDrawable(item.level))
             tvAddFriendSearchNickname.text = item.nickname
-            Glide.with(ivAddFriendSearchImage).load(item.profileImageUrl)
-                .fallback(R.drawable.default_turtle).into(ivAddFriendSearchImage) // 1
+            ivAddFriendSearchBackground.loadProfileBackground(item.backgroundImageUrl, ProfileImagePlacement.FRIEND_BACKGROUND)
+            ivAddFriendSearchImage.loadProfileTurtle(item.turtleImageUrl, R.drawable.default_turtle, ProfileImagePlacement.FRIEND_TURTLE, placeFallback = true)
             btnAddFriendSearchResultApply.setOnClickListener { onApply(item.userId, bindingAdapterPosition) }
         }
     }

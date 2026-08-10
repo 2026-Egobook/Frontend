@@ -5,5 +5,7 @@ data class FriendRequest(
     val userId: Long,
     val nickname: String,
     val level: Long,
+    val turtleImageUrl: String? = null,
+    val backgroundImageUrl: String? = null,
     val requestedAt: String
 )

@@ -58,7 +58,9 @@ class ShopRepository @Inject constructor(
     }
 
     suspend fun equipItemPermanently(item: CustomItem, isEquipped: Boolean): List<CustomItem> {
-        remoteShopDataSource.permanentEquipItem(item, isEquipped)
+        val result = remoteShopDataSource.permanentEquipItem(item, isEquipped)
+        check(result.isSuccess) { "Failed to update equipped item" }
+        remoteShopDataSource.confirmProfile()
         return remoteShopDataSource.loadEquippedItems()
     }
 

@@ -15,7 +15,11 @@ data class UserTodayQuestionAnswerItemModel(
     val userId: Long,
     val nickname: String,
     val content: String,
-    val createdAt: String
+    val createdAt: String,
+    val level: Long,
+    val topAbilityName: String? = null,
+    val turtleImageUrl: String? = null,
+    val backgroundImageUrl: String? = null
 )
 
 fun UserTodayQuestionAnswerItem.toPresentation() = UserTodayQuestionAnswerItemModel(
@@ -23,7 +27,11 @@ fun UserTodayQuestionAnswerItem.toPresentation() = UserTodayQuestionAnswerItemMo
     userId = userId,
     nickname = nickname,
     content = content,
-    createdAt = createdAt
+    createdAt = createdAt,
+    level = level,
+    topAbilityName = topAbilityName,
+    turtleImageUrl = turtleImageUrl,
+    backgroundImageUrl = backgroundImageUrl
 )
 
 fun UserTodayQuestionAnswer.toPresentation() = UserTodayQuestionAnswerModel(

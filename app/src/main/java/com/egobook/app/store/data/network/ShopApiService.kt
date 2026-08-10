@@ -27,4 +27,12 @@ interface ShopApiService {
 
     @PATCH("/shop/equip")
     suspend fun equipItemPermanently(@Body request: PermanentEquipRequest): BaseResponse<EquippedItemDto>
+
+    @POST("/shop/profile/confirm")
+    suspend fun confirmProfile(): BaseResponse<ProfileImageDto>
 }
+
+data class ProfileImageDto(
+    val turtleImageUrl: String?,
+    val backgroundImageUrl: String?
+)
