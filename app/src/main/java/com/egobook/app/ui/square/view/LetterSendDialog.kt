@@ -167,6 +167,7 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
         isSending = false
         binding.btnLetterSend.isEnabled = true
         binding.root.alpha = 1.0f
+        dismiss()
     }
 
     private fun hideLoadingDialog() {
