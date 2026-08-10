@@ -115,20 +115,22 @@
 
         </LinearLayout>
 
+        <!-- 다이얼로그 폭이 화면에 맞춰 늘어나므로 두 버튼을 균등 분할한다 -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="24dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_back"
                 style="@style/DeleteButtonStyle"
-                android:layout_width="94.5dp"
+                android:layout_width="0dp"
                 android:layout_height="42dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="돌아가기" />
@@ -136,8 +138,10 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_real_delete"
                 style="@style/RedButtonStyle"
-                android:layout_width="94.5dp"
+                android:layout_width="0dp"
                 android:layout_height="42dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="탈퇴하기"
