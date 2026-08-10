@@ -1,7 +1,6 @@
 package com.egobook.app.ui.home.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +26,7 @@ import com.egobook.app.store.ui.ItemImage
 import com.egobook.app.store.data.model.ItemType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -105,7 +105,7 @@ class HomeFragment(): Fragment() {
             viewModel.logPsychKnowledgeOpen()
 
             parentFragmentManager.setFragmentResultListener("psychology_key", viewLifecycleOwner) { _, _ ->
-                Log.d("jang", "다이얼로그 닫힘 감지 - 데이터 갱신")
+                Timber.d("다이얼로그 닫힘 감지 - 데이터 갱신")
                 viewModel.fetchUser()
                 viewModel.fetchDailyPhycologyReadState()
             }

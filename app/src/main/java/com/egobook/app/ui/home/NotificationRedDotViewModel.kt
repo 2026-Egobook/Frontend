@@ -1,6 +1,5 @@
 package com.egobook.app.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.ui.home.notification.NotificationRedDotState
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import timber.log.Timber
 
 @HiltViewModel
 class NotificationRedDotViewModel @Inject constructor(
@@ -28,7 +28,7 @@ class NotificationRedDotViewModel @Inject constructor(
                 val notifications = repository.loadNotifications().toList()
                 _redDotState.update { it.refreshed(notifications) }
             } catch (error: Exception) {
-                Log.e("NotificationRedDotViewModel", "Failed to refresh unread notifications", error)
+                Timber.e(error, "Failed to refresh unread notifications")
             }
         }
     }

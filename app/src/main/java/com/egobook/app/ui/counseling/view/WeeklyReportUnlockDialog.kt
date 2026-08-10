@@ -3,7 +3,6 @@ package com.egobook.app.ui.counseling.view
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -29,6 +28,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.layout.dialog_weekly_report_unlock) {
     private lateinit var binding: DialogWeeklyReportUnlockBinding
@@ -97,13 +97,13 @@ class WeeklyReportUnlockDialog(private val startDate: String): DialogFragment(R.
                 override fun onAdLoaded(ad: RewardedAd) {
                     isLoadingRewardedAd = false
                     rewardedAd = ad
-                    Log.d("AdMob", "주간 리포트 리워드 광고 로드 성공")
+                    Timber.d("주간 리포트 리워드 광고 로드 성공")
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     isLoadingRewardedAd = false
                     rewardedAd = null
-                    Log.d("AdMob", "주간 리포트 리워드 광고 로드 실패, $adError")
+                    Timber.d("주간 리포트 리워드 광고 로드 실패, $adError")
                 }
             }
         )

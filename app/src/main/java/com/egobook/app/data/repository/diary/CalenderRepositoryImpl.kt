@@ -1,6 +1,5 @@
 package com.egobook.app.data.repository.diary
 
-import android.util.Log
 import com.egobook.app.data.api.CalenderApiService
 import com.egobook.app.data.model.diary.response.CalenderData
 import com.egobook.app.data.util.safeApiCall
@@ -17,21 +16,12 @@ class CalenderRepositoryImpl @Inject constructor(
 
     override suspend fun getCalender(yearMonth: LocalDate): Result<List<CalenderDate>> {
         val monthString = yearMonth.format(DateTimeFormatter.ofPattern("yyyy-MM"))
-        Log.d("Repository", "Calling API with monthString: $monthString")
-
         val result = safeApiCall(
-            apiCall = { 
-                val response = apiService.getCalender(monthString)
-                Log.d("Repository", "Raw API Response - code: ${response.code}, data: ${response.data}")
-                response
-            },
+            apiCall = { apiService.getCalender(monthString) },
             transform = { calenderData: CalenderData ->
-                Log.d("Repository", "Transforming data: month=${calenderData.month}, days=${calenderData.days}")
                 CalenderMapper.dataToDomainList(calenderData)
             }
         )
-        
-        Log.d("Repository", "Result: $result")
         return result
     }
 }

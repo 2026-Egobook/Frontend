@@ -1,6 +1,5 @@
 package com.egobook.app.domain.model.diary.mapper
 
-import android.util.Log
 import com.egobook.app.data.model.diary.response.CalenderData
 import com.egobook.app.data.model.diary.response.CalenderDay
 import com.egobook.app.domain.model.calender.CalenderDate
@@ -16,7 +15,6 @@ object CalenderMapper {
      */
     fun dataToDomainList(calenderData: CalenderData): List<CalenderDate> {
         return calenderData.days?.map { day ->
-            Log.d("CalenderMapper", "Mapping day: date=${day.date}, emotionLevel=${day.emotionLevel}")
             dayToDomain(day)
         } ?: emptyList()
     }

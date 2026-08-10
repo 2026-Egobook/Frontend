@@ -1,6 +1,5 @@
 package com.egobook.app.store.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egobook.app.analytics.AnalyticsEvent
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import timber.log.Timber
 
 data class CustomItemState(
     val isSelected: Boolean,
@@ -117,7 +117,7 @@ class StoreViewModel @Inject constructor(
             _permanentItems.value = permanent
             _equippedItems.value = permanent
         } catch (e: Exception) {
-            Log.e("StoreViewModel", "Store initialize failed", e)
+            Timber.e(e, "Store initialize failed")
             _toastEvent.emit("상점 정보를 불러오지 못했습니다.")
         } finally {
             hideLoading()
@@ -129,7 +129,7 @@ class StoreViewModel @Inject constructor(
             val user = userRepository.load()
             _ink.update { user.ink }
         } catch (e: Exception) {
-            Log.e("StoreViewModel", "Ink loading failed", e)
+            Timber.e(e, "Ink loading failed")
         }
     }
 
@@ -148,9 +148,9 @@ class StoreViewModel @Inject constructor(
                 val permanent = shopRepository.loadEquippedItems()
                 _permanentItems.value = permanent
                 _equippedItems.value = permanent
-                Log.d("StoreViewModel", "load: ${permanent}")
+                Timber.d("load: ${permanent}")
             } catch (e: Exception) {
-                Log.e("StoreViewModel", "Load equipped items failed", e)
+                Timber.e(e, "Load equipped items failed")
             } finally {
                 hideLoading()
             }
@@ -163,7 +163,7 @@ class StoreViewModel @Inject constructor(
             _equippedItems.update { currentList ->
                 currentList.filter { it.type != item.type } + item
             }
-            Log.d("StoreViewModel", "미구매 아이템 - 프리뷰 모드")
+            Timber.d("미구매 아이템 - 프리뷰 모드")
         } else {
             // 구매한 아이템: 서버에 장착/해제 요청 (토글)
             viewModelScope.launch {
@@ -180,9 +180,9 @@ class StoreViewModel @Inject constructor(
                             AnalyticsParam.ITEM_TYPE to item.type.name
                         )
                     )
-                    Log.d("StoreViewModel", "서버 착용 상태 변경 성공: ${item.id}, ${!isAlreadyEquipped}")
+                    Timber.d("서버 착용 상태 변경 성공: ${item.id}, ${!isAlreadyEquipped}")
                 } catch (e: Exception) {
-                    Log.e("StoreViewModel", "서버 통신 에러", e)
+                    Timber.e(e, "서버 통신 에러")
                     _toastEvent.emit("아이템(${item.id}) 상태 변경에 실패했습니다.")
                 } finally {
                     hideLoading()
@@ -227,7 +227,7 @@ class StoreViewModel @Inject constructor(
                 )
                 _toastEvent.emit("구매가 완료되었어요")
             } catch (e: Exception) {
-                Log.e("StoreViewModel", "Purchase failed", e)
+                Timber.e(e, "Purchase failed")
                 _toastEvent.emit("잉크가 부족하거나 구매에 실패했어요")
             } finally {
                 hideLoading()
