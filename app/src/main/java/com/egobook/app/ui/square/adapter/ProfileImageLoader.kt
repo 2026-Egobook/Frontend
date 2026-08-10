@@ -32,7 +32,8 @@ internal fun ImageView.loadProfileBackground(url: String?, placement: ProfileIma
     observeProfileFrameChanges(placement)
     Glide.with(this)
         .load(url)
-        .listener(profilePlacementListener(placement))
+        .error(R.drawable.default_background)
+        .listener(profilePlacementListener(placement, useDefaultBackgroundOnFailure = true))
         .into(this)
 }
 
@@ -80,7 +81,8 @@ internal fun ImageView.loadProfileTurtle(
 private fun ImageView.profilePlacementListener(
     placement: ProfileImagePlacement,
     turtleFallbackScaleX: Float? = null,
-    placeTurtleFallback: Boolean = false
+    placeTurtleFallback: Boolean = false,
+    useDefaultBackgroundOnFailure: Boolean = false
 ) =
     object : RequestListener<Drawable> {
         override fun onLoadFailed(
@@ -89,7 +91,10 @@ private fun ImageView.profilePlacementListener(
             target: Target<Drawable>,
             isFirstResource: Boolean
         ): Boolean {
-            if (turtleFallbackScaleX != null) {
+            if (useDefaultBackgroundOnFailure) {
+                stopObservingProfileFrameChanges()
+                scaleType = ImageView.ScaleType.CENTER_CROP
+            } else if (turtleFallbackScaleX != null) {
                 scaleX = turtleFallbackScaleX
                 stopObservingProfileFrameChanges()
                 if (placeTurtleFallback) {
