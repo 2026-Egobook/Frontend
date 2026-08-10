@@ -57,7 +57,7 @@ class RadarDialog : DialogFragment() {
                 launch {
                     viewModel.tendencies.collect { data ->
                         if (data.isNotEmpty()) {
-                            binding.progressBar.visibility = View.GONE
+                            binding.pbLoading.visibility = View.GONE
                             binding.contentLayout.visibility = View.VISIBLE
                             radarView.setRadarData(data.sortedBy { it.type.order() }.map { it.experiencePoint })
                             showTendencyLevel(data)
@@ -67,7 +67,7 @@ class RadarDialog : DialogFragment() {
                 launch {
                     viewModel.isLoading.collect { isLoading ->
                         if (isLoading && viewModel.tendencies.value.isEmpty()) {
-                            binding.progressBar.visibility = View.VISIBLE
+                            binding.pbLoading.visibility = View.VISIBLE
                             binding.contentLayout.visibility = View.GONE
                         }
                     }

@@ -19,7 +19,7 @@
         android:orientation="vertical" >
 
         <ProgressBar
-            android:id="@+id/progress_bar"
+            android:id="@+id/pb_loading"
             style="@style/LoadingProgressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,12 +128,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/pb_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
 
 </FrameLayout>

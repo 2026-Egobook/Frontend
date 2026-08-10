@@ -102,19 +102,19 @@ class DiaryCheckFragment : Fragment() {
                 viewModel.diaryState.collectLatest { state ->
                     when (state) {
                         is UiState.Idle -> {
-                            binding.progressBar.visibility = View.GONE
+                            binding.pbLoading.visibility = View.GONE
                             binding.ivEmotion.visibility = View.GONE
                         }
                         is UiState.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
+                            binding.pbLoading.visibility = View.VISIBLE
                             binding.ivEmotion.visibility = View.GONE
                         }
                         is UiState.Success -> {
-                            binding.progressBar.visibility = View.GONE
+                            binding.pbLoading.visibility = View.GONE
                             updateUi(state.data)
                         }
                         is UiState.Failure -> {
-                            binding.progressBar.visibility = View.GONE
+                            binding.pbLoading.visibility = View.GONE
                             binding.ivEmotion.visibility = View.GONE
                             val message = state.message ?: "알 수 없는 오류가 발생했습니다."
                             Toast.makeText(requireContext(), 
