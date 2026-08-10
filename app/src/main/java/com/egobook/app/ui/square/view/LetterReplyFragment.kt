@@ -53,6 +53,13 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLetterReplyBinding.bind(view)
+        childFragmentManager.setFragmentResultListener(
+            DetectAbusiveContentLoadingDialog.CANCEL_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, _ ->
+            viewModel.cancelDetectAbusiveContent()
+            hideLoadingDialog()
+        }
         fetchData()
         initViews()
         initListeners()
@@ -285,7 +292,10 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
     }
 
     private fun hideLoadingDialog() {
-        loadingDialog?.dismiss()
+        val displayedDialog = loadingDialog
+            ?: childFragmentManager.findFragmentByTag(DetectAbusiveContentLoadingDialog.TAG)
+                as? DetectAbusiveContentLoadingDialog
+        displayedDialog?.dismiss()
         loadingDialog = null
         removeScreenBlur()
     }

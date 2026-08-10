@@ -21,9 +21,14 @@ class DetectAbusiveContentLoadingDialog: DialogFragment(R.layout.dialog_detect_a
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DialogDetectAbusiveContentLoadingBinding.bind(view)
+        binding.btnDetectAbusiveContentLoadingCancel.setOnClickListener {
+            parentFragmentManager.setFragmentResult(CANCEL_REQUEST_KEY, Bundle.EMPTY)
+            dismiss()
+        }
     }
 
     companion object {
         const val TAG = "DetectAbusiveContentLoadingDialog"
+        const val CANCEL_REQUEST_KEY = "detectAbusiveContentCancel"
     }
 }

@@ -24,6 +24,7 @@ import com.egobook.app.domain.model.square.letter.SentLetterItem
 import com.egobook.app.domain.model.square.letter.SentLetterWithReply
 import com.egobook.app.domain.repository.LetterRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class LetterRepositoryImpl @Inject constructor(
@@ -48,6 +49,8 @@ class LetterRepositoryImpl @Inject constructor(
         } else {
             Result.failure(Exception("Error: ${response.code()}"))
         }
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         Result.failure(e)
     }

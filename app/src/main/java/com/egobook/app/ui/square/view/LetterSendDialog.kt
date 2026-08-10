@@ -41,6 +41,10 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DialogLetterSendBinding.bind(view)
+        parentFragmentManager.setFragmentResultListener(
+            DetectAbusiveContentLoadingDialog.CANCEL_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, _ -> cancelAbusiveContentCheck() }
         initViews()
         initListeners()
         initObservers()
@@ -157,8 +161,20 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
         }
     }
 
+    private fun cancelAbusiveContentCheck() {
+        viewModel.cancelDetectAbusiveContent()
+        hideLoadingDialog()
+        isSending = false
+        binding.btnLetterSend.isEnabled = true
+        binding.root.alpha = 1.0f
+        dismiss()
+    }
+
     private fun hideLoadingDialog() {
-        loadingDialog?.dismiss()
+        val displayedDialog = loadingDialog
+            ?: parentFragmentManager.findFragmentByTag(DetectAbusiveContentLoadingDialog.TAG)
+                as? DetectAbusiveContentLoadingDialog
+        displayedDialog?.dismiss()
         loadingDialog = null
         removeScreenBlur()
     }
