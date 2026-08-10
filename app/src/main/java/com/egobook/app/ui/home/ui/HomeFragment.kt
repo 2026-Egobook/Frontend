@@ -1,11 +1,16 @@
 package com.egobook.app.ui.home.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -25,12 +30,30 @@ import com.egobook.app.ui.home.user.LevelType
 import com.egobook.app.store.ui.CustomItem
 import com.egobook.app.store.ui.ItemImage
 import com.egobook.app.store.data.model.ItemType
+import com.egobook.app.data.local.PushPreferenceStorage
+import com.egobook.app.domain.repository.push.PushTokenRepository
+import com.egobook.app.push.NotificationPermissionDecision
+import com.egobook.app.push.NotificationPermissionPolicy
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val redDotViewModel: NotificationRedDotViewModel by activityViewModels()
+
+    @Inject
+    lateinit var pushPreferenceStorage: PushPreferenceStorage
+
+    @Inject
+    lateinit var pushTokenRepository: PushTokenRepository
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            Log.d("HomeFragment", "알림 권한 요청 결과: $isGranted")
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +69,8 @@ class HomeFragment(): Fragment() {
 
         viewModel.fetchUser()
         viewModel.fetchEquipItems()
+
+        setUpPushNotification()
         
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -175,6 +200,42 @@ class HomeFragment(): Fragment() {
             ItemType.BACKGROUND -> binding.ivHomeBackground.load(imagePath)
             ItemType.LETTER_PAPER -> {}
         }
+    }
+
+    /**
+     * 홈 진입 시 알림 권한을 요청하고, FCM 토큰을 서버에 등록한다.
+     *
+     * 권한을 거절해도 토큰 등록은 진행한다.
+     * 사용자가 나중에 시스템 설정에서 알림을 켜면 바로 수신할 수 있어야 하기 때문이다.
+     */
+    private fun setUpPushNotification() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            requestNotificationPermissionIfNeeded()
+            pushTokenRepository.registerCurrentToken()
+        }
+    }
+
+    private suspend fun requestNotificationPermissionIfNeeded() {
+        val decision =
+            NotificationPermissionPolicy.decide(
+                sdkInt = Build.VERSION.SDK_INT,
+                isGranted = isNotificationPermissionGranted(),
+                hasRequestedBefore = pushPreferenceStorage.hasRequestedPermissionBefore(),
+            )
+
+        if (decision == NotificationPermissionDecision.REQUEST) {
+            pushPreferenceStorage.markPermissionRequested()
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    private fun isNotificationPermissionGranted(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return true
+
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.POST_NOTIFICATIONS,
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun LevelType.getResId(): Int {
