@@ -1,6 +1,7 @@
 package com.egobook.app.di.module
 
 import android.content.Context
+import com.egobook.app.data.local.PushPreferenceStorage
 import com.egobook.app.data.local.UserInfoStorage
 import dagger.Module
 import dagger.Provides
@@ -18,5 +19,11 @@ object DataStoreModule {
     fun provideUserTokenStorage(
         @ApplicationContext context: Context
     ): UserInfoStorage = UserInfoStorage(context)
+
+    @Provides
+    @Singleton
+    fun providePushPreferenceStorage(
+        @ApplicationContext context: Context
+    ): PushPreferenceStorage = PushPreferenceStorage(context)
 
 }

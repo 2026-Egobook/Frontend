@@ -1,6 +1,7 @@
 package com.egobook.app.data.repository.account
 
 import com.egobook.app.data.api.AccountApiService
+import com.egobook.app.data.local.PushPreferenceStorage
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.data.model.account.LinkRequest
 import com.egobook.app.data.model.account.NicknameRequest
@@ -14,7 +15,8 @@ import timber.log.Timber
 
 class AccountRepositoryImpl @Inject constructor(
     private val apiService: AccountApiService,
-    private val userInfoStorage: UserInfoStorage
+    private val userInfoStorage: UserInfoStorage,
+    private val pushPreferenceStorage: PushPreferenceStorage
 ) : AccountRepository {
 
     override suspend fun getUserId(forceRefresh: Boolean): Result<String> {
@@ -97,6 +99,7 @@ class AccountRepositoryImpl @Inject constructor(
                 try {
                     //datastore의 모든 데이터 삭제
                     userInfoStorage.clearAll()
+                    pushPreferenceStorage.clearLastRegisteredToken()
                     Timber.d("회원 탈퇴 성공: UserInfoStorage 초기화 완료")
                 } catch (e: Exception) {
                     Timber.e(e, "회원 탈퇴 후 UserInfoStorage 초기화 실패")

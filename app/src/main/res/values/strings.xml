@@ -35,4 +35,9 @@
 
     <!--  Home  -->
     <string name="home_bell_red_dot_description">읽지 않은 알림 있음</string>
+
+    <!--  Push Notification  -->
+    <string name="default_notification_channel_id" translatable="false">egobook_default</string>
+    <string name="default_notification_channel_name">에고북 알림</string>
+    <string name="default_notification_channel_description">에고북의 소식과 알림을 받아보세요</string>
 </resources>
