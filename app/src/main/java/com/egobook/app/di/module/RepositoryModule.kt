@@ -22,6 +22,8 @@ import com.egobook.app.domain.repository.diary.DiaryRepository
 import com.egobook.app.domain.repository.push.PushTokenRepository
 import com.egobook.app.ui.home.repository.HomeNotificationRepository
 import com.egobook.app.ui.home.repository.NetworkHomeNotificationRepository
+import com.egobook.app.ui.home.repository.NetworkNoticeRepository
+import com.egobook.app.ui.home.repository.NoticeRepository
 import com.egobook.app.ui.home.repository.NetworkUserRepository
 import com.egobook.app.ui.home.repository.UserActivityRepository
 import com.egobook.app.ui.home.repository.UserAdRepository
@@ -100,4 +102,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindCalenderRepository(impl: CalenderRepositoryImpl): CalenderRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNoticeRepository(impl: NetworkNoticeRepository): NoticeRepository
 }

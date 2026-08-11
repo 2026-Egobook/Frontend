@@ -23,6 +23,7 @@ import com.egobook.app.NotificationController
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
+import com.egobook.app.domain.model.notice.NoticeOpenResult
 import com.egobook.app.ui.home.HomeViewModel
 import com.egobook.app.ui.home.NotificationRedDotViewModel
 import com.egobook.app.ui.home.user.LevelType
@@ -84,6 +85,16 @@ class HomeFragment(): Fragment() {
                     redDotViewModel.redDotState.collect { redDotState ->
                         binding.vBellRedDot.isVisible = redDotState.isVisible
                     }
+                }
+
+                launch {
+                    viewModel.hasUnreadNotice.collect { hasUnreadNotice ->
+                        binding.vNoticeRedDot.isVisible = hasUnreadNotice
+                    }
+                }
+
+                launch {
+                    viewModel.noticeOpenResult.collect { result -> showNotice(result) }
                 }
 
                 launch {
@@ -177,11 +188,44 @@ class HomeFragment(): Fragment() {
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "SteakDialog")
         }
+
+        binding.ivNotice.setOnClickListener { viewModel.openNotice() }
+
+        parentFragmentManager.setFragmentResultListener(
+            NoticeDialog.RESULT_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean(NoticeDialog.RESULT_LOAD_FAILED)) showNoticeErrorDialog()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         redDotViewModel.refresh()
+    }
+
+    /**
+     * 공지 조회 결과에 따라 공지 웹뷰 또는 실패 다이얼로그를 띄운다.
+     *
+     * 조회를 기다리는 동안 화면이 흐려지지 않도록, 블러는 다이얼로그를 띄우는 시점에 적용한다.
+     */
+    private fun showNotice(result: NoticeOpenResult) {
+        applyScreenBlur(BlurLevel.BASE)
+        when (result) {
+            is NoticeOpenResult.Success -> {
+                val dialog = NoticeDialog.newInstance(result.url)
+                dialog.isCancelable = false
+                dialog.show(parentFragmentManager, "NoticeDialog")
+            }
+
+            NoticeOpenResult.Failure -> showNoticeErrorDialog()
+        }
+    }
+
+    private fun showNoticeErrorDialog() {
+        val dialog = NoticeErrorDialog()
+        dialog.isCancelable = false
+        dialog.show(parentFragmentManager, "NoticeErrorDialog")
     }
 
     private fun updateEquipItemUi(type: ItemType, item: CustomItem?) {

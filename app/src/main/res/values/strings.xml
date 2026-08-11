@@ -36,6 +36,14 @@
     <!--  Home  -->
     <string name="home_bell_red_dot_description">읽지 않은 알림 있음</string>
 
+    <!--  Notice  -->
+    <string name="notice_icon_description">공지사항</string>
+    <string name="notice_red_dot_description">읽지 않은 공지 있음</string>
+    <string name="notice_close_description">공지 닫기</string>
+    <string name="notice_error_title">공지를 불러오지 못했어요</string>
+    <string name="notice_error_message">잠시 후 다시 시도해 주세요</string>
+    <string name="notice_error_confirm">돌아가기</string>
+
     <!--  Push Notification  -->
     <string name="default_notification_channel_id" translatable="false">egobook_default</string>
     <string name="default_notification_channel_name">에고북 알림</string>
