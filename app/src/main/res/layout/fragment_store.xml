@@ -70,6 +70,7 @@
         android:id="@+id/iv_store_turtle"
         android:layout_width="283dp"
         android:layout_height="183dp"
+        android:layout_marginBottom="@dimen/store_turtle_collapsed_bottom_margin"
         android:scaleType="fitXY"
         android:src="@drawable/default_turtle"
         android:visibility="invisible"

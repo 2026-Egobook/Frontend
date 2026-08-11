@@ -2,7 +2,6 @@ package com.egobook.app.store.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -214,22 +213,19 @@ class StoreFragment: Fragment() {
             constraintSet.connect(R.id.iv_store_background, ConstraintSet.BOTTOM, R.id.vp2_store_collection_container, ConstraintSet.BOTTOM)
             constraintSet.clear(R.id.iv_store_turtle, ConstraintSet.TOP)
             constraintSet.connect(R.id.iv_store_turtle, ConstraintSet.BOTTOM, R.id.iv_tab_layout_background, ConstraintSet.TOP)
-            constraintSet.setMargin(R.id.iv_store_turtle, ConstraintSet.BOTTOM, dpToPx(TURTLE_COLLAPSED_BOTTOM_MARGIN_DP))
+            constraintSet.setMargin(
+                R.id.iv_store_turtle,
+                ConstraintSet.BOTTOM,
+                resources.getDimensionPixelSize(R.dimen.store_turtle_collapsed_bottom_margin)
+            )
             constraintSet.connect(R.id.iv_expand, ConstraintSet.BOTTOM, R.id.iv_tab_layout_background, ConstraintSet.TOP)
         }
 
         constraintSet.applyTo(binding.root)
     }
 
-    private fun dpToPx(dp: Int): Int = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics
-    ).toInt()
-
     companion object {
         private const val KEY_PREVIEW_STATE = "preview_state"
-
-        // 고북이 뷰 높이를 이미지 원본 비율(304:197)에 맞추면서 기존 세로 위치를 유지하기 위한 보정값
-        private const val TURTLE_COLLAPSED_BOTTOM_MARGIN_DP = 10
     }
 
     private fun observeViewModel() {
