@@ -10,9 +10,16 @@ data class UserDto(
     val level: Int,
     val ink: Int,
     val unreadNotifications: Int,
+    val hasUnreadNotice: Boolean = false,
     val hasUnopenedPsychology: Boolean,
     val isFirstAttendanceToday: Boolean,
     val attendanceRewardInk: Int
 ) {
-     fun toDomain(): User = User(id = userId, Level(level), Ink(ink), nickname = nickname)
+     fun toDomain(): User = User(
+         id = userId,
+         Level(level),
+         Ink(ink),
+         nickname = nickname,
+         hasUnreadNotice = hasUnreadNotice
+     )
 }
