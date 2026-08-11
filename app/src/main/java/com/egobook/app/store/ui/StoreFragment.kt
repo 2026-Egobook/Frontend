@@ -156,6 +156,9 @@ class StoreFragment: Fragment() {
             }
             ItemType.SKIN -> {
                 binding.ivStoreTurtleSkin.load(imagePath)
+                // 스킨 이미지가 없을 때만 기본 고북이를 노출한다.
+                binding.ivStoreTurtle.visibility =
+                    if (imagePath == null) View.VISIBLE else View.INVISIBLE
             }
             ItemType.DECO_1 -> {
                 if (imagePath?.contains("Default") == true) {
@@ -210,7 +213,11 @@ class StoreFragment: Fragment() {
             constraintSet.connect(R.id.iv_store_background, ConstraintSet.BOTTOM, R.id.vp2_store_collection_container, ConstraintSet.BOTTOM)
             constraintSet.clear(R.id.iv_store_turtle, ConstraintSet.TOP)
             constraintSet.connect(R.id.iv_store_turtle, ConstraintSet.BOTTOM, R.id.iv_tab_layout_background, ConstraintSet.TOP)
-            constraintSet.setMargin(R.id.iv_store_turtle, ConstraintSet.BOTTOM, 0)
+            constraintSet.setMargin(
+                R.id.iv_store_turtle,
+                ConstraintSet.BOTTOM,
+                resources.getDimensionPixelSize(R.dimen.store_turtle_collapsed_bottom_margin)
+            )
             constraintSet.connect(R.id.iv_expand, ConstraintSet.BOTTOM, R.id.iv_tab_layout_background, ConstraintSet.TOP)
         }
 

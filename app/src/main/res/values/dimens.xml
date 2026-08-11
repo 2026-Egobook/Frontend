@@ -4,4 +4,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="fragment_horizontal_margin">16dp</dimen>
     <dimen name="fragment_vertical_margin">16dp</dimen>
+    <!-- 상점 축소 상태에서 고북이와 하단 탭 영역 사이 간격 -->
+    <dimen name="store_turtle_collapsed_bottom_margin">24dp</dimen>
 </resources>
