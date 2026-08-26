@@ -2,6 +2,7 @@ package com.egobook.app.ui.login.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import android.util.Log
 import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.data.local.UserInfoStorage
 import com.egobook.app.domain.model.auth.AuthError
@@ -24,6 +25,10 @@ class LoginViewModel @Inject constructor(
     private val userInfoStorage: UserInfoStorage,
     private val analyticsLogger: AnalyticsLogger,
 ) : ViewModel()  {
+    private companion object {
+        const val GOOGLE_LOGIN_LOG_TAG = "GoogleLogin"
+    }
+
     private val _isFirstSignUp = MutableSharedFlow<Unit>()
     val isFirstSignUp = _isFirstSignUp.asSharedFlow()
     private val _isGuestSignUp = MutableSharedFlow<Unit>()
@@ -76,6 +81,11 @@ class LoginViewModel @Inject constructor(
                                 _loginState.value = LoginState.Idle
                             },
                             onFailure = { throwable ->
+                                Log.e(
+                                    GOOGLE_LOGIN_LOG_TAG,
+                                    "Backend authentication failed: flow=sign_up, error=${throwable::class.simpleName}",
+                                    throwable
+                                )
                                 val authError = throwable as? AuthError
                                     ?: AuthError.Unknown(throwable.message)
                                 _loginState.value = LoginState.Error(authError)
@@ -100,6 +110,11 @@ class LoginViewModel @Inject constructor(
 
                         },
                         onFailure = { throwable ->
+                            Log.e(
+                                GOOGLE_LOGIN_LOG_TAG,
+                                "Backend authentication failed: flow=login, error=${throwable::class.simpleName}",
+                                throwable
+                            )
                             val authError = throwable as? AuthError
                                 ?: AuthError.Unknown(throwable.message)
 
@@ -170,4 +185,3 @@ class LoginViewModel @Inject constructor(
     }
 
 }
-
