@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.SystemClock
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
@@ -54,12 +55,11 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
     private val viewModel: StatisticsViewModel by activityViewModels()
     private var tooltipPopup: PopupWindow? = null
     private var interstitialAd: InterstitialAd? = null
-    private var hasShownInterstitialAd = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentEgoRoomStatisticsBinding.bind(view)
-        loadInterstitialAd()
+        if (isInterstitialAdCooledDown()) loadInterstitialAd()
         initViews()
         initObservers()
         fetchData()
@@ -91,9 +91,9 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
     }
 
     private fun showInterstitialAdIfReady() {
-        if (hasShownInterstitialAd) return
         val ad = interstitialAd ?: return
-        hasShownInterstitialAd = true
+        if (!isInterstitialAdCooledDown()) return
+        lastInterstitialShownAt = SystemClock.elapsedRealtime()
         interstitialAd = null
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -101,6 +101,11 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
             }
         }
         ad.show(requireActivity())
+    }
+
+    private fun isInterstitialAdCooledDown(): Boolean {
+        val lastShownAt = lastInterstitialShownAt ?: return true
+        return SystemClock.elapsedRealtime() - lastShownAt >= INTERSTITIAL_AD_COOLDOWN_MILLIS
     }
 
     private fun initViews() {
@@ -595,6 +600,8 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
     companion object {
         private const val NO_DATA_TEXT = "\uC544\uC9C1 \uBAA8\uC778 \uB370\uC774\uD130\uAC00 \uC5C6\uC5B4\uC694"
         private const val WEEKDAY_CROWN_TAG = "weekday_crown"
+        private const val INTERSTITIAL_AD_COOLDOWN_MILLIS = 3 * 60 * 1000L
+        private var lastInterstitialShownAt: Long? = null
         private val DEFAULT_DAYS = listOf("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY")
     }
 }
