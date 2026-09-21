@@ -93,9 +93,12 @@ class EgoRoomStatisticsFragment : Fragment(R.layout.fragment_ego_room_statistics
     private fun showInterstitialAdIfReady() {
         val ad = interstitialAd ?: return
         if (!isInterstitialAdCooledDown()) return
-        lastInterstitialShownAt = SystemClock.elapsedRealtime()
         interstitialAd = null
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdShowedFullScreenContent() {
+                lastInterstitialShownAt = SystemClock.elapsedRealtime()
+            }
+
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 Timber.d("통계 전면 광고 표시 실패, $adError")
             }
