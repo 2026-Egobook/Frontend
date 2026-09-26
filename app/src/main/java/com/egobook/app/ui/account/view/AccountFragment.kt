@@ -55,6 +55,7 @@ class AccountFragment : Fragment() {
     }
 
     private val blurRadius = 5f
+    private var isSupportPageOpened = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -229,6 +230,16 @@ class AccountFragment : Fragment() {
 
             setupPromiseText()
 
+            // 후원하기 클릭
+            btnSendCoffee.setOnClickListener {
+                isSupportPageOpened = true
+
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://qr.kakaopay.com/FaxZeZ2hp5dc06022".toUri()
+                )
+                startActivity(intent)
+            }
 
         }
 
@@ -263,6 +274,23 @@ class AccountFragment : Fragment() {
             }
         } else {
             Timber.e("구글 로그인 credential 아님")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (isSupportPageOpened) {
+            isSupportPageOpened = false
+
+            applyScreenBlur(BlurLevel.BASE)
+
+            val dialog = SupportThanksDialogFragment()
+            dialog.isCancelable = true
+            dialog.show(
+                childFragmentManager,
+                SupportThanksDialogFragment.TAG
+            )
         }
     }
 

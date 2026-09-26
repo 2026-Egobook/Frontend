@@ -30,7 +30,7 @@ android {
         applicationId = "com.egobook"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
+        versionCode = 6
         versionName = "1.0.4"
         multiDexEnabled = true
 
