@@ -229,6 +229,15 @@ class AccountFragment : Fragment() {
 
             setupPromiseText()
 
+            // 후원하기 클릭
+            btnSendCoffee.setOnClickListener {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://qr.kakaopay.com/FaxZeZ2hp5dc06022".toUri()
+                )
+                startActivity(intent)
+            }
+
 
         }
 
