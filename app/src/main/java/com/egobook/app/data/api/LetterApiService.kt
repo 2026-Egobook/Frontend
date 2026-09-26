@@ -52,7 +52,7 @@ interface LetterApiService {
         @Path("letterId") letterId: Long
     ): ApiResponse<SentLetterWithReplyResponse>
 
-    @POST("/plaza/letters/{replyId}/report")
+    @POST("/plaza/letters/replies/{replyId}/report")
     suspend fun reportRepliedLetter(
         @Path("replyId") replyId: Long,
         @Body request: ReportContentRequest
