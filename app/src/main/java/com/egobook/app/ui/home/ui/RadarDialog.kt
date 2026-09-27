@@ -52,6 +52,8 @@ class RadarDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val radarView: RadarView = view.findViewById(R.id.custom_radar_view)
 
+        viewModel.fetchTendencies()
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
