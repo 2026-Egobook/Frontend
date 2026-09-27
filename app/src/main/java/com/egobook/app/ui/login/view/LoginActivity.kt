@@ -35,8 +35,8 @@ import com.egobook.app.ui.login.viewmodel.LoginViewModel
 import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginEvent as LoginEvent
 import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginState as LoginState
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -162,14 +162,13 @@ import javax.inject.Inject
         }
 
         private fun getGoogleRequest(): GetCredentialRequest {
-            val googleIdOption = GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)  // 모든 구글 계정 표시
-                .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
-                .setAutoSelectEnabled(false)  // 사용자가 직접 선택
+            val googleOption = GetSignInWithGoogleOption.Builder(
+                serverClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID,
+            )
                 .build()
 
             return GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
+                .addCredentialOption(googleOption)
                 .build()
         }
 
