@@ -11,6 +11,7 @@ import com.egobook.app.store.data.network.ofName
 import com.egobook.app.store.ui.CustomItem
 import com.egobook.app.store.ui.ItemImage
 import com.egobook.app.domain.model.square.letter.LetterPaperItem
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -58,15 +59,37 @@ class ShopRepository @Inject constructor(
     }
 
     suspend fun equipItemPermanently(item: CustomItem, isEquipped: Boolean): List<CustomItem> {
+        if (!isEquipped && item.type in REQUIRED_ITEM_TYPES) {
+            // 등껍질/고북은 비워둘 수 없으므로 해제 대신 기본 아이템으로 되돌린다.
+            val defaultItem = findDefaultItem(item.type)
+            if (defaultItem == null || defaultItem.id == item.id) return loadEquippedItems()
+            return equipItemPermanently(defaultItem, true)
+        }
         val result = remoteShopDataSource.permanentEquipItem(item, isEquipped)
         check(result.isSuccess) { "Failed to update equipped item" }
         remoteShopDataSource.confirmProfile()
-        return remoteShopDataSource.loadEquippedItems()
+        return loadEquippedItems()
     }
 
     suspend fun loadEquippedItems(): List<CustomItem> {
-        return remoteShopDataSource.loadEquippedItems()
+        val equippedItems = remoteShopDataSource.loadEquippedItems()
+        // 이미 등껍질/고북 장착 정보가 비어있는 계정은 기본 아이템으로 보여준다.
+        val defaultItems = REQUIRED_ITEM_TYPES
+            .filter { type -> equippedItems.none { it.type == type } }
+            .mapNotNull { findDefaultItem(it) }
+        return equippedItems + defaultItems
     }
+
+    private suspend fun findDefaultItem(type: ItemType): CustomItem? {
+        val items = localShopDataSource.itemStream.first()
+            .map { it.toDomain() }
+            .filter { it.type == type }
+            .ifEmpty { remoteShopDataSource.loadItems(type).map { it.toEntity().toDomain() } }
+        return items.find { it.isDefaultImage() } ?: items.find { it.price.value == 0 }
+    }
+
+    private fun CustomItem.isDefaultImage(): Boolean =
+        (outfitImage as? ItemImage.Url)?.path?.contains("Default") == true
 
     suspend fun loadLetterPaperItems(): List<LetterPaperItem> {
         return remoteShopDataSource.loadItems(ItemType.LETTER_PAPER).map { dto ->
@@ -88,6 +111,11 @@ class ShopRepository @Inject constructor(
             itemStatus = ItemStatus.PURCHASABLE
         )
         remoteShopDataSource.purchaseItems(customItem)
+    }
+
+    companion object {
+        // 항상 무언가 장착되어 있어야 하는 카테고리
+        private val REQUIRED_ITEM_TYPES = listOf(ItemType.BACK, ItemType.SKIN)
     }
 }
 
