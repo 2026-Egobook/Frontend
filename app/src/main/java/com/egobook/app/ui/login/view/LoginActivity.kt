@@ -4,6 +4,7 @@
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
@@ -34,8 +35,8 @@ import com.egobook.app.ui.login.viewmodel.LoginViewModel
 import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginEvent as LoginEvent
 import com.egobook.app.ui.login.viewmodel.LoginViewModel.LoginState as LoginState
 import com.egobook.app.ui.onboarding.view.OnboardingActivity
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -43,6 +44,10 @@ import javax.inject.Inject
 
     @AndroidEntryPoint
     class LoginActivity : AppCompatActivity() {
+
+        private companion object {
+            const val GOOGLE_LOGIN_LOG_TAG = "GoogleLogin"
+        }
 
         @Inject lateinit var userInfoStorage: UserInfoStorage
         private lateinit var request: GetCredentialRequest
@@ -94,6 +99,7 @@ import javax.inject.Inject
                 loginBottomSheet.setOnLoginConfirmListener(object : LoginBottomSheetFragment.OnLoginConfirmListener {
                     override fun onLoginConfirmed() {
                         request = getGoogleRequest()
+                        Log.i(GOOGLE_LOGIN_LOG_TAG, "Credential request started: flow=login")
 
                         lifecycleScope.launch {
                             try {
@@ -103,7 +109,11 @@ import javax.inject.Inject
                                 )
                                 handleSignIn(result, isLogin = true)
                             } catch (e: GetCredentialException) {
-                                Timber.d("로그인 실패: ${e.message}")
+                                Log.e(
+                                    GOOGLE_LOGIN_LOG_TAG,
+                                    "Credential request failed: flow=login, type=${e.type}",
+                                    e
+                                )
                             }
                         }
                     }
@@ -123,6 +133,7 @@ import javax.inject.Inject
             // Google 계정으로 회원가입 버튼 - 구글 로그인 창 띄우기
             binding.btnGoogleLogin.setOnClickListener {
                 request = getGoogleRequest()
+                Log.i(GOOGLE_LOGIN_LOG_TAG, "Credential request started: flow=sign_up")
 
                 lifecycleScope.launch {
                     try {
@@ -132,7 +143,11 @@ import javax.inject.Inject
                         )
                         handleSignIn(result, isLogin = false)
                     } catch (e: GetCredentialException) {
-                        Timber.d("회원가입 실패: ${e.message}")
+                        Log.e(
+                            GOOGLE_LOGIN_LOG_TAG,
+                            "Credential request failed: flow=sign_up, type=${e.type}",
+                            e
+                        )
                     }
 
                 }
@@ -147,14 +162,13 @@ import javax.inject.Inject
         }
 
         private fun getGoogleRequest(): GetCredentialRequest {
-            val googleIdOption = GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)  // 모든 구글 계정 표시
-                .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
-                .setAutoSelectEnabled(false)  // 사용자가 직접 선택
+            val googleOption = GetSignInWithGoogleOption.Builder(
+                serverClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID,
+            )
                 .build()
 
             return GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
+                .addCredentialOption(googleOption)
                 .build()
         }
 
@@ -168,7 +182,10 @@ import javax.inject.Inject
                     val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                     val idToken = googleIdTokenCredential.idToken
 
-                    Timber.d("Google ID Token 받음")
+                    Log.i(
+                        GOOGLE_LOGIN_LOG_TAG,
+                        "Google ID token received: flow=${if (isLogin) "login" else "sign_up"}"
+                    )
 
                     // 회원가입 vs 로그인 분기
                     if (isLogin) {
@@ -178,11 +195,18 @@ import javax.inject.Inject
                     }
 
                 } catch (e: GetCredentialException) {
-                    Timber.e(e, "구글 토큰 파싱 실패")
+                    Log.e(
+                        GOOGLE_LOGIN_LOG_TAG,
+                        "Google ID token parsing failed: flow=${if (isLogin) "login" else "sign_up"}, type=${e.type}",
+                        e
+                    )
                 }
 
             } else {
-                Timber.e("구글 로그인 credential 아님")
+                Log.e(
+                    GOOGLE_LOGIN_LOG_TAG,
+                    "Unexpected credential type: actual=${credential.type}, flow=${if (isLogin) "login" else "sign_up"}"
+                )
             }
         }
         private fun observeLoginState() {
