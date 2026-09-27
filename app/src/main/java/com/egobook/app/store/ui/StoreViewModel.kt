@@ -164,12 +164,17 @@ class StoreViewModel @Inject constructor(
                 currentList.filter { it.type != item.type } + item
             }
             Timber.d("미구매 아이템 - 프리뷰 모드")
+        } else if (isHiddenByPreview(item)) {
+            // 서버에 장착된 아이템이 미리보기에 가려진 상태: 해당 타입의 미리보기만 걷어내고 원래 아이템으로 복구
+            _equippedItems.update { currentList ->
+                currentList.filter { it.type != item.type } + item
+            }
         } else {
             // 구매한 아이템: 서버에 장착/해제 요청 (토글)
             viewModelScope.launch {
                 showLoading()
                 try {
-                    val isAlreadyEquipped = _permanentItems.value.any { it.id == item.id }
+                    val isAlreadyEquipped = _equippedItems.value.any { it.id == item.id }
                     val updatedEquipped = shopRepository.equipItemPermanently(item, !isAlreadyEquipped)
                     _permanentItems.value = updatedEquipped
                     _equippedItems.value = updatedEquipped
@@ -190,6 +195,10 @@ class StoreViewModel @Inject constructor(
             }
         }
     }
+
+    private fun isHiddenByPreview(item: CustomItem): Boolean =
+        _permanentItems.value.any { it.id == item.id } &&
+            _equippedItems.value.none { it.id == item.id }
 
     fun clearPreviewItems() {
         // 임시 착용 아이템을 벗고 서버에 저장된 원래 상태로 복구

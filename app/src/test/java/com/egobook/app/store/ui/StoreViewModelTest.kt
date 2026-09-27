@@ -9,6 +9,7 @@ import com.egobook.app.store.data.model.ItemType
 import com.egobook.app.store.data.model.Price
 import com.egobook.app.ui.home.repository.UserRepository
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -102,5 +103,54 @@ class StoreViewModelTest {
 
         // Then
         assertEquals(expectedItems, viewModel.equippedItems.value)
+    }
+
+    private val purchasedBack = CustomItem(
+        id = "11",
+        type = ItemType.BACK,
+        price = Price(300),
+        itemStatus = ItemStatus.PURCHASED
+    )
+    private val previewBack = CustomItem(
+        id = "12",
+        type = ItemType.BACK,
+        price = Price(500),
+        itemStatus = ItemStatus.PURCHASABLE
+    )
+
+    private suspend fun initializeWith(equipped: List<CustomItem>) {
+        coEvery { userRepository.load() } throws RuntimeException("ink load skipped for this test")
+        coEvery { shopRepository.initialize() } returns Unit
+        coEvery { shopRepository.loadEquippedItems() } returns equipped
+        viewModel.initialize()
+    }
+
+    @Test
+    fun `미리보기 후 장착 중인 구매 아이템을 누르면 해제하지 않고 원래 아이템으로 돌아온다`() = runTest {
+        // Given
+        initializeWith(listOf(purchasedBack))
+        viewModel.equipItem(previewBack)
+
+        // When
+        viewModel.equipItem(purchasedBack)
+        runCurrent()
+
+        // Then
+        assertEquals(listOf(purchasedBack), viewModel.equippedItems.value)
+        coVerify(exactly = 0) { shopRepository.equipItemPermanently(any(), any()) }
+    }
+
+    @Test
+    fun `화면에 장착된 구매 아이템을 다시 누르면 해제를 요청한다`() = runTest {
+        // Given
+        initializeWith(listOf(purchasedBack))
+        coEvery { shopRepository.equipItemPermanently(purchasedBack, false) } returns emptyList()
+
+        // When
+        viewModel.equipItem(purchasedBack)
+        runCurrent()
+
+        // Then
+        coVerify(exactly = 1) { shopRepository.equipItemPermanently(purchasedBack, false) }
     }
 }
