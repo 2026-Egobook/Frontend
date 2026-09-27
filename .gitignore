@@ -16,7 +16,6 @@
 local.properties
 .kotlin/
 app/release/
-
-# Keystore
 *.jks
 *.keystore
+google-services.json

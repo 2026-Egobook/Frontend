@@ -9,6 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.ui.setupWithNavController
 import com.egobook.app.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
@@ -66,6 +68,17 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
         binding.bottomNavigation.setupWithNavController(navHostFragment.navController)
         // navController변수 선언
         val navController = navHostFragment.navController
+
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            val options = navOptions {
+                launchSingleTop = true
+                popUpTo(navController.graph.findStartDestination().id) { saveState = false }
+            }
+            runCatching { navController.navigate(item.itemId, null, options) }.isSuccess
+        }
+        binding.bottomNavigation.setOnItemReselectedListener { item ->
+            navController.popBackStack(item.itemId, false)
+        }
 
         // 목적지 변경 리스너 추가: 특정 프래그먼트에서 바텀바 숨기기
         navController.addOnDestinationChangedListener { _, destination, _ ->
