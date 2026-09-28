@@ -16,7 +16,6 @@
 
     <style name="Theme.App.Dialog.NoAnimation" parent="Theme.Material3.DayNight.Dialog">
         <item name="android:windowAnimationStyle">@style/DialogNoAnimation</item>
-        <item name="android:backgroundDimAmount">0</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
