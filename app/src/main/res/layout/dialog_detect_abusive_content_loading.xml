@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_round_and_white_dialog"
     android:paddingVertical="24dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
