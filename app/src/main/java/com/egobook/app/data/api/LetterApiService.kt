@@ -56,13 +56,13 @@ interface LetterApiService {
     suspend fun reportRepliedLetter(
         @Path("replyId") replyId: Long,
         @Body request: ReportContentRequest
-    ): ApiResponse<Unit>
+    ): ApiResponse<String>
 
     @POST("/plaza/letters/{letterId}/report")
     suspend fun reportArrivedLetter(
         @Path("letterId") letterId: Long,
         @Body request: ReportContentRequest
-    ): ApiResponse<Unit>
+    ): ApiResponse<String>
 
     @DELETE("/plaza/letters/threads/{threadId}")
     suspend fun deleteLetterThread(
