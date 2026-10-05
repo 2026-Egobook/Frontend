@@ -6,6 +6,7 @@ data class SentLetterWithReply(
     val status: LetterStatus,
     val mode: LetterMode,
     val sentContent: String,
+    val backgroundImageUrl: String? = null,
     val backgroundColor: LetterBackgroundColor,
     val createdAt: String,
     val arrivedAt: String,

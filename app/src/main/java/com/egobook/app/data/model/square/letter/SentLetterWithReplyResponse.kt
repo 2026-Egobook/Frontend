@@ -18,6 +18,8 @@ data class SentLetterWithReplyResponse(
     val mode: LetterMode,
     @SerializedName("content")
     val sentContent: String,
+    @SerializedName("backgroundImageUrl")
+    val backgroundImageUrl: String? = null,
     @SerializedName("backgroundColor")
     val backgroundColor: LetterBackgroundColor,
     @SerializedName("createdAt")
@@ -57,6 +59,7 @@ fun SentLetterWithReplyResponse.toDomain(): SentLetterWithReply = SentLetterWith
     status = status,
     mode = mode,
     sentContent = sentContent,
+    backgroundImageUrl = backgroundImageUrl,
     backgroundColor = backgroundColor,
     createdAt = createdAt,
     arrivedAt = arrivedAt,

@@ -63,6 +63,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                 mode = item.mode,
                 fromLabel = item.fromLabel,
                 backgroundColor = item.backgroundColor,
+                backgroundImageUrl = item.backgroundImageUrl,
                 content = item.contentPreview,
                 arrivedAt = item.arrivedAt,
                 replyDeadlineAt = item.replyDeadlineAt

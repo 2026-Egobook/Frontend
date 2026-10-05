@@ -17,5 +17,6 @@ data class ReceivedReply(
     val isReported: Boolean,
     val mode: LetterMode,
     val fromLabel: String,
+    val backgroundImageUrl: String? = null,
     val letterColor: LetterBackgroundColor
 )

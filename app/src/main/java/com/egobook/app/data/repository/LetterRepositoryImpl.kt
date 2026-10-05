@@ -1,5 +1,6 @@
 package com.egobook.app.data.repository
 
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -66,10 +67,10 @@ class LetterRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-    override suspend fun replyLetter(letterId: Long, text: String): Result<ReplyLetter> = try {
+    override suspend fun replyLetter(letterId: Long, text: String, backgroundColor: LetterBackgroundColor): Result<ReplyLetter> = try {
         val response = letterApiService.replyLetter(
             letterId = letterId,
-            request = ReplyLetterRequest(text = text)
+            request = ReplyLetterRequest(text = text, backgroundColor = backgroundColor)
         )
         if (response.status == 200) {
             Result.success(response.data.toDomain())

@@ -26,6 +26,8 @@ data class DeferredLetterResponse(
     val mode: LetterMode,
     @SerializedName("fromLabel")
     val fromLabel: String,
+    @SerializedName("backgroundImageUrl")
+    val backgroundImageUrl: String? = null,
     @SerializedName("backgroundColor")
     val backgroundColor: LetterBackgroundColor,
     @SerializedName("contentPreview")
@@ -41,6 +43,7 @@ fun DeferredLetterResponse.toDomain(): DeferredLetter = DeferredLetter(
     status = status,
     mode = mode,
     fromLabel = fromLabel,
+    backgroundImageUrl = backgroundImageUrl,
     backgroundColor = backgroundColor,
     contentPreview = contentPreview,
     arrivedAt = arrivedAt,
