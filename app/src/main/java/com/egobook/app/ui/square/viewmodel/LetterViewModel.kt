@@ -1,5 +1,6 @@
 package com.egobook.app.ui.square.viewmodel
 
+import com.egobook.app.domain.model.square.letter.LetterBackgroundColor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -182,10 +183,10 @@ class LetterViewModel @Inject constructor(
     private val _replyLetterResult = MutableSharedFlow<UiState<ReplyLetterModel>>()
     val replyLetterResult = _replyLetterResult.asSharedFlow()
 
-    fun replyLetter(letterId: Long, text: String) {
+    fun replyLetter(letterId: Long, text: String, backgroundColor: LetterBackgroundColor) {
         viewModelScope.launch {
             _replyLetterResult.emit(UiState.Loading)
-            replyLetterUseCase(letterId = letterId, text = text).onSuccess { domain ->
+            replyLetterUseCase(letterId = letterId, text = text, backgroundColor = backgroundColor).onSuccess { domain ->
                 analyticsLogger.logEvent(AnalyticsEvent.LETTER_REPLY_SEND)
                 _replyLetterResult.emit(UiState.Success(domain.toPresentation()))
             }.onFailure { error ->

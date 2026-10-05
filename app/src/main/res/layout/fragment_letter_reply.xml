@@ -70,20 +70,28 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_letter_reply_letter_received_title" />
 
-            <TextView
-                android:id="@+id/tv_letter_reply_received_content"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_letter_reply_received_paper"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                tools:text="편지원문이 보이는자리 편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리"
-                android:textColor="@color/neutral"
-                android:textSize="14sp"
-                android:fontFamily="@font/arita_medium"
-                android:lineHeight="21sp"
-                android:letterSpacing="-0.02"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:cardCornerRadius="12dp"
+                app:contentPadding="16dp"
+                app:strokeWidth="0dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_letter_reply_letter_received_title" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_letter_reply_letter_received_title">
+                <TextView
+                    android:id="@+id/tv_letter_reply_received_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="편지원문이 보이는자리 편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리편지원문이 보이는자리"
+                    android:textColor="@color/neutral"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/arita_medium"
+                    android:lineHeight="21sp"
+                    android:letterSpacing="-0.02" />
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -229,11 +237,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:strokeWidth="0dp">
 
-                <ImageView
+                <com.egobook.app.ui.square.view.LetterPaperImageView
                     android:id="@+id/iv_letter_reply_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="match_parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

@@ -22,6 +22,7 @@ data class ReceivedReplyModel(
     val isReported: Boolean,
     val mode: LetterMode,
     val fromLabel: String,
+    val backgroundImageUrl: String? = null,
     val letterColor: LetterBackgroundColor
 )
 
@@ -42,5 +43,6 @@ fun ReceivedReply.toPresentation() = ReceivedReplyModel(
     isReported = isReported,
     mode = mode,
     fromLabel = fromLabel,
+    backgroundImageUrl = backgroundImageUrl,
     letterColor = letterColor
 )

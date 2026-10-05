@@ -12,5 +12,6 @@ data class ArrivedPendingLetterItem(
     val content: String,
     val arrivedAt: String,
     val replyDeadlineAt: String,
+    val backgroundImageUrl: String? = null,
     val backgroundColor: LetterBackgroundColor
 )

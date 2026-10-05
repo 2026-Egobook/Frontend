@@ -72,6 +72,7 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
 
     private fun initViews() = with(binding) {
         tvLetterReplyReceivedContent.text = letterItem.content
+        cvLetterReplyReceivedPaper.renderLetterPaper(letterItem.backgroundColor, letterItem.backgroundImageUrl)
         cvLetterReplyColorBeige.isSelected = true
         cvLetterReplyColorBeige.getChildAt(0).isVisible = true
     }
@@ -110,9 +111,9 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
 
     private fun initListeners() = with(binding) {
         ivLetterReplyChevron.setOnClickListener {
-            tvLetterReplyReceivedContent.isVisible = !tvLetterReplyReceivedContent.isVisible
+            cvLetterReplyReceivedPaper.isVisible = !cvLetterReplyReceivedPaper.isVisible
             val chevron =
-                if (tvLetterReplyReceivedContent.isVisible) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
+                if (cvLetterReplyReceivedPaper.isVisible) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
             ivLetterReplyChevron.setImageResource(chevron)
         }
         cvLetterReplyColorBeige.setOnClickListener {
@@ -240,9 +241,9 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
                                 } else {
                                     viewModel.replyLetter(
                                         letterId = letterItem.letterId,
-                                        text = etLetterReplyContent.text.toString()
+                                        text = etLetterReplyContent.text.toString(),
+                                        backgroundColor = replyLetterColor
                                     )
-                                    // TODO: replyLetterColor를 replyLetter API에 전달 (백엔드 지원 시)
                                 }
                             }
                         }

@@ -36,8 +36,10 @@ data class ReceivedReplyResponse(
     val mode: LetterMode,
     @SerializedName("fromLabel")
     val fromLabel: String,
-    @SerializedName("backgroundColor")
-    val letterColor: LetterBackgroundColor
+    @SerializedName("replyBackgroundColor")
+    val letterColor: LetterBackgroundColor? = null,
+    @SerializedName("replyBackgroundImageUrl")
+    val backgroundImageUrl: String? = null
 )
 
 fun ReceivedRepliesResponse.toDomain() = ReceivedReplies(
@@ -57,5 +59,6 @@ fun ReceivedReplyResponse.toDomain(): ReceivedReply = ReceivedReply(
     isReported = isReported,
     mode = mode,
     fromLabel = fromLabel,
-    letterColor = letterColor
+    letterColor = letterColor ?: LetterBackgroundColor.WHITE,
+    backgroundImageUrl = backgroundImageUrl
 )

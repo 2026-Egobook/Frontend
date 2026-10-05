@@ -5,6 +5,7 @@ data class DeferredLetter(
     val status: LetterStatus,
     val mode: LetterMode,
     val fromLabel: String,
+    val backgroundImageUrl: String? = null,
     val backgroundColor: LetterBackgroundColor,
     val contentPreview: String,
     val arrivedAt: String,

@@ -125,16 +125,10 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                             is UiState.Success<SentLetterWithReplyModel> -> {
                                 val data = state.data
                                 threadId = data.threadId
-                                val sentCardBackgroundColor = when(data.backgroundColor) {
-                                    LetterBackgroundColor.WHITE -> R.color.letter_bg_beige
-                                    LetterBackgroundColor.PINK -> R.color.letter_bg_pink
-                                    LetterBackgroundColor.GREEN -> R.color.letter_bg_green
-                                    LetterBackgroundColor.BLUE -> R.color.letter_bg_blue
-                                    LetterBackgroundColor.PURPLE -> R.color.letter_bg_purple
-                                }
                                 tvMyLetterDetailSentAt.text = formatDate(createdDateTime = data.createdAt)
                                 tvMyLetterDetailSentContent.text = data.sentContent
-                                cvMyLetterDetailSentContent.backgroundTintList = resources.getColorStateList(sentCardBackgroundColor, null)
+                                cvMyLetterDetailSentContent.renderLetterPaper(data.backgroundColor, data.backgroundImageUrl)
+                                llMyLetterDetailReplied.isVisible = data.reply != null
                                 if(data.reply != null) {
                                     myNickName = data.fromLabel
                                     viewModel.getReceivedReplyById(replyId = data.reply.replyId)
@@ -157,13 +151,7 @@ class MyLetterDetailFragment : Fragment(R.layout.fragment_my_letter_detail) {
                                 replyId = replyItem.replyId
                                 isReplyReported = replyItem.isReported
                                 tvMyLetterDetailRepliedContent.text = replyItem.replyContent
-                                cvMyLetterDetailReceivedContent.backgroundTintList = when(replyItem.letterColor) {
-                                    LetterBackgroundColor.WHITE -> resources.getColorStateList(R.color.letter_bg_beige, null)
-                                    LetterBackgroundColor.PINK -> resources.getColorStateList(R.color.letter_bg_pink, null)
-                                    LetterBackgroundColor.GREEN -> resources.getColorStateList(R.color.letter_bg_green, null)
-                                    LetterBackgroundColor.BLUE -> resources.getColorStateList(R.color.letter_bg_blue, null)
-                                    LetterBackgroundColor.PURPLE -> resources.getColorStateList(R.color.letter_bg_purple, null)
-                                }
+                                cvMyLetterDetailReceivedContent.renderLetterPaper(replyItem.letterColor, replyItem.backgroundImageUrl)
 
                                 if(replyItem.isAIGenerated) {
                                     tvMyLetterDetailReceiver.text = "To $myNickName"
