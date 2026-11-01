@@ -48,4 +48,39 @@
     <string name="default_notification_channel_id" translatable="false">egobook_default</string>
     <string name="default_notification_channel_name">에고북 알림</string>
     <string name="default_notification_channel_description">에고북의 소식과 알림을 받아보세요</string>
+
+<!-- 고북이와 상호작용_고북이 말풍선 더미-->
+    <string name="turtle_touch_description">고북이</string>
+
+    <string-array name="turtle_messages">
+        <item>기다리고 있었어요.</item>
+        <item>오늘 하루는 어땠어요?</item>
+        <item>지금 기분은 어때요?</item>
+        <item>오늘은 괜찮은 하루였나요?</item>
+        <item>천천히 가도 괜찮아요.\n거북이니까요.</item>
+        <item>고북이 등장!</item>
+        <item>앗, 간지러워요!</item>
+        <item>저 오늘 좀 귀엽지 않나요?</item>
+        <item>저 여기 있어요!</item>
+        <item>저 불렀어요?</item>
+        <item>밥은 먹었어요?</item>
+        <item>잘 잤어요?</item>
+        <item>오늘도 고생 많았어요.</item>
+        <item>여기서 조금 쉬다 가요.</item>
+        <item>오늘의 이야기가 궁금해요.</item>
+        <item>오늘도 한 페이지 채워볼까요?</item>
+        <item>고북이는 항상\n당신을 기다릴거예요.</item>
+        <item>고북이가 응원할게요.</item>
+        <item>마음이 복잡하면\n천천히 풀어봐요.</item>
+        <item>지금 느낀 감정\n바로 기록해볼까요?</item>
+        <item>나중의 내가\n오늘을 궁금해할지도 몰라요.</item>
+        <item>최근 행복했던 순간을 떠올려봐요.</item>
+        <item>고북이 생각 중…</item>
+        <item>사진 잘 나오게 꾸며주세요!</item>
+        <item>에고룸에 새로운 이야기가\n있을지도 몰라요.</item>
+        <item>오늘의 심리 지식도 확인했나요?</item>
+        <item>광장에 한번 가볼까요?</item>
+        <item>과거의 내가 남긴 기록을\n다시 보는 것도 재미있어요.</item>
+        <item>고북이는 항상 옆에 있을거예요.</item>
+    </string-array>
 </resources>

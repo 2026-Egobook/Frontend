@@ -38,6 +38,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {
@@ -54,6 +56,9 @@ class HomeFragment(): Fragment() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             Timber.d("알림 권한 요청 결과: $isGranted")
         }
+
+    private var turtleBubbleJob: Job? = null
+    private var lastTurtleMessageIndex = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -197,6 +202,8 @@ class HomeFragment(): Fragment() {
         ) { _, bundle ->
             if (bundle.getBoolean(NoticeDialog.RESULT_LOAD_FAILED)) showNoticeErrorDialog()
         }
+
+        binding.vTurtleTouchArea.setOnClickListener { showTurtleBubble() }
     }
 
     override fun onResume() {
@@ -219,6 +226,28 @@ class HomeFragment(): Fragment() {
             }
 
             NoticeOpenResult.Failure -> showNoticeErrorDialog()
+        }
+    }
+
+    private fun showTurtleBubble() {
+        val messages = resources.getStringArray(R.array.turtle_messages)
+        if (messages.isEmpty()) return
+
+        // 직전 문구는 빼고 랜덤 (문구가 1개뿐이면 그거 그대로)
+        val candidates = messages.indices
+            .filter { it != lastTurtleMessageIndex }
+            .ifEmpty { messages.indices.toList() }
+        val index = candidates.random()
+        lastTurtleMessageIndex = index
+
+        binding.tvTurtleBubble.text = messages[index]
+        binding.llTurtleBubble.isVisible = true
+
+        // 이전 타이머 취소 후 다시 3초 → 마지막 클릭 기준 3초
+        turtleBubbleJob?.cancel()
+        turtleBubbleJob = viewLifecycleOwner.lifecycleScope.launch {
+            delay(TURTLE_BUBBLE_DURATION_MS)
+            binding.llTurtleBubble.isVisible = false
         }
     }
 
@@ -293,5 +322,8 @@ class HomeFragment(): Fragment() {
             LevelType.SEVEN -> R.drawable.level_type_7
             LevelType.EIGHT -> R.drawable.level_type_8
         }
+    }
+    companion object {
+        private const val TURTLE_BUBBLE_DURATION_MS = 3_000L
     }
 }
