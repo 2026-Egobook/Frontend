@@ -270,13 +270,12 @@
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
             android:background="@drawable/bg_turtle_bubble"
+            android:fontFamily="@font/arita_semibold"
             android:gravity="center"
-            android:paddingStart="20dp"
-            android:paddingTop="14dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="14dp"
+            android:padding="12dp"
             android:textColor="@color/neutral"
-            android:textSize="14sp"
+            android:textSize="12dp"
+            app:lineHeight="18dp"
             tools:text="과거의 내가 남긴 기록을\n다시 보는 것도 재미있어요." />
 
         <ImageView
