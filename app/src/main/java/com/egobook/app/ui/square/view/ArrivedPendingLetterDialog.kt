@@ -82,10 +82,12 @@ class ArrivedPendingLetterDialog(
             dialog.show(parentFragmentManager, GiveUpReplyLetterPopupDialog.TAG)
         }
         btnArrivedPendingLetterReply.setOnClickListener {
-            dismiss()
-            removeScreenBlur()
-            val action = SquareFragmentDirections.actionMenuSquareToLetterReplyFragment(letterItem = letterInfo)
-            findNavController().navigate(action)
+            withLetterAccess(viewModel) {
+                dismiss()
+                removeScreenBlur()
+                val action = SquareFragmentDirections.actionMenuSquareToLetterReplyFragment(letterItem = letterInfo)
+                findNavController().navigate(action)
+            }
         }
     }
 

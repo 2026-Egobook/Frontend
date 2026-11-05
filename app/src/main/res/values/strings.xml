@@ -48,4 +48,9 @@
     <string name="default_notification_channel_id" translatable="false">egobook_default</string>
     <string name="default_notification_channel_name">에고북 알림</string>
     <string name="default_notification_channel_description">에고북의 소식과 알림을 받아보세요</string>
+    <string name="letter_restriction_title">7일간 사용이 제한됩니다</string>
+    <string name="letter_restriction_confirm">확인</string>
+    <string name="letter_restriction_reason">사유 : %1$s</string>
+    <string name="letter_restriction_until">%1$s부터\n다시 이용할 수 있어요</string>
+    <string name="letter_restriction_load_failed">편지 이용 상태를 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.</string>
 </resources>

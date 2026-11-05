@@ -18,6 +18,11 @@ import com.egobook.app.domain.usecase.letter.DeferReplyLetterUseCase
 import com.egobook.app.domain.usecase.letter.DeleteLetterThreadUseCase
 import com.egobook.app.domain.usecase.letter.DetectAbusiveContentUseCase
 import com.egobook.app.domain.usecase.letter.GetArrivedPendingLetterUseCase
+import com.egobook.app.domain.usecase.letter.GetInboxLetterUseCase
+import com.egobook.app.domain.usecase.letter.GetLetterRestrictionUseCase
+import com.egobook.app.domain.model.square.letter.LetterRestriction
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import com.egobook.app.domain.usecase.letter.GetDeferredLettersUseCase
 import com.egobook.app.domain.usecase.letter.GetReceivedReplyByIdUseCase
 import com.egobook.app.domain.usecase.letter.GetSentLetterWithReplyUseCase
@@ -59,6 +64,8 @@ class LetterViewModel @Inject constructor(
     private val sendLetterUseCase: SendLetterUseCase,
     private val detectAbusiveContentUseCase: DetectAbusiveContentUseCase,
     private val getArrivedPendingLetterUseCase: GetArrivedPendingLetterUseCase,
+    private val getInboxLetterUseCase: GetInboxLetterUseCase,
+    private val getLetterRestrictionUseCase: GetLetterRestrictionUseCase,
     private val replyLetterUseCase: ReplyLetterUseCase,
     private val deferReplyLetterUseCase: DeferReplyLetterUseCase,
     private val giveUpReplyLetterUseCase: GiveUpReplyLetterUseCase,
@@ -112,6 +119,11 @@ class LetterViewModel @Inject constructor(
     fun sendLetter(letter: SendLetterModel) {
         viewModelScope.launch {
             _sendLetterResult.emit(UiState.Loading)
+            val access = refreshLetterAccess()
+            if (access.getOrNull()?.restricted != false) {
+                _sendLetterResult.emit(UiState.Failure(access.exceptionOrNull()?.message ?: "편지 이용이 제한됩니다."))
+                return@launch
+            }
             sendLetterUseCase(letter = letter.toDomain()).onSuccess {
                 analyticsLogger.logEvent(
                     AnalyticsEvent.LETTER_SEND,
@@ -148,12 +160,56 @@ class LetterViewModel @Inject constructor(
     private val _arrivedPendingLetterResult = MutableStateFlow<UiState<ArrivedPendingLetterModel>>(UiState.Idle) // stateflow vs sharedflow
     val arrivedPendingLetterResult = _arrivedPendingLetterResult.asStateFlow()
 
+    private val _letterAccess = MutableStateFlow<LetterRestriction?>(null)
+    val letterAccess = _letterAccess.asStateFlow()
+    private var restrictionRequest: Deferred<Result<LetterRestriction>>? = null
+
+    suspend fun refreshLetterAccess(): Result<LetterRestriction> {
+        val request = restrictionRequest?.takeIf { it.isActive } ?: viewModelScope.async {
+            getLetterRestrictionUseCase().also { result -> _letterAccess.value = result.getOrNull() }
+        }.also { restrictionRequest = it }
+        return request.await()
+    }
+    private val _selectedInboxLetter = MutableSharedFlow<UiState<ArrivedPendingLetterModel>>()
+    val selectedInboxLetter = _selectedInboxLetter.asSharedFlow()
+    private var selectedInboxJob: Job? = null
+    private var arrivedLetterJob: Job? = null
+
+    fun openInboxLetter(letterId: Long) {
+        if (selectedInboxJob?.isActive == true) return
+        selectedInboxJob = viewModelScope.launch {
+            // Refresh the server's restriction before requesting any letter detail.
+            refreshLetterAccess().onSuccess { access ->
+                if (access.restricted) {
+                    _selectedInboxLetter.emit(UiState.Success(ArrivedPendingLetterModel(
+                        restricted = true, reason = access.reason, restrictedUntil = access.restrictedUntil
+                    )))
+                    return@onSuccess
+                }
+                getInboxLetterUseCase(letterId).onSuccess { detail ->
+                    val result = detail.toPresentation()
+                    _selectedInboxLetter.emit(UiState.Success(result))
+                }.onFailure { _selectedInboxLetter.emit(UiState.Failure(it.message)) }
+            }.onFailure {
+                _letterAccess.value = null
+                _selectedInboxLetter.emit(UiState.Failure(it.message))
+            }
+        }
+    }
+
     // 화면 재진입마다 같은 편지를 다시 폴링해도 letter_receive가 중복 집계되지 않도록 마지막으로 집계한 편지 ID를 기억한다.
     private var lastNotifiedArrivedLetterId: Long? = null
 
     fun getArrivedPendingLetter() {
-        viewModelScope.launch {
+        arrivedLetterJob?.cancel()
+        arrivedLetterJob = viewModelScope.launch {
+            _letterAccess.value = null
             _arrivedPendingLetterResult.value = UiState.Loading
+            val access = refreshLetterAccess()
+            if (access.isFailure) {
+                _arrivedPendingLetterResult.value = UiState.Failure(access.exceptionOrNull()?.message)
+                return@launch
+            }
             getArrivedPendingLetterUseCase().onSuccess { domain ->
                 val presentation = domain.toPresentation()
                 presentation.letter?.let { letter ->
@@ -186,6 +242,11 @@ class LetterViewModel @Inject constructor(
     fun replyLetter(letterId: Long, text: String, backgroundColor: LetterBackgroundColor) {
         viewModelScope.launch {
             _replyLetterResult.emit(UiState.Loading)
+            val access = refreshLetterAccess()
+            if (access.getOrNull()?.restricted != false) {
+                _replyLetterResult.emit(UiState.Failure(access.exceptionOrNull()?.message ?: "편지 이용이 제한됩니다."))
+                return@launch
+            }
             replyLetterUseCase(letterId = letterId, text = text, backgroundColor = backgroundColor).onSuccess { domain ->
                 analyticsLogger.logEvent(AnalyticsEvent.LETTER_REPLY_SEND)
                 _replyLetterResult.emit(UiState.Success(domain.toPresentation()))
@@ -302,9 +363,11 @@ class LetterViewModel @Inject constructor(
 
     private val _deferredLetters = MutableStateFlow<PagingData<DeferredLetterModel>?>(null)
     val deferredLetters = _deferredLetters.asStateFlow()
+    private var deferredLettersJob: Job? = null
 
     fun getDeferredLetters(size: Int) {
-        viewModelScope.launch {
+        deferredLettersJob?.cancel()
+        deferredLettersJob = viewModelScope.launch {
             getDeferredLettersUseCase(size = size).cachedIn(viewModelScope).collectLatest { pagingData ->
                 _deferredLetters.value = pagingData.map { it.toPresentation() }
             }

@@ -32,6 +32,22 @@ class LetterRepositoryImpl @Inject constructor(
     private val letterApiService: LetterApiService,
     private val aiApiService: AIApiService
 ) : LetterRepository {
+    override suspend fun fetchLetterRestriction(): Result<com.egobook.app.domain.model.square.letter.LetterRestriction> = try {
+        val response = letterApiService.fetchRestrictions()
+        val payload = response.get("data")?.takeUnless { it.isJsonNull }?.asJsonObject ?: response
+        val letter = checkNotNull(payload.getAsJsonObject("letter")) { "편지 제재 상태를 확인하지 못했습니다." }
+        check(letter.has("restricted") && !letter.get("restricted").isJsonNull) { "편지 제재 상태가 없습니다." }
+        Result.success(com.egobook.app.domain.model.square.letter.LetterRestriction(
+            restricted = letter.get("restricted").asBoolean,
+            reason = letter.get("reason")?.takeUnless { it.isJsonNull }?.asString,
+            restrictedUntil = letter.get("restrictedUntil")?.takeUnless { it.isJsonNull }?.asString
+        ))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
     override suspend fun sendLetter(letter: SendLetter): Result<Unit> = try {
         val response = letterApiService.sendLetter(request = letter.toData())
         if (response.status == 200) {
@@ -63,6 +79,18 @@ class LetterRepositoryImpl @Inject constructor(
         } else {
             Result.failure(Exception("Error: ${response.status}"))
         }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun fetchInboxLetter(letterId: Long): Result<ArrivedPendingLetter> = try {
+        val response = letterApiService.fetchInboxLetter(letterId)
+        if (response.status == 200) Result.success(response.data.toDomain())
+        else Result.failure(Exception("Error: ${response.status}"))
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         Result.failure(e)
     }

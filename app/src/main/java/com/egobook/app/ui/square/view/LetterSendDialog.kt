@@ -74,8 +74,13 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
             if (isSending) return@setOnClickListener
             isSending = true
             btnLetterSend.isEnabled = false
-            root.alpha = 0.0f
-            viewModel.detectAbusiveContent(text = letterContent)
+            withLetterAccess(viewModel, onDenied = {
+                isSending = false
+                btnLetterSend.isEnabled = true
+            }) {
+                root.alpha = 0.0f
+                viewModel.detectAbusiveContent(text = letterContent)
+            }
         }
     }
 
@@ -129,7 +134,10 @@ class LetterSendDialog(private val mode: LetterMode, private val friendInfo: Fri
                                 isSending = false
                                 btnLetterSend.isEnabled = true
                                 root.alpha = 1.0f
-                                Toast.makeText(context, "전송 실패: ${state.message}", Toast.LENGTH_SHORT).show()
+                                hideLoadingDialog()
+                                val restriction = viewModel.letterAccess.value
+                                if (restriction?.restricted == true) showLetterRestriction(restriction.reason, restriction.restrictedUntil)
+                                else Toast.makeText(context, "전송 실패: ${state.message}", Toast.LENGTH_SHORT).show()
                             }
                             UiState.Idle -> {}
                             UiState.Loading -> {}

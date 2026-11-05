@@ -19,12 +19,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.insertHeaderItem
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.egobook.app.BlurLevel
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
+import com.egobook.app.removeScreenBlur
 import com.egobook.app.databinding.FragmentSquareBinding
 import com.egobook.app.databinding.LayoutPopupVisibilityTypeBinding
 import com.egobook.app.domain.model.square.question.AnswerVisibility
@@ -32,8 +34,8 @@ import com.egobook.app.domain.model.square.question.MarketingConsentPolicy
 import com.egobook.app.ui.square.adapter.MySentLettersAdapter
 import com.egobook.app.ui.square.adapter.SquareDeferredLettersAdapter
 import com.egobook.app.ui.square.adapter.TodayQuestionFriendRepliesAdapter
-import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterItemModel
 import com.egobook.app.ui.square.model.letter.ArrivedPendingLetterModel
+import com.egobook.app.ui.square.model.letter.DeferredLetterModel
 import com.egobook.app.ui.square.model.question.SubmitStatus
 import com.egobook.app.ui.square.model.question.TodayAnswerModel
 import com.egobook.app.ui.square.model.question.TodayQuestionModel
@@ -41,6 +43,7 @@ import com.egobook.app.ui.square.viewmodel.LetterViewModel
 import com.egobook.app.ui.square.viewmodel.QuestionViewModel
 import com.egobook.app.util.UiState
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
@@ -54,22 +57,12 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private val letterViewModel: LetterViewModel by activityViewModels()
 
     private var visibilityType = AnswerVisibility.PUBLIC
+    private var hasSentLetterToday = false
 
     private val deferredLettersAdapter by lazy {
         SquareDeferredLettersAdapter { item ->
-            val letterInfo = ArrivedPendingLetterItemModel(
-                letterId = item.letterId,
-                status = item.status,
-                mode = item.mode,
-                fromLabel = item.fromLabel,
-                backgroundColor = item.backgroundColor,
-                backgroundImageUrl = item.backgroundImageUrl,
-                content = item.contentPreview,
-                arrivedAt = item.arrivedAt,
-                replyDeadlineAt = item.replyDeadlineAt
-            )
-            val dialog = ArrivedPendingLetterDialog(letterInfo = letterInfo).apply { isCancelable = false }
-            dialog.show(childFragmentManager, ArrivedPendingLetterDialog.TAG)
+            if (item.restricted) showLetterRestriction(item.reason, item.restrictedUntil)
+            else letterViewModel.openInboxLetter(item.letterId)
         }
     }
 
@@ -109,8 +102,28 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
         questionViewModel.getTodayQuestion()
         questionViewModel.getTodayFriendsReplies(size = 3)
         letterViewModel.getDeferredLetters(size = 10)
-        letterViewModel.getArrivedPendingLetter()
         letterViewModel.getSentLetters(size = 4)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        letterViewModel.getArrivedPendingLetter()
+        deferredLettersAdapter.refresh()
+    }
+
+    private fun showLetterRestriction(reason: String?, until: String?) {
+        if (childFragmentManager.findFragmentByTag(LetterRestrictionDialog.TAG) != null) return
+        LetterRestrictionDialog.newInstance(reason, until)
+            .show(childFragmentManager, LetterRestrictionDialog.TAG)
+        applyScreenBlur(BlurLevel.BASE)
+    }
+
+    private fun updateWriteLetterState() = with(binding) {
+        val access = letterViewModel.letterAccess.value
+        val restricted = access?.restricted == true
+        cvSquareWriteLetter.isEnabled = access != null && (!hasSentLetterToday || restricted)
+        cvSquareWriteLetter.alpha = if (access == null || restricted || hasSentLetterToday) 0.4f else 1f
+        tvSquareWriteLetterCount.text = if (hasSentLetterToday) "편지쓰기\n0/1" else "편지쓰기\n1/1"
     }
 
     private fun initViews() = with(binding) {
@@ -210,7 +223,9 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
             cvSquareTodayQuestionWriting.isVisible = true
         }
         cvSquareWriteLetter.setOnClickListener {
-            findNavController().navigate(R.id.action_menu_square_to_letterWriteFragment)
+            withLetterAccess(letterViewModel) {
+                findNavController().navigate(R.id.action_menu_square_to_letterWriteFragment)
+            }
         }
     }
 
@@ -291,6 +306,36 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
     private fun initObservers() = with(binding) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    letterViewModel.letterAccess.collect { access ->
+                        updateWriteLetterState()
+                        deferredLettersAdapter.setUserRestricted(access?.restricted == true)
+                        if (access?.restricted == true) {
+                            val openLetters = listOf(ArrivedPendingLetterDialog.TAG, ArrivedPendingLetterPopupDialog.TAG)
+                                .mapNotNull { childFragmentManager.findFragmentByTag(it) as? androidx.fragment.app.DialogFragment }
+                            openLetters.forEach { it.dismiss() }
+                            if (openLetters.isNotEmpty()) showLetterRestriction(access.reason, access.restrictedUntil)
+                        }
+                    }
+                }
+                launch {
+                    letterViewModel.selectedInboxLetter.collect { state ->
+                        when (state) {
+                            is UiState.Success -> {
+                                val result = state.data
+                                if (result.restricted) showLetterRestriction(result.reason, result.restrictedUntil)
+                                else result.letter?.let { letter ->
+                                    if (childFragmentManager.findFragmentByTag(ArrivedPendingLetterDialog.TAG) == null) {
+                                        ArrivedPendingLetterDialog(letter).apply { isCancelable = false }
+                                            .show(childFragmentManager, ArrivedPendingLetterDialog.TAG)
+                                    }
+                                }
+                            }
+                            is UiState.Failure -> Toast.makeText(context, R.string.letter_restriction_load_failed, Toast.LENGTH_SHORT).show()
+                            else -> Unit
+                        }
+                    }
+                }
                 launch {
                     questionViewModel.todayQuestion.collect { state ->
                         when(state) {
@@ -399,7 +444,8 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                             UiState.Loading -> {}
                             is UiState.Success<ArrivedPendingLetterModel> -> {
                                 val arrivedPendingLetter = state.data.letter
-                                if(arrivedPendingLetter != null) {
+                                if(arrivedPendingLetter != null && !state.data.restricted && letterViewModel.letterAccess.value?.restricted == false &&
+                                    childFragmentManager.findFragmentByTag(ArrivedPendingLetterPopupDialog.TAG) == null) {
                                     val dialog = ArrivedPendingLetterPopupDialog(letterInfo = arrivedPendingLetter).apply { isCancelable = false }
                                     dialog.show(childFragmentManager, ArrivedPendingLetterPopupDialog.TAG)
                                     applyScreenBlur(BlurLevel.BASE)
@@ -409,7 +455,21 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                     }
                 }
                 launch {
-                    letterViewModel.deferredLetters.collectLatest { pagingData ->
+                    combine(letterViewModel.deferredLetters, letterViewModel.arrivedPendingLetterResult, letterViewModel.letterAccess) { pagingData, state, access ->
+                        val inbox = (state as? UiState.Success)?.data
+                        val letter = inbox?.letter
+                        // ARRIVED is not in the DEFERRED endpoint. Keep it visible without changing its server status.
+                        if (pagingData != null && (inbox?.restricted == true || access?.restricted == true) && letter != null &&
+                            letter.status == com.egobook.app.domain.model.square.letter.LetterStatus.ARRIVED) {
+                            pagingData.insertHeaderItem(item = DeferredLetterModel(
+                                letterId = letter.letterId, status = letter.status, mode = letter.mode,
+                                fromLabel = letter.fromLabel, backgroundImageUrl = letter.backgroundImageUrl,
+                                backgroundColor = letter.backgroundColor, contentPreview = letter.content,
+                                arrivedAt = letter.arrivedAt, replyDeadlineAt = letter.replyDeadlineAt,
+                                restricted = true, reason = access?.reason ?: inbox?.reason, restrictedUntil = access?.restrictedUntil ?: inbox?.restrictedUntil
+                            ))
+                        } else pagingData
+                    }.collectLatest { pagingData ->
                         if(pagingData != null) {
                             deferredLettersAdapter.submitData(lifecycle, pagingData)
                         }
@@ -427,7 +487,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
 
                         val isListEmpty = loadStates.refresh is LoadState.NotLoading && sentLetterAdapter.itemCount == 0
 
-                        val hasSentLetterToday = if(!isListEmpty) {
+                        hasSentLetterToday = if(!isListEmpty) {
                             (0 until sentLetterAdapter.itemCount).any { index ->
                                 val item = sentLetterAdapter.peek(index)
                                 val createdDate = item?.createdAt?.toLocalDateOrNull()
@@ -437,9 +497,7 @@ class SquareFragment : Fragment(R.layout.fragment_square) {
                         } else {
                             false
                         }
-                        cvSquareWriteLetter.isEnabled = !hasSentLetterToday
-                        cvSquareWriteLetter.alpha = if(hasSentLetterToday) 0.4f else 1f
-                        tvSquareWriteLetterCount.text = if(hasSentLetterToday) "편지쓰기\n0/1" else "편지쓰기\n1/1"
+                        updateWriteLetterState()
 
                         tvSquareSentLetterPlaceholderMain.isVisible = isListEmpty
                         tvSquareSentLetterPlaceholderSub.isVisible = isListEmpty

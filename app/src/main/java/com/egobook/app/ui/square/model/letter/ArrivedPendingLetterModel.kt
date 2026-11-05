@@ -9,7 +9,10 @@ import com.egobook.app.domain.model.square.letter.LetterStatus
 import kotlinx.parcelize.Parcelize
 
 data class ArrivedPendingLetterModel(
-    val letter: ArrivedPendingLetterItemModel? = null
+    val letter: ArrivedPendingLetterItemModel? = null,
+    val restricted: Boolean = false,
+    val reason: String? = null,
+    val restrictedUntil: String? = null
 )
 
 @Parcelize
@@ -26,7 +29,10 @@ data class ArrivedPendingLetterItemModel(
 ): Parcelable
 
 fun ArrivedPendingLetter.toPresentation(): ArrivedPendingLetterModel = ArrivedPendingLetterModel(
-    letter = letter?.toPresentation()
+    letter = letter?.toPresentation(),
+    restricted = restricted,
+    reason = reason,
+    restrictedUntil = restrictedUntil
 )
 
 fun ArrivedPendingLetterItem.toPresentation(): ArrivedPendingLetterItemModel =

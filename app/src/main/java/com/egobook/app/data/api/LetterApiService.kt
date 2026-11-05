@@ -17,13 +17,20 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.google.gson.JsonObject
 
 interface LetterApiService {
+    @GET("/restrictions/me")
+    suspend fun fetchRestrictions(): JsonObject
+
     @POST("/plaza/letters")
     suspend fun sendLetter(@Body request: SendLetterRequest): ApiResponse<SendLetterResponse>
 
     @GET("/plaza/letters/inbox/next")
     suspend fun fetchArrivedPendingLetter(): ApiResponse<ArrivedPendingLetterResponse>
+
+    @GET("/plaza/letters/inbox/{letterId}")
+    suspend fun fetchInboxLetter(@Path("letterId") letterId: Long): ApiResponse<ArrivedPendingLetterResponse>
 
     @POST("/plaza/letters/{letterId}/reply")
     suspend fun replyLetter(

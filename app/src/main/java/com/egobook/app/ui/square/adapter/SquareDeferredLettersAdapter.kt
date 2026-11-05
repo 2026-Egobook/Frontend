@@ -15,6 +15,12 @@ import java.time.format.DateTimeFormatter
 class SquareDeferredLettersAdapter(
     private val onClicked: (DeferredLetterModel) -> Unit
 ): PagingDataAdapter<DeferredLetterModel, SquareDeferredLettersAdapter.SquareDeferredLettersViewHolder>(diffUtil) {
+    private var userRestricted = false
+    fun setUserRestricted(restricted: Boolean) {
+        if (userRestricted == restricted) return
+        userRestricted = restricted
+        notifyItemRangeChanged(0, itemCount, "restriction")
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -38,6 +44,7 @@ class SquareDeferredLettersAdapter(
         private val binding: ItemSquareDeferredLetterBinding,
     ): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DeferredLetterModel) = with(binding) {
+            root.alpha = if (item.restricted || userRestricted) 0.4f else 1f
             tvSquareDeferredLetterFromLabel.text = item.fromLabel
             tvSquareDeferredLetterReplyDeadline.text = getRemainingTime(replyDeadlineAt = item.replyDeadlineAt)
             root.setOnClickListener {

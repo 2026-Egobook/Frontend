@@ -14,7 +14,10 @@ data class DeferredLetterModel(
     val backgroundColor: LetterBackgroundColor,
     val contentPreview: String,
     val arrivedAt: String,
-    val replyDeadlineAt: String
+    val replyDeadlineAt: String,
+    val restricted: Boolean = false,
+    val reason: String? = null,
+    val restrictedUntil: String? = null
 )
 
 fun DeferredLetter.toPresentation(): DeferredLetterModel = DeferredLetterModel(
@@ -26,5 +29,8 @@ fun DeferredLetter.toPresentation(): DeferredLetterModel = DeferredLetterModel(
     backgroundColor = backgroundColor,
     contentPreview = contentPreview,
     arrivedAt = arrivedAt,
-    replyDeadlineAt = replyDeadlineAt
+    replyDeadlineAt = replyDeadlineAt,
+    restricted = restricted,
+    reason = reason,
+    restrictedUntil = restrictedUntil
 )

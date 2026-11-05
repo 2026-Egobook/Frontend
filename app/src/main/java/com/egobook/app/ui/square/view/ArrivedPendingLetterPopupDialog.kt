@@ -53,9 +53,11 @@ class ArrivedPendingLetterPopupDialog(private val letterInfo: ArrivedPendingLett
             viewModel.deferReplyLetter(letterId = letterInfo.letterId)
         }
         btnArrivedPendingLetterConfirm.setOnClickListener {
-            val dialog = ArrivedPendingLetterDialog(letterInfo = letterInfo).apply { isCancelable = false }
-            dialog.show(parentFragmentManager, ArrivedPendingLetterDialog.TAG)
-            dismiss()
+            withLetterAccess(viewModel) {
+                val dialog = ArrivedPendingLetterDialog(letterInfo = letterInfo).apply { isCancelable = false }
+                dialog.show(parentFragmentManager, ArrivedPendingLetterDialog.TAG)
+                dismiss()
+            }
         }
     }
 
