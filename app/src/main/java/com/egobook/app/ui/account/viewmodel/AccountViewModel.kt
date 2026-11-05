@@ -41,6 +41,9 @@ class AccountViewModel @Inject constructor(
     private val _userEmail = MutableStateFlow<String?>(null)
     val userEmail = _userEmail.asStateFlow()
 
+    private val _isGoogleLinked = MutableStateFlow<Boolean?>(null)
+    val isGoogleLinked = _isGoogleLinked.asStateFlow()
+
     private val _deleteAccountState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
     val deleteAccountState = _deleteAccountState.asStateFlow()
 
@@ -91,6 +94,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             accountRepository.getLinkedAccountInfo()
                 .onSuccess { info ->
+                    _isGoogleLinked.value = info.isGoogleLinked
                     if (info.isGoogleLinked) {
                         _userEmail.value = info.email
                         _linkState.value = UiState.Success(Unit)
@@ -120,6 +124,7 @@ class AccountViewModel @Inject constructor(
 
             accountRepository.linkToGoogle(idToken)
                 .onSuccess {
+                    _isGoogleLinked.value = true
                     _linkState.value = UiState.Success(Unit)
                     analyticsLogger.logEvent(AnalyticsEvent.ACCOUNT_LINK_COMPLETE)
                     _linkToastEvent.emit("Google 계정 연동이 완료되었습니다!")
