@@ -83,4 +83,5 @@
         <item>과거의 내가 남긴 기록을\n다시 보는 것도 재미있어요.</item>
         <item>고북이는 항상 옆에 있을거예요.</item>
     </string-array>
+    <string name="withdraw_guest_warning">게스트 계정은 회원 탈퇴 이후\n복구할 수 없습니다.</string>
 </resources>
