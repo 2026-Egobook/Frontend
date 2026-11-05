@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.os.bundleOf
@@ -67,6 +68,14 @@ class NoticeDialog : DialogFragment() {
                 ) {
                     if (request?.isForMainFrame != true) return
                     notifyLoadFailed()
+                }
+
+                override fun onReceivedHttpError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    errorResponse: WebResourceResponse?
+                ) {
+                    if (request?.isForMainFrame == true) notifyLoadFailed()
                 }
             }
             loadUrl(requireNoticeUrl())

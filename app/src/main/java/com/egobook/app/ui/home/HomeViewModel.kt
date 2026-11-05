@@ -26,6 +26,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -62,6 +64,9 @@ class HomeViewModel @Inject constructor(
 
     private val _noticeOpenResult = MutableSharedFlow<NoticeOpenResult>()
     val noticeOpenResult = _noticeOpenResult.asSharedFlow()
+
+    private var noticeRequest: Job? = null
+    private var noticeReadVersion = 0L
 
     private var loadingCount = 0
     private val _isLoading = MutableStateFlow(false)
@@ -105,10 +110,13 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun fetchUserInternal() {
+        val readVersionAtStart = noticeReadVersion
         try {
             val user = userRepository.load()
             _uiState.value = user
-            _hasUnreadNotice.value = user.hasUnreadNotice
+            if (readVersionAtStart == noticeReadVersion) {
+                _hasUnreadNotice.value = user.hasUnreadNotice
+            }
         } catch(error: Exception) {
             Timber.e(error, "Failed to fetch user")
         }
@@ -205,13 +213,16 @@ class HomeViewModel @Inject constructor(
      * 조회 자체가 실패했을 때만 레드닷을 유지한다.
      */
     fun openNotice() {
-        viewModelScope.launch {
+        if (noticeRequest?.isActive == true) return
+        noticeRequest = viewModelScope.launch {
             runCatching { noticeRepository.loadLatestNotice() }
                 .onSuccess { notice ->
+                    noticeReadVersion++
                     _hasUnreadNotice.value = false
                     _noticeOpenResult.emit(NoticePolicy.resolve(notice))
                 }
                 .onFailure { error ->
+                    if (error is CancellationException) throw error
                     Timber.e(error, "Failed to load latest notice")
                     _noticeOpenResult.emit(NoticeOpenResult.Failure)
                 }
