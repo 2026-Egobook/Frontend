@@ -15,9 +15,11 @@ import com.egobook.app.domain.model.square.letter.SentLetterWithReply
 import kotlinx.coroutines.flow.Flow
 
 interface LetterRepository {
+    suspend fun fetchLetterRestriction(): Result<com.egobook.app.domain.model.square.letter.LetterRestriction>
     suspend fun sendLetter(letter: SendLetter): Result<Unit>
     suspend fun detectAbusiveContent(text: String): Result<AbusiveContentAnalysis>
     suspend fun fetchArrivedPendingLetter(): Result<ArrivedPendingLetter>
+    suspend fun fetchInboxLetter(letterId: Long): Result<ArrivedPendingLetter>
     suspend fun replyLetter(letterId: Long, text: String, backgroundColor: LetterBackgroundColor): Result<ReplyLetter>
     suspend fun deferReplyLetter(letterId: Long): Result<Unit>
     suspend fun giveUpReplyLetter(letterId: Long): Result<Unit>

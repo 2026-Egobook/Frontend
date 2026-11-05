@@ -9,5 +9,8 @@ data class DeferredLetter(
     val backgroundColor: LetterBackgroundColor,
     val contentPreview: String,
     val arrivedAt: String,
-    val replyDeadlineAt: String
+    val replyDeadlineAt: String,
+    val restricted: Boolean = false,
+    val reason: String? = null,
+    val restrictedUntil: String? = null
 )

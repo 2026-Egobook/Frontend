@@ -70,6 +70,12 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
         viewModel.getUserInfo()
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.cvLetterReplyReceivedPaper.isVisible = false
+        withLetterAccess(viewModel) { binding.cvLetterReplyReceivedPaper.isVisible = true }
+    }
+
     private fun initViews() = with(binding) {
         tvLetterReplyReceivedContent.text = letterItem.content
         cvLetterReplyReceivedPaper.renderLetterPaper(letterItem.backgroundColor, letterItem.backgroundImageUrl)
@@ -111,10 +117,13 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
 
     private fun initListeners() = with(binding) {
         ivLetterReplyChevron.setOnClickListener {
-            cvLetterReplyReceivedPaper.isVisible = !cvLetterReplyReceivedPaper.isVisible
-            val chevron =
-                if (cvLetterReplyReceivedPaper.isVisible) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
-            ivLetterReplyChevron.setImageResource(chevron)
+            if (cvLetterReplyReceivedPaper.isVisible) {
+                cvLetterReplyReceivedPaper.isVisible = false
+                ivLetterReplyChevron.setImageResource(R.drawable.ic_chevron_down)
+            } else withLetterAccess(viewModel) {
+                cvLetterReplyReceivedPaper.isVisible = true
+                ivLetterReplyChevron.setImageResource(R.drawable.ic_chevron_up)
+            }
         }
         cvLetterReplyColorBeige.setOnClickListener {
             selectReplyColor(LetterBackgroundColor.WHITE)
@@ -161,7 +170,9 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
             showTooltipPopup(anchorView = ivLetterReplyTooltip)
         }
         btnLetterReply.setOnClickListener {
-            viewModel.detectAbusiveContent(text = etLetterReplyContent.text.toString())
+            withLetterAccess(viewModel) {
+                viewModel.detectAbusiveContent(text = etLetterReplyContent.text.toString())
+            }
         }
         ivLetterReplyBack.setOnClickListener {
             viewModel.deferReplyLetter(letterId = letterItem.letterId)
@@ -252,7 +263,12 @@ class LetterReplyFragment : Fragment(R.layout.fragment_letter_reply) {
                 launch {
                     viewModel.replyLetterResult.collect { state ->
                         when(state) {
-                            is UiState.Failure -> {}
+                            is UiState.Failure -> {
+                                hideLoadingDialog()
+                                val restriction = viewModel.letterAccess.value
+                                if (restriction?.restricted == true) showLetterRestriction(restriction.reason, restriction.restrictedUntil)
+                                else android.widget.Toast.makeText(context, state.message ?: getString(R.string.letter_restriction_load_failed), android.widget.Toast.LENGTH_SHORT).show()
+                            }
                             UiState.Idle -> {}
                             UiState.Loading -> {}
                             is UiState.Success<ReplyLetterModel> -> {

@@ -9,7 +9,10 @@ import com.google.gson.annotations.SerializedName
 
 data class ArrivedPendingLetterResponse(
     @SerializedName("letter")
-    val letter: ArrivedPendingLetterItemResponse? = null
+    val letter: ArrivedPendingLetterItemResponse? = null,
+    val restricted: Boolean = false,
+    val reason: String? = null,
+    val restrictedUntil: String? = null
 )
 
 data class ArrivedPendingLetterItemResponse(
@@ -34,7 +37,10 @@ data class ArrivedPendingLetterItemResponse(
 )
 
 fun ArrivedPendingLetterResponse.toDomain(): ArrivedPendingLetter = ArrivedPendingLetter(
-    letter = letter?.toDomain()
+    letter = letter?.toDomain(),
+    restricted = restricted,
+    reason = reason,
+    restrictedUntil = restrictedUntil
 )
 
 fun ArrivedPendingLetterItemResponse.toDomain(): ArrivedPendingLetterItem = ArrivedPendingLetterItem(

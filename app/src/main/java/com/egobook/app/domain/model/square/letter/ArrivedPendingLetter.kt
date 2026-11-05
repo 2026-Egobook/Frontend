@@ -1,7 +1,10 @@
 package com.egobook.app.domain.model.square.letter
 
 data class ArrivedPendingLetter(
-    val letter: ArrivedPendingLetterItem? = null
+    val letter: ArrivedPendingLetterItem? = null,
+    val restricted: Boolean = false,
+    val reason: String? = null,
+    val restrictedUntil: String? = null
 )
 
 data class ArrivedPendingLetterItem(

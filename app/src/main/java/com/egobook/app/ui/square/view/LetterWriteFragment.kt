@@ -64,6 +64,11 @@ class LetterWriteFragment : Fragment(R.layout.fragment_letter_write) {
         viewModel.getUserInfo()
     }
 
+    override fun onResume() {
+        super.onResume()
+        withLetterAccess(viewModel) { }
+    }
+
     private fun initViews() = with(binding) {
         cvLetterColorBeige.isSelected = true
         cvLetterColorBeige.getChildAt(0).isVisible = true

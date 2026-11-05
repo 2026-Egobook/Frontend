@@ -35,7 +35,10 @@ data class DeferredLetterResponse(
     @SerializedName("arrivedAt")
     val arrivedAt: String,
     @SerializedName("replyDeadlineAt")
-    val replyDeadlineAt: String
+    val replyDeadlineAt: String,
+    val restricted: Boolean = false,
+    val reason: String? = null,
+    val restrictedUntil: String? = null
 )
 
 fun DeferredLetterResponse.toDomain(): DeferredLetter = DeferredLetter(
@@ -47,5 +50,8 @@ fun DeferredLetterResponse.toDomain(): DeferredLetter = DeferredLetter(
     backgroundColor = backgroundColor,
     contentPreview = contentPreview,
     arrivedAt = arrivedAt,
-    replyDeadlineAt = replyDeadlineAt
+    replyDeadlineAt = replyDeadlineAt,
+    restricted = restricted,
+    reason = reason,
+    restrictedUntil = restrictedUntil
 )
