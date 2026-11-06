@@ -11,6 +11,7 @@ data class FriendModel(
     val id: Long,
     val name: String,
     val level: Long,
+    val topAbilityName: String? = null,
     val turtleImageUrl: String? = null,
     val backgroundImageUrl: String? = null
 )
@@ -25,5 +26,6 @@ fun Friend.toPresentation(): FriendModel = FriendModel(
     name = name,
     level = level,
     turtleImageUrl = turtleImageUrl,
+    topAbilityName = topAbilityName,
     backgroundImageUrl = backgroundImageUrl
 )
