@@ -19,6 +19,8 @@ import com.egobook.app.domain.usecase.diaryusecase.ExportDiary
 import com.egobook.app.domain.usecase.diaryusecase.GetDailyCount
 import com.egobook.app.domain.usecase.diaryusecase.GetDiaries
 import com.egobook.app.domain.usecase.diaryusecase.GetDiary
+import com.egobook.app.domain.usecase.diaryusecase.GetRecallDiary
+import com.egobook.app.domain.usecase.diaryusecase.MarkRecallSeen
 import com.egobook.app.domain.usecase.diaryusecase.UpdateDiary
 import dagger.Module
 import dagger.Provides
@@ -42,7 +44,9 @@ object UseCaseModule {
             updateDiary = UpdateDiary(repository),
             deleteDiary = DeleteDiary(repository),
             getDailyCount = GetDailyCount(repository),
-            exportDiary = ExportDiary(repository)
+            exportDiary = ExportDiary(repository),
+            getRecallDiary = GetRecallDiary(repository),
+            markRecallSeen = MarkRecallSeen(repository)
         )
 
     }

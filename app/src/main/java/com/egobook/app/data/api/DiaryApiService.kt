@@ -9,6 +9,8 @@ import com.egobook.app.data.model.diary.response.DiaryCreateResponse
 import com.egobook.app.data.model.diary.response.DiaryDeleteResponse
 import com.egobook.app.data.model.diary.response.DiaryEntryResponse
 import com.egobook.app.data.model.diary.response.DiaryExportResponse
+import com.egobook.app.data.model.diary.response.DiaryRecallResponse
+import com.egobook.app.data.model.diary.response.DiaryRecallSeenResponse
 import com.google.android.gms.common.api.Api
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -59,5 +61,15 @@ interface DiaryApiService {
     suspend fun exportDiary(
         @Body request: DiaryExportRequest
     ): ApiResponse<DiaryExportResponse>
+
+    //과거의 나 돌아보기 조회
+    @GET("/diaries/recall")
+    suspend fun getRecallDiary(): ApiResponse<DiaryRecallResponse>
+
+    //과거의 나 돌아보기 노출 확정
+    @POST("/diaries/recall/{diaryId}/seen")
+    suspend fun markRecallSeen(
+        @Path("diaryId") diaryId: Long
+    ): ApiResponse<DiaryRecallSeenResponse>
 
 }

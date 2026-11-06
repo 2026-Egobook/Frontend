@@ -146,4 +146,20 @@ class DiaryRepositoryImpl  @Inject constructor(
         )
     }
 
+
+    override suspend fun getRecallDiary(): Result<Diary?> {
+        return safeApiCall(
+            apiCall = { apiService.getRecallDiary() },
+            transform = { response ->
+                if (response.available) response.diary?.toDiaryEntity() else null
+            }
+        )
+    }
+
+    override suspend fun markRecallSeen(diaryId: Long): Result<Unit> {
+        return safeApiCall(
+            apiCall = { apiService.markRecallSeen(diaryId) },
+            transform = { }
+        )
+    }
 }

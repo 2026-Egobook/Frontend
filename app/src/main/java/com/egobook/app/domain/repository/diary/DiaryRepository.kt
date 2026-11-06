@@ -52,4 +52,14 @@ interface DiaryRepository {
      * 일기 내보내기
      */
     suspend fun exportDiary(diaryExportForm: DiaryExportForm): Result<DiaryDownloadForm>
+
+    /**
+     * 과거의 나 돌아보기 일기 조회 (노출 대상이 없으면 null)
+     */
+    suspend fun getRecallDiary(): Result<Diary?>
+
+    /**
+     * 과거의 나 돌아보기 노출 확정
+     */
+    suspend fun markRecallSeen(diaryId: Long): Result<Unit>
 }

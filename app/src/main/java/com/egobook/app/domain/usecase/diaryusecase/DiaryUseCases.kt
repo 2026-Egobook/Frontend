@@ -22,7 +22,9 @@ data class DiaryUseCases @Inject constructor (
     val updateDiary: UpdateDiary,
     val deleteDiary: DeleteDiary,
     val getDailyCount: GetDailyCount,
-    val exportDiary: ExportDiary
+    val exportDiary: ExportDiary,
+    val getRecallDiary: GetRecallDiary,
+    val markRecallSeen: MarkRecallSeen
 )
 
 // 각 유스케이스들 정의
@@ -83,5 +85,21 @@ class ExportDiary @Inject constructor(
 ) {
     suspend operator fun invoke(form: DiaryExportForm): Result<DiaryDownloadForm> {
         return repository.exportDiary(form)
+    }
+}
+
+class GetRecallDiary @Inject constructor(
+    private val repository: DiaryRepository
+) {
+    suspend operator fun invoke(): Result<Diary?> {
+        return repository.getRecallDiary()
+    }
+}
+
+class MarkRecallSeen @Inject constructor(
+    private val repository: DiaryRepository
+) {
+    suspend operator fun invoke(diaryId: Long): Result<Unit> {
+        return repository.markRecallSeen(diaryId)
     }
 }

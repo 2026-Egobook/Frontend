@@ -89,4 +89,14 @@
         <item>고북이는 항상 옆에 있을거예요.</item>
     </string-array>
     <string name="withdraw_guest_warning">게스트 계정은 회원 탈퇴 이후\n복구할 수 없습니다.</string>
+    <!-- 과거의 나 돌아보기 -->
+    <string name="recall_diary_title">과거의 내 기록이 도착했어요</string>
+    <string name="recall_diary_subtitle">그때의 내 마음을 다시 확인해볼까요?</string>
+    <string name="recall_diary_write_today">오늘 일기 쓰기</string>
+    <string name="recall_diary_view">보러가기</string>
+    <string name="recall_diary_close">닫기</string>
+    <string name="recall_diary_type_emotion">감정</string>
+    <string name="recall_diary_type_concern">고민</string>
+    <string name="recall_diary_type_praise">칭찬</string>
+    <string name="recall_diary_type_gratitude">감사</string>
 </resources>

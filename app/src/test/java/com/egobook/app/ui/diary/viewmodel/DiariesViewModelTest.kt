@@ -58,6 +58,8 @@ class DiariesViewModelTest {
             deleteDiary = mockk(),
             getDailyCount = getDailyCount,
             exportDiary = mockk(),
+            getRecallDiary = mockk(),
+            markRecallSeen = mockk(),
         )
 
         analyticsLogger = mockk(relaxed = true)

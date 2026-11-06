@@ -26,6 +26,14 @@
             android:id="@+id/action_notificationFragment_to_egoRoom"
             app:destination="@id/menu_ego_room" />
 
+        <action
+            android:id="@+id/action_homeFragment_to_diaryCheckFragment"
+            app:destination="@id/diaryCheckFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_diaryWriteFragment"
+            app:destination="@id/diaryWriteFragment" />
+
     </fragment>
 
 <!--    <fragment-->
