@@ -44,11 +44,13 @@ import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import java.time.LocalDate
+import com.egobook.app.util.UiState
 
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val redDotViewModel: NotificationRedDotViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     @Inject
     lateinit var pushPreferenceStorage: PushPreferenceStorage
@@ -63,6 +65,7 @@ class HomeFragment(): Fragment() {
 
     private var turtleBubbleJob: Job? = null
     private var lastTurtleMessageIndex = -1
+    private var creatingShareImage = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,8 +78,6 @@ class HomeFragment(): Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel: HomeViewModel by activityViewModels()
-
         viewModel.fetchUser()
         viewModel.fetchEquipItems()
 
@@ -86,7 +87,7 @@ class HomeFragment(): Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.isLoading.collect { isLoading ->
-                        binding.flLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+                        binding.flLoading.isVisible = isLoading || creatingShareImage
                     }
                 }
                 
@@ -104,6 +105,28 @@ class HomeFragment(): Fragment() {
 
                 launch {
                     viewModel.noticeOpenResult.collect { result -> showNotice(result) }
+                }
+                launch {
+                    viewModel.shareImage.collect { state ->
+                        creatingShareImage = state is UiState.Loading
+                        binding.btnTurtleShare.isEnabled = !creatingShareImage
+                        binding.flLoading.isVisible = creatingShareImage || viewModel.isLoading.value
+                        when (state) {
+                            is UiState.Success -> {
+                                if (childFragmentManager.isStateSaved) return@collect
+                                if (childFragmentManager.findFragmentByTag(TurtleShareDialog.TAG) == null) {
+                                    TurtleShareDialog.newInstance(state.data).show(childFragmentManager, TurtleShareDialog.TAG)
+                                    applyScreenBlur(BlurLevel.BASE)
+                                }
+                                viewModel.resetShareImage()
+                            }
+                            is UiState.Failure -> {
+                                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                                viewModel.resetShareImage()
+                            }
+                            else -> Unit
+                        }
+                    }
                 }
 
                 launch {
@@ -211,6 +234,7 @@ class HomeFragment(): Fragment() {
         }
 
         binding.ivNotice.setOnClickListener { viewModel.openNotice() }
+        binding.btnTurtleShare.setOnClickListener { viewModel.createShareImage() }
 
         parentFragmentManager.setFragmentResultListener(
             NoticeDialog.RESULT_KEY,

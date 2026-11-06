@@ -29,7 +29,7 @@ interface ShopApiService {
     suspend fun equipItemPermanently(@Body request: PermanentEquipRequest): BaseResponse<EquippedItemDto>
 
     @POST("/shop/profile/confirm")
-    suspend fun confirmProfile(): BaseResponse<ProfileImageDto>
+    suspend fun confirmProfile(): com.google.gson.JsonObject
 }
 
 data class ProfileImageDto(

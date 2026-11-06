@@ -33,6 +33,8 @@ import kotlinx.coroutines.CancellationException
 import java.time.LocalDate
 import javax.inject.Inject
 import timber.log.Timber
+import com.egobook.app.domain.usecase.GenerateTurtleShareUseCase
+import com.egobook.app.util.UiState
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -43,7 +45,8 @@ class HomeViewModel @Inject constructor(
     private val shopRepository: ShopRepository,
     private val userTendencyRepository: UserTendencyRepository,
     private val diaryUseCases: DiaryUseCases,
-    private val analyticsLogger: AnalyticsLogger
+    private val analyticsLogger: AnalyticsLogger,
+    private val generateTurtleShareUseCase: GenerateTurtleShareUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(User(id=-1, Level(1),Ink(0), nickname = ""))
     val uiState: StateFlow<User> = _uiState.asStateFlow()
@@ -59,6 +62,29 @@ class HomeViewModel @Inject constructor(
 
     private val _equippedItems = MutableStateFlow<List<CustomItem>>(emptyList())
     val equippedItems: StateFlow<List<CustomItem>> = _equippedItems
+    private var equippedItemsReady = false
+    private val _shareImage = MutableStateFlow<UiState<String>>(UiState.Idle)
+    val shareImage = _shareImage.asStateFlow()
+
+    fun createShareImage() {
+        if (_shareImage.value is UiState.Loading) return
+        if (!equippedItemsReady) {
+            _shareImage.value = UiState.Failure("착용 정보를 불러온 후 다시 시도해 주세요.")
+            return
+        }
+        val items = _equippedItems.value.toList()
+        _shareImage.value = UiState.Loading
+        viewModelScope.launch {
+            try { _shareImage.value = UiState.Success(generateTurtleShareUseCase(items)) }
+            catch (error: CancellationException) { throw error }
+            catch (error: Exception) {
+                Timber.e(error, "Failed to create turtle share image")
+                _shareImage.value = UiState.Failure("공유 이미지를 만들지 못했습니다. 연결 상태를 확인하고 다시 시도해 주세요.")
+            }
+        }
+    }
+
+    fun resetShareImage() { _shareImage.value = UiState.Idle }
 
     private val _dailyPhycologyReadState = MutableStateFlow(false)
     val dailyPhycologyReadState = _dailyPhycologyReadState.asStateFlow()
@@ -195,8 +221,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun fetchEquipItemsInternal() {
+        equippedItemsReady = false
         try {
             _equippedItems.value = shopRepository.loadEquippedItems()
+            equippedItemsReady = true
         } catch(error: Exception) {
             Timber.e(error, "Failed to fetch equip items")
         }

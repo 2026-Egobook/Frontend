@@ -26,6 +26,8 @@ class RemoteShopDataSource @Inject constructor(
     private val apiService by lazy {
         retrofit.create(ShopApiService::class.java)
     }
+    var latestConfirmedProfile: ProfileImageDto? = null
+        private set
 
     private suspend fun loadSpecificSliceItems(
         itemType: ItemType,
@@ -80,7 +82,10 @@ class RemoteShopDataSource @Inject constructor(
     }
 
     suspend fun confirmProfile() {
-        apiService.confirmProfile()
+        val response = apiService.confirmProfile()
+        val data = response.get("data")?.takeUnless { it.isJsonNull }?.asJsonObject ?: response
+        check(data.has("turtleImageUrl") && data.has("backgroundImageUrl")) { "프로필 이미지 응답을 확인하지 못했습니다." }
+        latestConfirmedProfile = com.google.gson.Gson().fromJson(data, ProfileImageDto::class.java)
     }
 }
 
