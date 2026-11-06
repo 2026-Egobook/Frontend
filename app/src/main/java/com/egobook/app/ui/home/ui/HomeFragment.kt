@@ -1,6 +1,7 @@
 package com.egobook.app.ui.home.ui
 
 import android.Manifest
+import android.graphics.Color
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +24,7 @@ import com.egobook.app.NotificationController
 import com.egobook.app.R
 import com.egobook.app.applyScreenBlur
 import com.egobook.app.databinding.FragmentHomeBinding
+import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.notice.NoticeOpenResult
 import com.egobook.app.ui.home.HomeViewModel
 import com.egobook.app.ui.home.NotificationRedDotViewModel
@@ -34,12 +36,14 @@ import com.egobook.app.data.local.PushPreferenceStorage
 import com.egobook.app.domain.repository.push.PushTokenRepository
 import com.egobook.app.push.NotificationPermissionDecision
 import com.egobook.app.push.NotificationPermissionPolicy
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class HomeFragment(): Fragment() {
@@ -100,6 +104,18 @@ class HomeFragment(): Fragment() {
 
                 launch {
                     viewModel.noticeOpenResult.collect { result -> showNotice(result) }
+                }
+
+                launch {
+                    viewModel.recallDiary.collect { diary ->
+                        if (diary != null) showRecallDiary(diary, viewModel)
+                    }
+                }
+
+                launch {
+                    viewModel.canWriteTodayDiary.collect { canWrite ->
+                        if (canWrite) navigateToTodayDiaryWrite() else showDailyLimitToast()
+                    }
                 }
 
                 launch {
@@ -203,6 +219,16 @@ class HomeFragment(): Fragment() {
             if (bundle.getBoolean(NoticeDialog.RESULT_LOAD_FAILED)) showNoticeErrorDialog()
         }
 
+        parentFragmentManager.setFragmentResultListener(
+            RecallDiaryDialog.RESULT_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            when (bundle.getString(RecallDiaryDialog.RESULT_ACTION)) {
+                RecallDiaryDialog.ACTION_VIEW -> navigateToDiaryDetail(bundle.getLong(RecallDiaryDialog.RESULT_DIARY_ID))
+                RecallDiaryDialog.ACTION_WRITE -> viewModel.checkCanWriteTodayDiary()
+            }
+        }
+
         binding.vTurtleTouchArea.setOnClickListener { showTurtleBubble() }
     }
 
@@ -227,6 +253,54 @@ class HomeFragment(): Fragment() {
 
             NoticeOpenResult.Failure -> showNoticeErrorDialog()
         }
+    }
+
+    /**
+     * 과거의 나 돌아보기 팝업을 띄우고, 띄운 직후 서버에 노출을 확정한다.
+     */
+    private fun showRecallDiary(diary: Diary, viewModel: HomeViewModel) {
+        if (parentFragmentManager.findFragmentByTag(RecallDiaryDialog.TAG) != null) return
+        applyScreenBlur(BlurLevel.BASE)
+        val dialog = RecallDiaryDialog.newInstance(diary)
+        dialog.isCancelable = false
+        dialog.show(parentFragmentManager, RecallDiaryDialog.TAG)
+        viewModel.onRecallShown(diary.diaryId)
+    }
+
+    private fun navigateToDiaryDetail(diaryId: Long) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToDiaryCheckFragment(diaryId)
+        )
+    }
+
+    private fun navigateToTodayDiaryWrite() {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToDiaryWriteFragment(
+                selectedDate = LocalDate.now().toString()
+            )
+        )
+    }
+
+    /**
+     * 오늘 작성 가능한 일기 수(48개)를 넘었을 때 안내 토스트를 띄운다. (DiaryFragment와 동일한 UI)
+     */
+    private fun showDailyLimitToast() {
+        val snackBar = Snackbar.make(requireView(), "", Snackbar.LENGTH_LONG)
+        val customView = layoutInflater.inflate(R.layout.toast_over_write, null)
+
+        val layout = snackBar.view as ViewGroup
+        layout.setPadding(0, 0, 0, 0)
+        layout.setBackgroundColor(Color.TRANSPARENT)
+        layout.addView(customView, 0)
+
+        snackBar.anchorView = requireActivity().findViewById<View>(R.id.bottom_navigation)
+
+        val extra = (9 * resources.displayMetrics.density).toInt()
+        val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin += extra
+        snackBar.view.layoutParams = params
+
+        snackBar.show()
     }
 
     private fun showTurtleBubble() {

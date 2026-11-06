@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.egobook.app.analytics.AnalyticsEvent
 import com.egobook.app.analytics.AnalyticsLogger
 import com.egobook.app.analytics.AnalyticsParam
+import com.egobook.app.domain.model.diary.entity.Diary
 import com.egobook.app.domain.model.notice.NoticeOpenResult
 import com.egobook.app.domain.model.notice.NoticePolicy
+import com.egobook.app.domain.usecase.diaryusecase.DiaryUseCases
 import com.egobook.app.ui.home.repository.AdInfoDto
 import com.egobook.app.ui.home.repository.NoticeRepository
 import com.egobook.app.ui.home.repository.UserAdRepository
@@ -28,6 +30,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.CancellationException
+import java.time.LocalDate
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -39,6 +42,7 @@ class HomeViewModel @Inject constructor(
     private val noticeRepository: NoticeRepository,
     private val shopRepository: ShopRepository,
     private val userTendencyRepository: UserTendencyRepository,
+    private val diaryUseCases: DiaryUseCases,
     private val analyticsLogger: AnalyticsLogger
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(User(id=-1, Level(1),Ink(0), nickname = ""))
@@ -68,6 +72,16 @@ class HomeViewModel @Inject constructor(
     private var noticeRequest: Job? = null
     private var noticeReadVersion = 0L
 
+    // 과거의 나 돌아보기: 띄울 일기가 있으면 값이 채워지고, 팝업을 띄운 뒤 onRecallShown()으로 비운다.
+    private val _recallDiary = MutableStateFlow<Diary?>(null)
+    val recallDiary: StateFlow<Diary?> = _recallDiary.asStateFlow()
+
+    // 과거의 나 돌아보기에서 '오늘 일기 쓰기'를 눌렀을 때 작성 가능 여부 (하루 48개 제한)
+    private val _canWriteTodayDiary = MutableSharedFlow<Boolean>()
+    val canWriteTodayDiary = _canWriteTodayDiary.asSharedFlow()
+
+    private var hasCheckedRecall = false
+
     private var loadingCount = 0
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -87,6 +101,42 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchInitialData()
+        fetchRecallDiary()
+    }
+
+    /**
+     * 앱 진입 시 '과거의 나 돌아보기'로 띄울 일기를 조회한다.
+     * 노출 주기(21일)와 일기 선정은 서버가 판단하며, 대상이 없으면 아무것도 하지 않는다.
+     */
+    private fun fetchRecallDiary() {
+        if (hasCheckedRecall) return
+        hasCheckedRecall = true
+        viewModelScope.launch {
+            diaryUseCases.getRecallDiary()
+                .onSuccess { diary -> _recallDiary.value = diary }
+                .onFailure { error -> Timber.e(error, "Failed to fetch recall diary") }
+        }
+    }
+
+    /**
+     * 과거의 나 돌아보기 팝업을 실제로 띄운 직후 호출해 노출을 확정한다. (다음 21일 주기 시작)
+     */
+    fun onRecallShown(diaryId: Long) {
+        _recallDiary.value = null
+        viewModelScope.launch {
+            diaryUseCases.markRecallSeen(diaryId)
+                .onFailure { error -> Timber.e(error, "Failed to mark recall diary seen: $diaryId") }
+        }
+    }
+
+    /**
+     * 오늘 일기를 더 쓸 수 있는지(하루 48개 미만) 확인해 알린다.
+     */
+    fun checkCanWriteTodayDiary() {
+        viewModelScope.launch {
+            val dailyCount = diaryUseCases.getDailyCount(LocalDate.now()).getOrDefault(0)
+            _canWriteTodayDiary.emit(dailyCount < MAX_DAILY_DIARY_COUNT)
+        }
     }
 
     private fun fetchInitialData() {
@@ -254,5 +304,9 @@ class HomeViewModel @Inject constructor(
                 hideLoading()
             }
         }
+    }
+
+    companion object {
+        private const val MAX_DAILY_DIARY_COUNT = 48
     }
 }
