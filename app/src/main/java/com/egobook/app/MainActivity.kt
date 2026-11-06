@@ -13,6 +13,7 @@ import androidx.navigation.navOptions
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.ui.setupWithNavController
 import com.egobook.app.databinding.ActivityMainBinding
+import com.egobook.app.ui.home.ui.NotificationFragment
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
@@ -124,6 +125,17 @@ class MainActivity : AppCompatActivity(), BlurController, NotificationController
 
         binding.blurView.setupWith(binding.blurTarget).setFrameClearDrawable(window.decorView.background).setBlurEnabled(false)
         binding.root.addDrawerListener(object: DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerStateChanged(newState: Int) {
+                super.onDrawerStateChanged(newState)
+                // 서랍이 닫힌 상태에서 열리기 시작할 때(벨 클릭/스와이프) 최신 알림 목록을 다시 불러온다.
+                val isStartingToOpen = newState != DrawerLayout.STATE_IDLE &&
+                    !binding.root.isDrawerOpen(binding.fcvNotificationDrawer)
+                if (isStartingToOpen) {
+                    (supportFragmentManager.findFragmentById(R.id.fcv_notification_drawer) as? NotificationFragment)
+                        ?.refresh()
+                }
+            }
+
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 activateBlur(BlurLevel.BASE)

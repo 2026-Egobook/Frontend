@@ -85,6 +85,10 @@ class NotificationFragment: Fragment() {
         }
     }
 
+    fun refresh() {
+        viewModel.loadNotifications()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
