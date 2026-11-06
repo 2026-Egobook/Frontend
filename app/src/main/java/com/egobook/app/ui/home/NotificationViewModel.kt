@@ -9,9 +9,11 @@ import com.egobook.app.ui.home.notification.Notification
 import com.egobook.app.ui.home.repository.HomeNotificationRepository
 import com.egobook.app.ui.home.repository.NotificationSettingDto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import timber.log.Timber
@@ -28,20 +30,18 @@ class NotificationViewModel @Inject constructor(
     private val _notificationSettingState = MutableStateFlow<NotificationSettingDto>(NotificationSettingDto(true))
     val notificationSettingState: StateFlow<NotificationSettingDto> = _notificationSettingState.asStateFlow()
 
+    private var loadJob: Job? = null
+
     init {
         loadNotificationSetting()
     }
 
     fun loadNotifications() {
-        viewModelScope.launch {
-            val updatedList = mutableListOf<Notification>()
-            repository.loadNotifications()
-                .collect { notification ->
-                    // 3. 데이터가 올 때마다 리스트에 추가하고 StateFlow 업데이트
-                    updatedList.add(notification)
-                    _notifications.value = updatedList.toList()
-
-                }
+        // 이전 로드가 진행 중이면 취소해 결과가 서로 덮어쓰지 않도록 한다.
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
+            // 전체 페이지를 받은 뒤 한 번에 반영해 재조회 시 목록이 비었다가 다시 채워지는 깜빡임을 막는다.
+            _notifications.value = repository.loadNotifications().toList()
         }
     }
 
