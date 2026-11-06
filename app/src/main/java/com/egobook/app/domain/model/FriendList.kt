@@ -10,5 +10,6 @@ data class Friend(
     val name: String,
     val level: Long,
     val turtleImageUrl: String? = null,
-    val backgroundImageUrl: String? = null
+    val backgroundImageUrl: String? = null,
+    val topAbilityName: String? = null,
 )

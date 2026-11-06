@@ -19,7 +19,9 @@ data class FriendResponse(
     @SerializedName("turtleImageUrl")
     val turtleImageUrl: String? = null,
     @SerializedName("backgroundImageUrl")
-    val backgroundImageUrl: String? = null
+    val backgroundImageUrl: String? = null,
+    @SerializedName("topAbilityName")
+val topAbilityName: String? = null,
 )
 
 fun FriendListResponse.toDomain(): FriendList = FriendList(
@@ -32,6 +34,7 @@ fun FriendResponse.toDomain(): Friend = Friend(
     name = name,
     level = level,
     turtleImageUrl = turtleImageUrl,
-    backgroundImageUrl = backgroundImageUrl
+    backgroundImageUrl = backgroundImageUrl,
+    topAbilityName = topAbilityName,
 )
 
