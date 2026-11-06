@@ -16,5 +16,7 @@ data class UserTodayQuestionAnswerItem(
     val level: Long,
     val topAbilityName: String? = null,
     val turtleImageUrl: String? = null,
-    val backgroundImageUrl: String? = null
+    val backgroundImageUrl: String? = null,
+    val empathyCount: Long = 0,
+    val empathized: Boolean = false
 )

@@ -29,22 +29,28 @@ class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) 
     private lateinit var binding: FragmentSquareAllRepliesBinding
     private val reportedAnswerIds = mutableSetOf<Long>()
     private val adapter by lazy {
-        SquareAllRepliesAdapter { answerId ->
-            if (reportedAnswerIds.contains(answerId)) {
-                Toast.makeText(context, "이미 신고한 답변입니다.", Toast.LENGTH_SHORT).show()
-                return@SquareAllRepliesAdapter
-            }
-            val dialog = SquareReportDialog(
-                origin = ReportOrigin.TODAY_QUESTION_ANSWER,
-                answerId = answerId,
-                onReportSuccess = {
-                    reportedAnswerIds.add(answerId)
-                }
-            ).apply { isCancelable = false }
-            dialog.show(childFragmentManager, SquareReportDialog.TAG)
-            applyScreenBlur(BlurLevel.BASE)
-        }
+        SquareAllRepliesAdapter(
+            onReportClick = { answerId -> showReportDialog(answerId) },
+            onEmpathyClick = { item -> viewModel.toggleAnswerEmpathy(item) }
+        )
     }
+
+    private fun showReportDialog(answerId: Long) {
+        if (reportedAnswerIds.contains(answerId)) {
+            Toast.makeText(context, "이미 신고한 답변입니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val dialog = SquareReportDialog(
+            origin = ReportOrigin.TODAY_QUESTION_ANSWER,
+            answerId = answerId,
+            onReportSuccess = {
+                reportedAnswerIds.add(answerId)
+            }
+        ).apply { isCancelable = false }
+        dialog.show(childFragmentManager, SquareReportDialog.TAG)
+        applyScreenBlur(BlurLevel.BASE)
+    }
+
     private val viewModel: QuestionViewModel by activityViewModels()
 
     private val args: SquareAllRepliesFragmentArgs by navArgs()
@@ -103,6 +109,11 @@ class SquareAllRepliesFragment : Fragment(R.layout.fragment_square_all_replies) 
                 launch {
                     viewModel.todayAllUserReplies.collectLatest { pagingData ->
                         if(pagingData != null) adapter.submitData(lifecycle, pagingData)
+                    }
+                }
+                launch {
+                    viewModel.toggleAnswerEmpathyError.collect {
+                        Toast.makeText(context, "공감 처리에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
                 launch {

@@ -3,6 +3,7 @@ package com.egobook.app.ui.square.adapter
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,10 @@ import com.egobook.app.ui.square.levelBadgeDrawable
 import com.egobook.app.ui.square.ProfileImagePlacement
 import com.egobook.app.ui.square.tendencyIconDrawable
 
-class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): PagingDataAdapter<UserTodayQuestionAnswerItemModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
+class SquareAllRepliesAdapter(
+    private val onReportClick: (Long) -> Unit,
+    private val onEmpathyClick: (UserTodayQuestionAnswerItemModel) -> Unit
+): PagingDataAdapter<UserTodayQuestionAnswerItemModel, SquareAllRepliesAdapter.SquareAllRepliesViewHolder>(diffUtil) {
     private val expandedAnswerIds = mutableSetOf<Long>()
 
     override fun onCreateViewHolder(
@@ -21,7 +25,7 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
         viewType: Int
     ): SquareAllRepliesViewHolder {
         val binding = ItemSquareQuestionReplyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SquareAllRepliesViewHolder(binding, onReportClick, expandedAnswerIds)
+        return SquareAllRepliesViewHolder(binding, onReportClick, onEmpathyClick, expandedAnswerIds)
     }
 
     override fun onBindViewHolder(
@@ -37,6 +41,7 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
     class SquareAllRepliesViewHolder(
         private val binding: ItemSquareQuestionReplyBinding,
         private val onReportClick: (Long) -> Unit,
+        private val onEmpathyClick: (UserTodayQuestionAnswerItemModel) -> Unit,
         private val expandedAnswerIds: MutableSet<Long>
     ): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: UserTodayQuestionAnswerItemModel) = with(binding) {
@@ -55,6 +60,7 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
                 mirrorFallback = true
             )
             applyContentExpandedState(expandedAnswerIds.contains(item.answerId))
+            applyEmpathyState(item.empathized, item.empathyCount)
 
             root.setOnClickListener {
                 toggleContentExpandedState(item.answerId)
@@ -65,7 +71,26 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
             ivSquareQuestionReplyReport.setOnClickListener {
                 onReportClick(item.answerId)
             }
+            llItemSquareQuestionReplyEmpathy.setOnClickListener {
+                onEmpathyClick(item)
+            }
         }
+
+        private fun applyEmpathyState(isEmpathized: Boolean, count: Long) = with(binding) {
+            ivItemSquareQuestionReplyEmpathy.setImageResource(
+                if (isEmpathized) R.drawable.ic_heart_filled else R.drawable.ic_heart_outline
+            )
+            tvItemSquareQuestionReplyEmpathyCount.text = formatEmpathyCount(count)
+            tvItemSquareQuestionReplyEmpathyCount.setTextColor(
+                ContextCompat.getColor(
+                    root.context,
+                    if (isEmpathized) R.color.brand else R.color.neutral_subtle
+                )
+            )
+        }
+
+        private fun formatEmpathyCount(count: Long): String =
+            if (count > MAX_DISPLAY_EMPATHY_COUNT) "$MAX_DISPLAY_EMPATHY_COUNT+" else count.toString()
 
         private fun applyContentExpandedState(isExpanded: Boolean) = with(binding.tvItemSquareQuestionReplyUserContent) {
             maxLines = if (isExpanded) Int.MAX_VALUE else COLLAPSED_CONTENT_MAX_LINES
@@ -86,6 +111,7 @@ class SquareAllRepliesAdapter(private val onReportClick: (Long) -> Unit): Paging
 
     companion object {
         private const val COLLAPSED_CONTENT_MAX_LINES = 4
+        private const val MAX_DISPLAY_EMPATHY_COUNT = 99
 
         val diffUtil = object: DiffUtil.ItemCallback<UserTodayQuestionAnswerItemModel>() {
             override fun areItemsTheSame(

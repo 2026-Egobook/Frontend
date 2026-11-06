@@ -12,6 +12,7 @@ import com.egobook.app.data.repository.paging.FriendRepliesPagingSource
 import com.egobook.app.data.repository.paging.MyRepliesHistoryPagingSource
 import com.egobook.app.domain.model.TodayQuestion
 import com.egobook.app.domain.model.square.letter.ReportContent
+import com.egobook.app.domain.model.square.question.AnswerEmpathy
 import com.egobook.app.domain.model.square.question.MyTodayQuestionAnswerItem
 import com.egobook.app.domain.model.square.question.TodayAnswer
 import com.egobook.app.domain.model.square.question.UserTodayQuestionAnswerItem
@@ -124,6 +125,17 @@ class QuestionRepositoryImpl @Inject constructor(private val apiService: Questio
         val response = apiService.reportTodayQuestionAnswer(answerId = answerId, request = request.toData())
         if(response.status == 200) {
             Result.success(Unit)
+        } else {
+            Result.failure(Exception("Error: ${response.status}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun toggleAnswerEmpathy(answerId: Long): Result<AnswerEmpathy> = try {
+        val response = apiService.toggleAnswerEmpathy(answerId = answerId)
+        if(response.status == 200) {
+            Result.success(response.data.toDomain())
         } else {
             Result.failure(Exception("Error: ${response.status}"))
         }

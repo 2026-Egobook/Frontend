@@ -2,6 +2,7 @@ package com.egobook.app.data.api
 
 import com.egobook.app.data.model.ApiResponse
 import com.egobook.app.data.model.square.letter.ReportContentRequest
+import com.egobook.app.data.model.square.question.AnswerEmpathyResponse
 import com.egobook.app.data.model.square.question.UserTodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.MyTodayQuestionAnswerResponse
 import com.egobook.app.data.model.square.question.TodayAnswerRequest
@@ -55,6 +56,11 @@ interface QuestionApiService {
         @Path("answerId") answerId: Long,
         @Body request: ReportContentRequest
     ): ApiResponse<Unit>
+
+    @POST("/questions/answers/{answerId}/empathy")
+    suspend fun toggleAnswerEmpathy(
+        @Path("answerId") answerId: Long
+    ): ApiResponse<AnswerEmpathyResponse>
 
     @PATCH("/questions/marketing-consent")
     suspend fun updateMarketingConsent(
