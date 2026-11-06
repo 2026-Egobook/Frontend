@@ -12,6 +12,8 @@ import com.egobook.app.store.ui.CustomItem
 import com.egobook.app.store.ui.ItemImage
 import com.egobook.app.domain.model.square.letter.LetterPaperItem
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +43,10 @@ class ShopRepository @Inject constructor(
     private val localShopDataSource: LocalShopDataSource,
     private val remoteShopDataSource: RemoteShopDataSource
 ) {
+    @Inject lateinit var userInfoStorage: com.egobook.app.data.local.UserInfoStorage
+
     val itemStream = localShopDataSource.itemStream
+    private val equipMutex = Mutex()
 
     suspend fun initialize() {
         val itemEntities = ItemType.entries.flatMap { itemType ->
@@ -59,17 +64,37 @@ class ShopRepository @Inject constructor(
     }
 
     suspend fun equipItemPermanently(item: CustomItem, isEquipped: Boolean): List<CustomItem> {
+        return equipMutex.withLock { equipItemInternal(item, isEquipped) }
+    }
+
+    private suspend fun equipItemInternal(item: CustomItem, isEquipped: Boolean): List<CustomItem> {
         if (!isEquipped && item.type in REQUIRED_ITEM_TYPES) {
             // 등껍질/고북은 비워둘 수 없으므로 해제 대신 기본 아이템으로 되돌린다.
             val defaultItem = findDefaultItem(item.type)
             if (defaultItem == null || defaultItem.id == item.id) return loadEquippedItems()
-            return equipItemPermanently(defaultItem, true)
+            return equipItemInternal(defaultItem, true)
         }
         val result = remoteShopDataSource.permanentEquipItem(item, isEquipped)
         check(result.isSuccess) { "Failed to update equipped item" }
         remoteShopDataSource.confirmProfile()
-        return loadEquippedItems()
+        return loadEquippedItems().also { items ->
+            try {
+                remoteShopDataSource.latestConfirmedProfile?.let { image ->
+                    userInfoStorage.saveProfileImages(profileFingerprint(items), image.turtleImageUrl, image.backgroundImageUrl)
+                }
+            } catch (error: kotlinx.coroutines.CancellationException) { throw error }
+            catch (error: Exception) { timber.log.Timber.w(error, "Profile cache could not be saved") }
+        }
     }
+
+    suspend fun getCachedProfileImages(items: List<CustomItem>): com.egobook.app.store.data.network.ProfileImageDto? =
+        userInfoStorage.getProfileImages(profileFingerprint(items))?.let {
+            com.egobook.app.store.data.network.ProfileImageDto(it.first, it.second)
+        }
+
+    private fun profileFingerprint(items: List<CustomItem>): String = items
+        .filter { it.type != ItemType.LETTER_PAPER }.sortedBy { it.type.ordinal }
+        .joinToString("|") { "${it.type}:${it.id}:${(it.outfitImage as? ItemImage.Url)?.path.orEmpty()}" }
 
     suspend fun loadEquippedItems(): List<CustomItem> {
         val equippedItems = remoteShopDataSource.loadEquippedItems()

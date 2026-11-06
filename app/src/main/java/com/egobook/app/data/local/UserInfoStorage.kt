@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -179,6 +180,20 @@ class UserInfoStorage @Inject constructor(
         }
     }
 
+    suspend fun saveProfileImages(fingerprint: String, turtle: String?, background: String?) {
+        dataStore.edit { preferences ->
+            preferences[PROFILE_FINGERPRINT] = fingerprint
+            if (turtle == null) preferences.remove(PROFILE_TURTLE) else preferences[PROFILE_TURTLE] = turtle
+            if (background == null) preferences.remove(PROFILE_BACKGROUND) else preferences[PROFILE_BACKGROUND] = background
+        }
+    }
+
+    suspend fun getProfileImages(fingerprint: String): Pair<String?, String?>? {
+        val preferences = dataStore.data.first()
+        if (preferences[PROFILE_FINGERPRINT] != fingerprint) return null
+        return preferences[PROFILE_TURTLE] to preferences[PROFILE_BACKGROUND]
+    }
+
     // 로그인 타입 정의
     enum class LoginType {
         GOOGLE, GUEST
@@ -186,6 +201,9 @@ class UserInfoStorage @Inject constructor(
 
     //저장할 키값 종류 정의
     companion object {
+        private val PROFILE_FINGERPRINT = stringPreferencesKey("profile_fingerprint")
+        private val PROFILE_TURTLE = stringPreferencesKey("profile_turtle")
+        private val PROFILE_BACKGROUND = stringPreferencesKey("profile_background")
 
         private val LOGIN_TYPE = stringPreferencesKey("login_type")
         private val USER_ID = stringPreferencesKey("user_id")
