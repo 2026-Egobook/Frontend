@@ -19,7 +19,9 @@ data class UserTodayQuestionAnswerItemModel(
     val level: Long,
     val topAbilityName: String? = null,
     val turtleImageUrl: String? = null,
-    val backgroundImageUrl: String? = null
+    val backgroundImageUrl: String? = null,
+    val empathyCount: Long = 0,
+    val empathized: Boolean = false
 )
 
 fun UserTodayQuestionAnswerItem.toPresentation() = UserTodayQuestionAnswerItemModel(
@@ -31,7 +33,9 @@ fun UserTodayQuestionAnswerItem.toPresentation() = UserTodayQuestionAnswerItemMo
     level = level,
     topAbilityName = topAbilityName,
     turtleImageUrl = turtleImageUrl,
-    backgroundImageUrl = backgroundImageUrl
+    backgroundImageUrl = backgroundImageUrl,
+    empathyCount = empathyCount,
+    empathized = empathized
 )
 
 fun UserTodayQuestionAnswer.toPresentation() = UserTodayQuestionAnswerModel(

@@ -33,7 +33,11 @@ data class UserTodayQuestionAnswerItemResponse(
     @SerializedName("turtleImageUrl")
     val turtleImageUrl: String? = null,
     @SerializedName("backgroundImageUrl")
-    val backgroundImageUrl: String? = null
+    val backgroundImageUrl: String? = null,
+    @SerializedName("empathyCount")
+    val empathyCount: Long = 0,
+    @SerializedName("empathized")
+    val empathized: Boolean = false
 )
 
 fun UserTodayQuestionAnswerResponse.toDomain(): UserTodayQuestionAnswer =
@@ -54,5 +58,7 @@ fun UserTodayQuestionAnswerItemResponse.toDomain(): UserTodayQuestionAnswerItem 
         level = level,
         topAbilityName = topAbilityName,
         turtleImageUrl = turtleImageUrl,
-        backgroundImageUrl = backgroundImageUrl
+        backgroundImageUrl = backgroundImageUrl,
+        empathyCount = empathyCount,
+        empathized = empathized
     )

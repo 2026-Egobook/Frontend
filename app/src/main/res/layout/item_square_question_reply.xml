@@ -76,6 +76,37 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_item_square_question_reply_symbol"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <LinearLayout
+        android:id="@+id/ll_item_square_question_reply_empathy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="4dp"
+        android:layout_marginEnd="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintTop_toTopOf="@id/iv_item_square_question_reply_symbol"
+        app:layout_constraintBottom_toBottomOf="@id/iv_item_square_question_reply_symbol"
+        app:layout_constraintEnd_toStartOf="@id/iv_square_question_reply_report">
+
+        <ImageView
+            android:id="@+id/iv_item_square_question_reply_empathy"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_heart_outline" />
+
+        <TextView
+            android:id="@+id/tv_item_square_question_reply_empathy_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0"
+            android:textColor="@color/neutral_subtle"
+            android:textSize="14sp"
+            android:fontFamily="@font/arita_medium" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tv_item_square_question_reply_user_content"
         android:layout_width="0dp"
