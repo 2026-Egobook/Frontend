@@ -51,6 +51,7 @@ class QuestionViewModelTest {
             deleteMyQuestionAnswerUseCase = mockk(),
             reportTodayQuestionAnswerUseCase = mockk(),
             updateMarketingConsentUseCase = updateMarketingConsentUseCase,
+            toggleAnswerEmpathyUseCase = mockk(),
             analyticsLogger = analyticsLogger
         )
     }
