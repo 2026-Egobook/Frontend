@@ -153,4 +153,38 @@ class StoreViewModelTest {
         // Then
         coVerify(exactly = 1) { shopRepository.equipItemPermanently(purchasedBack, false) }
     }
+
+    @Test
+    fun `구매한 아이템만 착용 중이고 미리보기가 없으면 변경 사항이 없다`() = runTest {
+        // Given
+        initializeWith(listOf(purchasedBack))
+
+        // Then
+        assertEquals(false, viewModel.hasPreviewChanges())
+    }
+
+    @Test
+    fun `미구매 아이템을 미리보기 착용하면 변경 사항이 있다`() = runTest {
+        // Given
+        initializeWith(listOf(purchasedBack))
+
+        // When
+        viewModel.equipItem(previewBack)
+
+        // Then
+        assertEquals(true, viewModel.hasPreviewChanges())
+    }
+
+    @Test
+    fun `미리보기를 초기화하면 변경 사항이 없다`() = runTest {
+        // Given
+        initializeWith(listOf(purchasedBack))
+        viewModel.equipItem(previewBack)
+
+        // When
+        viewModel.clearPreviewItems()
+
+        // Then
+        assertEquals(false, viewModel.hasPreviewChanges())
+    }
 }

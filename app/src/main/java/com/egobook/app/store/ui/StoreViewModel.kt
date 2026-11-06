@@ -200,6 +200,10 @@ class StoreViewModel @Inject constructor(
         _permanentItems.value.any { it.id == item.id } &&
             _equippedItems.value.none { it.id == item.id }
 
+    // 서버에 저장된 착용 상태와 화면의 착용 상태(미리보기 포함)가 다른지 여부
+    fun hasPreviewChanges(): Boolean =
+        _equippedItems.value.map { it.id }.toSet() != _permanentItems.value.map { it.id }.toSet()
+
     fun clearPreviewItems() {
         // 임시 착용 아이템을 벗고 서버에 저장된 원래 상태로 복구
         _equippedItems.value = _permanentItems.value
