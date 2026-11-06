@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.egobook.app.BlurLevel
@@ -87,6 +88,11 @@ class StoreFragment: Fragment() {
         })
 
         binding.ivBack.setOnClickListener {
+            if (!viewModel.hasPreviewChanges()) {
+                viewModel.logShopExit()
+                findNavController().navigate(R.id.action_storeFragment_to_homeFragment)
+                return@setOnClickListener
+            }
             applyScreenBlur(BlurLevel.BASE)
             val dialog = StoreLeavingDialog()
             dialog.isCancelable = false
