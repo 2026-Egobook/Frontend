@@ -17,10 +17,20 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import androidx.appcompat.app.AppCompatActivity
+import com.egobook.app.ui.onboarding.view.ServerShutdownDialogFragment
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.ContextThemeWrapper
+import android.view.LayoutInflater
+import androidx.core.text.HtmlCompat
+import com.egobook.app.databinding.DialogServerShutdownBinding
 
 //진짜 스플래시 화면으로 쓰는 용도
 @AndroidEntryPoint
-class IntroActivity : ComponentActivity() {
+//class IntroActivity : ComponentActivity() {
+class IntroActivity : AppCompatActivity() {
     @Inject lateinit var userInfoStorage: UserInfoStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,13 +85,37 @@ class IntroActivity : ComponentActivity() {
         Timber.d("토큰 존재 여부: $hasAccessToken")
 
         //액세스 토큰이 있다면 메인 화면으로, 없다면 로그인 화면으로 이동
-        if(hasAccessToken) {
-            Timber.d("메인 화면으로 이동")
-            navigateToMain()
-        } else {
-            Timber.d("로그인 화면으로 이동")
-            navigateToLogin()
+//        if(hasAccessToken) {
+//            Timber.d("메인 화면으로 이동")
+//            navigateToMain()
+//        } else {
+//            Timber.d("로그인 화면으로 이동")
+//            navigateToLogin()
+//        }
+        showShutdownDialog {
+            if (hasAccessToken) navigateToMain() else navigateToLogin()
         }
+    }
+
+    // 서비스 종료 팝업 (확인 누르면 onConfirm 실행)
+    private fun showShutdownDialog(onConfirm: () -> Unit) {
+        // MaterialCardView가 Material 테마를 요구해서 앱 테마로 감싸줌
+        val themed = ContextThemeWrapper(this, R.style.Theme_Egobook)
+        val dialogBinding = DialogServerShutdownBinding.inflate(LayoutInflater.from(themed))
+        val dialog = Dialog(themed).apply {
+            setContentView(dialogBinding.root)
+            setCancelable(false)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+        dialogBinding.tvShutdownDescription.text = HtmlCompat.fromHtml(
+            getString(R.string.dialog_shutdown_description),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+        dialogBinding.btnShutdownConfirm.setOnClickListener {
+            dialog.dismiss()
+            onConfirm()
+        }
+        dialog.show()
     }
     // 점검 취소로 인한 주석 처리
 //    private fun isMaintenanceTime(): Boolean {
