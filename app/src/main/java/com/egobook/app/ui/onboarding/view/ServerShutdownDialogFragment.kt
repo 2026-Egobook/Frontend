@@ -1,4 +1,4 @@
-package com.egobook.app.ui.onboarding
+package com.egobook.app.ui.onboarding.view
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

@@ -37,6 +37,13 @@ class OnboardingActivity : AppCompatActivity() {
         }
 
         setAdapter()
+
+        window.decorView.postDelayed({
+            if (!isFinishing && !isDestroyed) {
+                ServerShutdownDialogFragment()
+                    .show(supportFragmentManager, ServerShutdownDialogFragment.TAG)
+            }
+        }, 1500)   // 온보딩 뜨고 1.5초 뒤
     }
 
     private fun setAdapter() {
