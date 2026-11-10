@@ -124,7 +124,11 @@ class NetworkHomeNotificationRepository @Inject constructor(
                     ).data
 
                     response.content.forEach { dto ->
-                        emit(dto.toDomain())
+                        // 알 수 없는 타입 등 변환에 실패한 항목은 건너뛰고 나머지 알림은 계속 노출한다.
+                        val notification = runCatching { dto.toDomain() }
+                            .onFailure { Timber.w(it, "알림 변환 실패: id=${dto.notificationId}, type=${dto.type}") }
+                            .getOrNull()
+                        if (notification != null) emit(notification)
                     }
 
                     if (!response.hasNext) {
