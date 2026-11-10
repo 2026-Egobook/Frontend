@@ -44,6 +44,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import java.time.LocalDate
+import com.egobook.app.data.share.TurtleShareDesign
 import com.egobook.app.util.UiState
 
 @AndroidEntryPoint
@@ -110,13 +111,14 @@ class HomeFragment(): Fragment() {
                     viewModel.shareImage.collect { state ->
                         creatingShareImage = state is UiState.Loading
                         binding.btnTurtleShare.isEnabled = !creatingShareImage
+                        binding.btnTurtleCamera.isEnabled = !creatingShareImage
                         binding.flLoading.isVisible = creatingShareImage || viewModel.isLoading.value
                         when (state) {
                             is UiState.Success -> {
                                 if (childFragmentManager.isStateSaved) return@collect
                                 if (childFragmentManager.findFragmentByTag(TurtleShareDialog.TAG) == null) {
                                     TurtleShareDialog.newInstance(state.data).show(childFragmentManager, TurtleShareDialog.TAG)
-                                    applyScreenBlur(BlurLevel.BASE)
+                                    if (!TurtleShareDesign.USE_HOME_STORY) applyScreenBlur(BlurLevel.BASE)
                                 }
                                 viewModel.resetShareImage()
                             }
@@ -234,6 +236,9 @@ class HomeFragment(): Fragment() {
         }
 
         binding.ivNotice.setOnClickListener { viewModel.openNotice() }
+        binding.btnTurtleShare.isVisible = !TurtleShareDesign.USE_HOME_STORY
+        binding.btnTurtleCamera.isVisible = TurtleShareDesign.USE_HOME_STORY
+        binding.btnTurtleCamera.setOnClickListener { viewModel.createShareImage() }
         binding.btnTurtleShare.setOnClickListener { viewModel.createShareImage() }
 
         parentFragmentManager.setFragmentResultListener(

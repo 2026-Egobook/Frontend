@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/layer_white">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical">
+        <TextView android:id="@+id/btn_turtle_share_close" android:layout_width="48dp" android:layout_height="48dp"
+            android:text="&#x2039;" android:textSize="32sp" android:textColor="@color/neutral" android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/turtle_share_close" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/turtle_share"
+            android:fontFamily="@font/arita_semibold" android:textColor="@color/neutral" android:textSize="20sp" />
+    </LinearLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="1" android:layout_marginHorizontal="32dp" android:layout_marginTop="16dp">
+        <ImageView android:id="@+id/iv_turtle_share_preview" android:layout_width="0dp" android:layout_height="0dp"
+            android:scaleType="fitCenter" android:contentDescription="@string/turtle_share_preview"
+            android:background="@drawable/bg_turtle_share_preview" android:clipToOutline="true"
+            app:layout_constraintDimensionRatio="9:16" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" android:layout_marginBottom="28dp" android:gravity="center"
+        android:text="@string/turtle_share_hint" android:textSize="12sp" android:fontFamily="@font/arita_semibold" android:textColor="@color/neutral" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:paddingHorizontal="16dp" android:paddingBottom="16dp">
+        <com.google.android.material.button.MaterialButton android:id="@+id/btn_turtle_save"
+            style="@style/DeleteButtonStyle" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="48dp" android:layout_marginEnd="12dp" android:insetTop="0dp" android:insetBottom="0dp"
+            android:backgroundTint="@color/neutral_weak" android:textColor="@color/neutral" android:text="@string/turtle_save" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btn_turtle_share"
+            style="@style/DeleteButtonStyle" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="48dp" android:insetTop="0dp" android:insetBottom="0dp"
+            android:backgroundTint="@color/brand" android:textColor="@color/layer_white" android:text="@string/turtle_share" />
+    </LinearLayout>
+</LinearLayout>

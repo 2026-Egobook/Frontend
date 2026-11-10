@@ -19,3 +19,21 @@ app/release/
 *.jks
 *.keystore
 google-services.json
+
+# Local distribution artifacts and signing settings
+*.apk
+*.aab
+*.log
+*.p12
+*.pfx
+keystore.properties
+key.properties
+signing.properties
+/app/build/
+/delivery/
+/screenshots/
+/qa-artifacts/
+turtle-story-preview.png
+turtle-story-dialog.png
+turtle-home-preview.png
+turtle-home-camera-detail.png

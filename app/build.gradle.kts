@@ -30,8 +30,8 @@ android {
         applicationId = "com.egobook"
         minSdk = 24
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.0.6"
+        versionCode = 12
+        versionName = "1.0.9"
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
