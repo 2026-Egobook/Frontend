@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="41dp"
             android:orientation="vertical"
-            app:constraint_referenced_ids="iv_store,iv_bottle,iv_ad"
+            app:constraint_referenced_ids="iv_store,iv_bottle,iv_ad,btn_turtle_camera"
             app:flow_verticalGap="12dp"
             app:layout_constraintEnd_toEndOf="@id/iv_setting"
             app:layout_constraintTop_toBottomOf="@id/iv_setting" />
@@ -309,6 +309,17 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="16dp"/>
+
+    <!-- Figma entry; the old button below remains available through TurtleShareDesign. -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btn_turtle_camera"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="3dp"
+        android:scaleType="fitCenter"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_turtle_camera"
+        android:contentDescription="@string/turtle_share_open" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_turtle_share"

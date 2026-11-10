@@ -49,6 +49,11 @@ class TurtleShareRenderer @Inject constructor(@ApplicationContext private val co
             val bitmap = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888)
             try {
                 val canvas = Canvas(bitmap)
+                if (TurtleShareDesign.USE_HOME_STORY) {
+                    drawHomeStory(canvas, background, layers)
+                    return@withContext bitmap
+                }
+                // Legacy square-card story renderer is intentionally retained for rollback.
                 val neutral = ContextCompat.getColor(context, R.color.neutral)
                 val paper = ContextCompat.getColor(context, R.color.layer_white)
                 // Blur the same background at one-third resolution so its details remain recognizable.
@@ -101,6 +106,21 @@ class TurtleShareRenderer @Inject constructor(@ApplicationContext private val co
                 throw error
             }
         }
+    }
+
+    /** Figma story: full-bleed home scenery, no home controls, speech or account decoration. */
+    private fun drawHomeStory(canvas: Canvas, background: Drawable?, layers: List<Drawable>) {
+        canvas.drawColor(ContextCompat.getColor(context, R.color.layer_white))
+        background?.let {
+            // Match the home's fitXY background; the export itself always stays 9:16.
+            it.setBounds(0, 0, WIDTH, HEIGHT)
+            it.draw(canvas)
+        }
+        val turtleWidth = WIDTH * 0.84f
+        val turtleHeight = turtleWidth * 197f / 304f
+        val turtle = RectF((WIDTH - turtleWidth) / 2f, (HEIGHT - turtleHeight) / 2f,
+            (WIDTH + turtleWidth) / 2f, (HEIGHT + turtleHeight) / 2f)
+        layers.forEach { drawImage(canvas, it, turtle, false) }
     }
 
     /** Three separable box passes approximate a soft Gaussian blur in bounded memory. */

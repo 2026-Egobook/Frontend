@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.TurtleShare" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/layer_white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:statusBarColor">@color/layer_white</item>
+        <item name="android:navigationBarColor">@color/layer_white</item>
+    </style>
+</resources>

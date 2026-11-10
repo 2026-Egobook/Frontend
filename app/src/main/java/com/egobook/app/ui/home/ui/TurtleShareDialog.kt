@@ -11,6 +11,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.LayoutInflater
+import android.view.WindowManager
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.egobook.app.data.share.TurtleShareDesign
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,16 +46,33 @@ class TurtleShareDialog : DialogFragment(R.layout.dialog_turtle_share) {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (TurtleShareDesign.USE_HOME_STORY) setStyle(STYLE_NORMAL, R.style.Theme_TurtleShare)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        inflater.inflate(if (TurtleShareDesign.USE_HOME_STORY) R.layout.dialog_turtle_share_fullscreen
+            else R.layout.dialog_turtle_share, container, false)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val ui = DialogTurtleShareBinding.bind(view)
         binding = ui
+        if (TurtleShareDesign.USE_HOME_STORY) {
+            ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+                val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+                v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+                insets
+            }
+            ViewCompat.requestApplyInsets(view)
+        }
         val file = runCatching { storage.previewFile(fileName) }.getOrElse {
             toast(R.string.turtle_share_expired); dismiss(); return
         }
         val metrics = resources.displayMetrics
-        ui.ivTurtleSharePreview.maxHeight = minOf(metrics.heightPixels * 0.58f,
+        if (!TurtleShareDesign.USE_HOME_STORY) ui.ivTurtleSharePreview.maxHeight = minOf(metrics.heightPixels * 0.58f,
             metrics.heightPixels - 240 * metrics.density).coerceAtLeast(80 * metrics.density).toInt()
         ui.btnTurtleShare.isEnabled = false
         ui.btnTurtleSave.isEnabled = false
@@ -75,7 +97,19 @@ class TurtleShareDialog : DialogFragment(R.layout.dialog_turtle_share) {
                     clipData = ClipData.newUri(requireContext().contentResolver, getString(R.string.turtle_share_title), uri)
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
-                startActivity(Intent.createChooser(send, getString(R.string.turtle_share)))
+                val chooser = Intent.createChooser(send, getString(R.string.turtle_share))
+                // The story background is the exact preview PNG, never a sticker or square card.
+                val story = Intent("com.instagram.share.ADD_TO_STORY").apply {
+                    setPackage("com.instagram.android")
+                    setDataAndType(uri, "image/png")
+                    clipData = send.clipData
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                if (story.resolveActivity(requireContext().packageManager) != null) {
+                    requireContext().grantUriPermission("com.instagram.android", uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(story))
+                }
+                startActivity(chooser)
             } catch (_: ActivityNotFoundException) { toast(R.string.turtle_share_no_app) }
             catch (_: Exception) { toast(R.string.turtle_share_failed) }
         }
@@ -88,6 +122,13 @@ class TurtleShareDialog : DialogFragment(R.layout.dialog_turtle_share) {
 
     override fun onStart() {
         super.onStart()
+        if (TurtleShareDesign.USE_HOME_STORY) {
+            dialog?.window?.apply {
+                clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            }
+            return
+        }
         val density = resources.displayMetrics.density
         dialog?.window?.setLayout(minOf((360 * density).toInt(), resources.displayMetrics.widthPixels - (32 * density).toInt()), ViewGroup.LayoutParams.WRAP_CONTENT)
     }
