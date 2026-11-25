@@ -92,13 +92,26 @@ class IntroActivity : AppCompatActivity() {
 //            Timber.d("로그인 화면으로 이동")
 //            navigateToLogin()
 //        }
-        showShutdownDialog {
-            if (hasAccessToken) navigateToMain() else navigateToLogin()
+
+        // 종료 후 팝업_종료일 2026-12-20 부터 반영
+        val shutdownMillis = java.util.GregorianCalendar(2026, java.util.Calendar.DECEMBER, 20).timeInMillis
+
+        //if (System.currentTimeMillis() < shutdownMillis) {
+        if (true) {
+            // 종료 예고: 확인 → 앱 진입
+            showShutdownDialog(R.string.dialog_shutdown_description) {
+                if (hasAccessToken) navigateToMain() else navigateToLogin()
+            }
+        } else {
+            // 종료 이후: 확인 → 앱 종료
+            showShutdownDialog(R.string.dialog_shutdown_after_description) {
+                finishAffinity()
+            }
         }
     }
 
     // 서비스 종료 팝업 (확인 누르면 onConfirm 실행)
-    private fun showShutdownDialog(onConfirm: () -> Unit) {
+    private fun showShutdownDialog(descriptionRes: Int, onConfirm: () -> Unit) {
         // MaterialCardView가 Material 테마를 요구해서 앱 테마로 감싸줌
         val themed = ContextThemeWrapper(this, R.style.Theme_Egobook)
         val dialogBinding = DialogServerShutdownBinding.inflate(LayoutInflater.from(themed))
@@ -108,7 +121,7 @@ class IntroActivity : AppCompatActivity() {
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
         dialogBinding.tvShutdownDescription.text = HtmlCompat.fromHtml(
-            getString(R.string.dialog_shutdown_description),
+            getString(descriptionRes),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         dialogBinding.btnShutdownConfirm.setOnClickListener {
