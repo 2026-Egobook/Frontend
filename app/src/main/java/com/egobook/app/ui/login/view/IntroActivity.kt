@@ -97,7 +97,7 @@ class IntroActivity : AppCompatActivity() {
         val shutdownMillis = java.util.GregorianCalendar(2026, java.util.Calendar.DECEMBER, 20).timeInMillis
 
         //if (System.currentTimeMillis() < shutdownMillis) {
-        if (true) {
+        if (false) {
             // 종료 예고: 확인 → 앱 진입
             showShutdownDialog(R.string.dialog_shutdown_description) {
                 if (hasAccessToken) navigateToMain() else navigateToLogin()
