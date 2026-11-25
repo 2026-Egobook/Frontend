@@ -96,8 +96,7 @@ class IntroActivity : AppCompatActivity() {
         // 종료 후 팝업_종료일 2026-12-20 부터 반영
         val shutdownMillis = java.util.GregorianCalendar(2026, java.util.Calendar.DECEMBER, 20).timeInMillis
 
-        //if (System.currentTimeMillis() < shutdownMillis) {
-        if (false) {
+        if (System.currentTimeMillis() < shutdownMillis) {
             // 종료 예고: 확인 → 앱 진입
             showShutdownDialog(R.string.dialog_shutdown_description) {
                 if (hasAccessToken) navigateToMain() else navigateToLogin()
